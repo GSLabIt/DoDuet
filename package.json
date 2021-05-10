@@ -17,12 +17,20 @@
         "@tailwindcss/typography": "^0.3.0",
         "@vue/compiler-sfc": "^3.0.5",
         "axios": "^0.21",
+        "browser-sync": "^2.26.14",
+        "browser-sync-webpack-plugin": "^2.3.0",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
+        "node-sass": "^6.0.0",
         "postcss": "^8.1.14",
         "postcss-import": "^12.0.1",
+        "sass-loader": "^11.0.1",
         "tailwindcss": "^2.0.1",
         "vue": "^3.0.5",
         "vue-loader": "^16.1.2"
+    },
+    "dependencies": {
+        "@lottiefiles/lottie-player": "^1.0.3",
+        "boxicons": "^2.0.7"
     }
 }

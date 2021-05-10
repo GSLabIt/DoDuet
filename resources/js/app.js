@@ -5,6 +5,10 @@ import { createApp, h } from 'vue';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 
+import 'boxicons/css/animations.css'
+import 'boxicons/css/transformations.css'
+import 'boxicons/css/boxicons.min.css'
+
 const el = document.getElementById('app');
 
 createApp({
