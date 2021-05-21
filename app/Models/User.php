@@ -6,6 +6,8 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -63,4 +65,19 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
     ];
+
+    function tracks(): HasMany
+    {
+        return $this->hasMany(Track::class, "owner_id");
+    }
+
+    function favourite(): BelongsToMany
+    {
+        return $this->belongsToMany(Track::class);
+    }
+
+    function opinions(): HasMany
+    {
+        return $this->hasMany(Opinions::class, "sender_id");
+    }
 }

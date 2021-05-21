@@ -1,8 +1,8 @@
 <template>
     <fieldset class="rate">
         <template v-for="(elem, i) of Array.from({length: size}, scale)" :key="i">
-            <input type="radio" :id="`${id}-rating-${i}`" :name="`${id}-rating`" :value="elem" v-model="vote"/>
-            <label :for="`${id}-rating-${i}`" :title="`${elem} stars`" :class="{'half': (elem | 0) !== elem}"></label>
+            <input type="radio" :id="`${id}-rating-${i}`" :name="`${id}-rating`" :value="elem" v-model="vote" :disabled="disabled"/>
+            <label :for="`${id}-rating-${i}`" :title="`${elem} stars`" :class="{'half': (elem | 0) !== elem}" :aria-disabled="disabled"></label>
         </template>
     </fieldset>
 </template>
@@ -23,6 +23,10 @@ export default {
         id: {
             type: String,
             required: true,
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
         }
     },
     emits: ["update:modelValue"],
@@ -84,10 +88,10 @@ export default {
 }
 /* Click + hover color */
 input:checked ~ label, /* color current and previous stars on checked */
-label:hover, label:hover ~ label { color: #FBBF24;  } /* color previous stars on hover */
+label:hover:not([aria-disabled="true"]), label:hover:not([aria-disabled="true"]) ~ label { color: #FBBF24;  } /* color previous stars on hover */
 
 /* Hover highlights */
-input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
-input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
-label:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #FDE047;  }
+input:checked:not(:disabled) + label:hover, input:checked:not(:disabled) ~ label:hover, /* highlight current and previous stars */
+input:checked:not(:disabled) ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+label:hover ~ input:checked:not(:disabled) ~ label /* highlight previous selected stars */ { color: #FDE047;  }
 </style>

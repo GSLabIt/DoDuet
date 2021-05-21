@@ -1,4 +1,14 @@
 export default function globalUrls() {
+    const routeMatch = (test_route) => {
+        return route().current() === test_route || location.href.endsWith(test_route) // to support indexed routes
+    }
+
+    const classIfRouteMatch = (test_route) => {
+        return {
+            "font-semibold": routeMatch(test_route)
+        }
+    }
+
     return {
         urls: {
             home: `${route("home")}/#home`,
@@ -16,7 +26,9 @@ export default function globalUrls() {
             faq: route("home"),
             support: route("home"),
             sitemap: route("home"),
-        }
+        },
+        routeMatch,
+        classIfRouteMatch,
     }
 }
 
@@ -49,15 +61,19 @@ function urlGenerator(prefix, functionalities = {}) {
 }
 
 export function adminUrls() {
+    const {routeMatch, classIfRouteMatch} = globalUrls()
+
     return {
         urls: {
             global: {
                 ...globalUrls().urls
             },
-            ...urlGenerator("category"),
+            /*...urlGenerator("category"),
             ...urlGenerator("plan"),
             ...urlGenerator("plan_feature"),
-            ...urlGenerator("platform_functionality"),
-        }
+            ...urlGenerator("platform_functionality"),*/
+        },
+        routeMatch,
+        classIfRouteMatch
     }
 }

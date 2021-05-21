@@ -2,7 +2,7 @@
     <landing-layout>
         <hero picture="/asset/disk.jpg" overlay="bg-purple-100 opacity-50" id="home" centered href="#" class="mt-0">
             <template #title>
-                Ditty tune
+                Do Duet
             </template>
             <template #subtitle>
                 Share your musical creation,
@@ -232,7 +232,7 @@ export default {
                 `3 <sup><small>rd</small></sup>`,
             ]
         }
-    }
+    },
 }
 </script>
 

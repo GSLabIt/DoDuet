@@ -14,7 +14,10 @@ class CreateOpinionsTable extends Migration
     public function up()
     {
         Schema::create('opinions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid("id")->primary();
+            $table->foreignUuid("sender_id")->references("id")->on("users")->cascadeOnDelete();
+            $table->foreignUuid("track_id")->references("id")->on("tracks")->cascadeOnDelete();
+            $table->unsignedFloat("vote", 3, 1);
             $table->timestamps();
         });
     }

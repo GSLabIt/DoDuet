@@ -8,10 +8,13 @@ import { InertiaProgress } from '@inertiajs/progress';
 import 'boxicons/css/animations.css'
 import 'boxicons/css/transformations.css'
 import 'boxicons/css/boxicons.min.css'
+import Cleave from 'vue-cleave-component';
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 const el = document.getElementById('app');
 
-createApp({
+const app = createApp({
     render: () =>
         h(InertiaApp, {
             initialPage: JSON.parse(el.dataset.page),
@@ -20,6 +23,10 @@ createApp({
 })
     .mixin({ methods: { route } })
     .use(InertiaPlugin)
-    .mount(el);
+    .use(Cleave);
+
+app.config.globalProperties.$toast = Toastify;
+app.config.globalProperties.$http = axios;
+app.mount(el);
 
 InertiaProgress.init({ color: '#4B5563' });

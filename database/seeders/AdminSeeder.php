@@ -18,14 +18,14 @@ class AdminSeeder extends Seeder
         $admin = User::firstOrCreate(
             [
                 "name" => "admin",
-                "email" => "admin@thedittytune.com",
+                "email" => "admin@doduet.studio",
             ],
             [
                 "name" => "admin",
-                "email" => "admin@thedittytune.com",
+                "email" => "admin@doduet.studio",
                 "password" => Hash::make("jb38b*IBJEtE6N4owe5#4q%mOs0QoRH!^gCZ1MgFTc^trA3tXG")
             ]
         );
-        $admin->assignRole("admin");
+        $admin->assignRole("super-admin");
     }
 }

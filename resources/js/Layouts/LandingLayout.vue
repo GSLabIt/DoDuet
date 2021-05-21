@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col min-h-screen w-full max-w-screen bg-purple-100" id="home">
-        <header class="flex shadow-md w-full py-2 sticky top-0 inset-x-0 z-40 bg-gray-100 md:px-2 lg:px-0">
+        <header class="flex shadow-md w-full py-2 sticky top-0 inset-x-0 z-40 md:px-2 lg:px-0 bg-gradient-to-t from-purple-100 to-purple-50">
             <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 w-full mx-auto text-primary-600">
                 <inertia-link :href="urls.home"
                               class="hidden w-full transition-all duration-300 items-center justify-center lg:flex col-start-2 col-span-2">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-start-10 col-span-2 grid grid-cols-2 gap-4 text-secondary-800 font-semibold">
                     <inertia-link v-if="$page.props.user" :href="urls.dashboard"
-                                  class="col-span-2 flex items-center justify-center py-4 px-4 transition-all duration-300 hover:bg-pink-100"
+                                  class="flex items-center justify-center rounded py-4 px-4 transition-all duration-300 hover:bg-purple-200"
                                   :class="classIfRouteMatch('dashboard')">
                         Dashboard
                     </inertia-link>
@@ -69,19 +69,19 @@
                     <li class="row-start-2 lg:row-start-1 lg:col-start-4 col-start-1 flex items-center justify-center">
                         <inertia-link href="#"
                                       class="flex w-full items-center justify-center font-semibold py-4">
-                            Contatti
+                            Contacts
                         </inertia-link>
                     </li>
                     <li class="row-start-2 lg:row-start-1 md:col-span-2 lg:col-span-1 lg:col-start-5 flex items-center justify-center">
                         <inertia-link href="#"
                                       class="flex w-full items-center justify-center font-semibold py-4">
-                            Chi siamo
+                            Team
                         </inertia-link>
                     </li>
                     <li class="row-start-2 lg:row-start-1 md:col-span-2 lg:col-span-1 lg:col-start-6 flex items-center justify-center">
                         <inertia-link href="#"
                                       class="flex w-full items-center justify-center font-semibold py-4">
-                            Mappa del sito
+                            Sitemap
                         </inertia-link>
                     </li>
                     <li class="col-start-2 md:row-start-2 lg:row-start-1 md:col-start-8 flex items-center justify-center">
@@ -101,7 +101,7 @@
                 </ul>
                 <ul class="grid grid-cols-2 md:grid-cols-12 text-sm gap-2 text-primary-100">
                     <li class="row-start-4 md:col-span-12 md:row-start-2 lg:col-span-6 lg:row-start-1 col-span-2 flex flex-col md:flex-row items-center justify-center">
-                        <div>&copy; {{ copyright }} thedittytune.com</div>
+                        <div>&copy; {{ copyright }} duduet.studio</div>
                         <span class="mx-2 hidden md:block">|</span>
                         <div class="flex items-center justify-center mb-3 md:mb-0">
                             Made with <span class="bx bxs-heart text-red-500 text-base mx-2"></span> by Ebalo
@@ -110,19 +110,19 @@
                     <li class="md:col-span-4 lg:col-span-2 flex items-center justify-center">
                         <inertia-link href="#"
                                       class="flex w-full items-center justify-center font-semibold py-4">
-                            Informativa privacy
+                            Privacy policy
                         </inertia-link>
                     </li>
                     <li class="md:col-span-4 lg:col-span-2 flex items-center justify-center">
                         <inertia-link href="#"
                                       class="flex w-full items-center justify-center font-semibold py-4">
-                            Informativa cookies
+                            Cookie policy
                         </inertia-link>
                     </li>
                     <li class="md:col-span-4 lg:col-span-2 flex items-center justify-center">
                         <inertia-link href="#"
                                       class="flex w-full items-center justify-center font-semibold py-4">
-                            Termini e condizioni
+                            Terms & Conditions
                         </inertia-link>
                     </li>
                 </ul>
@@ -173,12 +173,6 @@ export default {
         }
     },
     methods: {
-        classIfRouteMatch(route) {
-            return {
-                "font-semibold": this.route().current() === route
-                    || location.href.endsWith(route) // to support indexed routes
-            }
-        },
         toggleMenu() {
             this.menu_open = !this.menu_open
         }
