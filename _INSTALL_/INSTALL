@@ -63,11 +63,19 @@ setupPHP8Repo () {
 
 a2setup () {
     echo -en "[ ]\tEnabling apache mods"
-    a2enmod deflate proxy_fcgi setenvif http2 headers php8.0 ssl rewrite 1>/dev/null 2>&1
+    a2enmod deflate proxy_fcgi setenvif http2 headers php8.0 ssl rewrite proxy proxy_http 1>/dev/null 2>&1
     echo -e "\r[+]\tEnabling apache mods"
     echo -en "[ ]\tEnabling apache configurations"
     a2enconf php8.0-fpm 1>/dev/null 2>&1
     echo -e "\r[+]\tEnabling apache configurations"
+    echo -en "[ ]\tTweaking apache configurations"
+    for line in /etc/php/8.0/fpm/php.ini /etc/php/8.0/cgi/php.ini /etc/php/8.0/cli/php.ini /etc/php/8.0/apache2/php.ini; do
+        sed -i -e '/upload_max_filesize/ c upload_max_filesize = 100G' \
+            -e '/post_max_size = \(On\|Off\)/ c post_max_size = 100G' \
+            -e '/file_uploads = \(On\|Off\)/ c file_uploads = On' \
+            -e '/max_file_uploads/ c max_file_uploads = 1' ${line}
+    done
+    echo -e "\r[+]\tTweaking apache configurations"
     echo -en "[ ]\tRestarting apache"
     systemctl restart apache2 1>/dev/null 2>&1
     echo -e "\r[+]\tRestarting apache"
@@ -135,6 +143,15 @@ createWebsocketUser () {
 EOF
 }
 
+setupInternalHiddenDomain () {
+    if ! grep -q "127.0.0.1 php.internal.doduet.studio" "/etc/hosts"; then
+        echo "127.0.0.1 php.internal.doduet.studio" >> /etc/hosts
+    fi
+    if ! grep -q "127.0.0.1 node.internal.doduet.studio" "/etc/hosts"; then
+        echo "127.0.0.1 node.internal.doduet.studio" >> /etc/hosts
+    fi
+}
+
 if [ "$EUID" -ne 0 ]; then
     echo "This tool must be run as root, please do not run as sudo"
     exit
@@ -159,3 +176,4 @@ a2secure
 nvmInstall
 npmGlobalInstall svgo
 peclInstallEV
+setupInternalHiddenDomain
