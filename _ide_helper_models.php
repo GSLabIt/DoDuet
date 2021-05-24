@@ -14,7 +14,8 @@ namespace App\Models{
 /**
  * App\Models\Genre
  *
- * @property int $id
+ * @property string $id
+ * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
@@ -26,6 +27,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Genre query()
  * @method static \Illuminate\Database\Eloquent\Builder|Genre whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Genre whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Genre whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Genre whereUpdatedAt($value)
  */
 	class Genre extends \Eloquent {}
@@ -35,9 +37,15 @@ namespace App\Models{
 /**
  * App\Models\Invite
  *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Invite newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Invite newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Invite query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Invite whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invite whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invite whereUpdatedAt($value)
  */
 	class Invite extends \Eloquent {}
 }
@@ -46,7 +54,10 @@ namespace App\Models{
 /**
  * App\Models\Opinions
  *
- * @property int $id
+ * @property string $id
+ * @property string $sender_id
+ * @property string $track_id
+ * @property float $vote
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
@@ -58,7 +69,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Opinions query()
  * @method static \Illuminate\Database\Eloquent\Builder|Opinions whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Opinions whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Opinions whereSenderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Opinions whereTrackId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Opinions whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Opinions whereVote($value)
  */
 	class Opinions extends \Eloquent {}
 }
@@ -67,14 +81,25 @@ namespace App\Models{
 /**
  * App\Models\Track
  *
- * @property int $id
+ * @property string $id
+ * @property string $name
+ * @property string $visibility
+ * @property string|null $description
+ * @property string|null $lyric
+ * @property string|null $daw
+ * @property string $duration
+ * @property string $nft_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $owner_id
+ * @property string $genre_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Genre $genre
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $lovedBy
  * @property-read int|null $loved_by_count
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|\Spatie\MediaLibrary\MediaCollections\Models\Media[] $media
+ * @property-read int|null $media_count
  * @property-read \App\Models\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Opinions[] $votes
  * @property-read int|null $votes_count
@@ -82,10 +107,19 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Track query()
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereDaw($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereGenreId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereLyric($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereNftId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereVisibility($value)
  */
-	class Track extends \Eloquent {}
+	class Track extends \Eloquent implements \Spatie\MediaLibrary\HasMedia {}
 }
 
 namespace App\Models{

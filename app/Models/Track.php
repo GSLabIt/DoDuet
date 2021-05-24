@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Track extends Model
+class Track extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity, Uuid, ActivityLogAll;
+    use HasFactory, LogsActivity, Uuid, ActivityLogAll, InteractsWithMedia;
 
     protected $guarded = [];
 

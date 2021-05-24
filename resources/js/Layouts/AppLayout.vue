@@ -2,7 +2,7 @@
     <div>
         <jet-banner/>
 
-        <div class="min-h-screen bg-purple-100 text-primary-100">
+        <div class="min-h-screen bg-purple-100 text-primary-200">
             <nav class="bg-gradient-to-t from-purple-100 to-purple-50 border-b border-secondary-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,15 +10,16 @@
                         <div class="flex">
                             <!-- Logo -->
                             <div class="flex-shrink-0 flex items-center">
-                                <inertia-link :href="urls.global.dashboard">
+                                <inertia-link :href="urls.dashboard">
                                     <jet-application-mark class="block h-9 w-auto"/>
                                 </inertia-link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="urls.global.dashboard" :active="routeMatch('dashboard')">
-                                    Dashboard
+                                <jet-nav-link v-for="(elem, id) of navigation" :href="elem.url" :key="id"
+                                              :active="routeMatch(elem.match)">
+                                    {{ elem.label }}
                                 </jet-nav-link>
                             </div>
                         </div>
@@ -170,8 +171,9 @@
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
                      class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link :href="urls.global.dashboard" :active="routeMatch('dashboard')">
-                            Dashboard
+                        <jet-responsive-nav-link v-for="(elem, id) of navigation" :href="elem.url" :key="id"
+                                      :active="routeMatch(elem.match)">
+                            {{ elem.label }}
                         </jet-responsive-nav-link>
                     </div>
 
@@ -258,7 +260,7 @@
             <!-- Page Heading -->
             <header class="bg-gradient-to-t from-purple-200 to-purple-100 shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <h2 class="font-semibold text-xl text-primary-400 leading-tight">
+                    <h2 class="font-semibold text-xl text-primary-300 leading-tight">
                         <slot name="header"></slot>
                     </h2>
                 </div>
@@ -283,7 +285,7 @@ import JetDropdown from '@/Jetstream/Dropdown'
 import JetDropdownLink from '@/Jetstream/DropdownLink'
 import JetNavLink from '@/Jetstream/NavLink'
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
-import { adminUrls } from '@/Composition/urls'
+import globalUrls from '@/Composition/urls'
 
 export default {
     components: {
@@ -296,12 +298,29 @@ export default {
     },
     setup() {
         return {
-            ...adminUrls()
+            ...globalUrls()
         }
     },
     data() {
         return {
             showingNavigationDropdown: false,
+            navigation: [
+                {
+                    label: "Dashboard",
+                    url: this.urls.dashboard,
+                    match: "dashboard"
+                },
+                {
+                    label: "Leaderboard",
+                    url: this.urls.dashboard,
+                    match: "leaderboard"
+                },
+                {
+                    label: "Weekly election",
+                    url: this.urls.dashboard,
+                    match: "election"
+                },
+            ]
         }
     },
     methods: {

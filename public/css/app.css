@@ -2198,6 +2198,10 @@ select {
 	--tw-text-opacity: 1;
 	color: rgba(223, 135, 180, var(--tw-text-opacity));
 }
+.text-primary-300 {
+	--tw-text-opacity: 1;
+	color: rgba(53, 35, 74, var(--tw-text-opacity));
+}
 .text-primary-600 {
 	--tw-text-opacity: 1;
 	color: rgba(24, 9, 43, var(--tw-text-opacity));
@@ -2420,6 +2424,10 @@ html {
 	--tw-bg-opacity: 1;
 	background-color: rgba(233, 213, 255, var(--tw-bg-opacity));
 }
+.hover\:bg-pink-50:hover {
+	--tw-bg-opacity: 1;
+	background-color: rgba(253, 242, 248, var(--tw-bg-opacity));
+}
 .hover\:bg-primary-300:hover {
 	--tw-bg-opacity: 1;
 	background-color: rgba(53, 35, 74, var(--tw-bg-opacity));
@@ -2461,6 +2469,10 @@ html {
 }
 .hover\:shadow-md:hover {
 	--tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.hover\:shadow-lg:hover {
+	--tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 .hover\:grayscale-0:hover {

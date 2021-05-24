@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TrackUserTable extends Migration
+class CreateTrackUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class TrackUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('track_user', function (Blueprint $table) {
-            $table->foreignUuid("user_id")->primary();
-            $table->foreignUuid("track_id")->primary();
+        Schema::create('track_users', function (Blueprint $table) {
+            $table->foreignUuid("user_id");
+            $table->foreignUuid("track_id");
+
+            $table->primary(["user_id", "track_id"]);
         });
     }
 
@@ -26,6 +28,6 @@ class TrackUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('favourites');
+        Schema::dropIfExists('track_users');
     }
 }

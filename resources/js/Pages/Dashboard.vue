@@ -5,7 +5,13 @@
         </template>
 
         <div class="bg-purple-200 overflow-hidden shadow-xl border border-secondary-100 rounded-lg p-4">
-            <h2 class="text-xl font-semibold">Your tracks</h2>
+            <h2 class="text-xl font-semibold flex items-center">
+                Your tracks
+                <inertia-link href="" class="ml-auto border border-secondary-100 rounded text-base px-3 py-2 bg-pink-100
+                    hover:bg-pink-50 hover:shadow-lg transition-all duration-500 select-none">
+                    Upload track
+                </inertia-link>
+            </h2>
             <data-table :data="tracks" class="mt-6">
                 <template v-slot:item.stars.total="{value}">
                     <div class="flex items-center justify-center">
