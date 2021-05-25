@@ -32,7 +32,7 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "@lottiefiles/lottie-player": "^1.0.3",
+        "@lottiefiles/lottie-player": "^1.0.4",
         "boxicons": "^2.0.7",
         "crypto-browserify": "^3.12.0",
         "https-browserify": "^1.0.0",

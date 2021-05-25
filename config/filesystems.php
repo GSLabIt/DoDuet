@@ -42,6 +42,12 @@ return [
             'visibility' => 'public',
         ],
 
+        "tracks" => [
+            "driver" => "local",
+            "root" => storage_path("app/tracks"),
+            "visibility" => "private",
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

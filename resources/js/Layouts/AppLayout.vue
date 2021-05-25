@@ -3,7 +3,7 @@
         <jet-banner/>
 
         <div class="min-h-screen bg-purple-100 text-primary-200">
-            <nav class="bg-gradient-to-t from-purple-100 to-purple-50 border-b border-secondary-100">
+            <nav class="bg-gradient-to-t from-purple-100 to-purple-50 border-b border-secondary-100 select-none">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -258,7 +258,7 @@
             </nav>
 
             <!-- Page Heading -->
-            <header class="bg-gradient-to-t from-purple-200 to-purple-100 shadow" v-if="$slots.header">
+            <header class="bg-gradient-to-t from-purple-200 to-purple-100 shadow select-none" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <h2 class="font-semibold text-xl text-primary-300 leading-tight">
                         <slot name="header"></slot>

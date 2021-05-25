@@ -1,4 +1,9 @@
 import {ref, reactive} from "vue"
+import checkers from "@/Composition/Web3Interactions/checkers";
+import getters from "@/Composition/Web3Interactions/getters";
+import handlers from "@/Composition/Web3Interactions/handlers";
+import utilities from "@/Composition/Web3Interactions/utilities";
+import eventSubscribers from "@/Composition/Web3Interactions/eventSubscribers";
 
 export default function web3Interactions() {
 	const address = ref(null),
@@ -17,77 +22,58 @@ export default function web3Interactions() {
 			json: require("./contracts/Crowdsale.json").abi
 		},
 		melody: {
-			address: "0x09F3DE4aD57C19fEA645d182fe840BBBec96034D",
+		    // address with ico
+			//address: "0x09F3DE4aD57C19fEA645d182fe840BBBec96034D",
+            // address without ico
+            address: "0x9e5e7C3770Dd2b711905E4A306506ecedBeea1f3",
 			json: require("./contracts/Melody.json").abi
 		},
 		track: {
-			address: "0x2506b72ac9175F8A16D9451feF72dc83899ed2B9",
+            // address with ico
+            // address: "0xacfe41BC539A463eEac895c85c3Aab2c2640FD55",
+            // address without ico
+            address: "0x665e8D25E06Be4faf6c04faa21692851169Bb5Ec",
 			json: require("./contracts/Track.json").abi
 		}
 	}
 
 	// Checkers
-	const isSupportedWallet = () => {
-		return window.ethereum || window.BinanceChain
-	}
+    const {
+	    isSupportedWallet
+	} = checkers()
 
 	// Getters
-	const getWalletProvider = () => {
-		return window.ethereum ? "ethereum" : "BinanceChain"
-	}
-
-	const getContract = (web3, contract) => {
-		return new web3.eth.Contract(
-			contracts[contract].json,
-			contracts[contract].address
-		)
-	}
-
-	const getBaseTxUrl = () => {
-		return +window.ethereum.networkVersion === 97 ? "https://testnet.bscscan.com/tx/" : "https://bscscan.com/tx/"
-	}
-
-	const getICOContract = (web3) => { return getContract(web3, "ico") }
-	const getMelodyContract = (web3) => { return getContract(web3, "melody") }
-	const getTrackContract = (web3) => { return getContract(web3, "track") }
+	const {
+	    getTrackContract,
+        getMelodyContract,
+        getICOContract,
+        getBaseTxUrl,
+        getWalletProvider,
+    } = getters(contracts)
 
 	// Handlers
-	const handleChainChange = () => {
-		location.reload()
-	}
+    const {
+	    handleAccountChange,
+        handleAccountRequest,
+        handleChainId,
+        handleChainChange,
+    } = handlers(address, network)
 
-	const handleAccountChange = () => {
-		address.value = window[getWalletProvider()].selectedAddress
-	}
+    // utility
+    const {
+	    divideDecimals,
+        dropDecimals,
+        prettyNumber,
+        prettyDecimals,
+    } = utilities()
 
-	const handleAccountRequest = (error, result) => {
-		if(!error) { address.value = result[0] }
-		else { console.error(error) }
-	}
+    // Event subscriber
+    const {
+	    subscribeICOEvents,
+        subscribeTrackRegistrationEvent,
+    } = eventSubscribers(getters(contracts))
 
-	const handleChainId = (error, id) => {
-		if(!error) {
-			network.id = id
-
-			if(+id === 97) {
-				network.testnet = true
-				network.unsupported = false
-				network.mainnet = false
-			}
-			else if(+id === 56) {
-				network.testnet = false
-				network.unsupported = false
-				network.mainnet = true
-			}
-			else {
-				network.testnet = false
-				network.unsupported = true
-				network.mainnet = false
-			}
-		}
-		else { console.error(error) }
-	}
-
+    // methods
 	const connect = (web3) => {
 		return Promise.all([
 			web3.eth.requestAccounts(handleAccountRequest),
@@ -97,56 +83,48 @@ export default function web3Interactions() {
 		})
 	}
 
-	// Helpers
-	const prettyNumber = (x) => {
-		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-	}
+	const checkAllowance = async (web3) => {
+        const melody = getMelodyContract(web3),
+            track = getTrackContract(web3)
 
-	const dropDecimals = (number, decimals = 18) => {
-		const str = number.toString()
-		return str.substr(0, str.length - decimals)
-	}
+        if(BigInt(await melody.methods.allowance(address.value, track.options.address).call() / 1e18) < BigInt(1500)) {
+            let res = await melody.methods
+                .approve(track.options.address, `1${"0".repeat(36)}`)
+                .send({
+                    from: address.value,
+                    gas: 50000,
+                    gasPrice: `10${"0".repeat(9)}`
+                })
 
-	const prettyDecimals = (number, decimals = 18) => {
-		const str = number.toString()
-		return `${prettyNumber(str.substr(0, str.length - decimals)) || 0}.${str.substr(str.length - decimals) || 0}`
-	}
-
-	const divideDecimals = (number, decimals = 18) => {
-		const str = number.toString(),
-			decimal = str.substr(str.length - decimals)
-		return `${str.substr(0, str.length - decimals) || 0}.${(decimal !== "0".repeat(decimals) ? decimal : 0) || 0}`
-	}
-
-	// Event subscriber
-	const subscribeICOEvents = (web3, buy_function = (err, res) => {}, finalize_function = (err, res) => {}, redeem_function = (err, res) => {}) => {
-		const ico = getICOContract(web3)
-		ico.events.Buy({}, buy_function)
-		ico.events.Finalize({}, finalize_function)
-		ico.events.Redeemed({}, redeem_function)
-	}
+            return res.status || false
+        }
+        return true
+    }
 
 	return {
-		isSupportedWallet,
+        isSupportedWallet,
 
-		getWalletProvider,
-		getBaseTxUrl,
-		getICOContract,
-		getMelodyContract,
-		getTrackContract,
+        subscribeICOEvents,
+        subscribeTrackRegistrationEvent,
 
-		handleChainChange,
-		handleAccountChange,
-		handleAccountRequest,
-		handleChainId,
+        getWalletProvider,
+        getBaseTxUrl,
+        getICOContract,
+        getMelodyContract,
+        getTrackContract,
+
+        handleChainChange,
+        handleAccountChange,
+        handleAccountRequest,
+        handleChainId,
+
+        dropDecimals,
+        prettyNumber,
+        prettyDecimals,
+        divideDecimals,
+
 		connect,
-
-		dropDecimals,
-		prettyNumber,
-		prettyDecimals,
-		divideDecimals,
-
-		subscribeICOEvents,
+        checkAllowance,
 
 		address,
 		network,

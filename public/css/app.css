@@ -1528,6 +1528,9 @@ select {
 	    -ms-user-select: none;
 	        user-select: none;
 }
+.resize-y {
+	resize: vertical;
+}
 .list-inside {
 	list-style-position: inside;
 }
@@ -2065,6 +2068,9 @@ select {
 	font-size: 2.25rem;
 	line-height: 2.5rem;
 }
+.text-\[6rem\] {
+	font-size: 6rem;
+}
 .font-medium {
 	font-weight: 500;
 }
@@ -2221,6 +2227,10 @@ select {
 .text-red-400 {
 	--tw-text-opacity: 1;
 	color: rgba(248, 113, 113, var(--tw-text-opacity));
+}
+.text-secondary-300 {
+	--tw-text-opacity: 1;
+	color: rgba(218, 115, 168, var(--tw-text-opacity));
 }
 .underline {
 	text-decoration: underline;

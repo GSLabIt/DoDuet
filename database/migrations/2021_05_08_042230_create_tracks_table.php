@@ -21,10 +21,12 @@ class CreateTracksTable extends Migration
             $table->longText("lyric")->nullable();
             $table->text("daw")->nullable();
             $table->string("duration");                 // in minutes and secs xx:xx
-            $table->string("nft_id", 100)->index()->unique();       // Integer representation of the nft (nft id) represented as string as it is a uint256
+            // Integer representation of the nft (nft id) represented as string as it is a uint256, kept unique on the backend
+            $table->string("nft_id", 100)->nullable()->index();
             $table->timestamps();
 
             $table->foreignUuid("owner_id")->references("id")->on("users");
+            $table->foreignUuid("creator_id")->references("id")->on("users");
             $table->foreignUuid("genre_id")->references("id")->on("genres");
 
             // m2m user

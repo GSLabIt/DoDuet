@@ -11,6 +11,7 @@ import 'boxicons/css/boxicons.min.css'
 import Cleave from 'vue-cleave-component';
 import Toastify from 'toastify-js'
 import "toastify-js/src/toastify.css"
+import "@lottiefiles/lottie-player";
 
 const el = document.getElementById('app');
 

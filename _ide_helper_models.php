@@ -88,13 +88,15 @@ namespace App\Models{
  * @property string|null $lyric
  * @property string|null $daw
  * @property string $duration
- * @property string $nft_id
+ * @property string|null $nft_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $owner_id
+ * @property string $creator_id
  * @property string $genre_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \App\Models\User $creator
  * @property-read \App\Models\Genre $genre
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $lovedBy
  * @property-read int|null $loved_by_count
@@ -107,6 +109,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Track query()
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereCreatorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereDaw($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Track whereDuration($value)

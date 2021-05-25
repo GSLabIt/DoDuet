@@ -33,7 +33,19 @@ mix.js('resources/js/app.js', 'public/js').vue({ version: 3 })
         "postcss-import",
         "tailwindcss",
         "vue",
-        "vue-loader"
+        "vue-loader",
+        "@lottiefiles/lottie-player",
+        "boxicons",
+        "crypto-browserify",
+        "https-browserify",
+        "os-browserify",
+        "pusher-js",
+        "socket.io-client",
+        "stream-browserify",
+        "stream-http",
+        "toastify-js",
+        "vue-cleave-component",
+        "web3"
     ]);
 
 if (mix.inProduction()) {

@@ -24,6 +24,11 @@ class Track extends Model implements HasMedia
         return $this->belongsTo(User::class, "owner_id");
     }
 
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, "creator_id");
+    }
+
     public function genre(): BelongsTo
     {
         return $this->belongsTo(Genre::class);
