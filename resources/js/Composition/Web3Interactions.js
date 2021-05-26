@@ -34,7 +34,11 @@ export default function web3Interactions() {
             // address without ico
             address: "0x665e8D25E06Be4faf6c04faa21692851169Bb5Ec",
 			json: require("./contracts/Track.json").abi
-		}
+		},
+        election: {
+            address: "0xADaC452d05206f3266f9228ab0E6B1fAd3605C40",
+            json: require("./contracts/TrackElection.json").abi
+        }
 	}
 
 	// Checkers
@@ -46,6 +50,7 @@ export default function web3Interactions() {
 	const {
 	    getTrackContract,
         getMelodyContract,
+        getElectionContract,
         getICOContract,
         getBaseTxUrl,
         getWalletProvider,
@@ -112,6 +117,7 @@ export default function web3Interactions() {
         getICOContract,
         getMelodyContract,
         getTrackContract,
+        getElectionContract,
 
         handleChainChange,
         handleAccountChange,
