@@ -23,7 +23,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, InteractsWithMedia;
-    use LogsActivity, Uuid, ActivityLogAll, CausesActivity, HasRoles, Billable;
+    use LogsActivity, Uuid, ActivityLogAll, CausesActivity, HasRoles;
 
     /**
      * The attributes that are mass assignable.
