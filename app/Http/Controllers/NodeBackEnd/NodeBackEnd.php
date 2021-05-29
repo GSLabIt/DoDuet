@@ -12,12 +12,12 @@ class NodeBackEnd
 
     protected static function get(string $url, array $parameters): Response
     {
-        return Http::get($url, $parameters);
+        return Http::timeout(60)->get($url, $parameters);
     }
 
     protected static function post(string $url, array $parameters): Response
     {
-        return Http::post($url, $parameters);
+        return Http::timeout(60)->post($url, $parameters);
     }
 
     public static function endpoints(): Endpoints
