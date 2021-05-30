@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Track;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -19,11 +20,15 @@ class TrackController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        // TODO: implement featured tracks and show up to 3 featured tracks randomly extracted
+        return response()->json([
+            "featured_tracks" => [],
+            "latest_tracks" => Track::orderBy("created_at")->limit(9)->get(["nft_id"])
+        ]);
     }
 
     /**

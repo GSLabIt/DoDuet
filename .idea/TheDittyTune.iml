@@ -166,6 +166,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/psr-http-message-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ratchet/rfc6455" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/evenement/evenement" />
+      <excludeFolder url="file://$MODULE_DIR$/public" />
+      <excludeFolder url="file://$MODULE_DIR$/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/bootstrap" />
+      <excludeFolder url="file://$MODULE_DIR$/_INSTALL_" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

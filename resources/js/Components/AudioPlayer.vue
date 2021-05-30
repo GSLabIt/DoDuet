@@ -1,19 +1,22 @@
 <template>
-    <div class="player w-full max-w-full overflow-hidden shadow-xl border border-purple-300" :class="{'bg-purple-200': featured, 'bg-purple-100': !featured}">
+    <div class="player w-full max-w-full overflow-hidden shadow-xl border border-purple-300"
+         :class="{'bg-purple-200': featured, 'bg-purple-100': !featured}">
         <div class="progress text-primary-100" ref="progress">
             <div class="flex flex-col items-end">
                 <div class="album-info w-full" v-if="currentTrack">
                     <div class="flex items-center">
                         <div class="album-info__name truncate">{{ currentTrack.artist }}</div>
                         <div class="flex items-center justify-center ml-auto cursor-pointer p-1" @click="favorite">
-                            <i class='bx bxs-heart text-3xl transition-all duration-300' :class="{ 'text-red-500' : currentTrack.favorited }"></i>
+                            <i class='bx bxs-heart text-3xl transition-all duration-300'
+                               :class="{ 'text-red-500' : currentTrack.favorited }"></i>
                         </div>
                     </div>
 
                     <div class="album-info__track truncate mt-2">{{ currentTrack.name }}</div>
                 </div>
                 <div class="flex items-center w-full text-primary-100 mt-6">
-                    <div v-if="previous" class="flex items-center justify-center mr-3 cursor-pointer" @click="prevTrack">
+                    <div v-if="previous" class="flex items-center justify-center mr-3 cursor-pointer"
+                         @click="prevTrack">
                         <i class='bx bx-skip-previous-circle text-2xl'></i>
                     </div>
                     <div class="flex items-center justify-center cursor-pointer" @click="play">
@@ -39,9 +42,19 @@
 
 <script>
 import StarRating from "./StarRating";
+import toaster from "@/Composition/toaster";
+import web3Interactions from "@/Composition/Web3Interactions";
+import Web3 from "web3";
+
 export default {
     name: "AudioPlayer",
     components: {StarRating},
+    setup() {
+        return {
+            ...toaster(),
+            ...web3Interactions(),
+        }
+    },
     props: {
         next: {
             type: Boolean,
@@ -58,6 +71,10 @@ export default {
         featured: {
             type: Boolean,
             default: false,
+        },
+        nft_id: {
+            type: String,
+            required: true,
         }
     },
     data() {
@@ -69,80 +86,7 @@ export default {
             duration: null,
             currentTime: null,
             isTimerPlaying: false,
-            tracks: [
-                {
-                    name: "Mekanın Sahibi aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                    artist: "Norm Ender",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/1.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/1.mp3",
-                    url: "https://www.youtube.com/watch?v=z3wAjJXbYzA",
-                    favorited: false
-                },
-                {
-                    name: "Everybody Knows",
-                    artist: "Leonard Cohen",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/2.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/2.mp3",
-                    url: "https://www.youtube.com/watch?v=Lin-a2lTelg",
-                    favorited: true
-                },
-                {
-                    name: "Extreme Ways",
-                    artist: "Moby",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/3.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/3.mp3",
-                    url: "https://www.youtube.com/watch?v=ICjyAe9S54c",
-                    favorited: false
-                },
-                {
-                    name: "Butterflies",
-                    artist: "Sia",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/4.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/4.mp3",
-                    url: "https://www.youtube.com/watch?v=kYgGwWYOd9Y",
-                    favorited: false
-                },
-                {
-                    name: "The Final Victory",
-                    artist: "Haggard",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/5.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/5.mp3",
-                    url: "https://www.youtube.com/watch?v=0WlpALnQdN8",
-                    favorited: true
-                },
-                {
-                    name: "Genius ft. Sia, Diplo, Labrinth",
-                    artist: "LSD",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/6.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/6.mp3",
-                    url: "https://www.youtube.com/watch?v=HhoATZ1Imtw",
-                    favorited: false
-                },
-                {
-                    name: "The Comeback Kid",
-                    artist: "Lindi Ortega",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/7.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/7.mp3",
-                    url: "https://www.youtube.com/watch?v=me6aoX0wCV8",
-                    favorited: true
-                },
-                {
-                    name: "Overdose",
-                    artist: "Grandson",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/8.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/8.mp3",
-                    url: "https://www.youtube.com/watch?v=00-Rl3Jlx-o",
-                    favorited: false
-                },
-                {
-                    name: "Rag'n'Bone Man",
-                    artist: "Human",
-                    cover: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/img/9.jpg",
-                    source: "https://raw.githubusercontent.com/muhammederdem/mini-player/master/mp3/9.mp3",
-                    url: "https://www.youtube.com/watch?v=L3wKzyIN1yk",
-                    favorited: false
-                }
-            ],
+            tracks: [],
             currentTrack: null,
             currentTrackIndex: 0,
             transitionName: null
@@ -150,12 +94,63 @@ export default {
     },
     methods: {
         play() {
-            if (this.audio.paused) {
-                this.audio.play();
-                this.isTimerPlaying = true;
+            if (this.audio.src) {
+                if (this.audio.paused) {
+                    this.audio.play();
+                    this.isTimerPlaying = true;
+                } else {
+                    this.audio.pause();
+                    this.isTimerPlaying = false;
+                }
             } else {
-                this.audio.pause();
-                this.isTimerPlaying = false;
+                let _this = this
+                this.$http.get(route("nft_access", {nft_id: this.nft_id}))
+                    .then(v => {
+                        this.audio.src = v.data.url
+
+                        this.audio.onended = () => {
+                            if (this.isSupportedWallet()) {
+                                let net = this.getWalletProvider()
+                                this.web3 = new Web3(window[net]);
+
+                                if (window[net].isConnected) {
+                                    // retrieve the wallet address to let the user vote
+                                    _this.web3.eth.requestAccounts((error, result) => {
+                                        _this.handleAccountRequest(error, result)
+                                        _this.$http.get(route("nft_vote", {
+                                            nft_id: _this.nft_id,
+                                            address: _this.address,
+                                        }))
+                                            .then(v => {
+                                                let data = v.data
+                                                if (data.submitted) {
+                                                    _this.successToast("Track vote request submitted, waiting for response")
+                                                        .finalize()
+                                                        .show()
+                                                } else {
+                                                    _this.infoToast("You can now vote this track")
+                                                        .finalize()
+                                                        .show()
+                                                }
+                                            })
+                                            .catch(err => {
+                                                _this.errorToast(err.response.data.error)
+                                                    .finalize()
+                                                    .show()
+                                            })
+                                    })
+                                    return
+                                }
+                            }
+                            _this.errorToast("Unable to vote, no wallet connected")
+                                .finalize()
+                                .show()
+                        };
+                        this.play()
+                    })
+                    .catch(err => {
+                        this.errorToast(err.response.data.error).finalize().show()
+                    })
             }
         },
         generateTime() {
@@ -186,14 +181,14 @@ export default {
             let maxduration = this.audio.duration;
             let position = x - (progress.offsetLeft + progress.offsetParent.offsetLeft);
             let percentage = (100 * position) / progress.offsetWidth;
-            console.log(position, percentage, progress.offsetWidth, x, progress.offsetLeft)
-            console.log(progress)
+
             if (percentage > 100) {
                 percentage = 100;
             }
             if (percentage < 0) {
                 percentage = 0;
             }
+
             this.barWidth = percentage + "%";
             this.circleLeft = percentage + "%";
             this.audio.currentTime = (maxduration * percentage) / 100;
@@ -247,29 +242,26 @@ export default {
     },
     created() {
         let vm = this;
-        this.currentTrack = this.tracks[0];
-        this.audio = new Audio();
-        this.audio.src = this.currentTrack.source;
-        this.audio.ontimeupdate = function () {
-            vm.generateTime();
-        };
-        this.audio.onloadedmetadata = function () {
-            vm.generateTime();
-        };
-        this.audio.onended = function () {
-            vm.nextTrack();
-            this.isTimerPlaying = true;
-        };
 
-        // this is optional (for preload covers)
-        for (let index = 0; index < this.tracks.length; index++) {
-            const element = this.tracks[index];
-            let link = document.createElement('link');
-            link.rel = "prefetch";
-            link.href = element.cover;
-            link.as = "image"
-            document.head.appendChild(link)
-        }
+        this.$http.get(route("nft_reference", {nft_id: this.nft_id})).then(v => {
+            let data = v.data
+
+            this.tracks.push({
+                name: data.name,
+                artist: data.artist,
+                source: data.duration,
+                favorited: false
+            })
+
+            this.currentTrack = this.tracks[0];
+            this.audio = new Audio();
+            this.audio.ontimeupdate = function () {
+                vm.generateTime();
+            };
+            this.audio.onloadedmetadata = function () {
+                vm.generateTime();
+            };
+        })
     }
 }
 </script>

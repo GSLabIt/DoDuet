@@ -9,19 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class VoteRequest extends Model
+class ListeningRequest extends Model
 {
     use HasFactory, LogsActivity, Uuid, ActivityLogAll;
 
     protected $guarded = [];
 
-    protected $casts = [
-        "confirmed" => "boolean",
-    ];
-
-    public function voter(): BelongsTo
+    public function listener(): BelongsTo
     {
-        return $this->belongsTo(User::class, "voter_id");
+        return $this->belongsTo(User::class, "listener_id");
     }
 
     public function track(): BelongsTo {

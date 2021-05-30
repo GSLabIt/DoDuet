@@ -36,7 +36,7 @@ class Track extends Model implements HasMedia
 
     public function votes(): HasMany
     {
-        return $this->hasMany(Opinions::class);
+        return $this->hasMany(Votes::class);
     }
 
     public function lovedBy(): BelongsToMany

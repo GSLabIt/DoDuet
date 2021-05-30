@@ -15,9 +15,7 @@ class DashboardController extends Controller
      */
     public function index(): Response|ResponseFactory
     {
-        return inertia("Dashboard", [
-
-        ]);
+        return inertia("Dashboard", []);
     }
 
     public function walletRequired(): Response|ResponseFactory

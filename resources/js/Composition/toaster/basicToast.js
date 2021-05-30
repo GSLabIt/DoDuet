@@ -1,6 +1,6 @@
 export default class BasicToast {
     #text = ""
-    #duration = 3000
+    #duration = 5000
     #destination = ""
     #newWindow = false
     #close = false
@@ -11,6 +11,8 @@ export default class BasicToast {
     #onClick = function(){} // Callback after click
     #toaster = null
     #toast = null
+    #escapeMarkup = false
+    #className = "!flex items-center text-lg"
 
     constructor(toaster) {
         this.#toaster = toaster
@@ -115,6 +117,8 @@ export default class BasicToast {
             backgroundColor: this.#backgroundColor,
             stopOnFocus: this.#stopOnFocus,
             onClick: this.#onClick,
+            escapeMarkup: this.#escapeMarkup,
+            className: this.#className,
         })
 
         return this

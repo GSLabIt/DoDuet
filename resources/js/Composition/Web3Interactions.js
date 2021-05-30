@@ -89,12 +89,16 @@ export default function web3Interactions() {
 	}
 
 	const checkAllowance = async (web3) => {
-        const melody = getMelodyContract(web3),
-            track = getTrackContract(web3)
+        const track = getTrackContract(web3)
+	    return await _checkAllowance(web3, track.options.address)
+    }
 
-        if(BigInt(await melody.methods.allowance(address.value, track.options.address).call() / 1e18) < BigInt(1500)) {
+    const _checkAllowance = async (web3, addr) => {
+        const melody = getMelodyContract(web3)
+
+        if(BigInt(await melody.methods.allowance(address.value, addr).call() / 1e18) < BigInt(1500)) {
             let res = await melody.methods
-                .approve(track.options.address, `1${"0".repeat(36)}`)
+                .approve(addr, `1${"0".repeat(36)}`)
                 .send({
                     from: address.value,
                     gas: 50000,

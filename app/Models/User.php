@@ -76,8 +76,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->belongsToMany(Track::class);
     }
 
-    function opinions(): HasMany
+    function votes(): HasMany
     {
-        return $this->hasMany(Opinions::class, "sender_id");
+        return $this->hasMany(Votes::class, "sender_id");
     }
 }

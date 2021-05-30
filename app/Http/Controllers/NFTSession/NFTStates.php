@@ -10,9 +10,17 @@ class NFTStates extends NFTSession
         return self::get(self::$PLAYING);
     }
 
+    public function getTempUrl(): string {
+        return self::get(self::$TMP_URL);
+    }
+
     public function hasPlaying(): bool
     {
         return self::has(self::$PLAYING);
+    }
+
+    public function hasTempUrl(): bool {
+        return self::has(self::$TMP_URL);
     }
 
     public function hasNotPlaying(): bool

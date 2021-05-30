@@ -96,6 +96,34 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\ListeningRequest
+ *
+ * @property string $id
+ * @property string $election_id
+ * @property string $listener_id
+ * @property string $track_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Election $election
+ * @property-read \App\Models\User $listener
+ * @property-read \App\Models\Track $track
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest whereElectionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest whereListenerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest whereTrackId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ListeningRequest whereUpdatedAt($value)
+ */
+	class ListeningRequest extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Track
  *
  * @property string $id
@@ -120,6 +148,8 @@ namespace App\Models{
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|\Spatie\MediaLibrary\MediaCollections\Models\Media[] $media
  * @property-read int|null $media_count
  * @property-read \App\Models\User $owner
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
+ * @property-read int|null $votes_count
  * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Track query()
@@ -175,6 +205,8 @@ namespace App\Models{
  * @property-read int|null $tokens_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
  * @property-read int|null $tracks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
+ * @property-read int|null $votes_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -228,6 +260,7 @@ namespace App\Models{
  * @property string $election_id
  * @property string $voter_id
  * @property string $track_id
+ * @property bool $confirmed
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
@@ -238,6 +271,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest whereConfirmed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest whereElectionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VoteRequest whereId($value)

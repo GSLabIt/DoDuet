@@ -7,6 +7,7 @@ class NFTSession
     public static string $PLAYING = "playing";
     public static string $PLAYING_TIME = "playing_url_elapse_time";
     public static string $NFT_ID = "nft_working_id";
+    public static string $TMP_URL = "nft_temporary_listening_url";
 
     protected static function get(string $variable) {
         return session($variable);

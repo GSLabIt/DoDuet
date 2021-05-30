@@ -15,35 +15,32 @@
         </hero>
         <container id="tracks">
             <grid :cols="3" gap="xl">
-                <audio-player id="featured-0" featured></audio-player>
-                <audio-player id="featured-1" featured></audio-player>
-                <audio-player id="featured-2" featured></audio-player>
-                <audio-player id="latest-0"></audio-player>
-                <audio-player id="latest-1"></audio-player>
-                <audio-player id="latest-2"></audio-player>
-                <audio-player id="latest-3"></audio-player>
-                <audio-player id="latest-4"></audio-player>
-                <audio-player id="latest-5"></audio-player>
-                <audio-player id="latest-6"></audio-player>
-                <audio-player id="latest-7"></audio-player>
-                <audio-player id="latest-8"></audio-player>
+                <div class="col-span-full">
+                    <audio-player v-for="(elem, id) of featured_tracks" :id="`featured-${id}`" featured :key="id"
+                                  :nft_id="elem.nft_id"></audio-player>
+                </div>
+                <audio-player v-for="(elem, id) of tracks" :id="`latest-${id}`" :key="id"
+                    :nft_id="elem.nft_id"></audio-player>
             </grid>
             <inertia-link class="flex items-center justify-center text-xl font-semibold text-primary-100 mt-8 p-4"
-                href="#">
+                          href="#">
                 Show more
             </inertia-link>
         </container>
-        <hero picture="/asset/register-now.jpg" overlay="bg-purple-100 opacity-50" centered href="#">
+        <hero v-if="registered_users > 0" picture="/asset/register-now.jpg" overlay="bg-purple-100 opacity-50" centered href="#">
             <template #title>
-                Join now to receive 3 free upload credit!
+                Join us now and receive a welcome prize of 300 MELD!
+            </template>
+            <template #subtitle>
+                Only {{ registered_users }} welcome prizes still available!
             </template>
             <template #button>Join now!</template>
         </hero>
-        <container id="how-it-works">
+        <container id="how-it-works" :class="registered_users === 0 ? 'mt-8' : ''">
             <div v-for="(elem, id) of how_to_box" :key="id"
                  class="grid grid-cols-8 gap-6 py-8 transition-all duration-500 filter grayscale hover:grayscale-0">
                 <div class="col-span-3 rounded-lg max-h-64 h-64"
-                    :class="{
+                     :class="{
                         'col-start-1': id % 2 === 0,
                         'col-start-6': id % 2 === 1
                     }">
@@ -75,7 +72,7 @@
                 Invite your friends
             </template>
             <template #subtitle>
-                And receive 2 upload credit for each completed registration!
+                And receive {{ referral_prize }} MELD for each completed registration!
             </template>
             <template #button>Join now!</template>
         </hero>
@@ -84,14 +81,14 @@
                 Prices & Plans
             </div>
             <p class="text-center mb-8">
-                If you are addicted to the music most of the The Ditty Tune will be free for you.<br>
-                Yes, this is because for each completely listened and voted track you receive 0.25 upload credit.<br>
-                The only thing you have to do to refill your upload credits is to listen to the others production and
+                If you are addicted to the music most of DoDuet will be free for you.<br>
+                Yes, this is because for each completely listened and voted track you receive 20 MELD.<br>
+                The only thing you have to do to refill your upload capability is to listen to the others production and
                 vote them.
             </p>
-            <grid :cols="4">
+            <grid :cols="2">
                 <div v-for="(elem, id) of plans" :key="id"
-                              class="border border-secondary-100 p-4 rounded-lg shadow-md overflow-hidden relative flex
+                     class="border border-secondary-100 p-4 rounded-lg shadow-md overflow-hidden relative flex
                                     flex-col transform-gpu transition-all duration-300 bg-purple-100">
                     <div class="text-center mb-2">
                         <h4 class="text-xl font-semibold border-secondary-100 pb-1">
@@ -104,11 +101,11 @@
                         <div v-if="elem.credits" class="text-lg">{{ elem.credits }} upload credits</div>
                         <div v-else-if="elem.time" class="text-lg">{{ elem.time }}</div>
                         <div class="mt-2">
-                            <strong>@ {{ elem.cost }} €</strong>
+                            <strong>@ {{ elem.cost }} MELD</strong>
                         </div>
                     </div>
                     <div class="flex items-center justify-center">
-                        <inertia-link class="mt-2 rounded border border-purple-400 text-primary-100 transition-all duration-300 hover:shadow-md hover:bg-purple-200 p-3
+                        <inertia-link v-if="elem.url" class="mt-2 rounded border border-purple-400 text-primary-100 transition-all duration-300 hover:shadow-md hover:bg-purple-200 p-3
                             cursor-pointer" :href="elem.url">
                             Buy now
                         </inertia-link>
@@ -139,60 +136,21 @@ export default {
         Hero,
         LandingLayout
     },
-    props: {},
+    props: {
+        referral_prize: Number,
+        registered_users: Number,
+    },
     data: () => ({
         plans: [
             {
-                title: "Upload credits mini",
-                pack: true,
-                credits: 2,
-                cost: 0.99,
-                url: "",
+                title: "Track registration",
+                pack: false,
+                cost: 150,
             },
             {
-                title: "Upload credits basic",
-                pack: true,
-                credits: 4.5,
-                cost: 1.99,
-                url: "",
-            },
-            {
-                title: "Upload credits large",
-                pack: true,
-                credits: 7.5,
-                cost: 2.99,
-                url: "",
-            },
-            {
-                title: "Upload credits xl",
-                pack: true,
-                credits: 11.5,
-                cost: 3.99,
-                url: "",
-            },
-            {
-                title: "Unlimited upload mini",
-                time: "2 weeks",
-                cost: 2.99,
-                url: "",
-            },
-            {
-                title: "Unlimited upload basic",
-                time: "1 month",
-                cost: 3.99,
-                url: "",
-            },
-            {
-                title: "Unlimited upload large",
-                time: "6 month",
-                cost: 9.99,
-                url: "",
-            },
-            {
-                title: "Unlimited upload xl",
-                time: "1 year",
-                cost: 14.99,
-                url: "",
+                title: "Weekly leaderboard participation",
+                pack: false,
+                cost: 100,
             },
         ],
         how_to_box: [
@@ -219,10 +177,12 @@ export default {
             },
         ],
         prizes: [
-            "10.00 € + 10 track upload",
-            "5.00 € + 5 track upload",
-            "3 track upload"
-        ]
+            "37.5% of total participation fee",
+            "25.0% of total participation fee",
+            "12.5% of total participation fee"
+        ],
+        tracks: [],
+        featured_tracks: [],
     }),
     computed: {
         prizePosition() {
@@ -233,6 +193,12 @@ export default {
             ]
         }
     },
+    created() {
+        this.$http.get(route("nft_index")).then(value => {
+            this.featured_tracks = value.data.featured_tracks
+            this.tracks = value.data.latest_tracks
+        })
+    }
 }
 </script>
 

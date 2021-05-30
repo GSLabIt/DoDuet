@@ -36,7 +36,7 @@ class PublicController extends Controller
                 "daw" => $track->daw,
                 "genre" => $track->genre->name,
                 "duration" => $track->duration,
-                "creator" => $track->creator->name,
+                "artist" => $track->creator->name,
             ]);
         }
         abort(404);
@@ -62,16 +62,32 @@ class PublicController extends Controller
                 ->addMinutes($duration->minute)
                 ->addSeconds($duration->second);
 
-            NFTSession::update()->trackAccessedRequested($url_elapse_time, $nft_id);
+            $tmp_url = $track->getFirstMedia()->getTemporaryUrl($url_elapse_time);
+
+            // save in session the url elapse time, the nft_id and the temporary url
+            NFTSession::update()->trackAccessedRequested($url_elapse_time, $nft_id, $tmp_url);
 
             return response()->json([
                 "track_duration" => $track->duration,
-                "url" => $track->getFirstMedia()
-                    ->getTemporaryUrl($url_elapse_time),
+                "url" => $tmp_url,
                 "url_lifetime" => $duration->format("H:i:s")
             ]);
         }
-        abort(404, "Track already requested");
+        elseif (!is_null($track) &&
+            // in case a request cannot be made again check if it is still valid and use that data
+            NFTSession::states()->hasTempUrl() &&
+            NFTSession::times()->isNotPlayingTimeElapsed()
+        ) {
+            $url_lifetime = Carbon::createFromFormat("H:i:s", $track->duration)
+                ->addMinutes(env("TRACK_LISTENING_TIME_MINUTES"))
+                ->addSeconds(env("TRACK_LISTENING_TIME_SECONDS"));
+            return response()->json([
+                "track_duration" => $track->duration,
+                "url" => NFTSession::states()->getTempUrl(),
+                "url_lifetime" => $url_lifetime->format("H:i:s")
+            ]);
+        }
+        return response()->json(["error" => "Track not found or already requested"], 404);
     }
 
     /**
@@ -96,10 +112,18 @@ class PublicController extends Controller
             ]);
         }
 
+        if(auth()->guest()) {
+            return response()->json([
+                "error" => "Vote allowed only to registered users"
+            ], 401);
+        }
+
         // check if track exists
+        $user = auth()->user();
         $user = auth()->user(); /**@var User $user*/
         $track = Track::where("nft_id", $nft_id)->first();
         $time_difference = Carbon::createFromTimestamp(NFTSession::times()->getPlaying())->diffInSeconds(absolute: false);
+
 
         if(!is_null($track)) {
             // Check that the user is not trying to vote his song
@@ -113,20 +137,23 @@ class PublicController extends Controller
             // possibility to vote
             $duration = Carbon::createFromFormat("H:i:s", $track->duration);
             $duration_secs = $duration->hour * 3600 + $duration->minute * 60 + $duration->second;
-            if(NFTSession::canRequestNftVotingAccess($nft_id) && $time_difference >= -$duration_secs) {
 
-                $week_start = now()->startOfWeek(Carbon::MONDAY);
-                $week_end = now()->endOfWeek(Carbon::SUNDAY);
-                $user = auth()->user();
-                /**@var User $user */
-                $election = Election::whereBetween("created_at", [$week_start, $week_end])->first();
+            $user = auth()->user(); /**@var User $user */
 
-                // retrieve an eventually existing vote request
-                $vote_request = VoteRequest::where("election_id", $election->id)
-                    ->where("voter_id", $user->id)
-                    ->where("track_id", $track->id)
-                    ->first();
+            $week_start = now()->startOfWeek(Carbon::MONDAY);
+            $week_end = now()->endOfWeek(Carbon::SUNDAY);
+            $election = Election::whereBetween("created_at", [$week_start, $week_end])->first();
 
+            // retrieve an eventually existing vote request
+            $vote_request = VoteRequest::where("election_id", $election->id)
+                ->where("voter_id", $user->id)
+                ->where("track_id", $track->id)
+                ->first();
+
+            if(
+                (NFTSession::canRequestNftVotingAccess($nft_id) && $time_difference >= -$duration_secs) ||
+                (!is_null($vote_request) && $vote_request->confirmed)
+            ) {
                 // if a vote request does not exist create one and update the states
                 if (is_null($vote_request)) {
                     VoteRequest::create([

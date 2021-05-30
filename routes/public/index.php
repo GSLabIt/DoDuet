@@ -3,9 +3,9 @@
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ServeTracksNFTController;
+use App\Http\Controllers\TrackController;
 
 Route::get('/', [LandingPageController::class, "index"])->name("home");
-
 
 
 Route::prefix("tracks/nft")->group(function() {
@@ -16,5 +16,6 @@ Route::prefix("tracks/nft")->group(function() {
 
     Route::get("/access/{nft_id}", [PublicController::class, "requestNftTrackAccess"])->name("nft_access");
     Route::get("/vote/{nft_id}/{address}", [PublicController::class, "requestNftTrackVote"])->name("nft_vote");
+    Route::get("/latest", [TrackController::class, "index"])->name("nft_index");
     Route::get("/{nft_id}", [PublicController::class, "nftReference"])->name("nft_reference");
 });
