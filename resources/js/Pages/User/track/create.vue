@@ -94,6 +94,16 @@
                     {{ nft_creation_popup.button_text }}
                 </a>
             </div>
+
+            <popup-base v-bind="popup" v-model:open="popup.open">
+                You landed on an unsupported network, this is probably an issue with Metamask default installation,
+                please follow the next guide in order to correctly setup Metamask, switch the network then reload this page.
+                <br>
+                <a href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain"
+                   target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-all duration-500">
+                    Metamask setup
+                </a>
+            </popup-base>
         </popup-base>
     </app-layout>
 </template>
@@ -153,7 +163,12 @@ export default {
                 nft_id: null,
             }),
             track: null,
-            audio: null
+            audio: null,
+            popup: {
+                open: false,
+                title: ""
+            },
+            web3: null,
         }
     },
     methods: {

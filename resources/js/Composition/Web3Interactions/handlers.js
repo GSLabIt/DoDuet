@@ -1,4 +1,11 @@
+import getters from "@/Composition/Web3Interactions/getters";
+
 export default function handlers(address, network) {
+    // Getters
+    const {
+        getWalletProvider,
+    } = getters({})
+
     const handleChainChange = () => {
         location.reload()
     }

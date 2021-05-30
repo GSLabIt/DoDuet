@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\NFTHelper\ElectionsController;
+use App\Http\Controllers\NFTHelper\TimeController;
+use App\Http\Controllers\NFTHelper\VoteController;
+use App\Http\Controllers\NFTHelper\Web3Address;
 use App\Http\Controllers\NFTSession\NFTSession;
 use App\Http\Controllers\NodeBackEnd\NodeBackEnd;
 use App\Models\Election;
+use App\Models\ListeningRequest;
 use App\Models\Track;
 use App\Models\User;
 use App\Models\VoteRequest;
 use Carbon\Carbon;
-use Dotenv\Exception\ValidationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -27,7 +32,7 @@ class PublicController extends Controller
     public function nftReference(string $nft_id): JsonResponse
     {
         $track = Track::where("nft_id", $nft_id)->first();
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "name" => $track->name,
                 "owner" => $track->owner->name,
@@ -45,22 +50,45 @@ class PublicController extends Controller
     /**
      * Return the temporary url and some additional data for the playback of the track
      * @param string $nft_id
+     * @param string|null $address
      * @return JsonResponse
      */
-    public function requestNftTrackAccess(string $nft_id): JsonResponse
+    public function requestNftTrackAccess(string $nft_id, ?string $address): JsonResponse
     {
-        // TODO: Remove this as soon as possible, it is made for testing only!!!!!
-        //NFTSession::update()->globalBypass();
+        // check if address is provided in the given request and is not valid if so, return the error
+        if (!is_null($address) && !Web3Address::validateAddress($address, $err)) {
+            return simpleJSONError($err);
+        }
+
+        if (auth()->guest()) {
+            return simpleJSONError("Listening allowed only to registered users", 401);
+        }
 
         $track = Track::where("nft_id", $nft_id)->first();
-        if(!is_null($track) && NFTSession::canRequestNftTrackAccess()) {
-            $track_time = Carbon::createFromFormat("H:i:s", $track->duration);
-            $duration = $track_time
-                ->addMinutes(env("TRACK_LISTENING_TIME_MINUTES"))
-                ->addSeconds(env("TRACK_LISTENING_TIME_SECONDS"));
-            $url_elapse_time = now()->addHours($duration->hour)
-                ->addMinutes($duration->minute)
-                ->addSeconds($duration->second);
+        if (!is_null($track) && NFTSession::canRequestNftTrackAccess()) {
+            $user = auth()->user(); /**@var User $user */
+            $election = ElectionsController::getCurrentElection();
+
+            // retrieve the current listening request if one exists
+            $listening_request = ListeningRequest::where("election_id", $election->id)
+                ->where("voter_id", $user->id)
+                ->where("track_id", $track->id)
+                ->first();
+
+            // create a new listening request if address is provided and it does not exists
+            if (is_null($listening_request) && !is_null($address)) {
+                ListeningRequest::create([
+                    "election_id" => $election->id,
+                    "voter_id" => $user->id,
+                    "track_id" => $track->id
+                ]);
+
+                VirtualBalanceController::addListeningPrize($address);
+            }
+
+            $track_time = TimeController::getTrackDuration($track);
+            $duration = TimeController::getTrackListeningDuration($track_time);
+            $url_elapse_time = TimeController::getUrlElapseTime($duration);
 
             $tmp_url = $track->getFirstMedia()->getTemporaryUrl($url_elapse_time);
 
@@ -72,77 +100,58 @@ class PublicController extends Controller
                 "url" => $tmp_url,
                 "url_lifetime" => $duration->format("H:i:s")
             ]);
-        }
-        elseif (!is_null($track) &&
+        } elseif (!is_null($track) &&
             // in case a request cannot be made again check if it is still valid and use that data
             NFTSession::states()->hasTempUrl() &&
             NFTSession::times()->isNotPlayingTimeElapsed()
         ) {
-            $url_lifetime = Carbon::createFromFormat("H:i:s", $track->duration)
-                ->addMinutes(env("TRACK_LISTENING_TIME_MINUTES"))
-                ->addSeconds(env("TRACK_LISTENING_TIME_SECONDS"));
+            $url_lifetime = TimeController::getTrackListeningDuration(
+                Carbon::createFromFormat("H:i:s", $track->duration)
+            );
+
             return response()->json([
                 "track_duration" => $track->duration,
                 "url" => NFTSession::states()->getTempUrl(),
                 "url_lifetime" => $url_lifetime->format("H:i:s")
             ]);
         }
-        return response()->json(["error" => "Track not found or already requested"], 404);
+
+        return simpleJSONError("Track not found or already requested", 404);
     }
 
     /**
      * @param string $nft_id
+     * @param string $address
      * @return JsonResponse
      */
     public function requestNftTrackVote(string $nft_id, string $address): JsonResponse
     {
         // check if address is provided in the given request
-        try {
-            Validator::validate(
-                [
-                    "address" => $address
-                ],
-                [
-                    "address" => "required|string|max:42|regex:/0x[A-Fa-f0-9]{40}/"
-                ]);
-        }
-        catch (ValidationException $exception) {
-            return response()->json([
-                "error" => $exception->getMessage()
-            ]);
+        if (!Web3Address::validateAddress($address, $err)) {
+            return simpleJSONError($err);
         }
 
-        if(auth()->guest()) {
-            return response()->json([
-                "error" => "Vote allowed only to registered users"
-            ], 401);
+        if (auth()->guest()) {
+            return simpleJSONError("Vote allowed only to registered users", 401);
         }
 
         // check if track exists
-        $user = auth()->user();
-        $user = auth()->user(); /**@var User $user*/
+        $user = auth()->user(); /**@var User $user */
         $track = Track::where("nft_id", $nft_id)->first();
         $time_difference = Carbon::createFromTimestamp(NFTSession::times()->getPlaying())->diffInSeconds(absolute: false);
 
-
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             // Check that the user is not trying to vote his song
-            if($track->owner_id === $user->id) {
-                return response()->json([
-                    "error" => "Cannot vote your own tracks"
-                ], 401);
+            if (VoteController::currentUserIsOwner($track)) {
+                return simpleJSONError("Cannot vote your own tracks", 401);
             }
 
             // check that the elapsed time is at least equal to the duration of the song before actually requesting the
             // possibility to vote
-            $duration = Carbon::createFromFormat("H:i:s", $track->duration);
+            $duration = TimeController::getTrackDuration($track);
             $duration_secs = $duration->hour * 3600 + $duration->minute * 60 + $duration->second;
 
-            $user = auth()->user(); /**@var User $user */
-
-            $week_start = now()->startOfWeek(Carbon::MONDAY);
-            $week_end = now()->endOfWeek(Carbon::SUNDAY);
-            $election = Election::whereBetween("created_at", [$week_start, $week_end])->first();
+            $election = ElectionsController::getCurrentElection();
 
             // retrieve an eventually existing vote request
             $vote_request = VoteRequest::where("election_id", $election->id)
@@ -150,7 +159,7 @@ class PublicController extends Controller
                 ->where("track_id", $track->id)
                 ->first();
 
-            if(
+            if ( // check that the user can vote the track and that the track was in listening state for at least the track duration
                 (NFTSession::canRequestNftVotingAccess($nft_id) && $time_difference >= -$duration_secs) ||
                 (!is_null($vote_request) && $vote_request->confirmed)
             ) {
@@ -168,7 +177,7 @@ class PublicController extends Controller
                     // send the request to the node backend to trigger the user addition to the vote array
                     $response = NodeBackEnd::endpoints()->sendVoteRequest($address, $nft_id);
 
-                    if($response["status"] !== 200) {
+                    if ($response["status"] !== 200) {
                         logger()->error($response["body"]);
                         return response()->json([
                             "submitted" => false
@@ -192,18 +201,15 @@ class PublicController extends Controller
                 ]);
             }
 
-            return response()->json([
-                "error" => "Voting requirements not respected, listen to the song and try again"
-            ], 401);
+            return simpleJSONError("Voting requirements not respected, listen to the song and try again", 401);
         }
-        return response()->json([
-            "error" => "Track not found"
-        ], 404);
+        return simpleJSONError("Track not found", 404);
     }
 
-    public function recordNftTrackVote(Request $request, string $nft_id) {
+    public function recordNftTrackVote(Request $request, string $nft_id)
+    {
         $track = Track::where("nft_id", $nft_id)->first();
-        if(!is_null($track)) {
+        if (!is_null($track)) {
 
 
             // TODO

@@ -1,5 +1,20 @@
 #!/bin/bash
 
+loopForPsw () {
+    psw=""
+    psw_c="1"
+    psw_match=0
+    while [[ "${psw}" != "${psw_c}" ]]; do
+        if [[ $psw_match == 1 ]]; then
+            echo -e "\nThe passwords does not match try typing them again"
+        fi
+        read -sp "Password: "$'\n' psw
+        read -sp "Retype password: "$'\n' psw_c
+        psw_match=1
+    done
+    echo "$psw"
+}
+
 update () {
     echo -en "[ ]\tUpdating repositories"
     apt update 1>/dev/null 2>&1
@@ -126,30 +141,149 @@ npmGlobalInstall () {
 }
 
 peclInstallEV () {
-    pecl channel-update pecl.php.net
-    echo -e "\n" | pecl install ev 1>/dev/null 2>&1
+    echo -en "[ ]\tUpdating pecl"
+    pecl channel-update pecl.php.net 1>/dev/null 2>&1
+    echo -e "\r[+]\tUpdating pecl"
 
+    echo -en "[ ]\t[PECL] Installing ev"
+    echo -e "\n" | pecl install ev 1>/dev/null 2>&1
+    echo -e "\r[+]\t[PECL] Installing ev"
+
+    echo -en "[ ]\t[PECL] Enabling ev"
     for file in /etc/php/8.0/apache2/php.ini /etc/php/8.0/cgi/php.ini /etc/php/8.0/cli/php.ini /etc/php/8.0/fpm/php.ini; do
         if ! grep -q "extension=ev.so" "$file"; then
             echo "extension=ev.so" >> $file
         fi
     done
+    echo -e "\r[+]\t[PECL] Enabling ev"
 }
 
 createWebsocketUser () {
+    echo -en "[ ]\tCreating laravel-echo user"
     id -u laravel-echo &>/dev/null || useradd laravel-echo
+    echo -e "\r[+]\tCreating laravel-echo user"
+    echo -en "[ ]\tUpgrading maximum file descriptor"
     cat >> /etc/security/limits.d/laravel-echo.conf <<EOF
     laravel-echo    soft    nofile  100000
 EOF
+    echo -e "\r[+]\tUpgrading maximum file descriptor"
 }
 
 setupInternalHiddenDomain () {
+    echo -en "[ ]\tSetting up hidden domains"
     if ! grep -q "127.0.0.1 php.internal.doduet.studio" "/etc/hosts"; then
         echo "127.0.0.1 php.internal.doduet.studio" >> /etc/hosts
     fi
     if ! grep -q "127.0.0.1 node.internal.doduet.studio" "/etc/hosts"; then
         echo "127.0.0.1 node.internal.doduet.studio" >> /etc/hosts
     fi
+    echo -e "\r[+]\tSetting up hidden domains"
+}
+
+installComposer () {
+    echo -en "[ ]\tInstalling composer v2"
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php -r "if (hash_file('sha384', 'composer-setup.php') === '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" 1>/dev/null 2>&1
+    php composer-setup.php --install-dir /usr/bin --filename composer --quiet
+    php -r "unlink('composer-setup.php');"
+    echo -e "\r[+]\tInstalling composer v2"
+}
+
+priotitizeSupervisor () {
+    echo -en "[ ]\tDisabling startup services"
+    systemctl disable apache2 1>/dev/null 2>&1
+    systemctl disable mysql 1>/dev/null 2>&1
+    systemctl disable redis-server 1>/dev/null 2>&1
+    echo -e "\r[+]\tDisabling startup services"
+
+    echo -en "[ ]\tStopping services"
+    service stop apache2 1>/dev/null 2>&1
+    service stop mysql 1>/dev/null 2>&1
+    service stop redis-server 1>/dev/null 2>&1
+    echo -e "\r[+]\tStopping services"
+
+    echo -en "[ ]\tUpdating supervisor configuration"
+    if ! grep -q "\[program:apache2\]" "/etc/supervisor/supervisord.conf"; then
+        echo -e "[program:apache2]\nautorestart=true\ncommand=/usr/sbin/apache2ctl -D FOREGROUND" >> /etc/supervisor/supervisord.conf
+    fi
+    if ! grep -q "\[program:mariadb\]" "/etc/supervisor/supervisord.conf"; then
+        echo -e "[program:mariadb]\nautorestart=true\ncommand=mysqld" >> /etc/supervisor/supervisord.conf
+    fi
+    if ! grep -q "\[program:redis\]" "/etc/supervisor/supervisord.conf"; then
+        echo -e "[program:redis]\nautorestart=true\ncommand=redis-server" >> /etc/supervisor/supervisord.conf
+    fi
+    echo -e "\r[+]\tUpdating supervisor configuration"
+
+    echo -en "[ ]\tEnabling and starting supervisor"
+    systemctl enable supervisor 1>/dev/null 2>&1
+    service supervisor start 1>/dev/null 2>&1
+    echo -e "\r[+]\tEnabling and starting supervisor"
+}
+
+supervisorArtisanWorker () {
+    path=$(cd .. && pwd)
+    echo -en "[ ]\tUpdating supervisor configuration"
+    if ! grep -q "\[program:artisan-queue\]" "/etc/supervisor/supervisord.conf"; then
+        echo -e "[program:artisan-queue]\nautorestart=true\ncommand=php $path/artisan queue:work" >> /etc/supervisor/supervisord.conf
+    fi
+    echo -e "\r[+]\tUpdating supervisor configuration"
+}
+
+supervisorArtisanWorkerQuestion () {
+    while true; do
+        read -p "Do you want to add artisan worker to supervisor? [y/n] " yn
+        case $yn in
+            [Yy]* ) supervisorArtisanWorker; break;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+}
+
+supervisorArtisanSchedule () {
+    path=$(cd .. && pwd)
+    echo -en "[ ]\tUpdating supervisor configuration"
+    if ! grep -q "\[program:artisan-schedule\]" "/etc/supervisor/supervisord.conf"; then
+        echo -e "[program:artisan-schedule]\nautorestart=true\ncommand=php $path/artisan schedule:work" >> /etc/supervisor/supervisord.conf
+    fi
+    echo -e "\r[+]\tUpdating supervisor configuration"
+}
+
+supervisorArtisanScheduleQuestion () {
+    while true; do
+        read -p "Do you want to add artisan schedule to supervisor? [y/n] " yn
+        case $yn in
+            [Yy]* ) supervisorArtisanSchedule; break;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+}
+
+mariadbSecureInstallation () {
+    echo -en "[ ]\tSecuring mariadb installation\n"
+    psw=$(loopForPsw)
+    echo -e "\ny\n$psw\n$psw\ny\ny\ny\ny\n" | mysql_secure_installation 1>/dev/null 2>&1
+    echo -e "\r[+]\tSecuring mariadb installation"
+}
+
+createDatabase () {
+    database_name=$(grep DB_DATABASE ../.env | cut -d "=" -f 2)
+
+    echo -en "[ ]\tCreating database $database_name"
+    mysql -e "create database if not exists $database_name;"
+    echo -e "\r[+]\tCreating database $database_name"
+
+    psw=$(loopForPsw "$database_name database")
+    echo -en "[ ]\tSetting database user password"
+    sed -i -e "s/DB_PASSWORD/DB_PASSWORD=$psw/g" ../.env
+    echo -e "\n6\n$database_name\n$database_name\ny\n$psw\n$psw\nlocalhost\nno\nyes\n0\n" | mysql_setpermission 1>/dev/null 2>&1
+    echo -e "\r[+]\tSetting database user password"
+
+    echo -en "[ ]\tMigrating & seeding database"
+    echo -e "\nyes\n" | php ../artisan migrate 1>/dev/null 2>&1
+    echo -e "\nyes\n" | php ../artisan db:seed 1>/dev/null 2>&1
+    echo -e "\r[+]\tMigrating & seeding database"
 }
 
 if [ "$EUID" -ne 0 ]; then
@@ -165,15 +299,22 @@ setupPHP8Repo
 for pck in php8.0 php8.0-{bcmath,bz2,cgi,cli,common,curl,decimal,dev,enchant,fpm,gd,imagick,inotify,intl,mbstring,mcrypt,mysql,redis,uuid,xml,xmlrpc,xsl,zip}; do
     install $pck
 done
-for pck in sendmail fail2ban mariadb-server redis-server apache2 libapache2-mod-php8.0 libapache2-mod-fcgid libsodium-dev; do
+for pck in sendmail fail2ban mariadb-server redis-server apache2 libapache2-mod-php8.0 libapache2-mod-fcgid libsodium-dev supervisor; do
     install $pck
 done
 for pck in jpegoptim optipng pngquant gifsicle; do
     install $pck
 done
-a2setup
-a2secure
 nvmInstall
 npmGlobalInstall svgo
 peclInstallEV
+installComposer
+a2setup
+a2secure
+createWebsocketUser
 setupInternalHiddenDomain
+mariadbSecureInstallation
+createDatabase
+priotitizeSupervisor
+supervisorArtisanWorkerQuestion
+supervisorArtisanScheduleQuestion

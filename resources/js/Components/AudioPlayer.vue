@@ -104,7 +104,7 @@ export default {
                 }
             } else {
                 let _this = this
-                this.$http.get(route("nft_access", {nft_id: this.nft_id}))
+                this.$http.get(route("nft_access", {nft_id: this.nft_id, address: this.address}))
                     .then(v => {
                         this.audio.src = v.data.url
 
