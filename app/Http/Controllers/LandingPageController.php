@@ -19,7 +19,8 @@ class LandingPageController extends Controller
         $registered_users = User::count() -1;
         return inertia("Welcome", [
             "referral_prize" => (int)env("REFERRAL_PRIZE"),
-            "registered_users" => $registered_users < 1000 ? 1000 - $registered_users : 0
+            "registered_users" => $registered_users < 1000 ? 1000 - $registered_users : 0,
+            "auth" => !auth()->guest()
         ]);
     }
 }

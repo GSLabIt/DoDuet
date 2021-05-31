@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Response;
@@ -15,7 +16,10 @@ class DashboardController extends Controller
      */
     public function index(): Response|ResponseFactory
     {
-        return inertia("Dashboard", []);
+        $user = auth()->user(); /**@var User $user*/
+        return inertia("Dashboard", [
+            "tracks" => $user->tracks
+        ]);
     }
 
     public function walletRequired(): Response|ResponseFactory

@@ -35,8 +35,32 @@
             <div class="progress__time">{{ currentTime }}</div>
         </div>
         <div class="flex items-center justify-center w-full mt-4">
-            <star-rating v-model="stars" :id="id"></star-rating>
+            <star-rating v-model="stars" :id="id" :disabled="stars !== null" @vote="vote"></star-rating>
         </div>
+        <popup-base v-bind="nft_participation_popup" v-model:open="nft_participation_popup.open">
+            <div class="flex flex-col items-center justify-center">
+                <div class="mb-4 text-[6rem] mx-auto text-secondary-300">
+                    <i v-if="!nft_participation_popup.completed && !nft_participation_popup.error"
+                       class='bx bx-loader-alt bx-spin'></i>
+                    <lottie-player v-else-if="nft_participation_popup.completed"
+                                   src="https://assets4.lottiefiles.com/temp/lf20_5tgmik.json"
+                                   background="transparent" speed="1" style="width: 100px; height: 100px;"
+                                   autoplay></lottie-player>
+                    <lottie-player v-else-if="nft_participation_popup.error"
+                                   src="https://assets6.lottiefiles.com/packages/lf20_gu5zubdo.json"
+                                   background="transparent" speed="1" style="width: 100px; height: 100px;"
+                                   autoplay></lottie-player>
+                </div>
+                <h3 class="text-xl font-semibold mx-auto text-center"
+                    :class="{'text-red-500': nft_participation_popup.error}"
+                    v-html="nft_participation_popup.state"></h3>
+                <a v-if="nft_participation_popup.url" :href="nft_participation_popup.url" class="mx-auto border border-secondary-100
+                    rounded bg-purple-100 px-4 py-3 text-lg mt-6 hover:bg-purple-200 hover:shadow-md transition-all duration-500"
+                   target="_blank" rel="noopener">
+                    {{ nft_participation_popup.button_text }}
+                </a>
+            </div>
+        </popup-base>
     </div>
 </template>
 
@@ -45,10 +69,14 @@ import StarRating from "./StarRating";
 import toaster from "@/Composition/toaster";
 import web3Interactions from "@/Composition/Web3Interactions";
 import Web3 from "web3";
+import PopupBase from "@/Components/PopupBase";
 
 export default {
     name: "AudioPlayer",
-    components: {StarRating},
+    components: {
+        PopupBase,
+        StarRating
+    },
     setup() {
         return {
             ...toaster(),
@@ -79,7 +107,7 @@ export default {
     },
     data() {
         return {
-            stars: 0,
+            stars: null,
             audio: null,
             circleLeft: null,
             barWidth: null,
@@ -89,10 +117,91 @@ export default {
             tracks: [],
             currentTrack: null,
             currentTrackIndex: 0,
-            transitionName: null
+            transitionName: null,
+            election: null,
+            web3: null,
+            nft_participation_popup: {
+                open: false,
+                title: "Voting track ${id}",
+                state: "Waiting transaction confirmation",
+                url: null,
+                error: false,
+                button_text: "Explore transaction",
+                completed: false,
+            },
         };
     },
     methods: {
+        async vote(stars) {
+            this.nft_participation_popup = {
+                open: true,
+                title: `Voting NFT ${this.nft_id}`,
+                state: "Waiting transaction confirmation",
+                url: null,
+                error: false,
+                button_text: "Explore transaction",
+                completed: false,
+            }
+
+            const half_stars = stars * 2,
+                election = this.getElectionContract(this.web3)
+
+            let tx;
+
+            this.subscribeElectionVoteEvent(this.web3, async (_, event) => {
+                if (tx === event.transactionHash) {
+                    this.nft_participation_popup.state = `Transaction approved, waiting final confirmation...`
+
+                    let track_id = event.returnValues.track_id,
+                        _this = this
+
+                    this.$http.post(route("nft_track_vote", {nft_id: track_id, address: this.address}), {
+                        half_stars
+                    }).then(res => {
+                        if (res.data.submitted) {
+                            _this.nft_participation_popup.url = null
+                            _this.nft_participation_popup.state = `Track successfully voted`
+                            _this.nft_participation_popup.completed = true
+
+                            setTimeout(() => {
+                                _this.nft_participation_popup.open = false
+                            }, 5000)
+                        } else {
+                            _this.errorToast("Track already voted")
+                                .finalize()
+                                .show()
+                        }
+                    }).catch(err => {
+                        _this.errorToast(err.response.data.error)
+                            .finalize()
+                            .show()
+                    })
+                }
+            })
+
+            try {
+                await election.methods.vote(this.nft_id, half_stars).send({
+                    from: this.address,
+                    gasPrice: `1${"0".repeat(10)}`,
+                    gasLimit: 500000
+                }, (err, tx_hash) => {
+                    if (!err) {
+                        tx = tx_hash
+                        this.nft_participation_popup.state = `Transaction confirmed, check its state clicking on the button below`
+                        this.nft_participation_popup.url = `${this.getBaseTxUrl()}${tx_hash}`
+                    } else {
+                        this.nft_participation_popup.open = false
+                        this.contractErrorToast(err)
+                            .setDuration(10_000)
+                            .finalize()
+                            .show()
+                    }
+                })
+            } catch (e) {
+                this.nft_participation_popup.state = `An error occurred during the transaction, check what happened examining it`
+                this.nft_participation_popup.error = true
+            }
+        },
         play() {
             if (this.audio.src) {
                 if (this.audio.paused) {
@@ -104,53 +213,77 @@ export default {
                 }
             } else {
                 let _this = this
-                this.$http.get(route("nft_access", {nft_id: this.nft_id, address: this.address}))
-                    .then(v => {
-                        this.audio.src = v.data.url
+                if (this.isSupportedWallet()) {
+                    let net = this.getWalletProvider()
+                    this.web3 = new Web3(window[net]);
 
-                        this.audio.onended = () => {
-                            if (this.isSupportedWallet()) {
-                                let net = this.getWalletProvider()
-                                this.web3 = new Web3(window[net]);
+                    if (window[net].isConnected) {
+                        this.connect(this.web3).then(async () => {
+                            if (this.network.unsupported) {
+                                this.errorToast("Unsupported network").finalize().show()
+                            } else {
+                                this.$http.get(route("nft_access", {nft_id: this.nft_id, address: this.address}))
+                                    .then(v => {
+                                        this.audio.src = v.data.url
 
-                                if (window[net].isConnected) {
-                                    // retrieve the wallet address to let the user vote
-                                    _this.web3.eth.requestAccounts((error, result) => {
-                                        _this.handleAccountRequest(error, result)
-                                        _this.$http.get(route("nft_vote", {
-                                            nft_id: _this.nft_id,
-                                            address: _this.address,
-                                        }))
-                                            .then(v => {
-                                                let data = v.data
-                                                if (data.submitted) {
-                                                    _this.successToast("Track vote request submitted, waiting for response")
-                                                        .finalize()
-                                                        .show()
-                                                } else {
-                                                    _this.infoToast("You can now vote this track")
-                                                        .finalize()
-                                                        .show()
+                                        this.audio.onended = () => {
+                                            if (this.isSupportedWallet()) {
+                                                let net = this.getWalletProvider()
+                                                this.web3 = new Web3(window[net]);
+
+                                                if (window[net].isConnected) {
+                                                    // retrieve the wallet address to let the user vote
+                                                    _this.web3.eth.requestAccounts((error, result) => {
+                                                        _this.handleAccountRequest(error, result)
+                                                        _this.$http.get(route("nft_vote", {
+                                                            nft_id: _this.nft_id,
+                                                            address: _this.address,
+                                                        }))
+                                                            .then(v => {
+                                                                let data = v.data
+                                                                if (data.submitted) {
+                                                                    _this.successToast("Track vote request submitted, waiting for response")
+                                                                        .finalize()
+                                                                        .show()
+                                                                } else {
+                                                                    _this.infoToast("You can now vote this track")
+                                                                        .finalize()
+                                                                        .show()
+                                                                }
+                                                                _this.$http.get(route("nft_registered_vote", {nft_id: _this.nft_id}))
+                                                                    .then(v => {
+                                                                        this.stars = +v.data.stars
+                                                                    })
+                                                                    .catch(err => {
+                                                                        this.errorToast(err.response.data.error).finalize().show()
+                                                                    })
+                                                            })
+                                                            .catch(err => {
+                                                                _this.errorToast(err.response.data.error)
+                                                                    .finalize()
+                                                                    .show()
+                                                            })
+                                                    })
+                                                    return
                                                 }
-                                            })
-                                            .catch(err => {
-                                                _this.errorToast(err.response.data.error)
-                                                    .finalize()
-                                                    .show()
-                                            })
+                                            }
+                                            _this.errorToast("Unable to vote, no wallet connected")
+                                                .finalize()
+                                                .show()
+                                        };
+                                        this.play()
                                     })
-                                    return
-                                }
+                                    .catch(err => {
+                                        this.errorToast(err.response.data.error).finalize().show()
+                                    })
                             }
-                            _this.errorToast("Unable to vote, no wallet connected")
-                                .finalize()
-                                .show()
-                        };
-                        this.play()
-                    })
-                    .catch(err => {
-                        this.errorToast(err.response.data.error).finalize().show()
-                    })
+                        })
+                    }
+                    window[net].on("chainChanged", this.handleChainChange)
+                    window[net].on('accountsChanged', this.handleAccountChange)
+                } else {
+                    this.$inertia.visit(route("wallet_required"))
+                }
             }
         },
         generateTime() {
@@ -243,6 +376,26 @@ export default {
     created() {
         let vm = this;
 
+        if (this.isSupportedWallet()) {
+            let net = this.getWalletProvider()
+            this.web3 = new Web3(window[net]);
+
+            if (window[net].isConnected) {
+                this.connect(this.web3).then(async () => {
+                    if (this.network.unsupported) {
+                        this.popup.open = true
+                        this.popup.title = "Unsupported network"
+                    } else {
+                        await this.checkElectionAllowance(this.web3)
+                    }
+                })
+            }
+            window[net].on("chainChanged", this.handleChainChange)
+            window[net].on('accountsChanged', this.handleAccountChange)
+        } else {
+            this.$inertia.visit(route("wallet_required"))
+        }
+
         this.$http.get(route("nft_reference", {nft_id: this.nft_id})).then(v => {
             let data = v.data
 
@@ -262,6 +415,14 @@ export default {
                 vm.generateTime();
             };
         })
+
+        this.$http.get(route("nft_registered_vote", {nft_id: this.nft_id}))
+            .then(v => {
+                this.stars = v.data.stars
+            })
+            .catch(err => {
+                this.errorToast(err.response.data.error).finalize().show()
+            })
     }
 }
 </script>

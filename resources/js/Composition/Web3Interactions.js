@@ -76,6 +76,8 @@ export default function web3Interactions() {
     const {
 	    subscribeICOEvents,
         subscribeTrackRegistrationEvent,
+        subscribeElectionParticipationEvent,
+        subscribeElectionVoteEvent,
     } = eventSubscribers(getters(contracts))
 
     // methods
@@ -110,11 +112,18 @@ export default function web3Interactions() {
         return true
     }
 
+    const checkElectionAllowance = async (web3) => {
+        const election = getElectionContract(web3)
+        return await _checkAllowance(web3, election.options.address)
+    }
+
 	return {
         isSupportedWallet,
 
         subscribeICOEvents,
         subscribeTrackRegistrationEvent,
+        subscribeElectionParticipationEvent,
+        subscribeElectionVoteEvent,
 
         getWalletProvider,
         getBaseTxUrl,
@@ -135,6 +144,7 @@ export default function web3Interactions() {
 
 		connect,
         checkAllowance,
+        checkElectionAllowance,
 
 		address,
 		network,

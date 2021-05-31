@@ -32,6 +32,8 @@ namespace App\Models{
  * @property-read \App\Models\Track|null $firstClassified
  * @property-read \App\Models\Track|null $secondClassified
  * @property-read \App\Models\Track|null $thirdClassified
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
+ * @property-read int|null $tracks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
  * @method static \Illuminate\Database\Eloquent\Builder|Election newModelQuery()
@@ -142,7 +144,11 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $creator
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Election[] $elections
+ * @property-read int|null $elections_count
  * @property-read \App\Models\Genre $genre
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listening
+ * @property-read int|null $listening_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $lovedBy
  * @property-read int|null $loved_by_count
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|\Spatie\MediaLibrary\MediaCollections\Models\Media[] $media

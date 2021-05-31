@@ -17,7 +17,7 @@
             leave-to-class="transform opacity-0 scale-95">
             <div v-show="open"
                     class="absolute z-50 mt-2 rounded-md shadow-lg"
-                    :class="[widthClass, alignmentClasses]"
+                    :class="[widthClass, alignmentClasses, wrapperClasses]"
                     style="display: none;"
                     @click="open = false">
                 <div class="rounded-md" :class="contentClasses">
@@ -41,6 +41,9 @@ export default {
         },
         contentClasses: {
             default: () => ['py-1', 'bg-white']
+        },
+        wrapperClasses: {
+            default: ""
         }
     },
 
@@ -69,12 +72,17 @@ export default {
         },
 
         alignmentClasses() {
-            if (this.align === 'left') {
-                return 'origin-top-left left-0'
-            } else if (this.align === 'right') {
-                return 'origin-top-right right-0'
-            } else {
-                return 'origin-top'
+            switch (this.align) {
+                case "left":
+                    return 'origin-top-left left-0'
+                case "right":
+                    return 'origin-top-right right-0'
+                case "bottom-right":
+                    return "origin-bottom-right right-0"
+                case "center-right":
+                    return "origin-center-right right-0"
+                default:
+                    return 'origin-top'
             }
         },
     }

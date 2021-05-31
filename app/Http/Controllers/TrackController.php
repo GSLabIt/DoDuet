@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\NFTHelper\ElectionsController;
 use App\Models\Track;
 use App\Models\User;
 use Carbon\Carbon;
@@ -9,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Inertia\Response;
 use Inertia\ResponseFactory;
@@ -114,17 +116,6 @@ class TrackController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Track  $track
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Track $track)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Track  $track
@@ -148,13 +139,105 @@ class TrackController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Track  $track
-     * @return \Illuminate\Http\Response
+     * Get the total number of listening request a track has received
+     * @param Track $track
+     * @return JsonResponse
      */
-    public function destroy(Track $track)
+    public function getListeningNumber(Track $track): JsonResponse
     {
-        //
+        return response()->json(["listened" => $track->listening->count()]);
+    }
+
+    /**
+     * Get the total number of votes a track has received
+     * @param Track $track
+     * @return JsonResponse
+     */
+    public function getVotesNumber(Track $track): JsonResponse
+    {
+        return response()->json(["voted" => $track->votes->count()]);
+    }
+
+    /**
+     * Get an average of the total votes a track has received
+     * @param Track $track
+     * @return JsonResponse
+     */
+    public function getAverageVote(Track $track): JsonResponse
+    {
+        $votes_number = $this->getVotesNumber($track)->getData(true)["voted"];
+        $total = 0;
+        foreach ($track->votes as $vote) {
+            $total += $vote->half_stars;
+        }
+        return response()->json(["average" => $total / ($votes_number > 0 ? $votes_number : 1)]);
+    }
+
+    public function isParticipatingInElection(Track $track): JsonResponse
+    {
+        return response()->json(["participating" => ElectionsController::trackParticipateInCurrentElection($track)]);
+    }
+
+    /**
+     * Return the vote given by the current user to the track in the current election
+     * @param Track $track
+     * @return JsonResponse
+     */
+    public function getRegisteredVote(string $nft_id): JsonResponse
+    {
+        $track = Track::where("nft_id", $nft_id)->first();
+
+        if(is_null($track)) {
+            return simpleJSONError("Track not found", 404);
+        }
+
+        // check the user is logged in
+        if (auth()->guest()) {
+            return simpleJSONError("Vote allowed only to registered users", 401);
+        }
+
+        $user = auth()->user(); /**@var User $user*/
+        $election = ElectionsController::getCurrentElection();
+
+        $stars = $track->votes()
+            ->where("voter_id", $user->id)
+            ->where("election_id", $election->id)
+            ->select(["half_stars"])->first();
+
+        if(!is_null($stars)) {
+            $stars /= 2;
+        }
+
+        return response()->json([
+            "stars" => $stars
+        ]);
+    }
+
+    /**
+     * Let the track participate in the current election
+     * @param string $nft_id
+     * @return RedirectResponse|JsonResponse
+     */
+    public function participateToElection(string $nft_id): RedirectResponse|JsonResponse
+    {
+        try {
+            Validator::validate([
+                "nft_id" => $nft_id
+            ], [
+                "nft_id" => "required|numeric|max:100|exists:tracks,nft_id",
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json($e->errors(), 400);
+        }
+
+        $track = Track::where("nft_id", $nft_id)->first();
+        if(!ElectionsController::trackParticipateInCurrentElection($track)) {
+            $election = ElectionsController::getCurrentElection();
+            $election->tracks()->save($track);
+
+            return response()->json(["submitted" => true]);
+        }
+
+        return simpleJSONError("Track already participating to election", 401);
     }
 }

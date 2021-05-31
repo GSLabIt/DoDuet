@@ -81,12 +81,16 @@
         <popup-base v-bind="nft_creation_popup" v-model:open="nft_creation_popup.open">
             <div class="flex flex-col items-center justify-center">
                 <div class="mb-4 text-[6rem] mx-auto text-secondary-300">
-                    <i v-if="!nft_creation_popup.completed" class='bx bx-loader-alt bx-spin'></i>
-                    <lottie-player v-else src="https://assets4.lottiefiles.com/temp/lf20_5tgmik.json"
+                    <i v-if="!nft_creation_popup.completed && !nft_creation_popup.error" class='bx bx-loader-alt bx-spin'></i>
+                    <lottie-player v-else-if="nft_creation_popup.completed" src="https://assets4.lottiefiles.com/temp/lf20_5tgmik.json"
+                                   background="transparent" speed="1" style="width: 100px; height: 100px;"
+                                   autoplay></lottie-player>
+                    <lottie-player v-else-if="nft_creation_popup.error" src="https://assets6.lottiefiles.com/packages/lf20_gu5zubdo.json"
                                    background="transparent" speed="1" style="width: 100px; height: 100px;"
                                    autoplay></lottie-player>
                 </div>
-                <h3 class="text-xl font-semibold mx-auto text-center" :class="{'text-red-500': nft_creation_popup.error}"
+                <h3 class="text-xl font-semibold mx-auto text-center"
+                    :class="{'text-red-500': nft_creation_popup.error}"
                     v-html="nft_creation_popup.state"></h3>
                 <a v-if="nft_creation_popup.url" :href="nft_creation_popup.url" class="mx-auto border border-secondary-100
                     rounded bg-purple-100 px-4 py-3 text-lg mt-6 hover:bg-purple-200 hover:shadow-md transition-all duration-500"
@@ -94,16 +98,16 @@
                     {{ nft_creation_popup.button_text }}
                 </a>
             </div>
+        </popup-base>
 
-            <popup-base v-bind="popup" v-model:open="popup.open">
-                You landed on an unsupported network, this is probably an issue with Metamask default installation,
-                please follow the next guide in order to correctly setup Metamask, switch the network then reload this page.
-                <br>
-                <a href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain"
-                   target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-all duration-500">
-                    Metamask setup
-                </a>
-            </popup-base>
+        <popup-base v-bind="popup" v-model:open="popup.open">
+            You landed on an unsupported network, this is probably an issue with Metamask default installation,
+            please follow the next guide in order to correctly setup Metamask, switch the network then reload this page.
+            <br>
+            <a href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain"
+               target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-700 transition-all duration-500">
+                Metamask setup
+            </a>
         </popup-base>
     </app-layout>
 </template>
@@ -214,6 +218,7 @@ export default {
         },
 
         async submit() {
+            let tx;
             this.nft_creation_popup = {
                 open: true,
                 title: "Uploading track",
@@ -227,45 +232,48 @@ export default {
             this.checkTrackState()
 
             this.subscribeTrackRegistrationEvent(this.web3, async (_, event) => {
-                this.nft_creation_popup.state = `Transaction approved, NFT created, finalizing creation...`
+                if(tx === event.transactionHash) {
+                    this.nft_creation_popup.state = `Transaction approved, NFT created, finalizing creation...`
 
-                let track_id = event.returnValues.track_id,
-                    _this = this
+                    let track_id = event.returnValues.track_id,
+                        _this = this
 
-                this.form.nft_id = track_id
-                this.form.post(route("track-store"), {
-                    onSuccess() {
-                        _this.nft_creation_popup.url = route("nft_reference", {id: track_id})
-                        _this.nft_creation_popup.button_text = "Explore NFT"
-                        _this.nft_creation_popup.state = `NFT creation completed, check your token clicking on the button below,
+                    this.form.nft_id = track_id
+                    this.form.post(route("track-store"), {
+                        onSuccess() {
+                            _this.nft_creation_popup.url = route("nft_reference", {id: track_id})
+                            _this.nft_creation_popup.button_text = "Explore NFT"
+                            _this.nft_creation_popup.state = `NFT creation completed, check your token clicking on the button below,
                             <br>
                             you'll be redirected to the dashboard in a moment`
-                        _this.nft_creation_popup.completed = true
+                            _this.nft_creation_popup.completed = true
 
-                        setTimeout(() => {
-                            _this.$inertia.visit(route("dashboard"))
-                        }, 10000)
-                    }
-                })
-            })
-
-            let result = await this.track.methods.registerTrack(this.address).send({
-                from: this.address,
-            }, (err, tx_hash) => {
-                if (!err) {
-                    this.nft_creation_popup.state = `Transaction confirmed, check its state clicking on the button below`
-                    this.nft_creation_popup.url = `${this.getBaseTxUrl()}${tx_hash}`
-                } else {
-                    this.nft_creation_popup.open = false
-                    this.contractErrorToast(err)
-                        .setDuration(10_000)
-                        .finalize()
-                        .show()
+                            setTimeout(() => {
+                                _this.$inertia.visit(route("dashboard"))
+                            }, 10000)
+                        }
+                    })
                 }
             })
 
-            if (!result.status) {
-                this.nft_creation_popup.state = `An error occurred during the transaction, check what happened examining the transaction`
+            try {
+                let result = await this.track.methods.registerTrack(this.address).send({
+                    from: this.address,
+                }, (err, tx_hash) => {
+                    if (!err) {
+                        tx = tx_hash
+                        this.nft_creation_popup.state = `Transaction confirmed, check its state clicking on the button below`
+                        this.nft_creation_popup.url = `${this.getBaseTxUrl()}${tx_hash}`
+                    } else {
+                        this.nft_creation_popup.open = false
+                        this.contractErrorToast(err)
+                            .setDuration(10_000)
+                            .finalize()
+                            .show()
+                    }
+                })
+            } catch (e) {
+                this.nft_creation_popup.state = `An error occurred during the transaction, check what happened examining it`
                 this.nft_creation_popup.error = true
             }
         },

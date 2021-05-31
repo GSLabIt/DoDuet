@@ -14,7 +14,8 @@
                 :class="{ 'text-center': elem.centered, 'text-left': elem.left, 'text-right': elem.right }">
                 <slot v-if="$slots[`item.${elem.value}`]" :name="`item.${elem.value}`"
                       :value="explodeValue(row, elem.value)"
-                      :index="i"></slot>
+                      :index="i"
+                      :row="row"></slot>
                 <template v-else>
                     {{ explodeValue(row, elem.value) }}
                 </template>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\NFTHelper;
 
 
 use App\Models\Election;
+use App\Models\Track;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -38,5 +39,16 @@ class ElectionsController
     public static function weekEnd(): \Illuminate\Support\Carbon
     {
         return now()->endOfWeek(Carbon::SUNDAY);
+    }
+
+    /**
+     * Check if the provided track is participating in the current election
+     * @param Track $track
+     * @return bool
+     */
+    public static function trackParticipateInCurrentElection(Track $track): bool
+    {
+        $election = self::getCurrentElection();
+        return !is_null($election->tracks->where("id", $track->id)->first());
     }
 }

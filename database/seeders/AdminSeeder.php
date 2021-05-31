@@ -23,7 +23,7 @@ class AdminSeeder extends Seeder
             [
                 "name" => "admin",
                 "email" => "admin@doduet.studio",
-                "password" => Hash::make("jb38b*IBJEtE6N4owe5#4q%mOs0QoRH!^gCZ1MgFTc^trA3tXG")
+                "password" => Hash::make("password") //Hash::make("jb38b*IBJEtE6N4owe5#4q%mOs0QoRH!^gCZ1MgFTc^trA3tXG")
             ]
         );
         $admin->assignRole("super-admin");

@@ -125,6 +125,9 @@ import Grid from "../Components/Grid";
 import StarRating from "../Components/StarRating";
 import AudioPlayer from "../Components/AudioPlayer";
 import AudioPlayerComplete from "../Components/AudioPlayer/AudioPlayerComplete";
+import Web3 from "web3";
+import web3Interactions from "@/Composition/Web3Interactions";
+import toaster from "@/Composition/toaster";
 
 export default {
     components: {
@@ -136,9 +139,16 @@ export default {
         Hero,
         LandingLayout
     },
+    setup() {
+        return {
+            ...web3Interactions(),
+            ...toaster()
+        }
+    },
     props: {
         referral_prize: Number,
         registered_users: Number,
+        auth: Boolean,
     },
     data: () => ({
         plans: [
@@ -183,6 +193,7 @@ export default {
         ],
         tracks: [],
         featured_tracks: [],
+        web3: null,
     }),
     computed: {
         prizePosition() {
@@ -198,6 +209,25 @@ export default {
             this.featured_tracks = value.data.featured_tracks
             this.tracks = value.data.latest_tracks
         })
+
+        if(this.auth) {
+            if (this.isSupportedWallet()) {
+                let net = this.getWalletProvider()
+                this.web3 = new Web3(window[net]);
+
+                if (window[net].isConnected) {
+                    this.connect(this.web3).then(async () => {
+                        if (this.network.unsupported) {
+                            this.errorToast("Unsupported network").finalize().show()
+                        }
+                    })
+                }
+                window[net].on("chainChanged", this.handleChainChange)
+                window[net].on('accountsChanged', this.handleAccountChange)
+            } else {
+                this.$inertia.visit(route("wallet_required"))
+            }
+        }
     }
 }
 </script>

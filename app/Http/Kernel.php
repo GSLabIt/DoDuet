@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\BannedMiddleware;
+use App\Http\Middleware\OwnsTrack;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -67,5 +68,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'banned' => BannedMiddleware::class,
+        "owns-track" => OwnsTrack::class,
     ];
 }

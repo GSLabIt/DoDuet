@@ -29,7 +29,7 @@ export default {
             default: false,
         }
     },
-    emits: ["update:modelValue"],
+    emits: ["update:modelValue", "vote"],
     data() {
         return {
             vote: this.modelValue
@@ -48,6 +48,7 @@ export default {
     watch: {
         vote(n) {
             this.$emit("update:modelValue", n)
+            this.$emit("vote", n)
         }
     }
 }

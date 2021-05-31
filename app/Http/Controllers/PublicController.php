@@ -13,6 +13,7 @@ use App\Models\ListeningRequest;
 use App\Models\Track;
 use App\Models\User;
 use App\Models\VoteRequest;
+use App\Models\Votes;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
@@ -53,8 +54,9 @@ class PublicController extends Controller
      * @param string|null $address
      * @return JsonResponse
      */
-    public function requestNftTrackAccess(string $nft_id, ?string $address): JsonResponse
+    public function requestNftTrackAccess(Request $request, string $nft_id): JsonResponse
     {
+        $address = $request->input("address");
         // check if address is provided in the given request and is not valid if so, return the error
         if (!is_null($address) && !Web3Address::validateAddress($address, $err)) {
             return simpleJSONError($err);
@@ -71,19 +73,17 @@ class PublicController extends Controller
 
             // retrieve the current listening request if one exists
             $listening_request = ListeningRequest::where("election_id", $election->id)
-                ->where("voter_id", $user->id)
+                ->where("listener_id", $user->id)
                 ->where("track_id", $track->id)
                 ->first();
 
             // create a new listening request if address is provided and it does not exists
-            if (is_null($listening_request) && !is_null($address)) {
+            if (is_null($listening_request) && !is_null($address) && $track->owner_id !== $user->id) {
                 ListeningRequest::create([
                     "election_id" => $election->id,
-                    "voter_id" => $user->id,
+                    "listener_id" => $user->id,
                     "track_id" => $track->id
                 ]);
-
-                VirtualBalanceController::addListeningPrize($address);
             }
 
             $track_time = TimeController::getTrackDuration($track);
@@ -138,12 +138,18 @@ class PublicController extends Controller
         // check if track exists
         $user = auth()->user(); /**@var User $user */
         $track = Track::where("nft_id", $nft_id)->first();
-        $time_difference = Carbon::createFromTimestamp(NFTSession::times()->getPlaying())->diffInSeconds(absolute: false);
+        $time_difference = 0;//Carbon::createFromTimestamp(NFTSession::times()->getPlaying())->diffInSeconds(absolute: false);
 
         if (!is_null($track)) {
             // Check that the user is not trying to vote his song
             if (VoteController::currentUserIsOwner($track)) {
                 return simpleJSONError("Cannot vote your own tracks", 401);
+            }
+
+            // TODO: Check that this method actually works
+            // Check that the track participates in the current election
+            if (!ElectionsController::trackParticipateInCurrentElection($track)) {
+                return simpleJSONError("Track not participating in current election", 401);
             }
 
             // check that the elapsed time is at least equal to the duration of the song before actually requesting the
@@ -206,14 +212,70 @@ class PublicController extends Controller
         return simpleJSONError("Track not found", 404);
     }
 
-    public function recordNftTrackVote(Request $request, string $nft_id)
+    /**
+     * @param Request $request
+     * @param string $nft_id
+     * @param string $address
+     * @return JsonResponse
+     */
+    public function recordNftTrackVote(Request $request, string $nft_id, string $address): JsonResponse
     {
-        $track = Track::where("nft_id", $nft_id)->first();
-        if (!is_null($track)) {
-
-
-            // TODO
+        // validate the number of stars
+        try {
+            $request->validate([
+                "half_stars" => "required|numeric|min:1|max:10"
+            ]);
         }
-        abort(404);
+        catch (ValidationException $e) {
+            return response()->json($e->errors());
+        }
+
+        // check the validity of the address
+        if (!Web3Address::validateAddress($address, $err)) {
+            return simpleJSONError($err);
+        }
+
+        // check the user is logged in
+        if (auth()->guest()) {
+            return simpleJSONError("Vote allowed only to registered users", 401);
+        }
+
+        $election = ElectionsController::getCurrentElection();
+        $user = auth()->user(); /**@var User $user*/
+
+        $track = Track::where("nft_id", $nft_id)->first();
+        $vote_request = VoteRequest::where("election_id", $election->id)
+            ->where("voter_id", $user->id)
+            ->where("track_id", $track->id)
+            ->first();
+
+        // check that the user had previously requested the permission to vote this song
+        if(is_null($vote_request)) {
+            return simpleJSONError("Voting requirements not respected, listen to the song and try again", 401);
+        }
+
+        if (!is_null($track)) {
+            // check the presence of the vote
+            $vote = Votes::where("election_id", $election->id)
+                ->where("voter_id", $user->id)
+                ->where("track_id", $track->id)
+                ->first();
+
+            // if vote is not created create it
+            if(is_null($vote)) {
+                Votes::create([
+                    "election_id" => $election->id,
+                    "voter_id" => $user->id,
+                    "track_id" => $track->id,
+                    "half_stars" => $request->input("half_stars")
+                ]);
+
+                VirtualBalanceController::addVotePrize($address);
+
+                return response()->json(["submitted" => true]);
+            }
+            return response()->json(["submitted" => false]);
+        }
+        return simpleJSONError("Track not found", 404);
     }
 }

@@ -12,10 +12,10 @@ class Web3Address
     /**
      * Validate the provided address, returns true if validation passes, $error will contain eventual errors
      * @param string $address
-     * @param string $error
+     * @param $error
      * @return bool
      */
-    public static function validateAddress(string $address, string &$error): bool
+    public static function validateAddress(string $address, &$error): bool
     {
         // Validate the provided address
         $validator = Validator::make(
@@ -26,7 +26,9 @@ class Web3Address
                     "address" => "required|string|max:42|regex:/0x[A-Fa-f0-9]{40}/"
                 ]);
 
-        $error = $validator->errors()->get("address")[0];
+        if(!$validator->passes()) {
+            $error = $validator->errors()->get("address")[0];
+        }
         return $validator->passes();
     }
 }

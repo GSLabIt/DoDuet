@@ -12,8 +12,22 @@ export default function eventSubscribers(getter) {
         track.events.TrackRegistered({}, fn)
     }
 
+    const subscribeElectionParticipationEvent = (web3, fn) => {
+        const election = getter.getElectionContract(web3)
+
+        election.events.NewParticipant({}, fn)
+    }
+
+    const subscribeElectionVoteEvent = (web3, fn) => {
+        const election = getter.getElectionContract(web3)
+
+        election.events.Voted({}, fn)
+    }
+
     return {
         subscribeICOEvents,
         subscribeTrackRegistrationEvent,
+        subscribeElectionParticipationEvent,
+        subscribeElectionVoteEvent,
     }
 }
