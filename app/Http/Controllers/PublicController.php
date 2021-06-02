@@ -180,8 +180,9 @@ class PublicController extends Controller
 
                     VirtualBalanceController::addListeningPrize($address);
 
+                    // TODO: Disable and migrate this as the vote will be centralized
                     // send the request to the node backend to trigger the user addition to the vote array
-                    $response = NodeBackEnd::endpoints()->sendVoteRequest($address, $nft_id);
+                    //$response = NodeBackEnd::endpoints()->sendVoteRequest($address, $nft_id);
 
                     if ($response["status"] !== 200) {
                         logger()->error($response["body"]);

@@ -24,3 +24,4 @@ Route::prefix("track")->group(function() {
     });
 });
 
+Route::get("/token", [DashboardController::class, "retrieveToken"])->name("token-retrieve");

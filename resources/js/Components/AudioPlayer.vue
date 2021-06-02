@@ -70,6 +70,7 @@ import toaster from "@/Composition/toaster";
 import web3Interactions from "@/Composition/Web3Interactions";
 import Web3 from "web3";
 import PopupBase from "@/Components/PopupBase";
+import voting from "@/Composition/voting";
 
 export default {
     name: "AudioPlayer",
@@ -81,6 +82,7 @@ export default {
         return {
             ...toaster(),
             ...web3Interactions(),
+            ...voting()
         }
     },
     props: {
@@ -202,7 +204,7 @@ export default {
                 this.nft_participation_popup.error = true
             }
         },
-        play() {
+        async play() {
             if (this.audio.src) {
                 if (this.audio.paused) {
                     this.audio.play();
@@ -212,78 +214,14 @@ export default {
                     this.isTimerPlaying = false;
                 }
             } else {
-                let _this = this
-                if (this.isSupportedWallet()) {
-                    let net = this.getWalletProvider()
-                    this.web3 = new Web3(window[net]);
+                this.audio.src = await this.requestAccess(this.nft_id, this.address)
 
-                    if (window[net].isConnected) {
-                        this.connect(this.web3).then(async () => {
-                            if (this.network.unsupported) {
-                                this.errorToast("Unsupported network").finalize().show()
-                            } else {
-                                this.$http.get(route("nft_access", {nft_id: this.nft_id, address: this.address}))
-                                    .then(v => {
-                                        this.audio.src = v.data.url
-
-                                        this.audio.onended = () => {
-                                            if (this.isSupportedWallet()) {
-                                                let net = this.getWalletProvider()
-                                                this.web3 = new Web3(window[net]);
-
-                                                if (window[net].isConnected) {
-                                                    // retrieve the wallet address to let the user vote
-                                                    _this.web3.eth.requestAccounts((error, result) => {
-                                                        _this.handleAccountRequest(error, result)
-                                                        _this.$http.get(route("nft_vote", {
-                                                            nft_id: _this.nft_id,
-                                                            address: _this.address,
-                                                        }))
-                                                            .then(v => {
-                                                                let data = v.data
-                                                                if (data.submitted) {
-                                                                    _this.successToast("Track vote request submitted, waiting for response")
-                                                                        .finalize()
-                                                                        .show()
-                                                                } else {
-                                                                    _this.infoToast("You can now vote this track")
-                                                                        .finalize()
-                                                                        .show()
-                                                                }
-                                                                _this.$http.get(route("nft_registered_vote", {nft_id: _this.nft_id}))
-                                                                    .then(v => {
-                                                                        this.stars = +v.data.stars
-                                                                    })
-                                                                    .catch(err => {
-                                                                        this.errorToast(err.response.data.error).finalize().show()
-                                                                    })
-                                                            })
-                                                            .catch(err => {
-                                                                _this.errorToast(err.response.data.error)
-                                                                    .finalize()
-                                                                    .show()
-                                                            })
-                                                    })
-                                                    return
-                                                }
-                                            }
-                                            _this.errorToast("Unable to vote, no wallet connected")
-                                                .finalize()
-                                                .show()
-                                        };
-                                        this.play()
-                                    })
-                                    .catch(err => {
-                                        this.errorToast(err.response.data.error).finalize().show()
-                                    })
-                            }
-                        })
+                this.audio.onended = async () => {
+                    if(this.requestVote(this.nft_id, this.address)) {
+                        this.stars = await this.retrievePreviousVote(this.nft_id)
                     }
-                    window[net].on("chainChanged", this.handleChainChange)
-                    window[net].on('accountsChanged', this.handleAccountChange)
-                } else {
-                    this.$inertia.visit(route("wallet_required"))
-                }
+                };
+                this.play()
             }
         },
         generateTime() {

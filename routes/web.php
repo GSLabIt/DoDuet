@@ -21,11 +21,3 @@ Route::group([], __DIR__ . "/public/index.php");
 Route::middleware(['auth:sanctum', 'verified'])
     ->prefix("dashboard")
     ->group(__DIR__ . "/auth/index.php");
-
-/*
- * test only
- * Route::get("test", function() {
-    return response()->json([
-        "url" => \Illuminate\Support\Facades\URL::temporarySignedRoute("test", now()->addMinutes(10))
-    ]);
-})->name("test");*/
