@@ -1,10 +1,9 @@
-import Web3 from "web3";
 import toaster from "@/Composition/toaster";
 import axios from "axios";
 
 export default function voting() {
     let token = null,
-        toaster = toaster()
+        _toaster = toaster()
 
     const retrieveToken = async () => {
         if (token === null) {
@@ -20,7 +19,7 @@ export default function voting() {
     }
 
     const outputError = (err) => {
-        toaster.errorToast(err.response ? err.response.data.error : err.message).finalize().show()
+        _toaster.errorToast(err.response ? err.response.data.error : err.message).finalize().show()
     }
 
     const requestAccess = async (nft_id, address) => {
@@ -57,11 +56,11 @@ export default function voting() {
         }
 
         if (data.submitted) {
-            toaster.successToast("Track vote request submitted, waiting for response")
+            _toaster.successToast("Track vote request submitted, waiting for response")
                 .finalize()
                 .show()
         } else {
-            toaster.infoToast("You can now vote this track")
+            _toaster.infoToast("You can now vote this track")
                 .finalize()
                 .show()
         }

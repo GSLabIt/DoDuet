@@ -82,7 +82,7 @@ export default {
         return {
             ...toaster(),
             ...web3Interactions(),
-            ...voting()
+            ...voting(),
         }
     },
     props: {
