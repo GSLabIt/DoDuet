@@ -274,11 +274,22 @@ createDatabase () {
     mysql -e "create database if not exists $database_name;"
     echo -e "\r[+]\tCreating database $database_name"
 
+    echo -en "[ ]\tCreating database dolabs (sso)"
+    mysql -e "create database if not exists dolabs;"
+    echo -e "\r[+]\tCreating database dolabs (sso)"
+
     psw=$(loopForPsw "$database_name database")
     echo -en "[ ]\tSetting database user password"
     sed -i -e "s/DB_PASSWORD/DB_PASSWORD=$psw/g" ../.env
     echo -e "\n6\n$database_name\n$database_name\ny\n$psw\n$psw\nlocalhost\nno\nyes\n0\n" | mysql_setpermission 1>/dev/null 2>&1
+    echo -e "\n6\ndolabs\n$database_name\nn\nlocalhost\nno\nyes\n0\n" | mysql_setpermission 1>/dev/null 2>&1
     echo -e "\r[+]\tSetting database user password"
+
+    psw=$(loopForPsw "dolabs (sso) database")
+    echo -en "[ ]\tSetting dolabs (sso) database password"
+    sed -i -e "s/SSO_PASSWORD/SSO_PASSWORD=$psw/g" ../.env
+    echo -e "\n6\n$database_name\n$database_name\ny\n$psw\n$psw\nlocalhost\nno\nyes\n0\n" | mysql_setpermission 1>/dev/null 2>&1
+    echo -e "\r[+]\tSetting dolabs (sso) database password"
 
     echo -en "[ ]\tMigrating & seeding database"
     echo -e "\nyes\n" | php ../artisan migrate 1>/dev/null 2>&1

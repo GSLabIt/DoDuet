@@ -25,8 +25,8 @@ class CreateTracksTable extends Migration
             $table->string("nft_id", 100)->nullable()->index();
             $table->timestamps();
 
-            $table->foreignUuid("owner_id")->references("id")->on("users");
-            $table->foreignUuid("creator_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("SSO_DATABASE") . ".users");
+            $table->foreignUuid("creator_id")->references("id")->on(env("SSO_DATABASE") . ".users");
             $table->foreignUuid("genre_id")->references("id")->on("genres");
 
             // m2m user

@@ -12,5 +12,7 @@ class VirtualBalance extends Model
 {
     use HasFactory, LogsActivity, Uuid, ActivityLogAll;
 
+    protected $connection = "sso";
+
     protected $guarded = [];
 }

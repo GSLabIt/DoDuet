@@ -25,6 +25,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, InteractsWithMedia;
     use LogsActivity, Uuid, ActivityLogAll, CausesActivity, HasRoles;
 
+    protected $connection = "sso";
+
     /**
      * The attributes that are mass assignable.
      *

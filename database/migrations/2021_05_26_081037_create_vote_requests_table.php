@@ -16,7 +16,7 @@ class CreateVoteRequestsTable extends Migration
         Schema::create('vote_requests', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->foreignUuid("election_id")->references("id")->on("elections");
-            $table->foreignUuid("voter_id")->references("id")->on("users");
+            $table->foreignUuid("voter_id")->references("id")->on(env("SSO_DATABASE") . ".users");
             $table->foreignUuid("track_id")->references("id")->on("tracks");
             $table->boolean("confirmed")->default(false);
             $table->timestamps();

@@ -13,7 +13,7 @@ class CreateVirtualBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('virtual_balances', function (Blueprint $table) {
+        Schema::connection("sso")->create('virtual_balances', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string("address", 42)->index()->unique();
             $table->unsignedBigInteger("balance")->default(0);
@@ -28,6 +28,6 @@ class CreateVirtualBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('virtual_balances');
+        Schema::connection("sso")->dropIfExists('virtual_balances');
     }
 }
