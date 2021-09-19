@@ -17,10 +17,10 @@
             leave-to-class="transform opacity-0 scale-95">
             <div v-show="open"
                     class="absolute z-50 mt-2 rounded-md shadow-lg"
-                    :class="[widthClass, alignmentClasses, wrapperClasses]"
+                    :class="[widthClass, alignmentClasses]"
                     style="display: none;"
                     @click="open = false">
-                <div class="rounded-md" :class="contentClasses">
+                <div class="rounded-md ring-1 ring-black ring-opacity-5" :class="contentClasses">
                     <slot name="content"></slot>
                 </div>
             </div>
@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from "vue";
+import { defineComponent, onMounted, onUnmounted, ref } from "vue";
 
-export default {
+export default defineComponent({
     props: {
         align: {
             default: 'right'
@@ -41,9 +41,6 @@ export default {
         },
         contentClasses: {
             default: () => ['py-1', 'bg-white']
-        },
-        wrapperClasses: {
-            default: ""
         }
     },
 
@@ -72,19 +69,14 @@ export default {
         },
 
         alignmentClasses() {
-            switch (this.align) {
-                case "left":
-                    return 'origin-top-left left-0'
-                case "right":
-                    return 'origin-top-right right-0'
-                case "bottom-right":
-                    return "origin-bottom-right right-0"
-                case "center-right":
-                    return "origin-center-right right-0"
-                default:
-                    return 'origin-top'
+            if (this.align === 'left') {
+                return 'origin-top-left left-0'
+            } else if (this.align === 'right') {
+                return 'origin-top-right right-0'
+            } else {
+                return 'origin-top'
             }
         },
     }
-}
+})
 </script>

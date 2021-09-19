@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Remember the /api prefix!!!
-
-/*Route::middleware("auth:sanctum")->group(function() {
-    Route::get("/test", function() { return response()->json(["ok" => true]); });
-});
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});*/
+});

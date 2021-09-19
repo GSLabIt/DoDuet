@@ -11,46 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').vue({ version: 3 })
+mix.js('resources/js/app.js', 'public/js').vue()
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
     ])
-    .webpackConfig(require('./webpack.config'))
-    .extract([
-        "@inertiajs/inertia",
-        "@inertiajs/inertia-vue3",
-        "@inertiajs/progress",
-        "@tailwindcss/forms",
-        "@tailwindcss/typography",
-        "@vue/compiler-sfc",
-        "axios",
-        "browser-sync",
-        "browser-sync-webpack-plugin",
-        "laravel-mix",
-        "lodash",
-        "postcss",
-        "postcss-import",
-        "tailwindcss",
-        "vue",
-        "vue-loader",
-        "@lottiefiles/lottie-player",
-        "boxicons",
-        "crypto-browserify",
-        "https-browserify",
-        "os-browserify",
-        "pusher-js",
-        "socket.io-client",
-        "stream-browserify",
-        "stream-http",
-        "toastify-js",
-        "vue-cleave-component",
-        "web3"
-    ]);
+    .webpackConfig(require('./webpack.config'));
 
 if (mix.inProduction()) {
     mix.version();
 }
-
-mix.disableNotifications();
-mix.browserSync('localhost:8000');

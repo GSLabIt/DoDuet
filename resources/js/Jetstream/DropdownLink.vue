@@ -1,21 +1,27 @@
 <template>
     <div>
-        <button type="submit" class="block w-full px-4 py-2 text-sm leading-5 text-primary-100 text-left hover:bg-purple-200 focus:outline-none focus:bg-purple-200 transition" v-if="as == 'button'">
+        <button type="submit" class="block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition" v-if="as == 'button'">
             <slot></slot>
         </button>
 
-        <a :href="href" class="block px-4 py-2 text-sm leading-5 text-primary-100 hover:bg-purple-200 focus:outline-none focus:bg-purple-200 transition" v-else-if="as =='a'">
+        <a :href="href" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition" v-else-if="as =='a'">
             <slot></slot>
         </a>
 
-        <inertia-link :href="href" class="block px-4 py-2 text-sm leading-5 text-primary-100 hover:bg-purple-200 focus:outline-none focus:bg-purple-200 transition" v-else>
+        <Link :href="href" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition" v-else>
             <slot></slot>
-        </inertia-link>
+        </Link>
     </div>
 </template>
 
 <script>
-    export default {
+    import { defineComponent } from 'vue';
+    import { Link } from '@inertiajs/inertia-vue3';
+
+    export default defineComponent({
+        components: {
+            Link,
+        },
         props: ['href', 'as']
-    }
+    })
 </script>
