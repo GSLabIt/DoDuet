@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGenresTable extends Migration
+class CreateUserSegmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateGenresTable extends Migration
      */
     public function up()
     {
-        Schema::create('genres', function (Blueprint $table) {
-            $table->uuid("id")->primary();
-            $table->string("name");
+        Schema::create('user_segments', function (Blueprint $table) {
+            $table->uuid()->primary();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ class CreateGenresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('genres');
+        Schema::dropIfExists('user_segments');
     }
 }
