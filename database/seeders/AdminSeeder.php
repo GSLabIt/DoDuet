@@ -27,5 +27,16 @@ class AdminSeeder extends Seeder
             ]
         );
         $admin->assignRole("super-admin");
+
+        User::firstOrCreate(
+            [
+                "name" => "burn-address",
+                "email" => "info@doduet.studio"
+            ],
+            [
+                "name" => "burn-address",
+                "email" => "info@doduet.studio",
+                "password" => "burn-address-login-disabled"
+            ]);
     }
 }

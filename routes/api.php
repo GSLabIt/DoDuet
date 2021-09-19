@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 // Remember the /api prefix!!!
 
-Route::domain("php.internal.doduet.studio")->group(function() {
+/*Route::middleware("auth:sanctum")->group(function() {
     Route::get("/test", function() { return response()->json(["ok" => true]); });
 });
 
-/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });*/
