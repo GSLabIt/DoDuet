@@ -1,2 +1,3 @@
+Functionalities in the list are not hierarchically linked
 Required functionalities:
-- something to do
+- Something to do
