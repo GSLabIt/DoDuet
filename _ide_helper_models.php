@@ -24,22 +24,22 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities newQuery()
- * @method static \Illuminate\Database\Query\Builder|Functionalities onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities query()
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereController($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities wherePlatform($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereTesting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereUi($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Functionalities whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Functionalities withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Functionalities withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereController($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities wherePlatform($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereTesting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereUi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withoutTrashed()
  */
 	class Functionalities extends \Eloquent {}
 }
@@ -103,24 +103,24 @@ namespace App\Models{
  * @property-read int|null $tokens_count
  * @property-read \App\Models\UserSegments $userSegment
  * @method static \Database\Factories\UserFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions)
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereProfilePhotoPath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereTwoFactorRecoveryCodes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereTwoFactorSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserSegment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User permission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereProfilePhotoPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorRecoveryCodes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUserSegment($value)
  */
 	class User extends \Eloquent {}
 }
@@ -134,12 +134,12 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
- * @method static \Illuminate\Database\Eloquent\Builder|UserSegments newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserSegments newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserSegments query()
- * @method static \Illuminate\Database\Eloquent\Builder|UserSegments whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSegments whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSegments whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereUpdatedAt($value)
  */
 	class UserSegments extends \Eloquent {}
 }
