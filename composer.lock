@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd202dbbc1c9bdef4c31cf6e4748779c",
+    "content-hash": "a5001dd570c04060399776d6bf564b4c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -680,6 +680,68 @@
                 }
             ],
             "time": "2020-11-24T19:55:57+00:00"
+        },
+        {
+            "name": "ebalo/easycrud",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ebalo55/easy-CRUD.git",
+                "reference": "5fda7d029623cd40610472fa83fe0d3216ed0cec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ebalo55/easy-CRUD/zipball/5fda7d029623cd40610472fa83fe0d3216ed0cec",
+                "reference": "5fda7d029623cd40610472fa83fe0d3216ed0cec",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ebalo\\EasyCRUD\\EasyCRUDServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ebalo\\EasyCRUD\\": "src"
+                },
+                "files": [
+                    "src/crud.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ebalo",
+                    "email": "webdev.ebalo@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "homepage": "https://github.com/ebalo/easycrud",
+            "keywords": [
+                "crud",
+                "easycrud",
+                "ebalo",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/ebalo55/easy-CRUD/issues",
+                "source": "https://github.com/ebalo55/easy-CRUD/tree/1.0.2"
+            },
+            "time": "2021-04-28T09:15:28+00:00"
         },
         {
             "name": "egulias/email-validator",
