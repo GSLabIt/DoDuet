@@ -19,7 +19,7 @@ class CreateFunctionalitiesTable extends Migration
             $table->longText("description");
             $table->boolean("controller")->default(false);
             $table->boolean("ui")->default(false);
-            $table->foreingUuid("platform");
+            $table->foreignUuid("platform");
             $table->boolean("testing")->default(true);
             $table->softDeletes();
             $table->timestamps();
