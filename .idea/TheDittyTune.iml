@@ -181,6 +181,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/hedii/laravel-gelf-logger" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/beyondcode/laravel-self-diagnosis" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/geerlingguy/ping" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/octane" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laminas/laminas-diactoros" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
