@@ -36,7 +36,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'roles' => env("SSO_DATABASE") . '.roles',
+        'roles' => 'roles',
 
         /*
          * When using the "HasPermissions" trait from this package, we need to know which
@@ -44,7 +44,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'permissions' => env("SSO_DATABASE") . '.permissions',
+        'permissions' => 'permissions',
 
         /*
          * When using the "HasPermissions" trait from this package, we need to know which
@@ -52,7 +52,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_permissions' => env("SSO_DATABASE") . '.model_has_permissions',
+        'model_has_permissions' => 'model_has_permissions',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -60,7 +60,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles' => env("SSO_DATABASE") . '.model_has_roles',
+        'model_has_roles' => 'model_has_roles',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -68,10 +68,15 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions' => env("SSO_DATABASE") . '.role_has_permissions',
+        'role_has_permissions' => 'role_has_permissions',
     ],
 
     'column_names' => [
+        /*
+         * Change this if you want to name the related pivots other than defaults
+         */
+        'role_pivot_key' => null, //default 'role_id',
+        'permission_pivot_key' => null, //default 'permission_id',
 
         /*
          * Change this if you want to name the related model primary key other than
@@ -82,7 +87,24 @@ return [
          */
 
         'model_morph_key' => 'model_id',
+
+        /*
+         * Change this if you want to use the teams feature and your related model's
+         * foreign key is other than `team_id`.
+         */
+
+        'team_foreign_key' => 'team_id',
     ],
+
+    /*
+     * When set to true the package implements teams using the 'team_foreign_key'. If you want
+     * the migrations to register the 'team_foreign_key', you must set this to true
+     * before doing the migration. If you already did the migration then you must make a new
+     * migration to also add 'team_foreign_key' to 'roles', 'model_has_roles', and
+     * 'model_has_permissions'(view the latest version of package's migration file)
+     */
+
+    'teams' => false,
 
     /*
      * When set to true, the required permission names are added to the exception
@@ -120,17 +142,6 @@ return [
          */
 
         'key' => 'spatie.permission.cache',
-
-        /*
-         * When checking for a permission against a model by passing a Permission
-         * instance to the check, this key determines what attribute on the
-         * Permissions model is used to cache against.
-         *
-         * Ideally, this should match your preferred way of checking permissions, eg:
-         * `$user->can('view-posts')` would be 'name'.
-         */
-
-        'model_key' => 'name',
 
         /*
          * You may optionally indicate a specific cache driver to use for permission and
