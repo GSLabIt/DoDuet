@@ -21,9 +21,9 @@ class Test extends Model
         return $this->hasMany(UserSegments::class);
     }
 
-    public function functionalities(): HasMany
+    public function functionality(): BelongsTo
     {
-        return $this->hasMany(Functionalities::class);
+        return $this->belongsTo(Functionalities::class);
     }
     
     public function questionnaire(): BelongsTo

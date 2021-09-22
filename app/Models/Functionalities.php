@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -16,8 +17,13 @@ class Functionalities extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    function test(): BelongsTo
+    function tests(): HasMany
     {
-        return $this->belongsTo(Test::class);
+        return $this->hasMany(Test::class);
+    }
+
+    function platform(): BelongsTo
+    {
+        return $this->belongsTo(Platforms::class);
     }
 }

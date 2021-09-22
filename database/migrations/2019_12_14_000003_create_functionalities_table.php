@@ -17,10 +17,10 @@ class CreateFunctionalitiesTable extends Migration
             $table->uuid("id")->primary();
             $table->string("name");
             $table->longText("description");
-            $table->boolean("controller")->default(false);
-            $table->boolean("ui")->default(false);
-            $table->foreignUuid("platform");
-            $table->boolean("testing")->default(true);
+            $table->boolean("is_controller")->default(false);
+            $table->boolean("is_ui")->default(false);
+            $table->foreignUuid("platform_id")->references("id")->on("platforms");
+            $table->boolean("is_testing")->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
