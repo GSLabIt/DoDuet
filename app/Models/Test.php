@@ -6,23 +6,22 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class UserSegments extends Model
+class Test extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["created_at", "updated_at"];
 
-    function users(): HasMany
+    public function userSegment(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(UserSegments::class);
     }
 
-    function test(): BelongsTo
+    public function functionalities(): HasMany
     {
-        return $this->belongsTo(Test::class);
+        return $this->hasMany(Functionalities::class);
     }
 }
