@@ -10,29 +10,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Test extends Model
+class TestResult extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["created_at", "updated_at"];
 
-    public function userSegment(): HasMany
+    function user(): BelongsTo
     {
-        return $this->hasMany(UserSegments::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function functionalities(): HasMany
+    function test(): BelongsTo
     {
-        return $this->hasMany(Functionalities::class);
-    }
-    
-    public function questionnaire(): BelongsTo
-    {
-        return $this->belongsTo(Questionnaire::class);
-    }
-    
-    public function testResults(): HasMany
-    {
-        return $this->hasMany(TestResult::class);
+        return $this->belongsTo(Test::class);
     }
 }
