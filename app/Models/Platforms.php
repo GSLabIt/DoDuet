@@ -15,8 +15,8 @@ class Platforms extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    public function functionalities(): HasMany
+    public function platformsFunctionalities(): HasMany
     {
-        return $this->hasMany(Functionalities::class);
+        return $this->hasMany(PlatformsFunctionalities::class);
     }
 }

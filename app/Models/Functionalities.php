@@ -22,8 +22,8 @@ class Functionalities extends Model
         return $this->hasMany(Test::class);
     }
 
-    function platform(): BelongsTo
+    public function platformsFunctionalities(): HasMany
     {
-        return $this->belongsTo(Platforms::class);
+        return $this->hasMany(PlatformsFunctionalities::class);
     }
 }
