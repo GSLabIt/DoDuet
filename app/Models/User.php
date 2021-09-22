@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -66,8 +67,8 @@ class User extends Authenticatable
         return $this->belongsTo(UserSegments::class);
     }
 
-    public function testResults(): BelongsTo
+    public function testResults(): HasMany
     {
-        return $this->belongsTo(TestResult::class);
+        return $this->hasMany(TestResult::class);
     }
 }

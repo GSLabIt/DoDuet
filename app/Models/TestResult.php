@@ -6,6 +6,7 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -15,13 +16,13 @@ class TestResult extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    function users(): HasMany
+    function user(): BelongsTo
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 
-    function tests(): HasMany
+    function test(): BelongsTo
     {
-        return $this->hasMany(Test::class);
+        return $this->belongsTo(Test::class);
     }
 }

@@ -26,8 +26,8 @@ class Test extends Model
         return $this->hasMany(Functionalities::class);
     }
 
-    public function testResults(): BelongsTo
+    public function testResults(): HasMany
     {
-        return $this->belongsTo(TestResult::class);
+        return $this->hasMany(TestResult::class);
     }
 }
