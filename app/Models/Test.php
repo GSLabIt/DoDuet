@@ -6,6 +6,7 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -25,8 +26,8 @@ class Test extends Model
         return $this->hasMany(Functionalities::class);
     }
 
-    public function questionnaires(): HasMany
+    public function questionnaire(): BelongsTo
     {
-        return $this->hasMany(Questionnaire::class);
+        return $this->belongsTo(Questionnaire::class);
     }
 }
