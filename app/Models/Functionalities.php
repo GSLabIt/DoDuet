@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -22,8 +23,8 @@ class Functionalities extends Model
         return $this->hasMany(Test::class);
     }
 
-    public function platformsFunctionalities(): HasMany
+    public function platformsFunctionalities(): BelongsToMany
     {
-        return $this->hasMany(PlatformsFunctionalities::class);
+        return $this->belongsToMany(PlatformsFunctionalities::class);
     }
 }
