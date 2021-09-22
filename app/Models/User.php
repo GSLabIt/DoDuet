@@ -65,4 +65,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserSegments::class);
     }
+
+    public function testResults(): BelongsTo
+    {
+        return $this->belongsTo(TestResult::class);
+    }
 }
