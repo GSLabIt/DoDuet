@@ -14,10 +14,10 @@ class CreateTestsTable extends Migration
     public function up()
     {
         Schema::create('tests', function (Blueprint $table) {
-            $table->uuid("functionality_id");
-            $table->uuid("user_segment");
             $table->uuid("id")->primary();
-            $table->uuid("questionnaire_id");
+            $table->foreignUuid("functionality_id")->references("id")->on("functionalities");
+            $table->foreignUuid("user_segment_id")->references("id")->on("user_segments");
+            $table->uuid("questionnaire_id"); //TODO link as soon as questionnaire model is avaibile and make sure that questionnaire seeder is ordered before this table
             $table->timestamps();
         });
     }
