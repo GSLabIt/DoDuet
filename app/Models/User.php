@@ -76,4 +76,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSettings::class, "owner_id");
     }
+
+    public function tracks(): HasMany
+    {
+        return $this->hasMany(Tracks::class);
+    }
 }
