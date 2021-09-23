@@ -326,22 +326,21 @@ namespace App\Models{
  * @property string $id
  * @property string $owner_id
  * @property string $settings_id
- * @property string $value
+ * @property \App\Models\Settings $setting
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
- * @property-read \App\Models\Settings $setting
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSetting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereValue($value)
  */
 	class UserSettings extends \Eloquent {}
 }

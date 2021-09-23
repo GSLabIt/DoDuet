@@ -17,7 +17,7 @@ class CreateUserSettingsTable extends Migration
             $table->uuid("id")->primary();
             $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
             $table->foreignUuid("settings_id")->references("id")->on("settings")->cascadeOnDelete();
-            $table->longText("value");
+            $table->longText("setting");
 
             $table->timestamps();
         });
