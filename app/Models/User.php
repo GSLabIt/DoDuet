@@ -71,4 +71,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(TestResult::class);
     }
+
+    public function settings(): HasMany
+    {
+        return $this->hasMany(UserSettings::class, "owner_id");
+    }
 }

@@ -17,28 +17,30 @@ namespace App\Models{
  * @property string $id
  * @property string $name
  * @property string $description
- * @property int $controller
- * @property int $ui
- * @property string $platform
- * @property int $testing
+ * @property int $is_controller
+ * @property int $is_ui
+ * @property int $is_testing
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PlatformsFunctionalities[] $platformsFunctionalities
+ * @property-read int|null $platforms_functionalities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
+ * @property-read int|null $tests_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereController($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereIsController($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereIsTesting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereIsUi($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities wherePlatform($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereTesting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereUi($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withoutTrashed()
@@ -79,6 +81,168 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Platforms
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $domain
+ * @property int $is_public
+ * @property int $is_password_protected
+ * @property string|null $password
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PlatformsFunctionalities[] $platformsFunctionalities
+ * @property-read int|null $platforms_functionalities_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereDomain($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereIsPasswordProtected($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereIsPublic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereUpdatedAt($value)
+ */
+	class Platforms extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\PlatformsFunctionalities
+ *
+ * @property string $functionality_id
+ * @property string $platform_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Functionalities $functionality
+ * @property-read \App\Models\Platforms $platform
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities whereFunctionalityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities wherePlatformId($value)
+ */
+	class PlatformsFunctionalities extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Questionnaire
+ *
+ * @property string $id
+ * @property string $link
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
+ * @property-read int|null $tests_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereUpdatedAt($value)
+ */
+	class Questionnaire extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Settings
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $type
+ * @property string|null $allowed_values
+ * @property bool $has_default_value
+ * @property string|null $default_value
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $userSettings
+ * @property-read int|null $user_settings_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereAllowedValues($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDefaultValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereHasDefaultValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereUpdatedAt($value)
+ */
+	class Settings extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Test
+ *
+ * @property string $id
+ * @property string $functionality_id
+ * @property string $user_segment_id
+ * @property string $questionnaire_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Functionalities $functionality
+ * @property-read \App\Models\Questionnaire $questionnaire
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
+ * @property-read int|null $test_results_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegments[] $userSegment
+ * @property-read int|null $user_segment_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereFunctionalityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereQuestionnaireId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUserSegmentId($value)
+ */
+	class Test extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\TestResult
+ *
+ * @property string $id
+ * @property string $tester_id
+ * @property int $utilizations
+ * @property int $has_answered_questionnaire
+ * @property string $test_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Test $test
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereHasAnsweredQuestionnaire($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTestId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTesterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereUtilizations($value)
+ */
+	class TestResult extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property string $id
@@ -93,7 +257,7 @@ namespace App\Models{
  * @property string|null $profile_photo_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $user_segment
+ * @property string $user_segment_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read string $profile_photo_url
@@ -103,6 +267,10 @@ namespace App\Models{
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $settings
+ * @property-read int|null $settings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
+ * @property-read int|null $test_results_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @property-read \App\Models\UserSegments $userSegment
@@ -124,7 +292,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorRecoveryCodes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUserSegment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUserSegmentId($value)
  */
 	class User extends \Eloquent {}
 }
@@ -138,6 +306,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \App\Models\Test $test
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments newModelQuery()
@@ -148,5 +317,32 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereUpdatedAt($value)
  */
 	class UserSegments extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\UserSettings
+ *
+ * @property string $id
+ * @property string $owner_id
+ * @property string $settings_id
+ * @property string $value
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Settings $setting
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereValue($value)
+ */
+	class UserSettings extends \Eloquent {}
 }
 
