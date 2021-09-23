@@ -76,4 +76,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSettings::class, "owner_id");
     }
+
+    public function mentions(): HasMany
+    {
+        return $this->hasMany(Mentions::class, "mentioned_id");
+    }
+
+    public function haveMentioned(): HasMany
+    {
+        return $this->hasMany(Mentions::class, "mentioner_id");
+    }
 }
