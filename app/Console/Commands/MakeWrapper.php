@@ -11,7 +11,7 @@ class MakeWrapper extends Command
      *
      * @var string
      */
-    protected $signature = 'make';
+    protected $signature = 'make:wrapper';
 
     /**
      * The console command description.
