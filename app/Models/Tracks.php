@@ -15,8 +15,13 @@ class Tracks extends Model
 
     protected $guarded = ["updated_at", "created_at"];
 
-    function user(): BelongsTo
+    function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, "owner_id");
+    }
+
+    function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, "creator_id");
     }
 }

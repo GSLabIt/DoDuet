@@ -77,8 +77,13 @@ class User extends Authenticatable
         return $this->hasMany(UserSettings::class, "owner_id");
     }
 
-    public function tracks(): HasMany
+    public function ownedTracks(): HasMany
     {
-        return $this->hasMany(Tracks::class);
+        return $this->hasMany(Tracks::class, "owner_id");
+    }
+
+    public function createdTracks(): HasMany
+    {
+        return $this->hasMany(Tracks::class, "creator_id");
     }
 }
