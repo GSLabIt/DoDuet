@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Wrappers;
+namespace App\Http\Wrappers;
 
+use App\Http\Wrappers\Interfaces\InteractiveWrapper;
+use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
-use function React\Promise\all;
 
-class SettingsWrapper
+class SettingsWrapper implements Wrapper, InteractiveWrapper
 {
     private User $user;
 
     /**
-     * Call method used for operator overloading.
-     * Create the static method init, depending on the argument type this will call initWithUser or initWithRequest
+     * Initialize the class instance, depending on the argument type this will call initWithUser or initWithRequest
      *
-     * @param string $name
-     * @param array $arguments
-     * @return false|mixed|void
+     * @param User|Request $initializer
+     * @return SettingsWrapper|null
      */
-    public static function init(User|Request $initializer)
+    public static function init($initializer): ?SettingsWrapper
     {
         // check if init method was called with an already created user model instance or if it is passed directly
         // from a request
@@ -31,6 +30,7 @@ class SettingsWrapper
             // init a new instance of the class and finally call the method with the request instance
             return (new static)->initWithRequest($initializer);
         }
+        return null;
     }
 
     /**
@@ -72,9 +72,9 @@ class SettingsWrapper
      * Returns the default setting value if no value is defined
      *
      * @param string $setting_name
-     * @return mixed
+     * @return string|int|bool|array|float|null
      */
-    public function get(string $setting_name): mixed
+    public function get(string $setting_name): string|int|bool|array|null|float
     {
         // init the result value to a neutral result
         $value = null;

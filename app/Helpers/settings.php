@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Wrappers\SettingsWrapper;
+use App\Http\Wrappers\SettingsWrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
 

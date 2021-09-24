@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Wrappers\Interfaces\Wrapper;
+
+class {{ class }} implements Wrapper
+{
+    /**
+     * Initialize the class instance
+     *
+     * @param $initializer
+     * @return {{ class }}|null
+     */
+    public static function init($initializer): ?{{ class }}
+    {
+        // TODO: Implement the initialization method.
+        return null;
+    }
+}
