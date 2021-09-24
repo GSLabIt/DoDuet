@@ -129,7 +129,7 @@ class SettingsWrapper implements Wrapper, InteractiveWrapper
      * @param string|int|float|bool|array $value
      * @return bool
      */
-    public function set(string $setting_name, string|int|float|bool|array $value): bool {
+    public function set(string $setting_name, $value): bool {
         // init the result value to a neutral result
         $executed = false;
 

@@ -50,6 +50,36 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Mentions
+ *
+ * @property string $id
+ * @property string $mentioner_id
+ * @property string $mentioned_id
+ * @property string $mentionable_type
+ * @property string $mentionable_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $mentionable
+ * @property-read \App\Models\User $mentioned
+ * @property-read \App\Models\User $mentioner
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionedId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereUpdatedAt($value)
+ */
+	class Mentions extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\PersonalAccessToken
  *
  * @property int $id
@@ -77,6 +107,36 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class PersonalAccessToken extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\PersonalInformations
+ *
+ * @property string $id
+ * @property string $owner_id
+ * @property string|null $alias
+ * @property string|null $mobile
+ * @property string|null $profile_cover_path
+ * @property string|null $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $owner
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereAlias($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereProfileCoverPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereUpdatedAt($value)
+ */
+	class PersonalInformations extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -247,7 +307,6 @@ namespace App\Models{
  *
  * @property string $id
  * @property string $name
- * @property string $surname
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
@@ -257,14 +316,18 @@ namespace App\Models{
  * @property string|null $profile_photo_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $user_segment_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read string $profile_photo_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentioner
+ * @property-read int|null $mentioner_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
+ * @property-read int|null $mentions_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
+ * @property-read \App\Models\PersonalInformations|null $personalInformation
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $settings
@@ -288,11 +351,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereProfilePhotoPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorRecoveryCodes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUserSegmentId($value)
  */
 	class User extends \Eloquent {}
 }
