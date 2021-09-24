@@ -21,10 +21,10 @@ class CreateTracksTable extends Migration
             $table->string('nft_id');
             $table->foreignUuid("owner_id")->references("id")->on("users");
             $table->foreignUuid("creator_id")->references("id")->on("users");
-            $table->uuid('lyric_id')->nullable();
-            $table->uuid('cover_id')->nullable();
-            $table->uuid('skynet_id');
-            $table->uuid('album_id')->nullable();
+            $table->foreignUuid('lyric_id')->nullable();
+            $table->foreignUuid('cover_id')->nullable();
+            $table->foreignUuid('skynet_id');
+            $table->foreignUuid('album_id')->nullable();
             $table->timestamps();
         });
     }
