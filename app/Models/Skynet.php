@@ -6,27 +6,25 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Tracks extends Model
+class Skynet extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["updated_at", "created_at"];
 
-    function owner(): BelongsTo
+    function track(): HasOne
     {
-        return $this->belongsTo(User::class, "owner_id");
+        return $this->hasOne(Tracks::class);
     }
 
-    function creator(): BelongsTo
+    //TODO add function (and link) to and from Cover model after both branches are merged in the main git branch.
+    /*
+    function cover(): HasOne
     {
-        return $this->belongsTo(User::class, "creator_id");
+        return $this->hasOne(Covers::class);
     }
-
-    function skynet(): BelongsTo
-    {
-        return $this->belongsTo(Skynet::class);
-    }
+     */
 }

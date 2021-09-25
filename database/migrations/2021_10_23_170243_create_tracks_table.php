@@ -23,7 +23,7 @@ class CreateTracksTable extends Migration
             $table->foreignUuid("creator_id")->references("id")->on("users");
             $table->foreignUuid('lyric_id')->nullable();
             $table->foreignUuid('cover_id')->nullable();
-            $table->foreignUuid('skynet_id');
+            $table->foreignUuid('skynet_id')->references("id")->on("skynets");
             $table->foreignUuid('album_id')->nullable();
             $table->timestamps();
         });
