@@ -12,7 +12,7 @@ class Elections extends Model
 {
     use HasFactory, LogsActivity, ActivityLogAll;
 
-    protected $guarded = ["started_at", "ended_at", "updated_at", "created_at"];
+    protected $guarded = ["updated_at", "created_at"];
 
     function firstPlace(): BelongsTo
     {
