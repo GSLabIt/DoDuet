@@ -138,6 +138,11 @@ class User extends Authenticatable
         return $this->hasMany(Lyrics::class, "creator_id");
     }
 
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
     public function referral(): HasOne
     {
         return $this->hasOne(Referral::class);
