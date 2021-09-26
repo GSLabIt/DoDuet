@@ -30,6 +30,11 @@ class Elections extends Model
         return $this->belongsTo(User::class, "third_place_id");
     }
 
+    public function listeningRequests(): HasMany
+    {
+        return $this->hasMany(ListeningRequest::class);
+    }
+
     public function votes(): HasMany
     {
         return $this->hasMany(Votes::class);

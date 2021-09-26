@@ -41,6 +41,11 @@ class Tracks extends Model
         return $this->belongsTo(Lyrics::class);
     }
 
+    public function listeningRequests(): HasMany
+    {
+        return $this->hasMany(ListeningRequest::class);
+    }
+
     public function votes(): HasMany
     {
         return $this->hasMany(Votes::class);
