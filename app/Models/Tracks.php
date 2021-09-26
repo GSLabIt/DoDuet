@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Tracks extends Model
@@ -29,14 +30,19 @@ class Tracks extends Model
     {
         return $this->belongsTo(Skynet::class);
     }
-  
+
     function cover(): BelongsTo
     {
         return $this->belongsTo(Covers::class);
     }
-  
+
     function lyric(): BelongsTo
     {
         return $this->belongsTo(Lyrics::class);
+    }
+
+    public function listeningRequests(): HasMany
+    {
+        return $this->hasMany(ListeningRequest::class);
     }
 }
