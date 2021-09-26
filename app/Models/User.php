@@ -87,6 +87,21 @@ class User extends Authenticatable
         return $this->hasMany(Tracks::class, "creator_id");
     }
 
+    public function firstPlaces(): HasMany
+    {
+        return $this->hasMany(Elections::class, "first_place_id");
+    }
+
+    public function secondPlaces(): HasMany
+    {
+        return $this->hasMany(Elections::class, "second_place_id");
+    }
+
+    public function thirdPlaces(): HasMany
+    {
+        return $this->hasMany(Elections::class, "third_place_id");
+    }
+
     public function ownedCovers(): HasMany
     {
         return $this->hasMany(Covers::class, "owner_id");
