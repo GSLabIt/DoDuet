@@ -5,8 +5,10 @@ namespace App\Http\Wrappers;
 use App\Http\Wrappers\Interfaces\WorkerWrapper;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Http\Wrappers\Traits\WrapWorker;
+use App\Models\Mentions;
 use App\Models\PersonalInformations;
 use App\Models\User;
+use App\Notifications\UserMentionedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\Regex\Exceptions\RegexFailed;
@@ -116,13 +118,15 @@ class MentionWrapper implements Wrapper, WorkerWrapper
                         $mentioned = $mentioned->owner;
 
                         // create the mention
-                        $this->user->mentioner()->create([
+                        /**@var Mentions $mention_instance*/
+                        $mention_instance = $this->user->mentioner()->create([
                             "mentioned_id" => $mentioned->id,
                             "mentionable_type" => $data[0]::class,
                             "mentionable_id" => $data[0]->id
                         ]);
 
-                        // TODO: send the notification
+                        // send the mention notification to the user
+                        $mentioned->notify(new UserMentionedNotification($mention_instance));
                     }
                 }
             }
