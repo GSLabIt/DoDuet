@@ -21,9 +21,9 @@ class CreateTracksTable extends Migration
             $table->string('nft_id');
             $table->foreignUuid("owner_id")->references("id")->on("users");
             $table->foreignUuid("creator_id")->references("id")->on("users");
+            $table->foreignUuid('skynet_id')->references("id")->on("skynets");
             $table->foreignUuid('cover_id')->references("id")->on("covers")->nullable();
             $table->foreignUuid('lyric_id')->references("id")->on("lyrics")->nullable();
-            $table->foreignUuid('skynet_id');
             $table->foreignUuid('album_id')->nullable();
             $table->timestamps();
         });

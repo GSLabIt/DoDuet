@@ -25,6 +25,11 @@ class Tracks extends Model
         return $this->belongsTo(User::class, "creator_id");
     }
 
+    function skynet(): BelongsTo
+    {
+        return $this->belongsTo(Skynet::class);
+    }
+  
     function cover(): BelongsTo
     {
         return $this->belongsTo(Covers::class);
