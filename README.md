@@ -5,8 +5,8 @@ repetitive functionalities or hard to understand ones.
 
 ## Wrappers
 The available wrappers currently are:
-- [Settings wrapper]()
-- [Mentions wrapper]()
+- [Settings wrapper](#settings-wrapper)
+- [Mentions wrapper](#mentions-wrapper)
 
 if you don't know what a wrapper is, wikipedia has the answer for you [here](https://it.wikipedia.org/wiki/Wrapper)
 
@@ -41,7 +41,7 @@ A worker wrapper is a wrapper designed to have one public method only, namely `r
 on the data provided and the operation requested a method defined on the wrapper or elsewhere.
 This wrapper is designed to offer a great flexibility when there is the need to automate some operation given some 
 data.
-An example is the [mentions wrapper]()
+An example is the [mentions wrapper](#mentions-wrapper)
 
 #### What an interactive wrapper is?
 An interactive wrapper heavily differs from a worker one because it will always have three methods:
@@ -52,10 +52,10 @@ An interactive wrapper heavily differs from a worker one because it will always 
     result of the operation, `true` for success, `false` otherwise
 
 The interactive wrapper is not flexible as the worker one but gives a clear and easy to use interface for the developers.
-An example is the [settings wrapper]()
+An example is the [settings wrapper](#settings-wrapper)
 
 ### Settings wrapper
-As the settings wrapper is an [interactive wrapper]() it has all the functions of interactive wrappers and nothing more.
+As the settings wrapper is an [interactive wrapper](#what-an-interactive-wrapper-is) it has all the functions of interactive wrappers and nothing more.
 It provided a clear and easy to use interface around user's settings, presence checking, setting and updating.
 
 As settings are strongly typed the settings wrapper checks for types error depending on the searched property and 
@@ -75,7 +75,7 @@ Conversions when retrieving values follow the same logic of when they are set ex
 json is always decoded to an associative array.
 
 ### Mentions wrapper
-The mention wrapper is an example of [worker wrapper](), it runs the same method whether operation is requested in 
+The mention wrapper is an example of [worker wrapper](#what-a-worker-wrapper-is), it runs the same method whether operation is requested in 
 order to avoid confusion.
 
 THe `run` method basically takes an array of data, with the instance of the mentionable object as the first parameter 
