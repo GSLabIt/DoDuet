@@ -142,4 +142,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ListeningRequest::class);
     }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Votes::class);
+    }
 }

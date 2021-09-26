@@ -20,11 +20,8 @@ class Skynet extends Model
         return $this->hasOne(Tracks::class);
     }
 
-    //TODO add function (and link) to and from Cover model after both branches are merged in the main git branch.
-    /*
     function cover(): HasOne
     {
         return $this->hasOne(Covers::class);
     }
-     */
 }
