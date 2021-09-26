@@ -137,4 +137,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Lyrics::class, "creator_id");
     }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Votes::class);
+    }
 }
