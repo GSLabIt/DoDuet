@@ -86,4 +86,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tracks::class, "creator_id");
     }
+
+    public function ownedCovers(): HasMany
+    {
+        return $this->hasMany(Covers::class, "owner_id");
+    }
+
+    public function createdCovers(): HasMany
+    {
+        return $this->hasMany(Covers::class, "creator_id");
+    }
+
+    public function ownedLyrics(): HasMany
+    {
+        return $this->hasMany(Lyrics::class, "owner_id");
+    }
+
+    public function createdLyrics(): HasMany
+    {
+        return $this->hasMany(Lyrics::class, "creator_id");
+    }
 }
