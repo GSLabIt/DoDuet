@@ -58,16 +58,6 @@ class SettingsWrapper implements Wrapper, InteractiveWrapper
     }
 
     /**
-     * Get the current instance of the user
-     *
-     * @return User
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
      * Get the value of the setting.
      * Returns the default setting value if no value is defined
      *

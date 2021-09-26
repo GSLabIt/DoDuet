@@ -1,64 +1,86 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## About DoDuet
+Doduet is one of the main platform of the whole Do Labs environment. The environment is design to be scalable and
+large almost with the only limit of imagination because of this many wrappers and helpers will be created around
+repetitive functionalities or hard to understand ones.
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Wrappers
+The available wrappers currently are:
+- [Settings wrapper]()
+- [Mentions wrapper]()
 
-## About Laravel
+if you don't know what a wrapper is, wikipedia has the answer for you [here](https://it.wikipedia.org/wiki/Wrapper)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Wrappers in general
+Wrappers are basically short, easy to remember, functions created to easy the development of something difficult or
+repetitive to code, in this way a simple and easy method can be used whatever it is needed instead of rewriting a
+functionality from scratch.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This means that wrappers reduce code duplication and all the issues related to duplicated code, bugs, vulnerabilities,
+spaghetti code and more.
 
-## Learning Laravel
+In order to easy the development of wrappers a custom artisan command was created, this command follows the standard
+command syntax, it is `make:wrapper` it gives you two possible switch to use:
+- `-w / --worker` - needed in case of a worker wrapper should be built
+- `-i / --interactive` - needed in case an interactive wrapper should be built
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+If none of the two types of wrapper is needed a generic wrapper with no predefined methods can be easily created omitting
+both the flags.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Consider that wrappers **must** not be fallible, at most a wrapper should throw an exception to be handled by the
+developer.
 
-## Laravel Sponsors
+Wrapper should generally be paired with a helper, a laravel global function. In order to easy the development of helpers 
+a command was created: `make:helper`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+As all wrappers must be initialized with an `init` static method the helper should simply return the instance of the
+initialized wrapper it is paired with.
 
-### Premium Partners
+#### What a worker wrapper is?
+A worker wrapper is a wrapper designed to have one public method only, namely `run`, this method will trigger depending
+on the data provided and the operation requested a method defined on the wrapper or elsewhere.
+This wrapper is designed to offer a great flexibility when there is the need to automate some operation given some 
+data.
+An example is the [mentions wrapper]()
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+#### What an interactive wrapper is?
+An interactive wrapper heavily differs from a worker one because it will always have three methods:
+- `has` - to check if a property exists in the wrapped object or high level instance
+- `get` - to retrieve a property from the wrapped object, this method should not be fallible, if the requested property
+    is not found a null value should be returned
+- `set` - to add or update a property of the wrapped object, this method should always return a boolean indicating the
+    result of the operation, `true` for success, `false` otherwise
 
-## Contributing
+The interactive wrapper is not flexible as the worker one but gives a clear and easy to use interface for the developers.
+An example is the [settings wrapper]()
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Settings wrapper
+As the settings wrapper is an [interactive wrapper]() it has all the functions of interactive wrappers and nothing more.
+It provided a clear and easy to use interface around user's settings, presence checking, setting and updating.
 
-## Code of Conduct
+As settings are strongly typed the settings wrapper checks for types error depending on the searched property and 
+applies all the needed conversions. The parser works both in reading properties and in writing properties.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+In case a user has not set a setting property the default value of the settings is returned.
 
-## Security Vulnerabilities
+The available settings types are:
+- `int` - the value to be set must strictly be an integer
+- `float` - the value to be set must be strictly be a floating point value
+- `bool` - the value to be set must be strictly a boolean 
+- `string` - the value to be set must be strictly a string
+- `json` - this type is design to give complete flexibility to the development of large and complex functionalities.
+    Its type can be both a valid json string or an array to be json encoded.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Conversions when retrieving values follow the same logic of when they are set except for the json representation,
+json is always decoded to an associative array.
 
-## License
+### Mentions wrapper
+The mention wrapper is an example of [worker wrapper](), it runs the same method whether operation is requested in 
+order to avoid confusion.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+THe `run` method basically takes an array of data, with the instance of the mentionable object as the first parameter 
+and a string with the text (like the description of a track or a comment) from where mentions should be looked up.
+If the model is mentionable and the string contains any mention tag formatted as `@<user-alias>` a new mention is 
+automatically created and a mention notification is fired, notifying the mentioned user of the new mention.
+
+Mention notifications are broadcasted and stored in the database.
