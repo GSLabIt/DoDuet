@@ -23,6 +23,11 @@ class Functionalities extends Model
         return $this->hasMany(Test::class);
     }
 
+    public function userSegmentsFunctionalities(): BelongsToMany
+    {
+        return $this->belongsToMany(UserSegmentsFunctionalities::class);
+    }
+
     public function platformsFunctionalities(): BelongsToMany
     {
         return $this->belongsToMany(PlatformsFunctionalities::class);
