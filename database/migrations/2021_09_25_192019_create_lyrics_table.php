@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTracksTable extends Migration
+class CreateLyricsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,13 @@ class CreateTracksTable extends Migration
      */
     public function up()
     {
-        Schema::create('tracks', function (Blueprint $table) {
+        Schema::create('lyrics', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->text('name');
-            $table->longText('description');
-            $table->string('duration');
-            $table->string('nft_id');
+            $table->longText('lyric');
             $table->foreignUuid("owner_id")->references("id")->on("users");
             $table->foreignUuid("creator_id")->references("id")->on("users");
-            $table->foreignUuid('cover_id')->references("id")->on("covers")->nullable();
-            $table->foreignUuid('lyric_id')->references("id")->on("lyrics")->nullable();
-            $table->foreignUuid('skynet_id');
-            $table->foreignUuid('album_id')->nullable();
+            $table->string('nft_id')->nullable();
             $table->timestamps();
         });
     }
@@ -36,6 +31,6 @@ class CreateTracksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tracks');
+        Schema::dropIfExists('lyrics');
     }
 }

@@ -7,13 +7,19 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Tracks extends Model
+class Lyrics extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["updated_at", "created_at"];
+
+    function track(): HasOne
+    {
+        return $this->hasOne(Tracks::class);
+    }
 
     function owner(): BelongsTo
     {
@@ -23,15 +29,5 @@ class Tracks extends Model
     function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, "creator_id");
-    }
-
-    function cover(): BelongsTo
-    {
-        return $this->belongsTo(Covers::class);
-    }
-  
-    function lyric(): BelongsTo
-    {
-        return $this->belongsTo(Lyrics::class);
     }
 }
