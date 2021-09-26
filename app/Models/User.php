@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -75,6 +76,21 @@ class User extends Authenticatable
     public function settings(): HasMany
     {
         return $this->hasMany(UserSettings::class, "owner_id");
+    }
+
+    public function mentions(): HasMany
+    {
+        return $this->hasMany(Mentions::class, "mentioned_id");
+    }
+
+    public function mentioner(): HasMany
+    {
+        return $this->hasMany(Mentions::class, "mentioner_id");
+    }
+
+    public function personalInformation(): HasOne
+    {
+        return $this->hasOne(PersonalInformations::class, "owner_id");
     }
 
     public function ownedTracks(): HasMany

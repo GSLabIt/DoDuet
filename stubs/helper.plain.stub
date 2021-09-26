@@ -1,0 +1,12 @@
+<?php
+
+if(!function_exists("{{ class }}")) {
+    /**
+     *
+     * @return mixed
+     */
+    function {{ class }}(): mixed
+    {
+        // TODO: implement {{ class }}() method.
+    }
+}

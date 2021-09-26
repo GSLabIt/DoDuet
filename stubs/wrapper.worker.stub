@@ -1,0 +1,37 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Wrappers\Interfaces\Wrapper;
+use {{ rootNamespace }}Http\Wrappers\Interfaces\WorkerWrapper;
+use {{ rootNamespace }}Http\Wrappers\Traits\WrapWorker;
+
+class {{ class }} implements Wrapper, WorkerWrapper
+{
+    use WrapWorker;
+
+    /**
+     * Initialize the class instance
+     *
+     * @param $initializer
+     * @return {{ class }}|null
+     */
+    public static function init($initializer): ?{{ class }}
+    {
+        // TODO: Implement the initialization method.
+        return null;
+    }
+
+    /**
+     * Execute an operation
+     *
+     * @param string $operation
+     * @param $data
+     * @return mixed
+     */
+    public function run($data, string $operation = "default"): mixed
+    {
+        // TODO: Implement run() method.
+        return null;
+    }
+}

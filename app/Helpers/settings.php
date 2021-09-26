@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Wrappers\SettingsWrapper;
+use App\Http\Wrappers\SettingsWrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 if(!function_exists("settings")) {
     /**
-     * Return a simple json structure with an error value
+     * Get an instance of the settings wrapper
+     *
      * @param User|Request $initializer
      * @return SettingsWrapper
      */

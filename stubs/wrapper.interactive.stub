@@ -1,0 +1,58 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Wrappers\Interfaces\Wrapper;
+use {{ rootNamespace }}Http\Wrappers\Interfaces\InteractiveWrapper;
+
+class {{ class }} implements Wrapper, InteractiveWrapper
+{
+    /**
+     * Initialize the class instance
+     *
+     * @param $initializer
+     * @return {{ class }}|null
+     */
+    public static function init($initializer): ?{{ class }}
+    {
+        // TODO: Implement the initialization method.
+        return null;
+    }
+
+    /**
+     * Check if the item exists
+     *
+     * @param string $item
+     * @return bool
+     */
+    function has(string $item): bool
+    {
+        // TODO: Implement has() method.
+        return false;
+    }
+
+    /**
+     * Get the value of the defined item.
+     *
+     * @param string $item
+     * @return mixed
+     */
+    function get(string $item): mixed
+    {
+        // TODO: Implement get() method.
+        return null;
+    }
+
+    /**
+     * Set the value of an item
+     *
+     * @param string $item
+     * @param $value
+     * @return bool
+     */
+    function set(string $item, $value): bool
+    {
+        // TODO: Implement set() method.
+        return false;
+    }
+}
