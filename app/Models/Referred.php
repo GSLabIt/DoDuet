@@ -7,22 +7,21 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Referral extends Model
+class Referred extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["created_at", "updated_at"];
 
-    function owner(): BelongsTo
+    function refferer(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Referral::class);
     }
 
-    function referrers(): HasMany
+    function referred(): BelongsTo
     {
-        return $this->hasMany(Referred::class);
+        return $this->belongsTo(User::class);
     }
 }
