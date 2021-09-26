@@ -6,22 +6,17 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Skynet extends Model
+class Referral extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
-    protected $guarded = ["updated_at", "created_at"];
+    protected $guarded = ["created_at", "updated_at"];
 
-    function track(): HasOne
+    function owner(): BelongsTo
     {
-        return $this->hasOne(Tracks::class);
-    }
-
-    function cover(): HasOne
-    {
-        return $this->hasOne(Covers::class);
+        return $this->belongsTo(User::class);
     }
 }

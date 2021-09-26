@@ -142,4 +142,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(Wallet::class);
     }
+
+    public function referral(): HasOne
+    {
+        return $this->hasOne(Referral::class);
+    }
+
+    public function listeningRequests(): HasMany
+    {
+        return $this->hasMany(ListeningRequest::class);
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Votes::class);
+    }
 }

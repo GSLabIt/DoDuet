@@ -7,32 +7,26 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Covers extends Model
+class ListeningRequest extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["updated_at", "created_at"];
 
-    function track(): HasOne
+    function voter(): BelongsTo
     {
-        return $this->hasOne(Tracks::class);
+        return $this->belongsTo(User::class);
     }
 
-    function owner(): BelongsTo
+    function track(): BelongsTo
     {
-        return $this->belongsTo(User::class, "owner_id");
+        return $this->belongsTo(Tracks::class);
     }
 
-    function creator(): BelongsTo
+    function election(): BelongsTo
     {
-        return $this->belongsTo(User::class, "creator_id");
-    }
-
-    function skynet(): BelongsTo
-    {
-        return $this->belongsTo(Skynet::class);
+        return $this->belongsTo(Elections::class);
     }
 }

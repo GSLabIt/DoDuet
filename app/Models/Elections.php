@@ -6,6 +6,7 @@ use App\Traits\ActivityLogAll;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Elections extends Model
@@ -27,5 +28,15 @@ class Elections extends Model
     function thirdPlace(): BelongsTo
     {
         return $this->belongsTo(User::class, "third_place_id");
+    }
+
+    public function listeningRequests(): HasMany
+    {
+        return $this->hasMany(ListeningRequest::class);
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Votes::class);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoversTable extends Migration
+class CreateReferralsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateCoversTable extends Migration
      */
     public function up()
     {
-        Schema::create('covers', function (Blueprint $table) {
+        Schema::create('referrals', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->text('name');
-            $table->foreignUuid("skynet_id")->references("id")->on("skynets");
-            $table->string('nft_id')->nullable();
+            $table->string('code');
             $table->foreignUuid("owner_id")->references("id")->on("users");
-            $table->foreignUuid("creator_id")->references("id")->on("users");
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateCoversTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('covers');
+        Schema::dropIfExists('referrals');
     }
 }
