@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['single', 'gelf'],
             'ignore_exceptions' => false,
         ],
 
@@ -60,6 +60,14 @@ return [
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => env('LOG_LEVEL', 'critical'),
+        ],
+
+        'slack-doduet-errors' => [
+            'driver' => 'slack',
+            'url' => "https://hooks.slack.com/services/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",
+            'username' => 'Do Duet Supervisor',
+            'emoji' => ':bangbang:',
+            'level' => 'error',
         ],
 
         'papertrail' => [

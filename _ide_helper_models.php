@@ -12,6 +12,89 @@
 
 namespace App\Models{
 /**
+ * App\Models\Covers
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $skynet_id
+ * @property string|null $nft_id
+ * @property string $owner_id
+ * @property string $creator_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $creator
+ * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Skynet $skynet
+ * @property-read \App\Models\Tracks|null $track
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereNftId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereSkynetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereUpdatedAt($value)
+ */
+	class Covers extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Elections
+ *
+ * @property int $id
+ * @property string $total_prize
+ * @property float $first_prize_rate
+ * @property string $first_place_id
+ * @property float $second_prize_rate
+ * @property string $second_place_id
+ * @property float $third_prize_rate
+ * @property string $third_place_id
+ * @property float $treasury_rate
+ * @property float $fee_rate
+ * @property float $burning_rate
+ * @property string|null $started_at
+ * @property string|null $ended_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $firstPlace
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
+ * @property-read int|null $listening_requests_count
+ * @property-read \App\Models\User $secondPlace
+ * @property-read \App\Models\User $thirdPlace
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
+ * @property-read int|null $votes_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereBurningRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereEndedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereFeeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereFirstPlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereFirstPrizeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereSecondPlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereSecondPrizeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereStartedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereThirdPlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereThirdPrizeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereTotalPrize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereTreasuryRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereUpdatedAt($value)
+ */
+	class Elections extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Functionalities
  *
  * @property string $id
@@ -29,6 +112,8 @@ namespace App\Models{
  * @property-read int|null $platforms_functionalities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
  * @property-read int|null $tests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegmentsFunctionalities[] $userSegmentsFunctionalities
+ * @property-read int|null $user_segments_functionalities_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities onlyTrashed()
@@ -46,6 +131,66 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withoutTrashed()
  */
 	class Functionalities extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ListeningRequest
+ *
+ * @property string $id
+ * @property string $voter_id
+ * @property string $track_id
+ * @property int $election_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Elections $election
+ * @property-read \App\Models\Tracks $track
+ * @property-read \App\Models\User $voter
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereElectionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereTrackId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereVoterId($value)
+ */
+	class ListeningRequest extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Lyrics
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $lyric
+ * @property string $owner_id
+ * @property string $creator_id
+ * @property string|null $nft_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $creator
+ * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Tracks|null $track
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereLyric($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereNftId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereUpdatedAt($value)
+ */
+	class Lyrics extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -214,6 +359,59 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Referral
+ *
+ * @property string $id
+ * @property string $code
+ * @property string $owner_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $owner
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Referred[] $referrers
+ * @property-read int|null $referrers_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereUpdatedAt($value)
+ */
+	class Referral extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Referred
+ *
+ * @property string $id
+ * @property string $referrer_id
+ * @property string $referred_id
+ * @property int $is_redeemed
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $referred
+ * @property-read \App\Models\Referral $refferer
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereIsRedeemed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferredId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferrerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereUpdatedAt($value)
+ */
+	class Referred extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Settings
  *
  * @property string $id
@@ -243,6 +441,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereUpdatedAt($value)
  */
 	class Settings extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Skynet
+ *
+ * @property string $id
+ * @property string $link
+ * @property int $encrypted
+ * @property string $encryption_key
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Covers|null $cover
+ * @property-read \App\Models\Tracks|null $track
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereEncryptionKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereUpdatedAt($value)
+ */
+	class Skynet extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -303,6 +528,54 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Tracks
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $description
+ * @property string $duration
+ * @property string $nft_id
+ * @property string $owner_id
+ * @property string $creator_id
+ * @property string $skynet_id
+ * @property string $cover_id
+ * @property string $lyric_id
+ * @property string|null $album_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Covers $cover
+ * @property-read \App\Models\User $creator
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
+ * @property-read int|null $listening_requests_count
+ * @property-read \App\Models\Lyrics $lyric
+ * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Skynet $skynet
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
+ * @property-read int|null $votes_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereAlbumId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereCoverId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereLyricId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereNftId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereSkynetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereUpdatedAt($value)
+ */
+	class Tracks extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property string $id
@@ -319,25 +592,50 @@ namespace App\Models{
  * @property string $user_segment_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Covers[] $createdCovers
+ * @property-read int|null $created_covers_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lyrics[] $createdLyrics
+ * @property-read int|null $created_lyrics_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tracks[] $createdTracks
+ * @property-read int|null $created_tracks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Elections[] $firstPlaces
+ * @property-read int|null $first_places_count
  * @property-read string $profile_photo_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
+ * @property-read int|null $listening_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentioner
  * @property-read int|null $mentioner_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Covers[] $ownedCovers
+ * @property-read int|null $owned_covers_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lyrics[] $ownedLyrics
+ * @property-read int|null $owned_lyrics_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tracks[] $ownedTracks
+ * @property-read int|null $owned_tracks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
  * @property-read \App\Models\PersonalInformations|null $personalInformation
+ * @property-read \App\Models\Referral|null $referral
+ * @property-read \App\Models\Referred|null $referred
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Elections[] $secondPlaces
+ * @property-read int|null $second_places_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $settings
  * @property-read int|null $settings_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Elections[] $thirdPlaces
+ * @property-read int|null $third_places_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @property-read \App\Models\UserSegments $userSegment
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
+ * @property-read int|null $votes_count
+ * @property-read \App\Models\Wallet|null $wallet
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
@@ -370,6 +668,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Test $test
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegmentsFunctionalities[] $userSegmentsFunctionalities
+ * @property-read int|null $user_segments_functionalities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments newModelQuery()
@@ -380,6 +680,19 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereUpdatedAt($value)
  */
 	class UserSegments extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\UserSegmentsFunctionalities
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegmentsFunctionalities newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegmentsFunctionalities newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegmentsFunctionalities query()
+ */
+	class UserSegmentsFunctionalities extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -406,5 +719,65 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereUpdatedAt($value)
  */
 	class UserSettings extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Votes
+ *
+ * @property string $id
+ * @property string $voter_id
+ * @property string $track_id
+ * @property int $election_id
+ * @property int $vote
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Elections $election
+ * @property-read \App\Models\Tracks $track
+ * @property-read \App\Models\User $voter
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereElectionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereTrackId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVoterId($value)
+ */
+	class Votes extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Wallet
+ *
+ * @property string $id
+ * @property string $owner_id
+ * @property string $chain
+ * @property string $private_key
+ * @property string $seed
+ * @property string $address
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $owner
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereChain($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePrivateKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereSeed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereUpdatedAt($value)
+ */
+	class Wallet extends \Eloquent {}
 }
 
