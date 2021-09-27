@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserSegmentsFunctionalityTable extends Migration
+class CreateUserSegmentsFunctionalitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,11 @@ class CreateUserSegmentsFunctionalityTable extends Migration
     public function up()
     {
         Schema::create('user_segments_functionalities', function (Blueprint $table) {
-            $table->foreignUuid("segment_id")->references("id")->on("user_segments");
-            $table->foreignUuid("functionality_id")->references("id")->on("functionalities");
+            $table->foreignUuid("segment_id");
+            $table->foreignUuid("functionality_id");
             $table->boolean("is_active")->default(false);
 
-            $table->primary(["segment_id","functionality_id"]);
+            $table->primary(["segment_id","functionality_id"], "segments_functionalities_id");
         });
     }
 

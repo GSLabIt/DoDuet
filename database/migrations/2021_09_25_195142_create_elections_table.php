@@ -14,9 +14,7 @@ class CreateElectionsTable extends Migration
     public function up()
     {
         Schema::create('elections', function (Blueprint $table) {
-            $table->id()->primary();
-            $table->timestamp('started_at');
-            $table->timestamp('ended_at');
+            $table->id();
             $table->string('total_prize');
             $table->double('first_prize_rate', 8, 4);
             $table->foreignUuid("first_place_id")->references("id")->on("users");
@@ -27,6 +25,8 @@ class CreateElectionsTable extends Migration
             $table->double('treasury_rate', 8, 4);
             $table->double('fee_rate', 8, 4);
             $table->double('burning_rate', 8, 4);
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('ended_at')->nullable();
             $table->timestamps();
         });
     }
