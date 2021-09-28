@@ -67,8 +67,6 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     public function has(?string $item): bool
     {
         return match ($item) {
-            $this->whitelistedItems()["master"] =>
-                    session()->has($this->whitelistedItems()["master"]),
             $this->whitelistedItems()["master_salt"] =>
                     settings($this->user)->has($this->whitelistedItems()["master_salt"]),
             $this->whitelistedItems()["master_derivation_key"] =>
@@ -78,7 +76,6 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
             $this->whitelistedItems()["public_key"] =>
                     settings($this->user)->has($this->whitelistedItems()["public_key"]),
             "all" =>
-                    $this->has($this->whitelistedItems()["master"]) &&
                     $this->has($this->whitelistedItems()["master_salt"]) &&
                     $this->has($this->whitelistedItems()["master_derivation_key"]) &&
                     $this->has($this->whitelistedItems()["secret_key"]) &&
@@ -96,8 +93,6 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     public function get(?string $item): mixed
     {
         return match ($item) {
-            $this->whitelistedItems()["master"] =>
-                    session()->get($this->whitelistedItems()["master"]),
             $this->whitelistedItems()["master_salt"] =>
                     settings($this->user)->get($this->whitelistedItems()["master_salt"]),
             $this->whitelistedItems()["master_derivation_key"] =>
@@ -231,7 +226,6 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
      * @return string[]
      */
     #[ArrayShape([
-        "master" => "string",
         "master_salt" => "string",
         "master_derivation_key" => "string",
         "public_key" => "string",
@@ -240,7 +234,6 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     public function whitelistedItems(): array
     {
         return [
-            "master" => "master_key",
             "master_salt" => "master_key_salt",
             "master_derivation_key" => "master_derivation_key",
             "public_key" => "public_key",

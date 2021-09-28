@@ -45,7 +45,7 @@ class SodiumSymmetricEncryptionWrapper implements Wrapper
                 $plain,
                 "",
                 hex2bin($nonce),
-                hex2bin($encryption_key)));
+                hex2bin($encryption_key))) . ":$nonce";
         }
         catch (SodiumException $exception) {
             logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
@@ -60,11 +60,12 @@ class SodiumSymmetricEncryptionWrapper implements Wrapper
      *
      * @param string $encoded
      * @param string $encryption_key
-     * @param string $nonce
      * @return string
      */
-    public function decrypt(string $encoded, string $encryption_key, string $nonce): string {
+    public function decrypt(string $encoded, string $encryption_key): string {
         try {
+            [$encoded, $nonce] = explode(":", $encoded);
+
             $decoded = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt(
                 hex2bin($encoded),
                 "",

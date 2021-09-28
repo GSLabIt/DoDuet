@@ -65,7 +65,7 @@ class SodiumAsymmetricEncryptionWrapper implements Wrapper
     public function encrypt(string $plain, string $encryption_keypair, string $nonce): string
     {
         try {
-            return bin2hex(sodium_crypto_box($plain, hex2bin($nonce), hex2bin($encryption_keypair)));
+            return bin2hex(sodium_crypto_box($plain, hex2bin($nonce), hex2bin($encryption_keypair))) . ":$nonce";
         } catch (SodiumException $exception) {
             logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
             logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
@@ -79,11 +79,11 @@ class SodiumAsymmetricEncryptionWrapper implements Wrapper
      *
      * @param string $encoded
      * @param string $encryption_keypair
-     * @param string $nonce
      * @return string
      */
-    public function decrypt(string $encoded, string $encryption_keypair, string $nonce): string {
+    public function decrypt(string $encoded, string $encryption_keypair): string {
         try {
+            [$encoded, $nonce] = explode(":", $encoded);
             return sodium_crypto_box_open(hex2bin($encoded), hex2bin($nonce), hex2bin($encryption_keypair));
         } catch (SodiumException $exception) {
             logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());

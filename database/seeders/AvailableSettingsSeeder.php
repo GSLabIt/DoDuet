@@ -38,6 +38,12 @@ class AvailableSettingsSeeder extends Seeder
                 "type" => "string",
                 "has_default_value" => false,
             ],
+            [
+                "name" => "has_messages",
+                "type" => "bool",
+                "has_default_value" => true,
+                "default_value" => true
+            ],
         ];
 
         foreach ($settings as $setting) {
