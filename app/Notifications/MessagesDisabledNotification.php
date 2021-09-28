@@ -2,13 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Models\Mentions;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use JetBrains\PhpStorm\ArrayShape;
 
-class UserMentionedNotification extends Notification
+class MessagesDisabledNotification extends Notification
 {
     use Queueable;
 
@@ -17,7 +17,7 @@ class UserMentionedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(private Mentions $mention)
+    public function __construct(private string $trigger, private string $reason, private bool $error = false)
     {
         //
     }
@@ -30,7 +30,7 @@ class UserMentionedNotification extends Notification
      */
     public function via($notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['database', "broadcast"];
     }
 
     /**
@@ -39,12 +39,14 @@ class UserMentionedNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    #[ArrayShape(["type" => "string", "mention_id" => "string"])]
+    #[ArrayShape(["trigger" => "string", "reason" => "string", "error" => "bool", "time" => "float|int|string"])]
     public function toArray($notifiable): array
     {
         return [
-            "type" => "mention",
-            "mention_id" => $this->mention->id,
+            "trigger" => $this->trigger,
+            "reason" => $this->reason,
+            "error" => $this->error,
+            "time" => now()->timestamp
         ];
     }
 }
