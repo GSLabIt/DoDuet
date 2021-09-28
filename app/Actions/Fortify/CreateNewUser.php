@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Http\Controllers\UserSegmentsController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -34,6 +35,8 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         secureUser($user)->set("password", $input["password"]);
+
+        UserSegmentsController::assignToSegment($user);
 
         return $user;
     }

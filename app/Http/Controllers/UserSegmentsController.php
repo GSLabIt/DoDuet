@@ -2,9 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\UserSegments;
 use Illuminate\Http\Request;
 
 class UserSegmentsController extends Controller
 {
-    //
+    public static function assignToSegment(User $user) {
+        // check the user is not yet in another segment
+        // this check will be done only here as we want to ensure that at registration the user is assigned to only one
+        // segment, admins may move multiple users into different segments
+        if(is_null($user->userSegment)) {
+            // retrieve the last user segment
+            $user_segments = UserSegments::latest();
+
+            // check if the segment does not exists or it is full, if this is the case create a new segment
+            if(is_null($user_segments) || $user_segments->users->count() >= config("user-segments.per_segment")) {
+                $user_segments = UserSegments::create([]);
+            }
+
+            $user->userSegment()->associate($user_segments);
+        }
+    }
 }
