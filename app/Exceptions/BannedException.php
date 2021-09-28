@@ -7,16 +7,6 @@ use Exception;
 class BannedException extends Exception
 {
     /**
-     * Report the exception.
-     *
-     * @return bool|null
-     */
-    public function report()
-    {
-        //
-    }
-
-    /**
      * Render the exception as an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -24,6 +14,6 @@ class BannedException extends Exception
      */
     public function render($request)
     {
-        return inertia("errors/banned");
+        return inertia("Errors/Banned");
     }
 }

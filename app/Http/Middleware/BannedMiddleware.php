@@ -14,9 +14,10 @@ class BannedMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
+     * @throws BannedException
      */
     public function handle(Request $request, Closure $next)
     {
@@ -27,7 +28,7 @@ class BannedMiddleware
         $user = auth()->user(); /**@var User $user*/
 
         if ($user->hasRole("banned")) {
-            throw new BannedException("You got banned", 401);
+            throw new BannedException("You got banned", 403);
         }
 
         return $next($request);
