@@ -18,6 +18,12 @@ class Functionalities extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
+    protected $casts = [
+        "is_controller" => "boolean",
+        "is_ui" => "boolean",
+        "is_testing" => "boolean",
+    ];
+
     function tests(): HasMany
     {
         return $this->hasMany(Test::class);
@@ -25,7 +31,7 @@ class Functionalities extends Model
 
     public function userSegments(): BelongsToMany
     {
-        return $this->belongsToMany(UserSegments::class)->using(UserSegmentsFunctionalities::class);
+        return $this->belongsToMany(UserSegments::class)->withPivot(["is_active"]);
     }
 
     public function platforms(): BelongsToMany

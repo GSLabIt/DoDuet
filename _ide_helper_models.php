@@ -100,20 +100,20 @@ namespace App\Models{
  * @property string $id
  * @property string $name
  * @property string $description
- * @property int $is_controller
- * @property int $is_ui
- * @property int $is_testing
+ * @property bool $is_controller
+ * @property bool $is_ui
+ * @property bool $is_testing
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PlatformsFunctionalities[] $platformsFunctionalities
- * @property-read int|null $platforms_functionalities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Platforms[] $platforms
+ * @property-read int|null $platforms_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
  * @property-read int|null $tests_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegmentsFunctionalities[] $userSegmentsFunctionalities
- * @property-read int|null $user_segments_functionalities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegments[] $userSegments
+ * @property-read int|null $user_segments_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities onlyTrashed()
@@ -298,8 +298,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PlatformsFunctionalities[] $platformsFunctionalities
- * @property-read int|null $platforms_functionalities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Functionalities[] $functionalities
+ * @property-read int|null $functionalities_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms query()
@@ -313,25 +313,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereUpdatedAt($value)
  */
 	class Platforms extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\PlatformsFunctionalities
- *
- * @property string $functionality_id
- * @property string $platform_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\Functionalities $functionality
- * @property-read \App\Models\Platforms $platform
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities whereFunctionalityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PlatformsFunctionalities wherePlatformId($value)
- */
-	class PlatformsFunctionalities extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -589,7 +570,6 @@ namespace App\Models{
  * @property string|null $profile_photo_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $user_segment_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Covers[] $createdCovers
@@ -654,7 +634,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorRecoveryCodes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUserSegmentId($value)
  */
 	class User extends \Eloquent {}
 }
@@ -664,13 +643,14 @@ namespace App\Models{
  * App\Models\UserSegments
  *
  * @property string $id
+ * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Functionalities[] $functionalities
+ * @property-read int|null $functionalities_count
  * @property-read \App\Models\Test $test
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegmentsFunctionalities[] $userSegmentsFunctionalities
- * @property-read int|null $user_segments_functionalities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments newModelQuery()
@@ -678,22 +658,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereUpdatedAt($value)
  */
 	class UserSegments extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\UserSegmentsFunctionalities
- *
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegmentsFunctionalities newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegmentsFunctionalities newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegmentsFunctionalities query()
- */
-	class UserSegmentsFunctionalities extends \Eloquent {}
 }
 
 namespace App\Models{
