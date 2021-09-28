@@ -13,11 +13,11 @@ class CreatePlatformsFunctionalitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('platforms_functionalities', function (Blueprint $table) {
-            $table->foreignUuid("functionality_id");
-            $table->foreignUuid("platform_id");
+        Schema::create('functionalities_platforms', function (Blueprint $table) {
+            $table->foreignUuid("functionalities_id");
+            $table->foreignUuid("platforms_id");
 
-            $table->primary(["functionality_id","platform_id"]);
+            $table->primary(["functionalities_id","platforms_id"], "functionalities_platforms_id");
         });
     }
 

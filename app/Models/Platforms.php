@@ -15,8 +15,8 @@ class Platforms extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    public function platformsFunctionalities(): BelongsToMany
+    public function functionalities(): BelongsToMany
     {
-        return $this->belongsToMany(PlatformsFunctionalities::class);
+        return $this->belongsToMany(Functionalities::class);
     }
 }

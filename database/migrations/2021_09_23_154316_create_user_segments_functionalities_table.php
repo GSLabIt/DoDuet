@@ -13,9 +13,9 @@ class CreateUserSegmentsFunctionalitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_segments_functionalities', function (Blueprint $table) {
-            $table->foreignUuid("segment_id");
-            $table->foreignUuid("functionality_id");
+        Schema::create('functionalities_user_segments', function (Blueprint $table) {
+            $table->foreignUuid("user_segments_id");
+            $table->foreignUuid("functionalities_id");
             $table->boolean("is_active")->default(false);
 
             $table->primary(["segment_id","functionality_id"], "segments_functionalities_id");

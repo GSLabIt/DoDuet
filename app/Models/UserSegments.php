@@ -24,7 +24,7 @@ class UserSegments extends Model
 
     public function functionalities(): BelongsToMany
     {
-        return $this->belongsToMany(Functionalities::class)->using(UserSegmentsFunctionalities::class);
+        return $this->belongsToMany(Functionalities::class)->withPivot(["is_active"]);
     }
 
     function test(): BelongsTo

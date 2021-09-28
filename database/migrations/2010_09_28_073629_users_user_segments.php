@@ -13,10 +13,10 @@ class UsersUserSegments extends Migration
      */
     public function up()
     {
-        Schema::create('users_user_segments', function (Blueprint $table) {
+        Schema::create('user_user_segments', function (Blueprint $table) {
             $table->uuid("user_id");
-            $table->uuid("segment_id");
-            $table->primary(["user_id", "segment_id"]);
+            $table->uuid("user_segments_id");
+            $table->primary(["user_id", "user_segments_id"]);
         });
     }
 
@@ -27,6 +27,6 @@ class UsersUserSegments extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists("users_user_segments");
+        Schema::dropIfExists("user_user_segments");
     }
 }
