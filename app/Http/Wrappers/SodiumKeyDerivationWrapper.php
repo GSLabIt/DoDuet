@@ -35,7 +35,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
     {
         try {
             // Fails if no appropriate source of randomness is found
-            return bin2hex(random_bytes(SodiumKeyLength::$PWHASH_SALT_BYTES));
+            return bin2hex(random_bytes($length));
         }
         catch (Exception $exception) {
             logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
@@ -87,7 +87,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
     public function generateMasterDerivationKey(string $password, string $salt = ""): array
     {
         // Need to keep the salt if we're ever going to be able to check this password
-        if(empty($salt) || strlen($salt) !== SodiumKeyLength::$PWHASH_SALT_BYTES) {
+        if(empty($salt) || strlen(hex2bin($salt)) !== SodiumKeyLength::$PWHASH_SALT_BYTES) {
             $salt = hex2bin($this->generateSalt(SodiumKeyLength::$PWHASH_SALT_BYTES));
         }
         else {

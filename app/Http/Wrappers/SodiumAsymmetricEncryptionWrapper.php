@@ -35,7 +35,7 @@ class SodiumAsymmetricEncryptionWrapper implements Wrapper, CryptographicWrapper
     public function key(string $seed): array
     {
         try {
-            $keypair = sodium_crypto_kx_seed_keypair($seed);
+            $keypair = sodium_crypto_kx_seed_keypair(hex2bin($seed));
 
             return [
                 "public_key" => bin2hex(sodium_crypto_kx_publickey($keypair)),
