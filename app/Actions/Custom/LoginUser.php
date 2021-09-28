@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginUser
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): ?User
     {
-        $this->login($request);
+        return $this->login($request);
     }
 
     /**
@@ -19,7 +19,7 @@ class LoginUser
      * @param Request $request
      * @return User|null
      */
-    public function login(Request $request): User|null
+    public function login(Request $request): ?User
     {
         $request->validate([
             "email" => "required|email",
