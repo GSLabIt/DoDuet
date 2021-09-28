@@ -7,6 +7,12 @@ repetitive functionalities or hard to understand ones.
 The available wrappers currently are:
 - [Settings wrapper](#settings-wrapper)
 - [Mentions wrapper](#mentions-wrapper)
+- [Sodium crypto wrapper](#sodium-crypto-wrapper)
+- [Sodium key derivation wrapper](#sodium-key-derivation-wrapper)
+- [Sodium encryption wrapper](#sodium-encryption-wrapper)
+- [Sodium symmetric encryption wrapper](#sodium-symmetric-encryption-wrapper)
+- [Sodium asymmetric encryption wrapper](#sodium-asymmetric-encryption-wrapper)
+- [Secure user wrapper](#secure-user-wrapper)
 
 if you don't know what a wrapper is, wikipedia has the answer for you [here](https://it.wikipedia.org/wiki/Wrapper)
 
@@ -54,6 +60,14 @@ An interactive wrapper heavily differs from a worker one because it will always 
 The interactive wrapper is not flexible as the worker one but gives a clear and easy to use interface for the developers.
 An example is the [settings wrapper](#settings-wrapper)
 
+#### What a cryptographic wrapper is?
+A cryptographic wrapper implements two methods related to cryptography:
+- `key` - generates the keys for the algorithm
+- `encrypt` - which encrypts a message with an algorithm, a key and a nonce
+- `decrypt` - which decrypts a message with an algorithm, and a key extracting the nonce from the body of the message
+
+An example if the [Sodium symmetric encryption wrapper](#sodium-symmetric-encryption-wrapper)
+
 ### Settings wrapper
 As the settings wrapper is an [interactive wrapper](#what-an-interactive-wrapper-is) it has all the functions of interactive wrappers and nothing more.
 It provided a clear and easy to use interface around user's settings, presence checking, setting and updating.
@@ -84,3 +98,79 @@ If the model is mentionable and the string contains any mention tag formatted as
 automatically created and a mention notification is fired, notifying the mentioned user of the new mention.
 
 Mention notifications are broadcasted and stored in the database.
+
+### Sodium crypto wrapper
+The sodium crypto wrapper is an external wrapper (it wraps other wrappers) with an exception function common to all the 
+subsequent wrappers.
+
+As an external wrapper it does not follow any common wrapper patterns instead it provides three methods:
+- `derivation` - access the key derivation wrapper
+- `encryption` - access the encryption wrapper
+- `randomInt` - compute a secure random integer within a range in whatever system it runs on
+
+The `SodiumCryptoWrapper` instance can be accessed with the `sodium()` helper.
+
+### Sodium key derivation wrapper
+The sodium key derivation wrapper does not follow any common wrapper patterns and provides all the functions linked to 
+cryptographically secure key generation and derivation.
+
+It provides the following methods:
+- `generateSalt` - generates a cryptographically secure random string (salt) to be used in encryption as nonce. At least
+    you know exactly what you're doing you should never use this function directly instead use the predefined nonce 
+    generators
+- `generateSymmetricNonce` - generates a cryptographically secure random string to be used in symmetric encryption
+- `generateAsymmetricNonce` - generates a cryptographically secure random string to be used in asymmetric encryption
+- `generateMasterDerivationKey` - generates a master-pass for all the functionalities that needs keys or seeds. The 
+    master-pass is computed based on a provided password (user's password) and a salt that must be saved for subsequently 
+    regenerate the same master-pass
+- `deriveKeypairSeed` - derive the seed for asymmetric keypair generation
+- `packSharedKeypair` - is a utility function that creates a shared keypair with a sender private key and a receiver's 
+    public one or with a receiver private key and a sender's one
+
+### Sodium encryption wrapper
+The sodium encryption wrapper is an external wrapper.
+
+It does not follow any common wrapper patterns instead it provides two methods:
+- `symmetric` - access the symmetric encryption wrapper
+- `asymmetric` - access the asymmetric encryption wrapper
+
+### Sodium symmetric encryption wrapper
+The sodium symmetric encryption wrapper follows the [cryptographic wrapper](#what-a-cryptographic-wrapper-is) pattern.
+
+It provides all the following methods:
+- `key` - generates an XChaCha20 key for authenticated encryption through Poly1305
+- `encrypt` - symmetrically encrypts a message of arbitrary length with a composition of the XChaCha20 (encryption) and 
+    Poly1305 (authentication) algorithms providing a double layer of security ensuring that a message is encrypted and
+    that it cannot be tampered without modifying and recomputing the whole message tag
+- `decrypt` - symmetrically decrypts and authenticate a message of arbitrary length with XChaCha20 and Poly1305
+
+### Sodium asymmetric encryption wrapper
+The sodium asymmetric encryption wrapper follows the [cryptographic wrapper](#what-a-cryptographic-wrapper-is) pattern.
+
+It provides all the following methods:
+- `key` - generates a pair of keys (public and private) for asymmetric cryptography. It uses a seed to deterministically
+    compute the keys and avoid the necessity to save the private key (as it can be easily regenerated)
+- `encrypt` - encrypt a message of arbitrary length with a composition of XSalsa20 (encryption), Poly1305
+    (authentication) and X25519 (key exchange) algorithms providing a triple layer of security ensuring that a message 
+    can always be read only by the two parties involved in the communication, that it is encrypted and that it cannot be 
+    tampered without modifying and recomputing the whole message
+- `decrypt` - decrypts and authenticate a message of arbitrary length with Salsa20 and Poly1305. It uses the key derived 
+    from the X25519 key exchange algorithm
+
+### Secure user wrapper
+The secure user wrapper follows the [interactive wrapper](#what-an-interactive-wrapper-is) pattern with an extra utility 
+method.
+
+It provides all the following methods:
+- `has` - check if one of the available properties exists. This method depending on the requested items checks if the 
+    item exists in the user's settings or in the current user's session. This method accepts an additional value to the  
+    `whitelistedItems` method ones: `all` is a shortcut for rapidly checking the existence of all the properties available
+- `get` - retrieve one of the whitelisted items from current user's settings or session depending on the requested 
+    property
+- `set` - it wraps around a set of virtual properties, `password` and `rotate` both the properties require as their value
+    the current user's plain password as they use it to derive cryptographic keys.
+    The `password` property triggers the generation or regeneration of the keys for asymmetric encryption while 
+    `rotate` property triggers the rotation of all the user's asymmetric keys regenerating a random seed and its 
+    associated keys. Key rotation is not reversible and makes all previously encoded text and received messages 
+    unreadable.
+- `whitelistedItems` - returns a hardcoded list of available items for the `get` and `has` methods

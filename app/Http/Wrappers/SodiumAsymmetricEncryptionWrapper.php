@@ -2,12 +2,13 @@
 
 namespace App\Http\Wrappers;
 
+use App\Http\Wrappers\Interfaces\CryptographicWrapper;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use SodiumException;
 
-class SodiumAsymmetricEncryptionWrapper implements Wrapper
+class SodiumAsymmetricEncryptionWrapper implements Wrapper, CryptographicWrapper
 {
     /**
      * Initialize the class instance

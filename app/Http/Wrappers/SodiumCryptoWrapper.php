@@ -2,13 +2,9 @@
 
 namespace App\Http\Wrappers;
 
-use App\Http\Wrappers\Enums\SodiumContexts;
-use App\Http\Wrappers\Enums\SodiumKeyLength;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use Exception;
-use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
-use SodiumException;
 
 class SodiumCryptoWrapper implements Wrapper
 {

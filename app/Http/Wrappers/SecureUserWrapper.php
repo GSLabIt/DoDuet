@@ -223,6 +223,8 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     }
 
     /**
+     * Returns a list of available and accepted items for the `get` and `has` methods
+     *
      * @return string[]
      */
     #[ArrayShape([

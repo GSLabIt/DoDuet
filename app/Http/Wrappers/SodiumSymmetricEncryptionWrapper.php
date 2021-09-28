@@ -2,11 +2,12 @@
 
 namespace App\Http\Wrappers;
 
+use App\Http\Wrappers\Interfaces\CryptographicWrapper;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use JetBrains\PhpStorm\Pure;
 use SodiumException;
 
-class SodiumSymmetricEncryptionWrapper implements Wrapper
+class SodiumSymmetricEncryptionWrapper implements Wrapper, CryptographicWrapper
 {
     /**
      * Initialize the class instance
@@ -23,9 +24,10 @@ class SodiumSymmetricEncryptionWrapper implements Wrapper
     /**
      * Generate a key for symmetric authenticated encryption
      *
+     * @param string|null $seed
      * @return string
      */
-    private function key(): string
+    public function key(string $seed = null): string
     {
         return bin2hex(sodium_crypto_aead_xchacha20poly1305_ietf_keygen());
     }
