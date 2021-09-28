@@ -15,6 +15,7 @@ class CreateUserSegmentsTable extends Migration
     {
         Schema::create('user_segments', function (Blueprint $table) {
             $table->uuid("id")->primary();
+            $table->string("name");
             $table->timestamps();
         });
     }

@@ -22,8 +22,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
-
-            $table->foreignUuid("user_segment_id")->references("id")->on("user_segments");
         });
     }
 

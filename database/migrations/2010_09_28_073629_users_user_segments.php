@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlatformsFunctionalitiesTable extends Migration
+class UsersUserSegments extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreatePlatformsFunctionalitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('platforms_functionalities', function (Blueprint $table) {
-            $table->foreignUuid("functionality_id");
-            $table->foreignUuid("platform_id");
-
-            $table->primary(["functionality_id","platform_id"]);
+        Schema::create('users_user_segments', function (Blueprint $table) {
+            $table->uuid("user_id");
+            $table->uuid("segment_id");
+            $table->primary(["user_id", "segment_id"]);
         });
     }
 
@@ -28,6 +27,6 @@ class CreatePlatformsFunctionalitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('platforms_functionalities');
+        Schema::dropIfExists("users_user_segments");
     }
 }

@@ -17,14 +17,14 @@ class UserSegments extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    function users(): HasMany
+    function users(): BelongsToMany
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, "users_user_segments", "segment_id");
     }
 
-    public function userSegmentsFunctionalities(): BelongsToMany
+    public function functionalities(): BelongsToMany
     {
-        return $this->belongsToMany(UserSegmentsFunctionalities::class);
+        return $this->belongsToMany(Functionalities::class)->using(UserSegmentsFunctionalities::class);
     }
 
     function test(): BelongsTo

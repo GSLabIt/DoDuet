@@ -9,5 +9,4 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class UserSegmentsFunctionalities extends Pivot
 {
     use LogsActivity, ActivityLogAll;
-    //
 }

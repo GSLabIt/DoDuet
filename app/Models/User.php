@@ -8,6 +8,7 @@ use App\Traits\Uuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -64,9 +65,9 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function userSegment(): BelongsTo
+    public function userSegments(): BelongsToMany
     {
-        return $this->belongsTo(UserSegments::class);
+        return $this->belongsToMany(UserSegments::class);
     }
 
     public function testResults(): HasMany

@@ -632,7 +632,8 @@ namespace App\Models{
  * @property-read int|null $third_places_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
- * @property-read \App\Models\UserSegments $userSegment
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegments[] $userSegments
+ * @property-read int|null $user_segments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
  * @property-read \App\Models\Wallet|null $wallet
