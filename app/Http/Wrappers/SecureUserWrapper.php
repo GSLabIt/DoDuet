@@ -128,8 +128,7 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     {
         // checks for invalidity of provided data
         if(!($item === "password" && !empty($value) && is_string($value)) &&
-            !($item === "rotation" && !empty($value) && is_string($value)) &&
-            $item !== "check") {
+            !($item === "rotation" && !empty($value) && is_string($value))) {
             return false;
         }
 
