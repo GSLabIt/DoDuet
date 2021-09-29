@@ -183,6 +183,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/geerlingguy/ping" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/octane" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laminas/laminas-diactoros" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/brianium/paratest" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
