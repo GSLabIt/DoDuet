@@ -30,14 +30,15 @@ class EnsureHasPlatformAccess
             abort(401, "Platform not registered");
         }
         else {
-            if(session()->has($session_value) && session()->get($session_value)) {
+            if((session()->has($session_value) && session()->get($session_value)) || $platform->is_public) {
                 // allow access to the platform
                 return $next($request);
             }
             else {
                 // request platform authentication
                 throw new PlatformLimitedAccessException(
-                    "In order to access " . config("platforms.platform_name") . " you need to be authenticated", 403);
+                    "In order to access " . config("platforms.platform_name") . " you need to be authenticated",
+                    403);
             }
         }
 

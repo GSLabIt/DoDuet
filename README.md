@@ -1,7 +1,64 @@
-## About DoDuet
+# About DoDuet
 Doduet is one of the main platform of the whole Do Labs environment. The environment is design to be scalable and
 large almost with the only limit of imagination because of this many wrappers and helpers will be created around
 repetitive functionalities or hard to understand ones.
+
+## Table of content
+- [Middlewares](#middlewares) - All about middlewares and their definitions
+- [Wrappers](#wrappers) - All about wrappers and their definitions
+- [Helpers](#helpers) - All about helpers and their definitions
+
+## Middlewares
+Middlewares a piece of software executed before the handling of the request by the controller and are one of the most 
+important part of a Laravel app.
+
+The available middlewares (except the default ones) are:
+- [Banned](#banned)
+- [Ensure functionality is enabled](#ensure-functionality-is-enabled)
+- [Ensure has platform access](#ensure-has-platform-access)
+
+### Banned
+The banned middleware checks if a user has a `banned` role, in case the user has that role returns a 403 (access forbidden).
+
+#### Usage
+This middleware should be placed on almost all the authenticated routes in order to actually lock-out the user.
+
+In order to call this middleware from routes its name must be used, `banned`.
+
+### Ensure functionality is enabled
+This middleware ensures that the user requesting a functionality is enabled to use that functionality. This is used to 
+surgically enable testing functionalities for user segments.
+
+This middleware also records interaction with testing functionalities.
+
+Note: Any unauthenticated user cannot access any testing functionality.
+
+#### Usage
+This middleware should be placed on single routes for controllers access, or called from within a controller method in 
+order to enable ui testing.
+
+It accepts 2 arguments:
+- The component name, that is the name of the functionality requested
+- The return type, that can be plain html or json, the two available values are: `page` and `json`
+
+In order to call this middleware from routes its name must be used, `functionality.enabled`.
+The standard laravel syntax for arguments can be used like in the following examples:
+
+`functionality.enabled:functionality-1,json`<br>
+`functionality.enabled:functionality-2`
+
+### Ensure has platform access
+This middleware check if a platform is protected and redirect to access page if the user is not allowed to navigate the 
+platform.
+
+Note: Anyone can access protected platforms from the local machine or network
+
+#### Usage
+This middleware should be placed as one of the root middleware for all the platforms as it will lock users from accessing 
+it.
+
+In order to call this middleware from routes its name must be used, `auth.platform`.
+
 
 ## Wrappers
 The available wrappers currently are:
@@ -174,3 +231,5 @@ It provides all the following methods:
     associated keys. Key rotation is not reversible and makes all previously encoded text and received messages 
     unreadable.
 - `whitelistedItems` - returns a hardcoded list of available items for the `get` and `has` methods
+
+## Helpers

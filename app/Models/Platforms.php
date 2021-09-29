@@ -15,6 +15,11 @@ class Platforms extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
+    protected $casts = [
+        "is_public" => "boolean",
+        "is_password_protected" => "boolean"
+    ];
+
     public function functionalities(): BelongsToMany
     {
         return $this->belongsToMany(Functionalities::class);
