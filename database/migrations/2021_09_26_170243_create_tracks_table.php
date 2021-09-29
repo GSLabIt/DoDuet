@@ -22,11 +22,20 @@ class CreateTracksTable extends Migration
             $table->foreignUuid("owner_id")->references("id")->on("users");
             $table->foreignUuid("creator_id")->references("id")->on("users");
             $table->foreignUuid('skynet_id')->references("id")->on("skynets");
-            $table->foreignUuid('cover_id')->references("id")->on("covers")->nullable();
-            $table->foreignUuid('lyric_id')->references("id")->on("lyrics")->nullable();
-            $table->foreignUuid('album_id')->nullable();
+            $table->foreignUuid('cover_id')->references("id")->on("covers");
+            $table->foreignUuid('lyric_id')->references("id")->on("lyrics");
+            $table->foreignUuid('album_id');
             $table->timestamps();
         });
+
+        // Creates nullable foreign keys
+        Schema::disableForeignKeyConstraints();
+        Schema::table("tracks", function (Blueprint $table) {
+            $table->uuid("cover_id")->nullable()->change();
+            $table->uuid("lyric_id")->nullable()->change();
+            $table->uuid("album_id")->nullable()->change();
+        });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

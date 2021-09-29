@@ -5,8 +5,11 @@ namespace App\Http\Wrappers;
 use App\Http\Wrappers\Interfaces\WorkerWrapper;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Http\Wrappers\Traits\WrapWorker;
+use App\Models\Covers;
+use App\Models\Lyrics;
 use App\Models\Mentions;
 use App\Models\PersonalInformations;
+use App\Models\Tracks;
 use App\Models\User;
 use App\Notifications\UserMentionedNotification;
 use Illuminate\Http\Request;
@@ -143,8 +146,11 @@ class MentionWrapper implements Wrapper, WorkerWrapper
      * @return bool
      */
     public function isValidMorph($morph): bool {
-        return is_object($morph) /*&& (
-                $morph instanceof
-            )*/;
+        return is_object($morph) && (
+                $morph instanceof Tracks ||
+                $morph instanceof Covers ||
+                $morph instanceof Lyrics /*||
+                $morph instanceof Albums*/
+            );
     }
 }

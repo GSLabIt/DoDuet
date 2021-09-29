@@ -29,6 +29,15 @@ class CreateElectionsTable extends Migration
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();
         });
+
+        // Creates nullable foreign keys
+        Schema::disableForeignKeyConstraints();
+        Schema::table("elections", function (Blueprint $table) {
+            $table->uuid("first_place_id")->nullable()->change();
+            $table->uuid("second_place_id")->nullable()->change();
+            $table->uuid("third_place_id")->nullable()->change();
+        });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
