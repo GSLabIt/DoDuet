@@ -65,7 +65,7 @@ class FunctionalitiesWrapper implements Wrapper
      * @param string $platform_name
      * @return Functionalities|null
      */
-    private function getComponent(string $component_name, string $platform_name): ?Functionalities {
+    public function getComponent(string $component_name, string $platform_name): ?Functionalities {
         // retrieve all the functionalities with the defined name
         $functionalities = Functionalities::where("name", $component_name)->get();
 
