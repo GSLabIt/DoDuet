@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\BannedMiddleware;
 use App\Http\Middleware\EnsureFunctionalityIsEnabled;
+use App\Http\Middleware\EnsureHasPlatformAccess;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,26 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'banned' => BannedMiddleware::class,
         'functionality.enabled' => EnsureFunctionalityIsEnabled::class,
+        'auth.platform' => EnsureHasPlatformAccess::class,
+    ];
+
+    /**
+     * The priority-sorted list of middleware.
+     *
+     * This forces non-global middleware to always be in the given order.
+     *
+     * @var array
+     */
+    protected $middlewarePriority = [
+        \App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+        \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        \Laravel\Jetstream\Http\Middleware\AuthenticateSession::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
+        EnsureHasPlatformAccess::class,
+        EnsureFunctionalityIsEnabled::class
     ];
 }

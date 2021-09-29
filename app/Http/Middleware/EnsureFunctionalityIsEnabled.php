@@ -32,11 +32,12 @@ class EnsureFunctionalityIsEnabled
     {
         /**@var User $user*/
         $user = auth()->user();
+        $platform_name = config("platforms.platform_name_parser")(config("platforms.platform_name"));
 
         // if the user is not authenticated or the guarded component is not active for the user-platform pair
         // throw a DisabledFunctionalityException redirecting the user to an error page
         if(auth()->guest() || is_null($user) ||
-            !functionalities($user)->isComponentActive($component, Str::slug(env("APP_NAME")))
+            !functionalities($user)->isComponentActive($component, $platform_name)
         ) {
             if($answer === "page") {
                 throw new DisabledFunctionalityException("Access to $component is disabled", 403);
@@ -47,9 +48,9 @@ class EnsureFunctionalityIsEnabled
         }
 
         // check if the requested component is under test
-        $component = functionalities($user)->getComponent($component, Str::slug(env("APP_NAME")));
-        if(functionalities($user)->isTestingController($component, Str::slug(env("APP_NAME"))) ||
-            functionalities($user)->isTestingUserInterface($component, Str::slug(env("APP_NAME")))) {
+        $component = functionalities($user)->getComponent($component, $platform_name);
+        if(functionalities($user)->isTestingController($component, $platform_name) ||
+            functionalities($user)->isTestingUserInterface($component, $platform_name)) {
 
             // log the usage of the component(s)
             // for every user segment
