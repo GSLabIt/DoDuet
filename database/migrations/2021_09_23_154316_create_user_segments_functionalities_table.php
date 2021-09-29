@@ -18,7 +18,7 @@ class CreateUserSegmentsFunctionalitiesTable extends Migration
             $table->foreignUuid("functionalities_id");
             $table->boolean("is_active")->default(false);
 
-            $table->primary(["segment_id","functionality_id"], "segments_functionalities_id");
+            $table->primary(["user_segments_id","functionalities_id"], "segments_functionalities_id");
         });
     }
 

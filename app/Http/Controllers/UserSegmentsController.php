@@ -15,7 +15,7 @@ class UserSegmentsController extends Controller
         // segment, admins may move multiple users into different segments
         if($user->userSegments->count() === 0) {
             // retrieve the last user segment
-            $user_segments = UserSegments::latest();
+            $user_segments = UserSegments::all()->last();
 
             // check if the segment does not exists or it is full, if this is the case create a new segment
             if(is_null($user_segments) || $user_segments->users->count() >= config("user-segments.per_segment")) {
