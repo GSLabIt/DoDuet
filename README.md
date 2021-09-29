@@ -70,6 +70,7 @@ The available wrappers currently are:
 - [Sodium symmetric encryption wrapper](#sodium-symmetric-encryption-wrapper)
 - [Sodium asymmetric encryption wrapper](#sodium-asymmetric-encryption-wrapper)
 - [Secure user wrapper](#secure-user-wrapper)
+- [Functionalities wrapper](#functionalities-wrapper)
 
 if you don't know what a wrapper is, wikipedia has the answer for you [here](https://it.wikipedia.org/wiki/Wrapper)
 
@@ -232,4 +233,38 @@ It provides all the following methods:
     unreadable.
 - `whitelistedItems` - returns a hardcoded list of available items for the `get` and `has` methods
 
+### Functionalities wrapper
+The functionalities' wrapper does not follow any common wrapper pattern.
+It provides many methods to interact with functionalities, this wrapper may grow in size in time as some 
+functionalities were not taken into consideration as they will rarely be used.
+
+It provides all the following methods:
+- `getComponent` - retrieve a functionality given its name and the platform it is assigned to
+- `hasComponent` - check if a functionality exists for a given platform
+- `isController` - check if a functionality of a given platform is a controller functionality
+- `isTestingController` - check if a functionality of a given platform is a controller under test
+- `isUserInterface` - check if a functionality of a given platform is an ui functionality
+- `isTestingUserInterface` - check if a functionality of a given platform is an ui under test
+- `getSegmentFunctionality` - retrieve a functionality of a user segment given its name and platform
+- `segmentHasFunctionality` - check if a defined user segment has a functionality given its name and platform
+- `isComponentActive` - check if a functionality defined by its name and platform is active for a user segment or for
+    the current user
+
 ## Helpers
+Helpers are short quick functions that help in developing quicker.
+
+The available helpers are:
+- `directoryFromClass` - get the full class name and return a standardized representation of it. This is used for view 
+    creation and call standardization.
+- `camelToSnake` - return the provided string converting its case from camel/pascal case to snake case
+- `indexFromClass` - this further brings standardization to view creation and standardization automatically generating 
+    the path to the index page
+
+The 3 previous functions are linked together and are stored in the same file, for more information about them see the 
+phpdoc in `directoryFromClass.php`
+
+- `functionalities` - initialize and return an instance of the functionalities wrapper
+- `mentions` - initialize and return an instance of the mentions wrapper
+- `secureUser` - initialize and return an instance of the secure user wrapper
+- `settings` - initialize and return an instance of the settings wrapper
+- `sodium` - initialize and return an instance of the sodium crypto wrapper
