@@ -35,4 +35,9 @@ class Covers extends Model
     {
         return $this->belongsTo(Skynet::class);
     }
+
+    function album(): HasOne
+    {
+        return $this->hasOne(Albums::class);
+    }
 }
