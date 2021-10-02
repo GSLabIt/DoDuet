@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Covers extends Model
@@ -34,5 +35,10 @@ class Covers extends Model
     function skynet(): BelongsTo
     {
         return $this->belongsTo(Skynet::class);
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comments::class, "commentable");
     }
 }
