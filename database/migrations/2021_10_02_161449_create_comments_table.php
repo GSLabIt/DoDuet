@@ -17,8 +17,6 @@ class CreateCommentsTable extends Migration
             $table->uuid("id")->primary();
             $table->foreignUuid("commentor_id")->references("id")->on("users");
             $table->text('content');
-            $table->foreignUuid("commentable_id");
-            $table->string('commentable_type');
             $table->uuidMorphs('commentable');
             $table->timestamps();
         });

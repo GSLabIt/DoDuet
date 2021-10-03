@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Albums;
 use App\Models\Comments;
 use App\Models\Covers;
 use App\Models\Lyrics;
@@ -34,25 +35,45 @@ class CommentsFactory extends Factory
         ];
     }
 
-    public function definition1()
+    /**
+     * Switch commentable_id to Lyric id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function lyric()
     {
-        return [
-            "id" => $this->faker->uuid(),
-            "commentor_id" => User::factory(),
-            "content" => $this->faker->sentence(),
-            "commentable_id" => Lyrics::factory(),
-            "commentable_type" => $this->faker->text(255),
-        ];
+        return $this->state(function (array $attributes) {
+            return [
+                "commentable_id" => Lyrics::factory(),
+            ];
+        });
     }
 
-    public function definition2()
+    /**
+     * Switch commentable_id to Cover id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function cover()
     {
-        return [
-            "id" => $this->faker->uuid(),
-            "commentor_id" => User::factory(),
-            "content" => $this->faker->sentence(),
-            "commentable_id" => Covers::factory(),
-            "commentable_type" => $this->faker->text(255),
-        ];
+        return $this->state(function (array $attributes) {
+            return [
+                "commentable_id" => Covers::factory(),
+            ];
+        });
+    }
+
+    /**
+     * Switch commentable_id to Album id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function album()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "commentable_id" => Albums::factory(),
+            ];
+        });
     }
 }
