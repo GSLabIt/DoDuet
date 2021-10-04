@@ -34,7 +34,7 @@ class TaggableFactory extends Factory
     }
 
     /**
-     * Switch commentable_id to Lyric id.
+     * Switch taggable_id to Lyric id.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -48,7 +48,7 @@ class TaggableFactory extends Factory
     }
 
     /**
-     * Switch commentable_id to Cover id.
+     * Switch taggable_id to Cover id.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -62,7 +62,7 @@ class TaggableFactory extends Factory
     }
 
     /**
-     * Switch commentable_id to Album id.
+     * Switch taggable_id to Album id.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
