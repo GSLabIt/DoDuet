@@ -25,7 +25,7 @@ class MessagesFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "sender_id" => User::factory(),
-            "receiver_id" => fn (array $attributes) => $attributes['owner_id'],
+            "receiver_id" => fn (array $attributes) => $attributes['sender_id'],
             "content" => $this->faker->sentence(),
             "read_at" => $this->faker->dateTime(),
             "sender_deleted_at" => $this->faker->dateTime(),
