@@ -25,4 +25,9 @@ class Albums extends Model
     {
         return $this->morphMany(Comments::class, "commentable");
     }
+
+    public function tags(): MorphMany
+    {
+        return $this->morphMany(Taggable::class, "taggable");
+    }
 }
