@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Covers extends Model
@@ -39,5 +40,10 @@ class Covers extends Model
     function album(): HasOne
     {
         return $this->hasOne(Albums::class);
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comments::class, "commentable");
     }
 }
