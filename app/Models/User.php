@@ -179,7 +179,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Follows::class, "followed_id");
     }
-  
+
     public function sentMessages(): HasMany
     {
         return $this->hasMany(Messages::class, "sender_id");
@@ -188,5 +188,15 @@ class User extends Authenticatable
     public function receivedMessages(): HasMany
     {
         return $this->hasMany(Messages::class, "receiver_id");
+    }
+
+    public function sentTips(): HasMany
+    {
+        return $this->hasMany(Tips::class, "tipper_id");
+    }
+
+    public function receivedTips(): HasMany
+    {
+        return $this->hasMany(Tips::class, "tipped_id");
     }
 }
