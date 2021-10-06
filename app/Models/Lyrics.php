@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -32,6 +33,11 @@ class Lyrics extends Model
         return $this->belongsTo(User::class, "creator_id");
     }
 
+    function explicit(): MorphOne
+    {
+        return $this->morphOne(Explicits::class);
+    }
+  
     public function comments(): MorphMany
     {
         return $this->morphMany(Comments::class, "commentable");
