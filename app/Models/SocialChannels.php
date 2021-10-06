@@ -14,9 +14,7 @@ class SocialChannels extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll, SoftDeletes;
 
-    protected $guarded = ["created_at", "updated_at"];
-    protected $table = "social_channels";
-    protected $key = "id";
+    protected $guarded = ["created_at", "updated_at", "deleted_at"];
 
     public function socials(): HasMany
     {

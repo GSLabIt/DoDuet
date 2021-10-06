@@ -23,7 +23,7 @@ class SocialChannelsFactory extends Factory
     {
         return [
             "id" => $this->faker->uuid(),
-            "name" => $this->faker->unique()->domainWord(),
+            "name" => $this->faker->unique()->randomElement(["facebook","twitter","github","gitlab","instagram","linkedin"]),
             "safe_domain" => $this->faker->domainName()
         ];
     }

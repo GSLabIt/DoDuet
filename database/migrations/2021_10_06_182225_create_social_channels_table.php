@@ -14,8 +14,8 @@ class CreateSocialChannelsTable extends Migration
     public function up()
     {
         Schema::create('social_channels', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->string('name');
+            $table->uuid('id')->primary();
+            $table->string('name')->unique()->index();
             $table->text('safe_domain');
 
             $table->timestamps();
