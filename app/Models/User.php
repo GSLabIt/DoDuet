@@ -164,4 +164,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Votes::class);
     }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comments::class);
+    }
 }

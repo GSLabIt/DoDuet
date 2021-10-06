@@ -7,22 +7,22 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Albums extends Model
+class Comments extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
-    protected $guarded = ["updated_at", "created_at"];
+    protected $guarded = ["created_at", "updated_at"];
 
-    function cover(): BelongsTo
+    public function commentor(): BelongsTo
     {
-        return $this->belongsTo(Covers::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function comments(): MorphMany
+    public function commentable(): MorphTo
     {
-        return $this->morphMany(Comments::class, "commentable");
+        return $this->morphTo();
     }
 }
