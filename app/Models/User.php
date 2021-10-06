@@ -179,4 +179,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Follows::class, "followed_id");
     }
+  
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Messages::class, "sender_id");
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Messages::class, "receiver_id");
+    }
 }
