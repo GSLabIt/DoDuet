@@ -25,7 +25,7 @@ class FollowsFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "follower_id" => User::factory(),
-            "followed_id" => fn (array $attributes) => $attributes['follower_id'],
+            "followed_id" => User::factory(),
         ];
     }
 }
