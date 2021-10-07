@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Socials extends Model
@@ -18,5 +19,10 @@ class Socials extends Model
     public function userSegment(): BelongsTo
     {
         return $this->belongsTo(SocialChannels::class);
+    }
+
+    function userSettings(): BelongsToMany
+    {
+        return $this->belongsToMany(UserSettings::class, "settings_socials","socials_id","settings_id");
     }
 }
