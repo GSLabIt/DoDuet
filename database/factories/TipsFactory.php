@@ -24,7 +24,7 @@ class TipsFactory extends Factory
     {
         return [
             "id" => $this->faker->uuid(),
-            "tip" => $this->faker->sentence(),
+            "tip" => $this->faker->numerify("##################"),
             "tipped_id" => User::factory(),
             "tipper_id" => User::factory(),
         ];
