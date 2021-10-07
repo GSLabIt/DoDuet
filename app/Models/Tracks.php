@@ -55,9 +55,9 @@ class Tracks extends Model
 
     function explicit(): MorphOne
     {
-        return $this->morphOne(Explicits::class);
+        return $this->morphOne(Explicits::class, "explicit_content");
     }
-  
+
     public function comments(): MorphMany
     {
         return $this->morphMany(Comments::class, "commentable");
@@ -66,5 +66,10 @@ class Tracks extends Model
     public function tags(): MorphMany
     {
         return $this->morphMany(Taggable::class, "taggable");
+    }
+
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Reports::class, "reportable");
     }
 }
