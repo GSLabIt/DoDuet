@@ -30,4 +30,9 @@ class Albums extends Model
     {
         return $this->morphMany(Taggable::class, "taggable");
     }
+
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Reports::class, "reportable");
+    }
 }

@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Messages extends Model
@@ -23,5 +24,10 @@ class Messages extends Model
     function receiver(): BelongsTo
     {
         return $this->belongsTo(User::class, "receiver_id");
+    }
+
+    public function reports(): MorphOne
+    {
+        return $this->morphOne(Reports::class, "reportable");
     }
 }

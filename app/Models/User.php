@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -190,6 +191,11 @@ class User extends Authenticatable
         return $this->hasMany(Messages::class, "receiver_id");
     }
 
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Reports::class, "reportable");
+    }
+  
     public function sentTips(): HasMany
     {
         return $this->hasMany(Tips::class, "tipper_id");
