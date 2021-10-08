@@ -6,23 +6,17 @@ use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Reports extends Model
+class ReportReasons extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["created_at", "updated_at"];
 
-    public function reportable(): MorphTo
+    public function report(): HasMany
     {
-        return $this->morphTo();
-    }
-
-    public function reportReason(): BelongsTo
-    {
-        return $this->belongsTo(ReportReasons::class);
+        return $this->hasMany(Reports::class);
     }
 }

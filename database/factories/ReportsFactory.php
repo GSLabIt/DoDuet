@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Messages;
 use App\Models\Reports;
+use App\Models\ReportReasons;
 use App\Models\Tracks;
 use App\Models\Covers;
 use App\Models\Lyrics;
@@ -31,7 +32,7 @@ class ReportsFactory extends Factory
             "id" => $this->faker->uuid(),
             "reportable_id" => Tracks::factory(),
             "reportable_type" => $this->faker->text(255),
-            //"reason_id" => ReportReasons::factory(),
+            "reason_id" => ReportReasons::factory(),
             "extra_information" => $this->faker->sentence(),
         ];
     }
