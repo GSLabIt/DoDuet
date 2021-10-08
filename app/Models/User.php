@@ -195,4 +195,14 @@ class User extends Authenticatable
     {
         return $this->morphMany(Reports::class, "reportable");
     }
+  
+    public function sentTips(): HasMany
+    {
+        return $this->hasMany(Tips::class, "tipper_id");
+    }
+
+    public function receivedTips(): HasMany
+    {
+        return $this->hasMany(Tips::class, "tipped_id");
+    }
 }
