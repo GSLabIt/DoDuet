@@ -190,7 +190,7 @@ class User extends Authenticatable
         return $this->hasMany(Messages::class, "receiver_id");
     }
 
-    public function personalLibraries(): HasMany
+    public function libraries(): HasMany
     {
         return $this->hasMany(PersonalLibraries::class, "owner_id");
     }

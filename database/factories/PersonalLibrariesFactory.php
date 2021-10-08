@@ -27,7 +27,21 @@ class PersonalLibrariesFactory extends Factory
             "owner_id" => User::factory(),
             "description" => $this->faker->sentence(),
             "name" => $this->faker->text(255),
-            "is_public" => $this->faker->boolean(),
+            "is_public" => $this->faker->boolean(100),
         ];
+    }
+
+    /**
+     * Switch is_public to true.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function private()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "is_public" => $this->faker->boolean(0),
+            ];
+        });
     }
 }
