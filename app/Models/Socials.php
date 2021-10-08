@@ -16,7 +16,7 @@ class Socials extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    public function userSegment(): BelongsTo
+    public function socialChannels(): BelongsTo
     {
         return $this->belongsTo(SocialChannels::class);
     }
