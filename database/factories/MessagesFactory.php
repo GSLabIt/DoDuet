@@ -32,4 +32,19 @@ class MessagesFactory extends Factory
             "receiver_deleted_at" => $this->faker->dateTime(),
         ];
     }
+
+
+    /**
+     * Switch receiver_id to sender_id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function invalid()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "receiver_id" => fn (array $attributes) => $attributes['sender_id'],
+            ];
+        });
+    }
 }
