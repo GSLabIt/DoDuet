@@ -22,7 +22,54 @@ class FunctionalitiesFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id"  => $this->faker->uuid(),
+            "name" => $this->faker->text(),
+            "description" => $this->faker->sentence(),
+            "is_controller" => $this->faker->boolean(0),
+            "is_ui" => $this->faker->boolean(0),
+            "is_testing" => $this->faker->boolean(100),
         ];
+    }
+
+    /**
+     * Switch is_controller to true.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function isControllerTrue()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "is_controller" => $this->faker->boolean(100),
+            ];
+        });
+    }
+
+    /**
+     * Switch is_ui to true.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function isUiTrue()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "is_ui" => $this->faker->boolean(100),
+            ];
+        });
+    }
+
+    /**
+     * Switch is_testing to false.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+        public function isTestingFalse()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "is_testing" => $this->faker->boolean(0),
+            ];
+        });
     }
 }
