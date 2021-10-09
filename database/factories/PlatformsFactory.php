@@ -22,7 +22,41 @@ class PlatformsFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "name" => $this->faker->text(255),
+            "domain" => $this->faker->text(),
+            "is_public" => $this->faker->boolean(0),
+            "is_password_protected" => $this->faker->boolean(0),
+            "password" => null,
         ];
+    }
+
+    /**
+     * Switch is_public to true.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function public()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "is_public" => $this->faker->boolean(100),
+            ];
+        });
+    }
+
+    /**
+     * Switch is_password_protected to true and sets a passowrd.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function passwordProtected()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "is_password_protected" => $this->faker->boolean(100),
+                "password" => $this->faker->text(255),
+            ];
+        });
     }
 }
