@@ -14,8 +14,8 @@ class CreateSettingsSocialsTable extends Migration
     public function up()
     {
         Schema::create('settings_socials', function (Blueprint $table) {
-            $table->foreignUuid('settings_id')->references('id')->on('user_settings');
-            $table->foreignUuid('socials_id')->references('id')->on('socials');
+            $table->foreignUuid('settings_id');
+            $table->foreignUuid('socials_id');
 
             $table->primary(["settings_id","socials_id"]);
         });
