@@ -78,4 +78,9 @@ class Tracks extends Model
     {
         return $this->belongsToMany(PersonalLibraries::class,"personal_libraries_tracks","track_id","library_id");
     }
+
+    public function mentions(): MorphMany
+    {
+        return $this->morphMany(Mentions::class, "mentionable");
+    }
 }

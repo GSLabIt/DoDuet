@@ -52,4 +52,9 @@ class Lyrics extends Model
     {
         return $this->morphMany(Reports::class, "reportable");
     }
+
+    public function mentions(): MorphMany
+    {
+        return $this->morphMany(Mentions::class, "mentionable");
+    }
 }
