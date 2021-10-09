@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -71,5 +72,10 @@ class Tracks extends Model
     public function reports(): MorphMany
     {
         return $this->morphMany(Reports::class, "reportable");
+    }
+
+    public function libraries(): BelongsToMany
+    {
+        return $this->belongsToMany(PersonalLibraries::class,"personal_libraries_tracks","track_id","library_id");
     }
 }
