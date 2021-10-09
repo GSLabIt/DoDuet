@@ -191,6 +191,11 @@ class User extends Authenticatable
         return $this->hasMany(Messages::class, "receiver_id");
     }
 
+    public function libraries(): HasMany
+    {
+        return $this->hasMany(PersonalLibraries::class, "owner_id");
+    }
+
     public function reports(): MorphMany
     {
         return $this->morphMany(Reports::class, "reportable");
