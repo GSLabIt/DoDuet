@@ -33,4 +33,18 @@ class AlbumsFactory extends Factory
             "description" => $this->faker->sentence(),
         ];
     }
+
+    /**
+     * Switch owner_id to buyer user id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function sold()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "owner_id" => User::factory(),
+            ];
+        });
+    }
 }
