@@ -34,7 +34,7 @@ class FollowsFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function sameUser()
+    public function invalid()
     {
         return $this->state(function (array $attributes) {
             return [
