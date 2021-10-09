@@ -32,7 +32,7 @@ class PlatformsFactory extends Factory
     }
 
     /**
-     * Switch is_public to true.
+     * Set is_public to true.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -46,7 +46,7 @@ class PlatformsFactory extends Factory
     }
 
     /**
-     * Switch is_password_protected to true and sets a passowrd.
+     * Set is_password_protected to true and set a password.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
