@@ -28,4 +28,18 @@ class FollowsFactory extends Factory
             "followed_id" => User::factory(),
         ];
     }
+
+    /**
+     * Switch followed_id to follower_id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function sameUser()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "followed_id" => fn (array $attributes) => $attributes['follower_id'],
+            ];
+        });
+    }
 }
