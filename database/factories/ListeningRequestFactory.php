@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Elections;
 use App\Models\ListeningRequest;
+use App\Models\Tracks;
+use App\Models\Votes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ListeningRequestFactory extends Factory
@@ -22,7 +25,11 @@ class ListeningRequestFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "voter_id" => Votes::factory(),
+            "track_id" => Tracks::factory(),
+            "election_id" => Elections::factory(),
+
         ];
     }
 }
