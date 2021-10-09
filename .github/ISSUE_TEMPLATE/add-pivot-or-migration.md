@@ -1,7 +1,7 @@
 ---
 name: Add pivot or migration
 about: Request the creation of one or more new pivot tables
-title: Models creation - [PIVOT_NAME]
+title: Migration creation - [PIVOT_NAME]
 labels: models, new functionality, pivot
 assignees: ''
 
