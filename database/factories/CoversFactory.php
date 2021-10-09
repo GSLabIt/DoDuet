@@ -31,4 +31,18 @@ class CoversFactory extends Factory
             "creator_id" => fn (array $attributes) => $attributes['owner_id'],
         ];
     }
+
+    /**
+     * Switch owner_id to buyer user's id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function sold()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "owner_id" => User::factory(),
+            ];
+        });
+    }
 }
