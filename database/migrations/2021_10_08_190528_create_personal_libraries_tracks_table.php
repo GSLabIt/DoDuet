@@ -16,7 +16,6 @@ class CreatePersonalLibrariesTracksTable extends Migration
         Schema::create('personal_libraries_tracks', function (Blueprint $table) {
             $table->foreignUuid("library_id");
             $table->foreignUuid("track_id");
-
             $table->primary(["library_id","track_id"]);
         });
     }

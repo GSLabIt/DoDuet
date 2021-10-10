@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Albums;
+use App\Models\Covers;
 use App\Models\Explicits;
 use App\Models\Tracks;
 use App\Models\Lyrics;
@@ -26,7 +28,7 @@ class ExplicitsFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "explicit_content_id" => Tracks::factory(),
-            "explicit_content_type" => $this->faker->text(255),
+            "explicit_content_type" => Tracks::class,
         ];
     }
 
@@ -40,9 +42,38 @@ class ExplicitsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "explicit_content_id" => Lyrics::factory(),
+                "explicit_content_type" => Lyrics::class,
+            ];
+        });
+    }
+    /**
+     * Switch explicit_content_id to Cover id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function cover()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "explicit_content_id" => Covers::factory(),
+                "explicit_content_type" => Covers::class,
             ];
         });
     }
 
-    //TODO: link with Comments too
+    /**
+     * Switch explicit_content_id to Album id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function album()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "explicit_content_id" => Albums::factory(),
+                "explicit_content_type" => Albums::class,
+            ];
+        });
+    }
+
 }
