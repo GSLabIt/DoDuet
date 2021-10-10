@@ -25,35 +25,37 @@ class FunctionalitiesFactory extends Factory
             "id"  => $this->faker->uuid(),
             "name" => $this->faker->text(),
             "description" => $this->faker->sentence(),
-            "is_controller" => $this->faker->boolean(0),
+            "is_controller" => $this->faker->boolean(100),
             "is_ui" => $this->faker->boolean(0),
             "is_testing" => $this->faker->boolean(100),
         ];
     }
 
     /**
-     * Switch is_controller to true.
+     * Switch both is_controller and is_ui to false.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function isControllerTrue()
+    public function invalid()
     {
         return $this->state(function (array $attributes) {
             return [
-                "is_controller" => $this->faker->boolean(100),
+                "is_controller" => $this->faker->boolean(0),
+                "is_ui" => $this->faker->boolean(0),
             ];
         });
     }
 
     /**
-     * Switch is_ui to true.
+     * Switch is_ui to true and is_controller to false.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function isUiTrue()
+    public function isUi()
     {
         return $this->state(function (array $attributes) {
             return [
+                "is_controller" => $this->faker->boolean(0),
                 "is_ui" => $this->faker->boolean(100),
             ];
         });
@@ -64,7 +66,7 @@ class FunctionalitiesFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-        public function isTestingFalse()
+        public function isNotTesting()
     {
         return $this->state(function (array $attributes) {
             return [
