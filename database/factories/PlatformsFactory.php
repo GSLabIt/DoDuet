@@ -55,7 +55,7 @@ class PlatformsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "is_password_protected" => $this->faker->boolean(100),
-                "password" => $this->faker->text(255),
+                "password" => \Hash::make('password'),
             ];
         });
     }
