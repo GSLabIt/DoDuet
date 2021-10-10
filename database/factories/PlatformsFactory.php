@@ -24,7 +24,7 @@ class PlatformsFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "name" => $this->faker->text(255),
-            "domain" => $this->faker->text(),
+            "domain" => $this->faker->domainName(),
             "is_public" => $this->faker->boolean(0),
             "is_password_protected" => $this->faker->boolean(0),
             "password" => null,
