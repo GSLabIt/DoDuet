@@ -22,11 +22,15 @@ class MessagesFactory extends Factory
      */
     public function definition()
     {
+        $u1 = User::factory();
+        $u2 = User::factory();
+        secureUser($u1)->set("password","password");
+        secureUser($u2)->set("password","password");
         return [
             "id" => $this->faker->uuid(),
-            "sender_id" => User::factory(),
-            "receiver_id" => User::factory(),
-            "content" => $this->faker->sentence(),
+            "sender_id" => $u1,
+            "receiver_id" => $u2,
+            "content" => $u1->encodeMessage($this->faker->sentence(), $u2),
             "read_at" => $this->faker->dateTime(),
             "sender_deleted_at" => $this->faker->dateTime(),
             "receiver_deleted_at" => $this->faker->dateTime(),
