@@ -30,7 +30,7 @@ class MentionsFactory extends Factory
             "id" => $this->faker->uuid(),
             "mentioner_id" => User::factory(),
             "mentioned_id" => User::factory(),
-            "mention_type" => $this->faker->text(255),
+            "mention_type" => Tracks::class,
             "mention_id" => Tracks::factory(),
         ];
     }
@@ -44,6 +44,7 @@ class MentionsFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
+                "mention_type" => Lyrics::class,
                 "mention_id" => Lyrics::factory(),
             ];
         });
@@ -58,6 +59,7 @@ class MentionsFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
+                "mention_type" => Covers::class,
                 "mention_id" => Covers::factory(),
             ];
         });
@@ -72,6 +74,7 @@ class MentionsFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
+                "mention_type" => Albums::class,
                 "mention_id" => Albums::factory(),
             ];
         });
