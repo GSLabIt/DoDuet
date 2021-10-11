@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Referral;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ReferralFactory extends Factory
@@ -22,7 +23,9 @@ class ReferralFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "code" => $this->faker->text(255),
+            "owner_id" => User::factory(),
         ];
     }
 }
