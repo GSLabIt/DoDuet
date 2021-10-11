@@ -31,7 +31,7 @@ class CommentsFactory extends Factory
             "commentor_id" => User::factory(),
             "content" => $this->faker->sentence(),
             "commentable_id" => Tracks::factory(),
-            "commentable_type" => $this->faker->text(255),
+            "commentable_type" => Tracks::class,
         ];
     }
 
@@ -45,6 +45,7 @@ class CommentsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "commentable_id" => Lyrics::factory(),
+                "commentable_type" => Lyrics::class,
             ];
         });
     }
@@ -59,6 +60,7 @@ class CommentsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "commentable_id" => Covers::factory(),
+                "commentable_type" => Covers::class,
             ];
         });
     }
@@ -73,6 +75,7 @@ class CommentsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "commentable_id" => Albums::factory(),
+                "commentable_type" => Albums::class,
             ];
         });
     }

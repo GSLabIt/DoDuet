@@ -29,7 +29,7 @@ class TaggableFactory extends Factory
         return [
             "hashtag_id" => Hashtags::factory(),
             "taggable_id" => Tracks::factory(),
-            "taggable_type" => $this->faker->text(255),
+            "taggable_type" => Tracks::class,
         ];
     }
 
@@ -43,6 +43,7 @@ class TaggableFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "taggable_id" => Lyrics::factory(),
+                "taggable_type" => Lyrics::class,
             ];
         });
     }
@@ -57,6 +58,7 @@ class TaggableFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "taggable_id" => Covers::factory(),
+                "taggable_type" => Covers::class,
             ];
         });
     }
@@ -71,6 +73,7 @@ class TaggableFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "taggable_id" => Albums::factory(),
+                "taggable_type" => Albums::class,
             ];
         });
     }

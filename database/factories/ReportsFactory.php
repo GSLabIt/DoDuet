@@ -31,7 +31,7 @@ class ReportsFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "reportable_id" => Tracks::factory(),
-            "reportable_type" => $this->faker->text(255),
+            "reportable_type" => Tracks::class,
             "reason_id" => ReportReasons::factory(),
             "extra_information" => $this->faker->sentence(),
         ];
@@ -47,6 +47,7 @@ class ReportsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "reportable_id" => Lyrics::factory(),
+                "reportable_type" => Lyrics::class,
             ];
         });
     }
@@ -61,6 +62,7 @@ class ReportsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "reportable_id" => Covers::factory(),
+                "reportable_type" => Covers::class,
             ];
         });
     }
@@ -75,6 +77,7 @@ class ReportsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "reportable_id" => Albums::factory(),
+                "reportable_type" => Albums::class,
             ];
         });
     }
@@ -89,6 +92,7 @@ class ReportsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "reportable_id" => User::factory(),
+                "reportable_type" => User::class,
             ];
         });
     }
@@ -103,6 +107,7 @@ class ReportsFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "reportable_id" => Messages::factory(),
+                "reportable_type" => Messages::class,
             ];
         });
     }
