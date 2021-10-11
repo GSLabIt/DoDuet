@@ -29,4 +29,18 @@ class TipsFactory extends Factory
             "tipper_id" => User::factory(),
         ];
     }
+
+    /**
+     * Switch tipped_id to tipper_id.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function invalid()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "tipped_id" => fn (array $attributes) => $attributes['tipper_id'],
+            ];
+        });
+    }
 }
