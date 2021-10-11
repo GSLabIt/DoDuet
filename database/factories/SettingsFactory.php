@@ -22,7 +22,41 @@ class SettingsFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "name" => $this->faker->text(255),
+            "type" => $this->faker->text(255),
+            "allowed_values" => $this->faker->text(),
+            "has_default" => $this->faker->boolean(0),
+            "default_value" => null,
         ];
+    }
+
+    /**
+     * Switch allowed_values to null.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function nullAllowedValues()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "allowed_values" => null,
+            ];
+        });
+    }
+
+    /**
+     * Switch has_default to true and set a value to default_value.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function hasDefault()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "has_default" => $this->faker->boolean(100),
+                "default_value" => $this->faker->text(),
+            ];
+        });
     }
 }
