@@ -22,7 +22,24 @@ class SkynetFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "link" => $this->faker->url(),
+            "encrypted" => $this->faker->boolean(100),
+            "encryption_key" => $this->faker->text(512),
         ];
+    }
+
+    /**
+     * Switch encrypted to false.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function notEncrypted()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "encrypted" => $this->faker->boolean(0),
+            ];
+        });
     }
 }
