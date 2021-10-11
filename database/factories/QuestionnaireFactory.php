@@ -22,7 +22,8 @@ class QuestionnaireFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "link" => $this->faker->url(),
         ];
     }
 }
