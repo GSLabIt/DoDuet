@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Functionalities;
+use App\Models\Questionnaire;
 use App\Models\Test;
+use App\Models\UserSegments;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TestFactory extends Factory
@@ -22,7 +25,10 @@ class TestFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "functionality_id" => Functionalities::factory(),
+            "user_segment_id" => UserSegments::factory(),
+            "id" => $this->faker->uuid(),
+            "questionnaire_id" => Questionnaire::factory(),
         ];
     }
 }
