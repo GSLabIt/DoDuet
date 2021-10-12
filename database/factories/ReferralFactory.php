@@ -24,7 +24,7 @@ class ReferralFactory extends Factory
     {
         return [
             "id" => $this->faker->uuid(),
-            "code" => $this->faker->text(255),
+            "code" => hash("sha1", sodium()->derivation()->generateSalt(64)),
             "owner_id" => User::factory(),
         ];
     }
