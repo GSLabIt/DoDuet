@@ -25,7 +25,7 @@ class SettingsFactory extends Factory
             "id" => $this->faker->uuid(),
             "name" => $this->faker->text(255),
             "type" => $this->faker->text(255),
-            "allowed_values" => $this->faker->text(),
+            "allowed_values" => json_encode([$this->faker->text() => $this->faker->text()]),
             "has_default" => $this->faker->boolean(0),
             "default_value" => null,
         ];
@@ -36,7 +36,7 @@ class SettingsFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function nullAllowedValues()
+    public function allowAllValues()
     {
         return $this->state(function (array $attributes) {
             return [
@@ -56,6 +56,21 @@ class SettingsFactory extends Factory
             return [
                 "has_default" => $this->faker->boolean(100),
                 "default_value" => $this->faker->text(),
+            ];
+        });
+    }
+
+    /**
+     * Switch has_default to true and set default_value to null.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function invalid()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "has_default" => $this->faker->boolean(100),
+                "default_value" => null,
             ];
         });
     }
