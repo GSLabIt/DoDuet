@@ -25,7 +25,7 @@ class SkynetFactory extends Factory
             "id" => $this->faker->uuid(),
             "link" => $this->faker->url(),
             "encrypted" => $this->faker->boolean(100),
-            "encryption_key" => $this->faker->text(512),
+            "encryption_key" => sodium()->encryption()->symmetric(),
         ];
     }
 
