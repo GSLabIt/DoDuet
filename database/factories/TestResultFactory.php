@@ -26,7 +26,7 @@ class TestResultFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "tester_id" => User::factory(),
-            "utilizations" => $this->faker->numberBetween(0, 18446744073709551615),
+            "utilizations" => $this->faker->numberBetween(0, PHP_INT_MAX),
             "has_answered_questionnaire" => $this->faker->boolean(0),
             "test_id" => Test::factory(),
         ];
