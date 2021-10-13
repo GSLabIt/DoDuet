@@ -149,8 +149,8 @@ class MentionWrapper implements Wrapper, WorkerWrapper
         return is_object($morph) && (
                 $morph instanceof Tracks ||
                 $morph instanceof Covers ||
-                $morph instanceof Lyrics /*||
-                $morph instanceof Albums*/
+                $morph instanceof Lyrics ||
+                $morph instanceof Albums
             );
     }
 }
