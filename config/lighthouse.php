@@ -29,6 +29,8 @@ return [
          * make sure to return spec-compliant responses in case an error is thrown.
          */
         'middleware' => [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+
             \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class,
 
             // Logs in a user if they are authenticated. In contrast to Laravel's 'auth'
@@ -37,6 +39,8 @@ return [
 
             // Logs every incoming GraphQL query.
             // \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
+
+
         ],
 
         /*
@@ -57,7 +61,7 @@ return [
     |
     */
 
-    'guard' => 'api',
+    'guard' => 'sanctum',
 
     /*
     |--------------------------------------------------------------------------
@@ -156,9 +160,13 @@ return [
     */
 
     'security' => [
-        'max_query_complexity' => \GraphQL\Validator\Rules\QueryComplexity::DISABLED,
-        'max_query_depth' => \GraphQL\Validator\Rules\QueryDepth::DISABLED,
-        'disable_introspection' => \GraphQL\Validator\Rules\DisableIntrospection::DISABLED,
+        'max_query_complexity' => env("APP_ENV", "production") === "local" ?
+            \GraphQL\Validator\Rules\QueryComplexity::DISABLED : 1000,
+        'max_query_depth' => env("APP_ENV", "production") === "local" ?
+            \GraphQL\Validator\Rules\QueryDepth::DISABLED : 5,
+        'disable_introspection' => env("APP_ENV", "production") === "local" ?
+            \GraphQL\Validator\Rules\DisableIntrospection::DISABLED :
+            \GraphQL\Validator\Rules\DisableIntrospection::ENABLED,
     ],
 
     /*
@@ -176,13 +184,13 @@ return [
          * Allow clients to query paginated lists without specifying the amount of items.
          * Setting this to `null` means clients have to explicitly ask for the count.
          */
-        'default_count' => null,
+        'default_count' => 5,
 
         /*
          * Limit the maximum amount of items that clients can request from paginated lists.
          * Setting this to `null` means the count is unrestricted.
          */
-        'max_count' => null,
+        'max_count' => 25,
     ],
 
     /*
@@ -213,7 +221,7 @@ return [
     |
     */
 
-    'debug' => env('LIGHTHOUSE_DEBUG', \GraphQL\Error\DebugFlag::INCLUDE_DEBUG_MESSAGE | \GraphQL\Error\DebugFlag::INCLUDE_TRACE),
+    'debug' => env('APP_DEBUG', \GraphQL\Error\DebugFlag::INCLUDE_DEBUG_MESSAGE | \GraphQL\Error\DebugFlag::INCLUDE_TRACE),
 
     /*
     |--------------------------------------------------------------------------
@@ -328,7 +336,7 @@ return [
     |
     */
 
-    'non_null_pagination_results' => false,
+    'non_null_pagination_results' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -365,7 +373,7 @@ return [
          * Setting this to `null` means the subscriptions are stored forever. This may cause
          * stale subscriptions to linger indefinitely in case cleanup fails for any reason.
          */
-        'storage_ttl' => env('LIGHTHOUSE_SUBSCRIPTION_STORAGE_TTL', null),
+        'storage_ttl' => env('LIGHTHOUSE_SUBSCRIPTION_STORAGE_TTL', 3600),  // 1h
 
         /*
          * Default subscription broadcaster.
