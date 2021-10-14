@@ -1,0 +1,9 @@
+# |--------------------------------------------------------------------------
+# | Referrals
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to queries on the Referral model
+# |
+extend type Query @namespace(field: "App\\Http\\Controllers") {
+    getReferralURL: String! @guard @field(resolver: "ReferralController@getReferralURL")
+}
