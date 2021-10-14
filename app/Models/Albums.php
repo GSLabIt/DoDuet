@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -19,6 +20,10 @@ class Albums extends Model
     function cover(): BelongsTo
     {
         return $this->belongsTo(Covers::class);
+    }
+
+    function tracks(): HasMany {
+        return $this->HasMany(Tracks::class);
     }
 
     public function comments(): MorphMany

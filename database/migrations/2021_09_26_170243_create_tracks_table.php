@@ -24,7 +24,7 @@ class CreateTracksTable extends Migration
             $table->foreignUuid('skynet_id')->references("id")->on("skynets");
             $table->foreignUuid('cover_id')->references("id")->on("covers");
             $table->foreignUuid('lyric_id')->references("id")->on("lyrics");
-            $table->foreignUuid('album_id');
+            $table->foreignUuid('album_id')->references("id")->on("albums");
             $table->timestamps();
         });
 
