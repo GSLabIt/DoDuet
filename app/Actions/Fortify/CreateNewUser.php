@@ -6,6 +6,7 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\UserSegmentsController;
 use App\Models\Referral;
 use App\Models\User;
+use App\Notifications\NewReferralNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -60,10 +61,16 @@ class CreateNewUser implements CreatesNewUsers
             if (!is_null($referral)) {
                 // if the referral code exists than associate the just created user with the referrer
                 // the prize for the referrer is computed on the fly based on the amount of refs it has
+                $prize = ReferralController::computePrizeForNewReferer($referral->owner);
+
+                // actually create the association
                 $user->referredBy()->create([
                     "referrer_id" => $referral->owner->id,
-                    "prize" => ReferralController::computePrizeForNewReferer($referral->owner)
+                    "prize" => $prize
                 ]);
+
+                // notify the referrer of the new ref
+                $referral->owner->notify(new NewReferralNotification($user->id, $prize));
             }
         }
 
