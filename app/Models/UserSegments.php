@@ -19,7 +19,7 @@ class UserSegments extends Model
 
     function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, "users_user_segments", "segment_id");
+        return $this->belongsToMany(User::class, "user_user_segments");
     }
 
     public function functionalities(): BelongsToMany

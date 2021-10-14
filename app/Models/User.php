@@ -68,7 +68,7 @@ class User extends Authenticatable
 
     public function userSegments(): BelongsToMany
     {
-        return $this->belongsToMany(UserSegments::class);
+        return $this->belongsToMany(UserSegments::class, "user_user_segments");
     }
 
     public function testResults(): HasMany
@@ -148,7 +148,7 @@ class User extends Authenticatable
 
     public function referral(): HasOne
     {
-        return $this->hasOne(Referral::class);
+        return $this->hasOne(Referral::class, "owner_id");
     }
 
     public function referred(): HasOne
@@ -200,7 +200,7 @@ class User extends Authenticatable
     {
         return $this->morphMany(Reports::class, "reportable");
     }
-  
+
     public function sentTips(): HasMany
     {
         return $this->hasMany(Tips::class, "tipper_id");
