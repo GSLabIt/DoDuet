@@ -114,9 +114,9 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
-import web3Interactions from "@/Composition/Web3Interactions";
+//import web3Interactions from "@/Composition/Web3Interactions";
 import toaster from "@/Composition/toaster";
-import Web3 from "web3";
+//import Web3 from "web3";
 import {useForm} from "@inertiajs/inertia-vue3";
 import PopupBase from "@/Components/PopupBase";
 import JetButton from '@/Jetstream/Button'
@@ -142,7 +142,7 @@ export default {
     },
     setup() {
         return {
-            ...web3Interactions(),
+            //...web3Interactions(),
             ...toaster()
         }
     },
@@ -204,7 +204,7 @@ export default {
         },
         checkTrackState() {
             if (!this.track) {
-                this.track = this.getTrackContract(this.web3)
+                // this.track = this.getTrackContract(this.web3)
             }
         },
 
@@ -218,7 +218,7 @@ export default {
         },
 
         async submit() {
-            let tx;
+            /*let tx;
             this.nft_creation_popup = {
                 open: true,
                 title: "Uploading track",
@@ -275,11 +275,11 @@ export default {
             } catch (e) {
                 this.nft_creation_popup.state = `An error occurred during the transaction, check what happened examining it`
                 this.nft_creation_popup.error = true
-            }
+            }*/
         },
     },
     created() {
-        if (this.isSupportedWallet()) {
+        /*if (this.isSupportedWallet()) {
             let net = this.getWalletProvider()
             this.web3 = new Web3(window[net]);
 
@@ -298,7 +298,7 @@ export default {
             window[net].on('accountsChanged', this.handleAccountChange)
         } else {
             this.$inertia.visit(route("wallet_required"))
-        }
+        }*/
     }
 }
 </script>

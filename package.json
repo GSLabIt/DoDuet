@@ -29,6 +29,7 @@
     "dependencies": {
         "@apollo/client": "^3.4.16",
         "graphql": "^15.6.1",
-        "graphql-tag": "^2.12.5"
+        "graphql-tag": "^2.12.5",
+        "toastify-js": "^1.11.2"
     }
 }

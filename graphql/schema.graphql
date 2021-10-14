@@ -14,7 +14,7 @@ type Query {
     # | Section assigned to queries on the current user model
     # |
     """Get the current user instance"""
-    me: User! @auth
+    me: User @auth
 }
 
 type Mutation {

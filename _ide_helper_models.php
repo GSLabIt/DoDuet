@@ -204,6 +204,11 @@ namespace App\Models{
 /**
  * App\Models\Follows
  *
+ * @property string $id
+ * @property string $follower_id
+ * @property string $followed_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $followed
@@ -212,6 +217,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereFollowedId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereFollowerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereUpdatedAt($value)
  */
 	class Follows extends \Eloquent {}
 }
@@ -387,6 +397,15 @@ namespace App\Models{
 /**
  * App\Models\Messages
  *
+ * @property string $id
+ * @property string $sender_id
+ * @property string $receiver_id
+ * @property string $content
+ * @property string $read_at
+ * @property string|null $sender_deleted_at
+ * @property string|null $receiver_deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $receiver
@@ -396,6 +415,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereReadAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereReceiverDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereReceiverId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereUpdatedAt($value)
  */
 	class Messages extends \Eloquent {}
 }
@@ -466,6 +494,13 @@ namespace App\Models{
 /**
  * App\Models\PersonalLibraries
  *
+ * @property string $id
+ * @property string $owner_id
+ * @property string $description
+ * @property string $name
+ * @property int $is_public
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
@@ -475,6 +510,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereIsPublic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereUpdatedAt($value)
  */
 	class PersonalLibraries extends \Eloquent {}
 }
@@ -568,6 +610,7 @@ namespace App\Models{
  * @property string $referrer_id
  * @property string $referred_id
  * @property int $is_redeemed
+ * @property int $prize
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
@@ -581,6 +624,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereIsRedeemed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred wherePrize($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferredId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferrerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereUpdatedAt($value)
@@ -592,6 +636,12 @@ namespace App\Models{
 /**
  * App\Models\ReportReasons
  *
+ * @property string $id
+ * @property string $reportable_type
+ * @property string $name
+ * @property string $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $report
@@ -600,6 +650,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereReportableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereUpdatedAt($value)
  */
 	class ReportReasons extends \Eloquent {}
 }
@@ -608,6 +664,13 @@ namespace App\Models{
 /**
  * App\Models\Reports
  *
+ * @property string $id
+ * @property string $reportable_type
+ * @property string $reportable_id
+ * @property string $reason_id
+ * @property string $extra_informations
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\ReportReasons $reportReason
@@ -616,6 +679,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereExtraInformations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReasonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereUpdatedAt($value)
  */
 	class Reports extends \Eloquent {}
 }
@@ -686,6 +756,12 @@ namespace App\Models{
 /**
  * App\Models\SocialChannels
  *
+ * @property string $id
+ * @property string $name
+ * @property string $safe_domain
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Socials[] $socials
@@ -695,6 +771,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereSafeDomain($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withoutTrashed()
  */
@@ -705,6 +787,12 @@ namespace App\Models{
 /**
  * App\Models\Socials
  *
+ * @property string $id
+ * @property string $channel_id
+ * @property string $link
+ * @property int $is_public
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\SocialChannels $socialChannels
@@ -714,6 +802,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereChannelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereIsPublic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereUpdatedAt($value)
  */
 	class Socials extends \Eloquent {}
 }
@@ -801,6 +895,12 @@ namespace App\Models{
 /**
  * App\Models\Tips
  *
+ * @property string $id
+ * @property string $tipper_id
+ * @property string $tipped_id
+ * @property string $tip
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $tipped
@@ -809,6 +909,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTippedId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTipperId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereUpdatedAt($value)
  */
 	class Tips extends \Eloquent {}
 }
