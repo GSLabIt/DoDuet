@@ -20,9 +20,4 @@ class Referral extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    function referrers(): HasMany
-    {
-        return $this->hasMany(Referred::class);
-    }
 }

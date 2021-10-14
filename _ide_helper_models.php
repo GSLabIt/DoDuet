@@ -547,8 +547,6 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Referred[] $referrers
- * @property-read int|null $referrers_count
  * @method static \Database\Factories\ReferralFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newQuery()
@@ -575,7 +573,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $referred
- * @property-read \App\Models\Referral $refferer
+ * @property-read \App\Models\User $referrer
  * @method static \Database\Factories\ReferredFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newQuery()
@@ -931,7 +929,9 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tips[] $receivedTips
  * @property-read int|null $received_tips_count
  * @property-read \App\Models\Referral|null $referral
- * @property-read \App\Models\Referred|null $referred
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Referred[] $referred
+ * @property-read int|null $referred_count
+ * @property-read \App\Models\Referred|null $referredBy
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
@@ -940,14 +940,14 @@ namespace App\Models{
  * @property-read int|null $second_places_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Messages[] $sentMessages
  * @property-read int|null $sent_messages_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tips[] $sentTips
- * @property-read int|null $sent_tips_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $settings
  * @property-read int|null $settings_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Elections[] $thirdPlaces
  * @property-read int|null $third_places_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tips[] $tipped
+ * @property-read int|null $tipped_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSegments[] $userSegments

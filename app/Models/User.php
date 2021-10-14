@@ -176,12 +176,12 @@ class User extends Authenticatable
         return $this->hasMany(Comments::class);
     }
 
-    public function followers(): HasMany
+    public function followed(): HasMany
     {
         return $this->hasMany(Follows::class, "follower_id");
     }
 
-    public function followed(): HasMany
+    public function followers(): HasMany
     {
         return $this->hasMany(Follows::class, "followed_id");
     }
@@ -206,7 +206,7 @@ class User extends Authenticatable
         return $this->morphMany(Reports::class, "reportable");
     }
 
-    public function sentTips(): HasMany
+    public function tipped(): HasMany
     {
         return $this->hasMany(Tips::class, "tipper_id");
     }

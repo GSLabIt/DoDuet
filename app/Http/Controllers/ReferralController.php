@@ -28,7 +28,7 @@ class ReferralController extends Controller
     }
 
     /**
-     * TODO: describe what this function does
+     * Get the prize that will be received by the referrer for the next referred user
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -47,7 +47,7 @@ class ReferralController extends Controller
 
         // check with the configuration which prize will be given for the next referred user based on the amount of
         // already referred ones
-        foreach (config("global-statical-definitions.referral_prizes") as $ref_pack) {
+        foreach (config("platforms.referral_prizes") as $ref_pack) {
             if($referred_users >= $ref_pack["min"] && $referred_users <= $ref_pack["max"]) {
                 return $ref_pack["prize"];
             }

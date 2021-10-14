@@ -15,13 +15,13 @@ class Referred extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
-    function refferer(): BelongsTo
+    function referrer(): BelongsTo
     {
-        return $this->belongsTo(Referral::class);
+        return $this->belongsTo(User::class, "referrer_id");
     }
 
     function referred(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, "referred_id");
     }
 }

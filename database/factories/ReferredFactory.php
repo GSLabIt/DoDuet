@@ -25,9 +25,10 @@ class ReferredFactory extends Factory
     {
         return [
             "id" => $this->faker->uuid(),
-            "referrer_id" => Referral::factory(),
+            "referrer_id" => User::factory(),
             "referred_id" => User::factory(),
             "is_redeemed" => $this->faker->boolean(0),
+            "prize" => config("platforms.referral_prizes")[0]["prize"]
         ];
     }
 
