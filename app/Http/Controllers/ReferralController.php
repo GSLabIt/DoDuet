@@ -9,7 +9,7 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 class ReferralController extends Controller
 {
     /**
-     * Return a value for the field.
+     * Generates the referral url for the current user.
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -27,3 +27,5 @@ class ReferralController extends Controller
         return route("register", ["ref" => $user->referral->code]);
     }
 }
+
+
