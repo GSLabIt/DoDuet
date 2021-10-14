@@ -609,7 +609,7 @@ namespace App\Models{
  * @property string $id
  * @property string $referrer_id
  * @property string $referred_id
- * @property int $is_redeemed
+ * @property bool $is_redeemed
  * @property int $prize
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

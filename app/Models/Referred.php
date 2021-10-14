@@ -15,6 +15,10 @@ class Referred extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
+    protected $casts = [
+        "is_redeemed" => "boolean",
+    ];
+
     function referrer(): BelongsTo
     {
         return $this->belongsTo(User::class, "referrer_id");
