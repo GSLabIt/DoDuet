@@ -28,7 +28,8 @@ class ReferralController extends Controller
     }
 
     /**
-     * Get the prize that will be received by the referrer for the next referred user
+     * Get the prize that will be received by the referrer for the next referred user.
+     * This is a graphql accessor around the static method "computePrizeForNewReferer"
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -42,6 +43,16 @@ class ReferralController extends Controller
         /**@var User $user*/
         $user = $context->user();
 
+        // call the actual computing function and reflect it
+        return self::computePrizeForNewReferer($user);
+    }
+
+    /**
+     * Get the prize that will be received by the referrer for the next referred user
+     * @param User $user
+     * @return int
+     */
+    public static function computePrizeForNewReferer(User $user): int {
         // retrieve the amount of referred users
         $referred_users = $user->referred()->count();
 
@@ -52,11 +63,28 @@ class ReferralController extends Controller
                 return $ref_pack["prize"];
             }
         }
-
-        // placed to avoid errors, this is never reached
         return 0;
     }
+
+    /**
+     * Sum the prizes received for all the referred users and returns it
+     *
+     * @param null $root Always null, since this field has no parent.
+     * @param array<string, mixed> $args The field arguments passed by the client.
+     * @param GraphQLContext $context Shared between all fields.
+     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
+     * @return int
+     */
+    public function getTotalPrizeForRefers($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
+        // User won't ever be null here as in the query definition we check it is authenticated using the @guard
+        // directive
+        /**@var User $user*/
+        $user = $context->user();
+
+        return $user->referred->sum("prize");
+    }
 }
+
 
 
 
