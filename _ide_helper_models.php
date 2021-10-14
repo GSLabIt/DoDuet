@@ -14,11 +14,20 @@ namespace App\Models{
 /**
  * App\Models\Albums
  *
+ * @property string $id
+ * @property string $name
+ * @property string $owner_id
+ * @property string $creator_id
+ * @property string|null $nft_id
+ * @property string|null $cover_id
+ * @property string $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
- * @property-read \App\Models\Covers $cover
+ * @property-read \App\Models\Covers|null $cover
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
@@ -29,6 +38,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereCoverId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereNftId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereUpdatedAt($value)
  */
 	class Albums extends \Eloquent {}
 }
@@ -37,6 +55,13 @@ namespace App\Models{
 /**
  * App\Models\Comments
  *
+ * @property string $id
+ * @property string $commentor_id
+ * @property string $content
+ * @property string $commentable_type
+ * @property string $commentable_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
@@ -45,6 +70,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCommentableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCommentableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCommentorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereUpdatedAt($value)
  */
 	class Comments extends \Eloquent {}
 }
@@ -147,6 +179,11 @@ namespace App\Models{
 /**
  * App\Models\Explicits
  *
+ * @property string $id
+ * @property string $explicit_content_type
+ * @property string $explicit_content_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $explicitContent
@@ -154,6 +191,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereExplicitContentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereExplicitContentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereUpdatedAt($value)
  */
 	class Explicits extends \Eloquent {}
 }
@@ -219,6 +261,10 @@ namespace App\Models{
 /**
  * App\Models\Hashtags
  *
+ * @property string $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
@@ -227,6 +273,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereUpdatedAt($value)
  */
 	class Hashtags extends \Eloquent {}
 }
@@ -674,6 +724,9 @@ namespace App\Models{
 /**
  * App\Models\Taggable
  *
+ * @property string $hashtag_id
+ * @property string $taggable_type
+ * @property string $taggable_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $taggable
@@ -681,6 +734,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereHashtagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableType($value)
  */
 	class Taggable extends \Eloquent {}
 }

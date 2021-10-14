@@ -151,9 +151,14 @@ class User extends Authenticatable
         return $this->hasOne(Referral::class, "owner_id");
     }
 
-    public function referred(): HasOne
+    public function referred(): HasMany
     {
-        return $this->hasOne(Referred::class);
+        return $this->hasMany(Referred::class, "referrer_id");
+    }
+
+    public function referredBy(): HasOne
+    {
+        return $this->hasOne(Referred::class, "referred_id");
     }
 
     public function listeningRequests(): HasMany

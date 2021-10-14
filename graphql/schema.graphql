@@ -13,7 +13,7 @@ type Query {
     # |
     # | Section assigned to queries on the current user model
     # |
-
+    """Get the current user instance"""
     me: User! @auth
 }
 
@@ -24,7 +24,7 @@ type Mutation {
     # |
     # | Section assigned to queries on the current user model
     # |
-    getUser: User @auth
+    doNothing: User @auth
 }
 
 type User {
@@ -33,4 +33,5 @@ type User {
     email: String!
     created_at: DateTime!
     updated_at: DateTime!
+    referred: [Referral]! @hasMany
 }

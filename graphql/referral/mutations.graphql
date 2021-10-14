@@ -1,3 +1,9 @@
+# |--------------------------------------------------------------------------
+# | Referrals
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to queries on the Referral model
+# |
 extend type Mutation {
-    b: User! @auth
+    doNothing2: User! @auth
 }
