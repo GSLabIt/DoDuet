@@ -66,20 +66,74 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+
+
+    /**
+    * |--------------------------------------------------------------------------
+    * | User segments section
+    * |--------------------------------------------------------------------------
+    * |
+    * | Define all the _user segments_ related methods here
+    * |
+    */
+
     public function userSegments(): BelongsToMany
     {
         return $this->belongsToMany(UserSegments::class, "user_user_segments");
     }
+
+
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Tests section
+     * |--------------------------------------------------------------------------
+     * |
+     * | Define all the _tests_ related methods here
+     * |
+     */
 
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);
     }
 
+
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Settings section
+     * |--------------------------------------------------------------------------
+     * |
+     * | Define all the _user settings_ related methods here
+     * |
+     */
+
     public function settings(): HasMany
     {
         return $this->hasMany(UserSettings::class, "owner_id");
     }
+
+    public function personalInformation(): HasOne
+    {
+        return $this->hasOne(PersonalInformations::class, "owner_id");
+    }
+
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Multi user interaction section
+     * |--------------------------------------------------------------------------
+     * |
+     * | Define all the _multi user_ related methods here
+     * |
+     */
 
     public function mentions(): HasMany
     {
@@ -91,10 +145,71 @@ class User extends Authenticatable
         return $this->hasMany(Mentions::class, "mentioner_id");
     }
 
-    public function personalInformation(): HasOne
+    public function referral(): HasOne
     {
-        return $this->hasOne(PersonalInformations::class, "owner_id");
+        return $this->hasOne(Referral::class, "owner_id");
     }
+
+    public function referred(): HasMany
+    {
+        return $this->hasMany(Referred::class, "referrer_id");
+    }
+
+    public function referredBy(): HasOne
+    {
+        return $this->hasOne(Referred::class, "referred_id");
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comments::class);
+    }
+
+    public function followed(): HasMany
+    {
+        return $this->hasMany(Follows::class, "follower_id");
+    }
+
+    public function followers(): HasMany
+    {
+        return $this->hasMany(Follows::class, "followed_id");
+    }
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Messages::class, "sender_id");
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Messages::class, "receiver_id");
+    }
+
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Reports::class, "reportable");
+    }
+
+    public function tipped(): HasMany
+    {
+        return $this->hasMany(Tips::class, "tipper_id");
+    }
+
+    public function receivedTips(): HasMany
+    {
+        return $this->hasMany(Tips::class, "tipped_id");
+    }
+
+
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Tracks & Elections section
+     * |--------------------------------------------------------------------------
+     * |
+     * | Define all the _tracks_ and _elections_ related methods here
+     * |
+     */
 
     public function ownedTracks(): HasMany
     {
@@ -141,26 +256,6 @@ class User extends Authenticatable
         return $this->hasMany(Lyrics::class, "creator_id");
     }
 
-    public function wallet(): HasOne
-    {
-        return $this->hasOne(Wallet::class);
-    }
-
-    public function referral(): HasOne
-    {
-        return $this->hasOne(Referral::class, "owner_id");
-    }
-
-    public function referred(): HasMany
-    {
-        return $this->hasMany(Referred::class, "referrer_id");
-    }
-
-    public function referredBy(): HasOne
-    {
-        return $this->hasOne(Referred::class, "referred_id");
-    }
-
     public function listeningRequests(): HasMany
     {
         return $this->hasMany(ListeningRequest::class);
@@ -171,48 +266,8 @@ class User extends Authenticatable
         return $this->hasMany(Votes::class);
     }
 
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comments::class);
-    }
-
-    public function followed(): HasMany
-    {
-        return $this->hasMany(Follows::class, "follower_id");
-    }
-
-    public function followers(): HasMany
-    {
-        return $this->hasMany(Follows::class, "followed_id");
-    }
-
-    public function sentMessages(): HasMany
-    {
-        return $this->hasMany(Messages::class, "sender_id");
-    }
-
-    public function receivedMessages(): HasMany
-    {
-        return $this->hasMany(Messages::class, "receiver_id");
-    }
-
     public function libraries(): HasMany
     {
         return $this->hasMany(PersonalLibraries::class, "owner_id");
-    }
-
-    public function reports(): MorphMany
-    {
-        return $this->morphMany(Reports::class, "reportable");
-    }
-
-    public function tipped(): HasMany
-    {
-        return $this->hasMany(Tips::class, "tipper_id");
-    }
-
-    public function receivedTips(): HasMany
-    {
-        return $this->hasMany(Tips::class, "tipped_id");
     }
 }
