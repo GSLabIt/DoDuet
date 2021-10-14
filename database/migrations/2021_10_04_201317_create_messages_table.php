@@ -19,8 +19,8 @@ class CreateMessagesTable extends Migration
             $table->foreignUuid("receiver_id")->references("id")->on("users");
             $table->longText('content');
             $table->timestamp('read_at');
-            $table->timestamp('sender_deleted_at');
-            $table->timestamp('receiver_deleted_at');
+            $table->timestamp('sender_deleted_at')->nullable();
+            $table->timestamp('receiver_deleted_at')->nullable();
             $table->timestamps();
         });
     }
