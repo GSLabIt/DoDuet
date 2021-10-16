@@ -22,7 +22,8 @@ class UserSegmentsFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "id" => $this->faker->uuid(),
+            "name" => $this->faker->text(255),
         ];
     }
 }
