@@ -9,7 +9,6 @@ use App\Models\Skynet;
 use App\Models\Tracks;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class TracksFactory extends Factory
 {
@@ -31,12 +30,12 @@ class TracksFactory extends Factory
             "id" => $this->faker->unique()->uuid(),
             "name" => $this->faker->sentence(),
             "description" => $this->faker->sentence(),
-            "duration" => $this->faker->sentence(),
-            "nft_id" => Hash("sha512",Str::random(32)), //TODO ADD NFT ID
+            "duration" => $this->faker->time("i:s"),
+            "nft_id" => $this->faker->sentence(),
             "owner_id" => User::factory(),
             "creator_id" => fn (array $attributes) => $attributes['owner_id'],
             "skynet_id" => Skynet::factory(),
-            "cover_id" => Covers::factory(),
+            "cover_id" => null,
             "lyric_id" => null,
             "album_id" => null,
         ];
@@ -61,11 +60,10 @@ class TracksFactory extends Factory
      *
      * @return TracksFactory
      */
-    public function belongsToAlbum(): TracksFactory
+    public function withAlbum(): TracksFactory
     {
         return $this->state(function (array $attributes) {
             return [
-                "cover_id" => null,
                 "album_id" => Albums::factory()
             ];
         });
@@ -76,12 +74,25 @@ class TracksFactory extends Factory
      *
      * @return TracksFactory
      */
-    public function belongsToLyric(): TracksFactory
+    public function withLyric(): TracksFactory
     {
         return $this->state(function (array $attributes) {
             return [
-                "cover_id" => null,
                 "lyric_id" => Lyrics::factory()
+            ];
+        });
+    }
+
+    /**
+     * Define the model's state when the track belongs to a cover.
+     *
+     * @return TracksFactory
+     */
+    public function withCover(): TracksFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "cover_id" => Covers::factory()
             ];
         });
     }
