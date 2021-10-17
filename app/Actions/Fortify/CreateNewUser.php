@@ -49,8 +49,6 @@ class CreateNewUser implements CreatesNewUsers
             "code" => hash("sha1", sodium()->derivation()->generateSalt(64))
         ]);
 
-        logger($user->connection);
-
         // check if the user registered with a referral code
         // if session has the referral_code value than the user is registering with a ref
         if (session()->has("referral_code")) {
