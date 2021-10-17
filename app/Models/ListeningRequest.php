@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
+use App\Traits\MultiDatabaseRelation;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,13 +12,16 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class ListeningRequest extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
 
     protected $guarded = ["updated_at", "created_at"];
 
     function voter(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->multiDatabaseRunQuery(
+            "common",
+            fn() => $this->belongsTo(User::class)
+        );
     }
 
     function track(): BelongsTo

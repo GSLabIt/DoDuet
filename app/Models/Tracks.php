@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
+use App\Traits\MultiDatabaseRelation;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,18 +16,24 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Tracks extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
 
     protected $guarded = ["updated_at", "created_at"];
 
     function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class, "owner_id");
+        return $this->multiDatabaseRunQuery(
+            "common",
+            fn() => $this->belongsTo(User::class, "owner_id")
+        );
     }
 
     function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, "creator_id");
+        return $this->multiDatabaseRunQuery(
+            "common",
+            fn() => $this->belongsTo(User::class, "creator_id")
+        );
     }
 
     function skynet(): BelongsTo

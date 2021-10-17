@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
+use App\Traits\MultiDatabaseRelation;
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Socials extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
 
     protected $guarded = ["created_at", "updated_at"];
 
@@ -23,6 +24,9 @@ class Socials extends Model
 
     function userSettings(): BelongsToMany
     {
-        return $this->belongsToMany(UserSettings::class, "settings_socials","socials_id","settings_id");
+        return $this->multiDatabaseRunQuery(
+            "common",
+            fn() => $this->belongsToMany(UserSettings::class, "settings_socials","socials_id","settings_id")
+        );
     }
 }
