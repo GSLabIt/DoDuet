@@ -16,7 +16,7 @@ class CreateReferralsTable extends Migration
         Schema::create('referrals', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string('code');
-            $table->foreignUuid("owner_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->timestamps();
         });
     }

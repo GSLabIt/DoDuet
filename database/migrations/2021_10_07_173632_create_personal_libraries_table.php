@@ -15,7 +15,7 @@ class CreatePersonalLibrariesTable extends Migration
     {
         Schema::create('personal_libraries', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("owner_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->text('description');
             $table->string('name');
             $table->boolean('is_public')->default(false);

@@ -15,7 +15,7 @@ class CreateUserSettingsTable extends Migration
     {
         Schema::connection("common")->create('user_settings', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users")->cascadeOnDelete();
             $table->foreignUuid("settings_id")->references("id")->on("settings")->cascadeOnDelete();
             $table->longText("setting");
 

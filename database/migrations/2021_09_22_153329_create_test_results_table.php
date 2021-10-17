@@ -15,7 +15,7 @@ class CreateTestResultsTable extends Migration
     {
         Schema::connection("common")->create('test_results', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("tester_id")->references("id")->on("users");
+            $table->foreignUuid("tester_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->unsignedBigInteger("utilizations")->default(0);
             $table->tinyInteger("has_answered_questionnaire")->default(0);
             $table->foreignUuid("test_id")->references("id")->on("tests");

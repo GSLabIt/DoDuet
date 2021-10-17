@@ -19,8 +19,8 @@ class CreateTracksTable extends Migration
             $table->longText('description');
             $table->string('duration');
             $table->string('nft_id');
-            $table->foreignUuid("owner_id")->references("id")->on("users");
-            $table->foreignUuid("creator_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid("creator_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->foreignUuid('skynet_id')->references("id")->on("skynets");
             $table->foreignUuid('cover_id')->references("id")->on("covers");
             $table->foreignUuid('lyric_id')->references("id")->on("lyrics");

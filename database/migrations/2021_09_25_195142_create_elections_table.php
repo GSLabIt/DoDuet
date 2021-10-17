@@ -17,11 +17,11 @@ class CreateElectionsTable extends Migration
             $table->id();
             $table->string('total_prize');
             $table->double('first_prize_rate', 8, 4);
-            $table->foreignUuid("first_place_id")->references("id")->on("users");
+            $table->foreignUuid("first_place_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->double('second_prize_rate', 8, 4);
-            $table->foreignUuid("second_place_id")->references("id")->on("users");
+            $table->foreignUuid("second_place_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->double('third_prize_rate', 8, 4);
-            $table->foreignUuid("third_place_id")->references("id")->on("users");
+            $table->foreignUuid("third_place_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->double('treasury_rate', 8, 4);
             $table->double('fee_rate', 8, 4);
             $table->double('burning_rate', 8, 4);

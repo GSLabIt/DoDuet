@@ -15,8 +15,8 @@ class CreateReferredsTable extends Migration
     {
         Schema::create('referreds', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("referrer_id")->references("id")->on("users");
-            $table->foreignUuid("referred_id")->references("id")->on("users");
+            $table->foreignUuid("referrer_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid("referred_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->boolean("is_redeemed")->default(false);
             $table->integer("prize");
             $table->timestamps();

@@ -15,7 +15,7 @@ class CreateWalletsTable extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("owner_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->string('chain');
             $table->text('private_key');
             $table->text('seed');

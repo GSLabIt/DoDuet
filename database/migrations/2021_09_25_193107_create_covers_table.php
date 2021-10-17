@@ -18,8 +18,8 @@ class CreateCoversTable extends Migration
             $table->text('name');
             $table->foreignUuid("skynet_id")->references("id")->on("skynets");
             $table->string('nft_id')->nullable();
-            $table->foreignUuid("owner_id")->references("id")->on("users");
-            $table->foreignUuid("creator_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid("creator_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->timestamps();
         });
     }

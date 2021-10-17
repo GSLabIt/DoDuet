@@ -13,6 +13,7 @@ class CreateUserSegmentsTable extends Migration
      */
     public function up()
     {
+        Schema::connection("common")->dropAllTables();
         Schema::connection("common")->create('user_segments', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string("name");

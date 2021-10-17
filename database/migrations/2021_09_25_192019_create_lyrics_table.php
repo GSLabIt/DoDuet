@@ -17,8 +17,8 @@ class CreateLyricsTable extends Migration
             $table->uuid("id")->primary();
             $table->text('name');
             $table->longText('lyric');
-            $table->foreignUuid("owner_id")->references("id")->on("users");
-            $table->foreignUuid("creator_id")->references("id")->on("users");
+            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid("creator_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->string('nft_id')->nullable();
             $table->timestamps();
         });
