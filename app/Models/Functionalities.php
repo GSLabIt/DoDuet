@@ -16,6 +16,8 @@ class Functionalities extends Model
 {
     use HasFactory, SoftDeletes, Uuid, LogsActivity, ActivityLogAll;
 
+    public $connection = "common";
+
     protected $guarded = ["created_at", "updated_at"];
 
     protected $casts = [

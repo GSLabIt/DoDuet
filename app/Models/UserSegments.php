@@ -15,6 +15,8 @@ class UserSegments extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
+    public $connection = "common";
+
     protected $guarded = ["created_at", "updated_at"];
 
     function users(): BelongsToMany

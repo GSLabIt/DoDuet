@@ -14,6 +14,8 @@ class Test extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
+    public $connection = "common";
+
     protected $guarded = ["created_at", "updated_at"];
 
     public function userSegment(): HasMany
@@ -25,12 +27,12 @@ class Test extends Model
     {
         return $this->belongsTo(Functionalities::class);
     }
-    
+
     public function questionnaire(): BelongsTo
     {
         return $this->belongsTo(Questionnaire::class);
     }
-    
+
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);

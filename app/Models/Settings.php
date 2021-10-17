@@ -13,6 +13,8 @@ class Settings extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
+    public $connection = "common";
+
     protected $guarded = ["created_at", "updated_at", "deleted_at"];
 
     protected $casts = [

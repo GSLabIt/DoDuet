@@ -13,6 +13,8 @@ class PersonalInformations extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
+    public $connection = "common";
+
     protected $guarded = ["created_at", "updated_at"];
 
     function owner(): BelongsTo

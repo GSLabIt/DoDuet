@@ -25,6 +25,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
     use ActivityLogAll, CryptographicComposition;
 
+    public $connection = "common";
+
     /**
      * The attributes that are mass assignable.
      *

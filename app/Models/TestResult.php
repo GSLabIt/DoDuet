@@ -14,6 +14,8 @@ class TestResult extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
+    public $connection = "common";
+
     protected $guarded = ["created_at", "updated_at"];
 
     function user(): BelongsTo
