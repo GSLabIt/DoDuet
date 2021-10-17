@@ -13,7 +13,7 @@ class CreatePersonalInformationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('personal_informations', function (Blueprint $table) {
+        Schema::connection("common")->create('personal_informations', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
             $table->string("alias")->nullable();
@@ -31,6 +31,6 @@ class CreatePersonalInformationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('personal_informations');
+        Schema::connection("common")->dropIfExists('personal_informations');
     }
 }

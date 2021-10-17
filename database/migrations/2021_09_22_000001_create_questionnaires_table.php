@@ -13,7 +13,7 @@ class CreateQuestionnairesTable extends Migration
      */
     public function up()
     {
-        Schema::create('questionnaires', function (Blueprint $table) {
+        Schema::connection("common")->create('questionnaires', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->text("link");
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateQuestionnairesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questionnaires');
+        Schema::connection("common")->dropIfExists('questionnaires');
     }
 }

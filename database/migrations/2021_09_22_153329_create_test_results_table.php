@@ -13,7 +13,7 @@ class CreateTestResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_results', function (Blueprint $table) {
+        Schema::connection("common")->create('test_results', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->foreignUuid("tester_id")->references("id")->on("users");
             $table->unsignedBigInteger("utilizations")->default(0);
@@ -29,6 +29,6 @@ class CreateTestResultsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_results');
+        Schema::connection("common")->dropIfExists('test_results');
     }
 }

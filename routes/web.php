@@ -30,3 +30,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::post("/register/ref", [CommonController::class, "referralKeeper"])->name("referral_keeper");
+
+Route::get("/giveme-user", function() {
+    /**@var $user \App\Models\User*/
+    $user = auth()->user();
+    return $user;
+});

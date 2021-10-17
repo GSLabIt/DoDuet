@@ -63,14 +63,14 @@ return [
             ]) : [],
         ],
 
-        'sso' => [
+        'common' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('SSO_HOST', '127.0.0.1'),
-            'port' => env('SSO_PORT', '3306'),
-            'database' => env('SSO_DATABASE', 'forge'),
-            'username' => env('SSO_USERNAME', 'forge'),
-            'password' => env('SSO_PASSWORD', ''),
+            'host' => env('COMMON_HOST', '127.0.0.1'),
+            'port' => env('COMMON_PORT', '3306'),
+            'database' => env('COMMON_DATABASE', 'forge'),
+            'username' => env('COMMON_USERNAME', 'forge'),
+            'password' => env('COMMON_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

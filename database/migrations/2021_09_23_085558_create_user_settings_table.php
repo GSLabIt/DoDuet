@@ -13,7 +13,7 @@ class CreateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_settings', function (Blueprint $table) {
+        Schema::connection("common")->create('user_settings', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
             $table->foreignUuid("settings_id")->references("id")->on("settings")->cascadeOnDelete();
@@ -30,6 +30,6 @@ class CreateUserSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_settings');
+        Schema::connection("common")->dropIfExists('user_settings');
     }
 }
