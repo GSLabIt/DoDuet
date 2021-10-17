@@ -207,14 +207,12 @@ class SettingsWrapper implements Wrapper, InteractiveWrapper
      * @return bool
      */
     private function allowedValuesCheck(string|int|float|bool|array $value, string|null $allowed_values): bool {
-        logger([$allowed_values]);
         if(is_null($allowed_values) || !$this->isJson($allowed_values)) {
             return true;
         }
 
         // decode the json representation of allowed values, this representation is already typed
         $allowed_values_packet = json_decode($allowed_values, true);
-        logger($allowed_values_packet);
 
         // loop through the array of values and check if the provided value is present in the list of allowed ones
         // if it is not the value is not allowed

@@ -29,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:common.users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
@@ -48,6 +48,8 @@ class CreateNewUser implements CreatesNewUsers
         $user->referral()->create([
             "code" => hash("sha1", sodium()->derivation()->generateSalt(64))
         ]);
+
+        logger($user->connection);
 
         // check if the user registered with a referral code
         // if session has the referral_code value than the user is registering with a ref

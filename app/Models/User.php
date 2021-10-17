@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\ActivityLogAll;
 use App\Traits\CryptographicComposition;
+use App\Traits\MultiDatabaseRelation;
 use App\Traits\Uuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
-    use ActivityLogAll, CryptographicComposition;
+    use ActivityLogAll, CryptographicComposition, MultiDatabaseRelation;
 
     public $connection = "common";
 
@@ -123,7 +124,10 @@ class User extends Authenticatable
 
     public function wallet(): HasOne
     {
-        return $this->hasOne(Wallet::class);
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasOne(Wallet::class)
+        );
     }
 
 
@@ -139,67 +143,106 @@ class User extends Authenticatable
 
     public function mentions(): HasMany
     {
-        return $this->hasMany(Mentions::class, "mentioned_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Mentions::class, "mentioned_id")
+        );
     }
 
     public function mentioner(): HasMany
     {
-        return $this->hasMany(Mentions::class, "mentioner_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Mentions::class, "mentioner_id")
+        );
     }
 
     public function referral(): HasOne
     {
-        return $this->hasOne(Referral::class, "owner_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasOne(Referral::class, "owner_id")
+        );
     }
 
     public function referred(): HasMany
     {
-        return $this->hasMany(Referred::class, "referrer_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Referred::class, "referrer_id")
+        );
     }
 
     public function referredBy(): HasOne
     {
-        return $this->hasOne(Referred::class, "referred_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasOne(Referred::class, "referred_id")
+        );
     }
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comments::class);
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Comments::class)
+        );
     }
 
     public function followed(): HasMany
     {
-        return $this->hasMany(Follows::class, "follower_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Follows::class, "follower_id")
+        );
     }
 
     public function followers(): HasMany
     {
-        return $this->hasMany(Follows::class, "followed_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Follows::class, "followed_id")
+        );
     }
 
     public function sentMessages(): HasMany
     {
-        return $this->hasMany(Messages::class, "sender_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Messages::class, "sender_id")
+        );
     }
 
     public function receivedMessages(): HasMany
     {
-        return $this->hasMany(Messages::class, "receiver_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Messages::class, "receiver_id")
+        );
     }
 
     public function reports(): MorphMany
     {
-        return $this->morphMany(Reports::class, "reportable");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->morphMany(Reports::class, "reportable")
+        );
     }
 
     public function tipped(): HasMany
     {
-        return $this->hasMany(Tips::class, "tipper_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Tips::class, "tipper_id")
+        );
     }
 
     public function receivedTips(): HasMany
     {
-        return $this->hasMany(Tips::class, "tipped_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Tips::class, "tipped_id")
+        );
     }
 
 
@@ -215,61 +258,97 @@ class User extends Authenticatable
 
     public function ownedTracks(): HasMany
     {
-        return $this->hasMany(Tracks::class, "owner_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Tracks::class, "owner_id")
+        );
     }
 
     public function createdTracks(): HasMany
     {
-        return $this->hasMany(Tracks::class, "creator_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Tracks::class, "creator_id")
+        );
     }
 
     public function firstPlaces(): HasMany
     {
-        return $this->hasMany(Elections::class, "first_place_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Elections::class, "first_place_id")
+        );
     }
 
     public function secondPlaces(): HasMany
     {
-        return $this->hasMany(Elections::class, "second_place_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Elections::class, "second_place_id")
+        );
     }
 
     public function thirdPlaces(): HasMany
     {
-        return $this->hasMany(Elections::class, "third_place_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Elections::class, "third_place_id")
+        );
     }
 
     public function ownedCovers(): HasMany
     {
-        return $this->hasMany(Covers::class, "owner_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Covers::class, "owner_id")
+        );
     }
 
     public function createdCovers(): HasMany
     {
-        return $this->hasMany(Covers::class, "creator_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Covers::class, "creator_id")
+        );
     }
 
     public function ownedLyrics(): HasMany
     {
-        return $this->hasMany(Lyrics::class, "owner_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Lyrics::class, "owner_id")
+        );
     }
 
     public function createdLyrics(): HasMany
     {
-        return $this->hasMany(Lyrics::class, "creator_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Lyrics::class, "creator_id")
+        );
     }
 
     public function listeningRequests(): HasMany
     {
-        return $this->hasMany(ListeningRequest::class);
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(ListeningRequest::class)
+        );
     }
 
     public function votes(): HasMany
     {
-        return $this->hasMany(Votes::class);
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Votes::class)
+        );
     }
 
     public function libraries(): HasMany
     {
-        return $this->hasMany(PersonalLibraries::class, "owner_id");
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(PersonalLibraries::class, "owner_id")
+        );
     }
 }
