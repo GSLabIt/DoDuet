@@ -18,4 +18,16 @@ return [
         "message" => "Unable to find the requested referral",
         "code" => 1001,
     ],
+    "COVER_NOT_FOUND" => [
+        "message" => "Unable to find the requested cover",
+        "code" => 1002,
+    ],
+    "LYRIC_NOT_FOUND" => [
+        "message" => "Unable to find the requested lyric",
+        "code" => 1003,
+    ],
+    "ALBUM_NOT_FOUND" => [
+        "message" => "Unable to find the requested album",
+        "code" => 1004,
+    ],
 ];

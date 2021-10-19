@@ -1,0 +1,12 @@
+# |--------------------------------------------------------------------------
+# | Tracks
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Tracks model
+# |
+extend type Mutation @namespace(field: "App\\Http\\Controllers") {
+
+    """ This function creates the track and stores the uploaded mp3 file in the file system """
+    createTrack(input: tracksCreationInput @spread): Track
+        @guard @field(resolver: "TracksController@createTrack")
+}

@@ -1,0 +1,10 @@
+type Lyric {
+    id: ID!
+    name: String!
+    lyric: String!
+    owner: User! @belongsTo
+    creator: User! @belongsTo
+    nft_id: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}

@@ -1,0 +1,25 @@
+type Track {
+    id: ID!
+    name: String!
+    description: String!
+    duration: String!
+    nft_id: String!
+    owner: User! @belongsTo
+    creator: User! @belongsTo
+    skynet: Skynet! @belongsTo
+    cover: Cover @belongsTo
+    lyric: Lyric @belongsTo
+    album: Album @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input tracksCreationInput {
+    name: String!
+    description: String!
+    duration: String!
+    mp3: Upload!
+    cover: ID
+    lyric: ID
+    album: ID
+}

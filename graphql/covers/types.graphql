@@ -1,0 +1,10 @@
+type Cover {
+    id: ID!
+    name: String!
+    skynet: Skynet! @belongsTo
+    nft_id: String
+    owner: User! @belongsTo
+    creator: User! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
