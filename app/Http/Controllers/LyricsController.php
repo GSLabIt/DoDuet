@@ -21,24 +21,60 @@ class LyricsController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return mixed
      * @throws ValidationException
-     * @throws LyricSafeException
      */
     public function createLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): mixed
     {
-        Validator::validate($args, [
-            "name" => "required|string",
-            "lyric" => "required|string",
+        $this->validate($args, [
+            "name" => "required|string|max:65535",
+            "lyric" => "required|string|max:1000000",
         ]);
 
-        /** @var $user User */
-        $user = auth()->user();
+        /** @var User $user */
+        $user = $context->user();
 
-        return Lyrics::create([
+        return $user->createdLyrics()->create([
             "name" => $args["name"],
             "lyric" => $args["lyric"],
-            "creator_id" => $user->id,
             "owner_id" => $user->id,
-            "nft_id" => "?????", //TODO: add nft_id
         ]);
+    }
+
+    /**
+     * This function updates the lyric
+     *
+     * @param null $root Always null, since this field has no parent.
+     * @param array<string, mixed> $args The field arguments passed by the client.
+     * @param GraphQLContext $context Shared between all fields.
+     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
+     * @return mixed
+     * @throws ValidationException
+     * @throws LyricSafeException
+     */
+    public function updateLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): mixed
+    {
+        $this->validate($args, [
+            "id" => "required|uuid|exists:lyrics,id",
+            "name" => "required|string|max:65535",
+            "lyric" => "required|string|max:1000000",
+        ]);
+
+        /** @var User $user */
+        $user = $context->user();
+
+        // selects the lyric created by the user that called the update function which has an id specified in the args
+        /** @var Lyrics $lyric */
+        $lyric = $user->createdLyrics()->where("id", $args["id"])->first();
+
+        if (!is_null($lyric)) {
+            return $lyric->update([
+                "name" => $args["name"],
+                "lyric" => $args["lyric"],
+            ]);
+        }
+
+        throw new LyricSafeException(
+            config("error-codes.LYRIC_NOT_FOUND.message"),
+            config("error-codes.LYRIC_NOT_FOUND.code")
+        );
     }
 }

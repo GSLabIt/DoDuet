@@ -13,3 +13,9 @@ input lyricsCreationInput {
     name: String!
     lyric: String!
 }
+
+input lyricsUpdateInput {
+    id: ID!
+    name: String!
+    lyric: String!
+}

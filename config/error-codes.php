@@ -18,4 +18,8 @@ return [
         "message" => "Unable to find the requested referral",
         "code" => 1001,
     ],
+    "LYRIC_NOT_FOUND" => [
+        "message" => "Unable to find the requested lyric",
+        "code" => 1003,
+    ],
 ];
