@@ -40,7 +40,7 @@ class ReferralController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return mixed
+     * @return int
      */
     public function getPrizeForNewRefer($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
         // User won't ever be null here as in the query definition we check it is authenticated using the @guard
@@ -96,7 +96,7 @@ class ReferralController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return mixed
+     * @return int
      * @throws ValidationException
      * @throws Exception
      */
