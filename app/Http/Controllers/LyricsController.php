@@ -6,7 +6,6 @@ use App\Exceptions\LyricSafeException;
 use App\Models\Lyrics;
 use App\Models\User;
 use GraphQL\Type\Definition\ResolveInfo;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
