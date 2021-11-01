@@ -1,7 +1,6 @@
 type Cover {
     id: ID!
     name: String!
-    skynet: Skynet! @belongsTo
     owner: User! @belongsTo
     creator: User! @belongsTo
     nft_id: String
@@ -17,5 +16,5 @@ input coversCreationInput {
 input coversUpdateInput {
     id: ID!
     name: String!
-    img: Upload #
+    img: Upload
 }

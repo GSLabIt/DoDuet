@@ -1,8 +1,0 @@
-type Skynet {
-    id: ID!
-    link: String!
-    encrypted: Boolean!
-    encryption_key: String!
-    created_at: DateTime!
-    updated_at: DateTime!
-}

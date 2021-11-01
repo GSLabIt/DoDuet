@@ -9,7 +9,6 @@ scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload
 
 #import referral/*.graphql
 #import lyrics/*.graphql
-#import skynet/*.graphql
 #import covers/*.graphql
 
 type Query {
