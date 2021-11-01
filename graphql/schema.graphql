@@ -41,4 +41,8 @@ type User {
     referral: Referral! @hasOne
     #referred: [Referral]! @hasMany
     #referredBy: []
+    createdLyrics: [Lyric]! @hasMany
+    ownedLyrics: [Lyric]! @hasMany
+    createdCovers: [Cover]! @hasMany
+    ownedCovers: [Cover]! @hasMany
 }
