@@ -1,0 +1,24 @@
+type Album {
+    id: ID!
+    name: String!
+    owner: User! @belongsTo
+    creator: User! @belongsTo
+    nft_id: String
+    cover: Cover @belongsTo
+    description: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input albumsCreationInput {
+    name: String!
+    cover: ID
+    description: String!
+}
+
+input albumsUpdateInput {
+    id: ID!
+    name: String!
+    cover: ID
+    description: String!
+}

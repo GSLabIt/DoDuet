@@ -1,0 +1,20 @@
+# |--------------------------------------------------------------------------
+# | Albums
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Albums model
+# |
+extend type Mutation @namespace(field: "App\\Http\\Controllers") @guard {
+
+    """ This function creates the album and autoassigns the owner, creator and creates the nft_id """
+    createAlbum(input: albumsCreationInput @spread): Album
+    @field(resolver: "AlbumsController@createAlbum")
+
+    """ This function updates the album"""
+    updateAlbum(input: albumsUpdateInput @spread): Album
+    @field(resolver: "AlbumsController@updateAlbum")
+
+    """ This function creates the nft"""
+    createNft(id: ID!): Album
+    @field(resolver: "AlbumsController@createNft")
+}

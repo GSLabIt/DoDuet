@@ -45,4 +45,6 @@ type User {
     ownedLyrics: [Lyric]! @hasMany
     createdCovers: [Cover]! @hasMany
     ownedCovers: [Cover]! @hasMany
+    createdAlbum: [Album]! @hasMany
+    ownedAlbum: [Album]! @hasMany
 }
