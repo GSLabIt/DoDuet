@@ -28,12 +28,16 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Covers|null $cover
+ * @property-read \App\Models\User $creator
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
+ * @property-read \App\Models\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tracks[] $tracks
+ * @property-read int|null $tracks_count
  * @method static \Database\Factories\AlbumsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums newQuery()
@@ -938,6 +942,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \App\Models\Albums|null $album
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Covers|null $cover
@@ -1019,8 +1024,6 @@ namespace App\Models{
  * @property-read int|null $mentioner_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Covers[] $ownedCovers
  * @property-read int|null $owned_covers_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lyrics[] $ownedLyrics
@@ -1181,6 +1184,7 @@ namespace App\Models{
  * @property string $address
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $public_key
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
@@ -1194,6 +1198,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePrivateKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePublicKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereSeed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereUpdatedAt($value)
  */

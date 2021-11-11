@@ -126,7 +126,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasOne(Wallet::class)
+            fn() => $this->hasOne(Wallet::class, "owner_id")
         );
     }
 
