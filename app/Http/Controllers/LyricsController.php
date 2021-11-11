@@ -60,9 +60,9 @@ class LyricsController extends Controller
         /** @var User $user */
         $user = $context->user();
 
-        // selects the lyric owned by the user that called the update function which has an id specified in the args
+        // selects the lyric created by the user that called the update function which has an id specified in the args
         /** @var Lyrics $lyric */
-        $lyric = $user->ownedLyrics()->where("id", $args["id"])->first();
+        $lyric = $user->createdLyrics()->where("id", $args["id"])->first();
 
         if (!is_null($lyric)) {
             $lyric->update([

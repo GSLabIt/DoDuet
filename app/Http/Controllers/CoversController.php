@@ -68,9 +68,9 @@ class CoversController extends Controller
         /** @var User $user */
         $user = $context->user();
 
-        // selects the cover owned by the user that called the update function which has an id specified in the args
+        // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */
-        $cover = $user->ownedCovers()->where("id", $args["id"])->first();
+        $cover = $user->createdCovers()->where("id", $args["id"])->first();
 
         if (!is_null($cover)) {
 

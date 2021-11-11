@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\AlbumSafeException;
+use App\Exceptions\CoverSafeException;
 use App\Models\User;
 use App\Models\Albums;
 use App\Models\Covers;
@@ -21,7 +22,7 @@ class AlbumsController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Albums
      * @throws ValidationException
-     * @throws AlbumSafeException
+     * @throws CoverSafeException
      */
     public function createAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Albums {
         $this->validate($args, [
@@ -38,7 +39,7 @@ class AlbumsController extends Controller
         $cover = $user->ownedCovers()->where("id", $args["cover"])->first();
 
         if(is_null($cover) && !is_null($args["cover"])){ // A cover id was given but the cover was not owned or not found
-            throw new AlbumSafeException(
+            throw new CoverSafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
@@ -61,6 +62,7 @@ class AlbumsController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Albums
      * @throws ValidationException
+     * @throws CoverSafeException
      * @throws AlbumSafeException
      */
     public function updateAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Albums {
@@ -83,7 +85,7 @@ class AlbumsController extends Controller
         $cover = $user->ownedCovers()->where("id", $args["cover"])->first();
 
         if(is_null($cover) && !is_null($args["cover"])){ // A cover id was given but the cover was not owned or not found
-            throw new AlbumSafeException(
+            throw new CoverSafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
