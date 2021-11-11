@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\ActivityLogAll;
 use App\Traits\CryptographicComposition;
 use App\Traits\MultiDatabaseRelation;
+use App\Traits\PlatformIsolatedNotifications;
 use App\Traits\Uuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
@@ -23,7 +23,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
+    use HasApiTokens, HasFactory, HasProfilePhoto, PlatformIsolatedNotifications, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
     use ActivityLogAll, CryptographicComposition, MultiDatabaseRelation;
 
     public $connection = "common";
