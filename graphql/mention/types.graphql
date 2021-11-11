@@ -1,0 +1,11 @@
+union Mentionable = Album | Lyric | Cover | Track
+
+type Mention {
+    id: ID!
+    mentioner: User! @belongsTo
+    mentioned: User! @belongsTo
+    mention_type: String!
+    mention_id: Mentionable @morphTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}

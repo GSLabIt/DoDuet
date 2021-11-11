@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Albums extends Model
@@ -61,5 +62,10 @@ class Albums extends Model
     public function mentions(): MorphMany
     {
         return $this->morphMany(Mentions::class, "mentionable");
+    }
+
+    function explicit(): MorphOne
+    {
+        return $this->morphOne(Explicits::class, "explicit_content");
     }
 }

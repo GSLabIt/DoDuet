@@ -1,27 +1,17 @@
-type Lyric {
+type Album {
     id: ID!
     name: String!
-    lyric: String!
     owner: User! @belongsTo
     creator: User! @belongsTo
     nft_id: String
+    cover: Cover @belongsTo
+    description: String!
     created_at: DateTime!
     updated_at: DateTime!
-    track: Track! @hasOne
-    explicit: Explicit @morphOne
-    comments: Comment @morphMany
+    tracks: Track! @hasMany
+    comments: Comment @hasMany
     #tags: Taggable @morphMany  --- I am currently confused on how to handle pivot in graphql
     reports: Report @morphMany
     mentions: Mention @morphMany
-}
-
-input lyricsCreationInput {
-    name: String!
-    lyric: String!
-}
-
-input lyricsUpdateInput {
-    id: ID!
-    name: String!
-    lyric: String!
+    explicit: Explicit @morphOne
 }
