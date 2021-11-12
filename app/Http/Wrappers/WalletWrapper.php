@@ -61,23 +61,32 @@ class WalletWrapper implements Wrapper
      */
     public function generate(): bool
     {
+        // generate the command string
         $cmd = storage_path("app/subkey") . " generate -n beats --output-type Json -w 24";
-        exec($cmd, $array_output, $exit_code);
 
-        if($exit_code === 0 && $this->user->wallet()->count() === 0) {
-            $output = join("\n", $array_output);
+        // check the user does not have a wallet address yet
+        if($this->user->wallet()->count() === 0) {
 
-            $data = json_decode($output, true);
+            // actually run the command and retrieve the output and exit code
+            exec($cmd, $array_output, $exit_code);
 
-            $this->user->wallet()->create([
-                "chain" => "beats",
-                "private_key" => $data["secretSeed"],
-                "public_key" => $data["publicKey"],
-                "seed" => $data["secretPhrase"],
-                "address" => $data["ss58Address"],
-            ]);
+            // check if the program exited successfully
+            if($exit_code === 0) {
+                // join lines of output forming a valid json
+                $output = join("", $array_output);
 
-            return true;
+                $data = json_decode($output, true);
+
+                $this->user->wallet()->create([
+                    "chain" => "beats",
+                    "private_key" => $data["secretSeed"],
+                    "public_key" => $data["publicKey"],
+                    "seed" => $data["secretPhrase"],
+                    "address" => $data["ss58Address"],
+                ]);
+
+                return true;
+            }
         }
         return false;
     }

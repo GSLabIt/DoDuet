@@ -14,20 +14,11 @@ namespace App\Models{
 /**
  * App\Models\Albums
  *
- * @property string $id
- * @property string $name
- * @property string $owner_id
- * @property string $creator_id
- * @property string|null $nft_id
- * @property string|null $cover_id
- * @property string $description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
- * @property-read \App\Models\Covers|null $cover
+ * @property-read \App\Models\Covers $cover
  * @property-read \App\Models\User $creator
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
@@ -42,15 +33,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereCoverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereCreatorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereNftId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereUpdatedAt($value)
  */
 	class Albums extends \Eloquent {}
 }
@@ -59,13 +41,6 @@ namespace App\Models{
 /**
  * App\Models\Comments
  *
- * @property string $id
- * @property string $commentor_id
- * @property string $content
- * @property string $commentable_type
- * @property string $commentable_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
@@ -74,13 +49,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCommentableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCommentableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCommentorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereUpdatedAt($value)
  */
 	class Comments extends \Eloquent {}
 }
@@ -89,14 +57,6 @@ namespace App\Models{
 /**
  * App\Models\Covers
  *
- * @property string $id
- * @property string $name
- * @property string $skynet_id
- * @property string|null $nft_id
- * @property string $owner_id
- * @property string $creator_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Albums|null $album
@@ -116,14 +76,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereCreatorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereNftId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereSkynetId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereUpdatedAt($value)
  */
 	class Covers extends \Eloquent {}
 }
@@ -132,49 +84,19 @@ namespace App\Models{
 /**
  * App\Models\Elections
  *
- * @property int $id
- * @property string $total_prize
- * @property float $first_prize_rate
- * @property string|null $first_place_id
- * @property float $second_prize_rate
- * @property string|null $second_place_id
- * @property float $third_prize_rate
- * @property string|null $third_place_id
- * @property float $treasury_rate
- * @property float $fee_rate
- * @property float $burning_rate
- * @property string|null $started_at
- * @property string|null $ended_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\User|null $firstPlace
+ * @property-read \App\Models\User $firstPlace
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
  * @property-read int|null $listening_requests_count
- * @property-read \App\Models\User|null $secondPlace
- * @property-read \App\Models\User|null $thirdPlace
+ * @property-read \App\Models\User $secondPlace
+ * @property-read \App\Models\User $thirdPlace
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
  * @method static \Database\Factories\ElectionsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereBurningRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereEndedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereFeeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereFirstPlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereFirstPrizeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereSecondPlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereSecondPrizeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereStartedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereThirdPlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereThirdPrizeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereTotalPrize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereTreasuryRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Elections whereUpdatedAt($value)
  */
 	class Elections extends \Eloquent {}
 }
@@ -183,11 +105,6 @@ namespace App\Models{
 /**
  * App\Models\Explicits
  *
- * @property string $id
- * @property string $explicit_content_type
- * @property string $explicit_content_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $explicitContent
@@ -195,11 +112,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereExplicitContentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereExplicitContentType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereUpdatedAt($value)
  */
 	class Explicits extends \Eloquent {}
 }
@@ -208,11 +120,6 @@ namespace App\Models{
 /**
  * App\Models\Follows
  *
- * @property string $id
- * @property string $follower_id
- * @property string $followed_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $followed
@@ -221,11 +128,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereFollowedId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereFollowerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereUpdatedAt($value)
  */
 	class Follows extends \Eloquent {}
 }
@@ -234,15 +136,6 @@ namespace App\Models{
 /**
  * App\Models\Functionalities
  *
- * @property string $id
- * @property string $name
- * @property string $description
- * @property bool $is_controller
- * @property bool $is_ui
- * @property bool $is_testing
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Platforms[] $platforms
@@ -256,15 +149,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereIsController($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereIsTesting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereIsUi($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withoutTrashed()
  */
@@ -275,10 +159,6 @@ namespace App\Models{
 /**
  * App\Models\Hashtags
  *
- * @property string $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
@@ -287,10 +167,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereUpdatedAt($value)
  */
 	class Hashtags extends \Eloquent {}
 }
@@ -299,12 +175,6 @@ namespace App\Models{
 /**
  * App\Models\ListeningRequest
  *
- * @property string $id
- * @property string $voter_id
- * @property string $track_id
- * @property int $election_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Elections $election
@@ -314,12 +184,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereElectionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereTrackId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereVoterId($value)
  */
 	class ListeningRequest extends \Eloquent {}
 }
@@ -328,14 +192,6 @@ namespace App\Models{
 /**
  * App\Models\Lyrics
  *
- * @property string $id
- * @property string $name
- * @property string $lyric
- * @property string $owner_id
- * @property string $creator_id
- * @property string|null $nft_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
@@ -354,14 +210,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereCreatorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereLyric($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereNftId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereUpdatedAt($value)
  */
 	class Lyrics extends \Eloquent {}
 }
@@ -370,13 +218,6 @@ namespace App\Models{
 /**
  * App\Models\Mentions
  *
- * @property string $id
- * @property string $mentioner_id
- * @property string $mentioned_id
- * @property string $mentionable_type
- * @property string $mentionable_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $mentionable
@@ -386,13 +227,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionedId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereUpdatedAt($value)
  */
 	class Mentions extends \Eloquent {}
 }
@@ -401,15 +235,6 @@ namespace App\Models{
 /**
  * App\Models\Messages
  *
- * @property string $id
- * @property string $sender_id
- * @property string $receiver_id
- * @property string $content
- * @property string $read_at
- * @property string|null $sender_deleted_at
- * @property string|null $receiver_deleted_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $receiver
@@ -419,15 +244,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereReadAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereReceiverDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereReceiverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereUpdatedAt($value)
  */
 	class Messages extends \Eloquent {}
 }
@@ -467,14 +283,6 @@ namespace App\Models{
 /**
  * App\Models\PersonalInformations
  *
- * @property string $id
- * @property string $owner_id
- * @property string|null $alias
- * @property string|null $mobile
- * @property string|null $profile_cover_path
- * @property string|null $description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
@@ -482,14 +290,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereAlias($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereMobile($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereProfileCoverPath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereUpdatedAt($value)
  */
 	class PersonalInformations extends \Eloquent {}
 }
@@ -498,13 +298,6 @@ namespace App\Models{
 /**
  * App\Models\PersonalLibraries
  *
- * @property string $id
- * @property string $owner_id
- * @property string $description
- * @property string $name
- * @property int $is_public
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
@@ -514,13 +307,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereIsPublic($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereUpdatedAt($value)
  */
 	class PersonalLibraries extends \Eloquent {}
 }
@@ -529,14 +315,6 @@ namespace App\Models{
 /**
  * App\Models\Platforms
  *
- * @property string $id
- * @property string $name
- * @property string $domain
- * @property bool $is_public
- * @property bool $is_password_protected
- * @property string|null $password
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Functionalities[] $functionalities
@@ -545,14 +323,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereDomain($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereIsPasswordProtected($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereIsPublic($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereUpdatedAt($value)
  */
 	class Platforms extends \Eloquent {}
 }
@@ -561,10 +331,6 @@ namespace App\Models{
 /**
  * App\Models\Questionnaire
  *
- * @property string $id
- * @property string $link
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
@@ -573,10 +339,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereUpdatedAt($value)
  */
 	class Questionnaire extends \Eloquent {}
 }
@@ -585,11 +347,6 @@ namespace App\Models{
 /**
  * App\Models\Referral
  *
- * @property string $id
- * @property string $code
- * @property string $owner_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
@@ -597,11 +354,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereUpdatedAt($value)
  */
 	class Referral extends \Eloquent {}
 }
@@ -610,13 +362,6 @@ namespace App\Models{
 /**
  * App\Models\Referred
  *
- * @property string $id
- * @property string $referrer_id
- * @property string $referred_id
- * @property bool $is_redeemed
- * @property int $prize
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $referred
@@ -625,13 +370,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereIsRedeemed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred wherePrize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferredId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferrerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereUpdatedAt($value)
  */
 	class Referred extends \Eloquent {}
 }
@@ -640,12 +378,6 @@ namespace App\Models{
 /**
  * App\Models\ReportReasons
  *
- * @property string $id
- * @property string $reportable_type
- * @property string $name
- * @property string $description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $report
@@ -654,12 +386,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereReportableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereUpdatedAt($value)
  */
 	class ReportReasons extends \Eloquent {}
 }
@@ -668,13 +394,6 @@ namespace App\Models{
 /**
  * App\Models\Reports
  *
- * @property string $id
- * @property string $reportable_type
- * @property string $reportable_id
- * @property string $reason_id
- * @property string $extra_informations
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\ReportReasons $reportReason
@@ -683,13 +402,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereExtraInformations($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReasonId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereUpdatedAt($value)
  */
 	class Reports extends \Eloquent {}
 }
@@ -698,15 +410,6 @@ namespace App\Models{
 /**
  * App\Models\Settings
  *
- * @property string $id
- * @property string $name
- * @property string $type
- * @property string|null $allowed_values
- * @property bool $has_default_value
- * @property string|null $default_value
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $userSettings
@@ -715,15 +418,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereAllowedValues($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDefaultValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereHasDefaultValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereUpdatedAt($value)
  */
 	class Settings extends \Eloquent {}
 }
@@ -732,12 +426,6 @@ namespace App\Models{
 /**
  * App\Models\Skynet
  *
- * @property string $id
- * @property string $link
- * @property int $encrypted
- * @property string $encryption_key
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Covers|null $cover
@@ -746,12 +434,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereEncrypted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereEncryptionKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereUpdatedAt($value)
  */
 	class Skynet extends \Eloquent {}
 }
@@ -760,12 +442,6 @@ namespace App\Models{
 /**
  * App\Models\SocialChannels
  *
- * @property string $id
- * @property string $name
- * @property string $safe_domain
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Socials[] $socials
@@ -775,12 +451,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels newQuery()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereSafeDomain($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withoutTrashed()
  */
@@ -791,12 +461,6 @@ namespace App\Models{
 /**
  * App\Models\Socials
  *
- * @property string $id
- * @property string $channel_id
- * @property string $link
- * @property int $is_public
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\SocialChannels $socialChannels
@@ -806,12 +470,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereChannelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereIsPublic($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereUpdatedAt($value)
  */
 	class Socials extends \Eloquent {}
 }
@@ -820,9 +478,6 @@ namespace App\Models{
 /**
  * App\Models\Taggable
  *
- * @property string $hashtag_id
- * @property string $taggable_type
- * @property string $taggable_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $taggable
@@ -830,9 +485,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereHashtagId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableType($value)
  */
 	class Taggable extends \Eloquent {}
 }
@@ -841,12 +493,6 @@ namespace App\Models{
 /**
  * App\Models\Test
  *
- * @property string $id
- * @property string $functionality_id
- * @property string $user_segment_id
- * @property string $questionnaire_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Functionalities $functionality
@@ -859,12 +505,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereFunctionalityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereQuestionnaireId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUserSegmentId($value)
  */
 	class Test extends \Eloquent {}
 }
@@ -873,11 +513,6 @@ namespace App\Models{
 /**
  * App\Models\TestResult
  *
- * @property string $id
- * @property string $tester_id
- * @property int $utilizations
- * @property int $has_answered_questionnaire
- * @property string $test_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Test $test
@@ -886,11 +521,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereHasAnsweredQuestionnaire($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTestId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTesterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereUtilizations($value)
  */
 	class TestResult extends \Eloquent {}
 }
@@ -899,12 +529,6 @@ namespace App\Models{
 /**
  * App\Models\Tips
  *
- * @property string $id
- * @property string $tipper_id
- * @property string $tipped_id
- * @property string $tip
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $tipped
@@ -913,12 +537,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTip($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTippedId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTipperId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereUpdatedAt($value)
  */
 	class Tips extends \Eloquent {}
 }
@@ -927,32 +545,19 @@ namespace App\Models{
 /**
  * App\Models\Tracks
  *
- * @property string $id
- * @property string $name
- * @property string $description
- * @property string $duration
- * @property string $nft_id
- * @property string $owner_id
- * @property string $creator_id
- * @property string $skynet_id
- * @property string|null $cover_id
- * @property string|null $lyric_id
- * @property string|null $album_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\Albums|null $album
+ * @property-read \App\Models\Albums $album
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
- * @property-read \App\Models\Covers|null $cover
+ * @property-read \App\Models\Covers $cover
  * @property-read \App\Models\User $creator
  * @property-read \App\Models\Explicits|null $explicit
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PersonalLibraries[] $libraries
  * @property-read int|null $libraries_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
  * @property-read int|null $listening_requests_count
- * @property-read \App\Models\Lyrics|null $lyric
+ * @property-read \App\Models\Lyrics $lyric
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \App\Models\User $owner
@@ -967,19 +572,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereAlbumId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereCoverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereCreatorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereDuration($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereLyricId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereNftId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereSkynetId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereUpdatedAt($value)
  */
 	class Tracks extends \Eloquent {}
 }
@@ -988,17 +580,6 @@ namespace App\Models{
 /**
  * App\Models\User
  *
- * @property string $id
- * @property string $name
- * @property string $email
- * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
- * @property string|null $two_factor_secret
- * @property string|null $two_factor_recovery_codes
- * @property string|null $remember_token
- * @property string|null $profile_photo_path
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
@@ -1070,17 +651,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles, $guard = null)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereProfilePhotoPath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorRecoveryCodes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  */
 	class User extends \Eloquent {}
 }
@@ -1116,27 +686,16 @@ namespace App\Models{
 /**
  * App\Models\UserSettings
  *
- * @property string $id
- * @property string $owner_id
- * @property string $settings_id
- * @property \App\Models\Settings $setting
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Settings $setting
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Socials[] $socials
  * @property-read int|null $socials_count
  * @method static \Database\Factories\UserSettingsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSetting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingsId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereUpdatedAt($value)
  */
 	class UserSettings extends \Eloquent {}
 }
@@ -1145,13 +704,6 @@ namespace App\Models{
 /**
  * App\Models\Votes
  *
- * @property string $id
- * @property string $voter_id
- * @property string $track_id
- * @property int $election_id
- * @property int $vote
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Elections $election
@@ -1161,13 +713,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereElectionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereTrackId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVote($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVoterId($value)
  */
 	class Votes extends \Eloquent {}
 }
@@ -1176,15 +721,6 @@ namespace App\Models{
 /**
  * App\Models\Wallet
  *
- * @property string $id
- * @property string $owner_id
- * @property string $chain
- * @property string $private_key
- * @property string $seed
- * @property string $address
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $public_key
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
@@ -1192,15 +728,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereChain($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePrivateKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePublicKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereSeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereUpdatedAt($value)
  */
 	class Wallet extends \Eloquent {}
 }

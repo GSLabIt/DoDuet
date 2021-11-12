@@ -68,18 +68,18 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     {
         return match ($item) {
             $this->whitelistedItems()["master_salt"] =>
-                    settings($this->user)->has($this->whitelistedItems()["master_salt"]),
+            settings($this->user)->has($this->whitelistedItems()["master_salt"]),
             $this->whitelistedItems()["master_derivation_key"] =>
-                    settings($this->user)->has($this->whitelistedItems()["master_derivation_key"]),
+            settings($this->user)->has($this->whitelistedItems()["master_derivation_key"]),
             $this->whitelistedItems()["secret_key"] =>
-                    session()->has($this->whitelistedItems()["secret_key"]),
+            session()->has($this->whitelistedItems()["secret_key"]),
             $this->whitelistedItems()["public_key"] =>
-                    settings($this->user)->has($this->whitelistedItems()["public_key"]),
+            settings($this->user)->has($this->whitelistedItems()["public_key"]),
             "all" =>
-                    $this->has($this->whitelistedItems()["master_salt"]) &&
-                    $this->has($this->whitelistedItems()["master_derivation_key"]) &&
-                    $this->has($this->whitelistedItems()["secret_key"]) &&
-                    $this->has($this->whitelistedItems()["public_key"]),
+                $this->has($this->whitelistedItems()["master_salt"]) &&
+                $this->has($this->whitelistedItems()["master_derivation_key"]) &&
+                $this->has($this->whitelistedItems()["secret_key"]) &&
+                $this->has($this->whitelistedItems()["public_key"]),
             default => false,
         };
     }
@@ -94,13 +94,13 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     {
         return match ($item) {
             $this->whitelistedItems()["master_salt"] =>
-                    settings($this->user)->get($this->whitelistedItems()["master_salt"]),
+            settings($this->user)->get($this->whitelistedItems()["master_salt"]),
             $this->whitelistedItems()["master_derivation_key"] =>
-                    settings($this->user)->get($this->whitelistedItems()["master_derivation_key"]),
+            settings($this->user)->get($this->whitelistedItems()["master_derivation_key"]),
             $this->whitelistedItems()["secret_key"] =>
-                    session()->get($this->whitelistedItems()["secret_key"]),
+            session()->get($this->whitelistedItems()["secret_key"]),
             $this->whitelistedItems()["public_key"] =>
-                    settings($this->user)->get($this->whitelistedItems()["public_key"]),
+            settings($this->user)->get($this->whitelistedItems()["public_key"]),
             default => null,
         };
     }
