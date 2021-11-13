@@ -15,3 +15,16 @@ type Album {
     mentions: Mention @morphMany
     explicit: Explicit @morphOne
 }
+
+input albumsCreationInput {
+    name: String!
+    cover: ID
+    description: String!
+}
+
+input albumsUpdateInput {
+    id: ID!
+    name: String!
+    cover: ID
+    description: String!
+}

@@ -21,10 +21,10 @@ class CoversController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return mixed
+     * @return Covers
      * @throws ValidationException
      */
-    public function createCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): mixed
+    public function createCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
     {
         $this->validate($args, [
             "name" => "required|string|max:65535",

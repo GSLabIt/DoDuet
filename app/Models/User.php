@@ -126,7 +126,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasOne(Wallet::class)
+            fn() => $this->hasOne(Wallet::class, "owner_id")
         );
     }
 
@@ -309,6 +309,22 @@ class User extends Authenticatable
         return $this->multiDatabaseRunQuery(
             "mysql",
             fn() => $this->hasMany(Covers::class, "creator_id")
+        );
+    }
+
+    public function ownedAlbums(): HasMany
+    {
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Albums::class, "owner_id")
+        );
+    }
+
+    public function createdAlbums(): HasMany
+    {
+        return $this->multiDatabaseRunQuery(
+            "mysql",
+            fn() => $this->hasMany(Albums::class, "creator_id")
         );
     }
 

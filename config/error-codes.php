@@ -26,4 +26,8 @@ return [
         "message" => "Unable to find the requested lyric",
         "code" => 1003,
     ],
+    "ALBUM_NOT_FOUND" => [
+        "message" => "Unable to find the requested album",
+        "code" => 1004,
+    ],
 ];
