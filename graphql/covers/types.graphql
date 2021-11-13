@@ -9,7 +9,7 @@ type Cover {
     track: Track! @hasOne
     album: Album! @hasOne
     comments: Comment @hasMany
-    #tags: Taggable @morphMany  --- I am currently confused on how to handle pivot in graphql
+    tags: Taggable @morphMany
     reports: Report @morphMany
     mentions: Mention @morphMany
     explicit: Explicit @morphOne

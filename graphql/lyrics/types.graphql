@@ -10,7 +10,7 @@ type Lyric {
     track: Track! @hasOne
     explicit: Explicit @morphOne
     comments: Comment @morphMany
-    #tags: Taggable @morphMany  --- I am currently confused on how to handle pivot in graphql
+    tags: Taggable @morphMany
     reports: Report @morphMany
     mentions: Mention @morphMany
 }

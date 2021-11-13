@@ -2,10 +2,9 @@ union Commentable = Lyric | Cover | Album | Track
 
 type Comment {
     id: ID!
-    commentor_id: User! @belongsTo
+    commentor: User! @belongsTo
     content: String!
-    commentable_id: Commentable @morphTo
-    commentable_type: String!
+    commentable: Commentable @morphTo
     created_at: DateTime!
     updated_at: DateTime!
     explicit: Explicit @morphOne

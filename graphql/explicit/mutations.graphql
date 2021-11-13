@@ -11,6 +11,6 @@ extend type Mutation @namespace(field: "App\\Http\\Controllers") @guard {
     @field(resolver: "ExplicitsController@setExplicit")
 
     """ This function delete the explicit instance in the db """
-    removeExplicit(input: removeExplicitInput @spread): Boolean!
+    removeExplicit(input: removeExplicitInput @spread): Explicit!
     @field(resolver: "ExplicitsController@removeExplicit")
 }

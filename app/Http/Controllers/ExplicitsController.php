@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Albums;
+use App\Models\Comments;
+use App\Models\Covers;
 use App\Models\Explicits;
+use App\Models\Lyrics;
+use App\Models\Tracks;
 use Dotenv\Exception\ValidationException;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -29,12 +34,20 @@ class ExplicitsController extends Controller
 
         // Then, use explicit_content_type to validate explicit_content_id and check the right db
         $this->validate($args, [
-            "explicit_content_id" => "required|uuid|exists:".$args["explicit_content_type"].",id",
+            "explicit_content_id" => "required|uuid|exists:{$args["explicit_content_type"]},id",
         ]);
+
+        $contentTypeClass = match ($args["explicit_content_type"]) {
+            "covers" => Covers::class,
+            "lyrics" => Lyrics::class,
+            "tracks" => Tracks::class,
+            "albums" => Albums::class,
+            "comments" => Comments::class,
+        };
 
         return Explicits::create([
             "explicit_content_id" => $args["explicit_content_id"],
-            "explicit_content_type" => $args["explicit_content_type"],
+            "explicit_content_type" => $contentTypeClass,
         ]);
     }
 
@@ -45,15 +58,15 @@ class ExplicitsController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return bool
+     * @return Explicits
      * @throws ValidationException
      */
-    public function removeExplicit($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): bool {
+    public function removeExplicit($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Explicits {
         $this->validate($args, [
             "id" => "required|uuid|exists:explicits,id",
         ]);
 
-        return Explicits::where("id", $args["id"])->delete();
+        return Explicits::whereId($args["id"])->delete();
     }
 }
 

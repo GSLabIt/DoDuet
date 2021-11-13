@@ -32,6 +32,8 @@ type Mutation {
     doNothing: User @auth
 }
 
+union Taggable = Track | Album | Lyric | Cover
+
 type User {
     id: ID!
     name: String!
