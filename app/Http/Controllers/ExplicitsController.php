@@ -34,7 +34,7 @@ class ExplicitsController extends Controller
 
         // Then, use explicit_content_type to validate explicit_content_id and check the right db
         $this->validate($args, [
-            "explicit_content_id" => "required|uuid|exists:{$args["explicit_content_type"]},id",
+            "explicit_content_id" => "required|uuid|exists:{$args['explicit_content_type']},id",
         ]);
 
         $contentTypeClass = match ($args["explicit_content_type"]) {
@@ -66,7 +66,13 @@ class ExplicitsController extends Controller
             "id" => "required|uuid|exists:explicits,id",
         ]);
 
-        return Explicits::whereId($args["id"])->delete();
+        // selects the $explicit which has an id specified in the args
+        /** @var Explicits $explicit */
+        $explicit = Explicits::whereId($args["id"]);
+
+        $explicit->delete();
+
+        return $explicit;
     }
 }
 

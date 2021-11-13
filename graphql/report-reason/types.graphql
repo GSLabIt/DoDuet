@@ -1,6 +1,5 @@
 type ReportReason {
     id: ID!
-    reportable_type: String!
     name: String!
     description: String!
     created_at: DateTime!
