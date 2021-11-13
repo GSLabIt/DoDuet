@@ -7,6 +7,12 @@ type Lyric {
     nft_id: String
     created_at: DateTime!
     updated_at: DateTime!
+    track: Track! @hasOne
+    explicit: Explicit @morphOne
+    comments: Comment @morphMany
+    tags: Taggable @morphMany
+    reports: Report @morphMany
+    mentions: Mention @morphMany
 }
 
 input lyricsCreationInput {

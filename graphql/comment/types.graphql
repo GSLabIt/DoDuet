@@ -1,0 +1,11 @@
+union Commentable = Lyric | Cover | Album | Track
+
+type Comment {
+    id: ID!
+    commentor: User! @belongsTo
+    content: String!
+    commentable: Commentable @morphTo
+    created_at: DateTime!
+    updated_at: DateTime!
+    explicit: Explicit @morphOne
+}
