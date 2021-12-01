@@ -77,11 +77,29 @@ class WalletWrapper implements Wrapper
 
                 $data = json_decode($output, true);
 
+                // get the symmetric encryption key of the current user, this key is used to encrypt all
+                // user's personal data
+                $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"]);
+
+                // store the mnemonic phrase in the user's session in order to improve performances, it is stored in
+                // plain text.
+                session()->put("mnemonic", $data["secretPhrase"]);
+
+                // encrypt the private key and the seed, this ensures that even accessing the database directly does not
+                // leak any wallet related data as they are encrypted with a key derived from the user's password
                 $this->user->wallet()->create([
                     "chain" => "beats",
-                    "private_key" => $data["secretSeed"],
+                    "private_key" => sodium()->encryption()->symmetric()->encrypt(
+                        $data["secretSeed"],
+                        $symmetric_key,
+                        sodium()->derivation()->generateSymmetricNonce()
+                    ),
                     "public_key" => $data["publicKey"],
-                    "seed" => $data["secretPhrase"],
+                    "seed" => sodium()->encryption()->symmetric()->encrypt(
+                        $data["secretPhrase"],
+                        $symmetric_key,
+                        sodium()->derivation()->generateSymmetricNonce()
+                    ),
                     "address" => $data["ss58Address"],
                 ]);
 
@@ -89,5 +107,29 @@ class WalletWrapper implements Wrapper
             }
         }
         return false;
+    }
+
+    /**
+     * Retrieve, decode and return the user's wallet mnemonic
+     *
+     * @return string
+     */
+    public function mnemonic(): string {
+        $wallet = $this->user->wallet;
+
+        if(is_null($wallet)) {
+            $this->generate();
+            return session("mnemonic");
+        }
+
+        if(!session()->has("mnemonic")) {
+            $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"]);
+
+            // store the mnemonic phrase in the user's session in order to improve performances, it is stored in
+            // plain text.
+            session()->put("mnemonic", sodium()->encryption()->symmetric()->decrypt($wallet->seed, $symmetric_key));
+        }
+
+        return session("mnemonic");
     }
 }

@@ -63,8 +63,8 @@ class sodiumWrapperTest extends TestCase
     }
 
     public function test_nonce_length_is_correct() {
-        $this->assertEquals(SodiumKeyLength::$ASYMMETRIC_ENCRYPTION_NONCE * 2, strlen(sodium()->derivation()->generateAsymmetricNonce()));
-        $this->assertEquals(SodiumKeyLength::$SYMMETRIC_ENCRYPTION_NONCE * 2, strlen(sodium()->derivation()->generateSymmetricNonce()));
+        $this->assertEquals((int) SodiumKeyLength::ASYMMETRIC_ENCRYPTION_NONCE * 2, strlen(sodium()->derivation()->generateAsymmetricNonce()));
+        $this->assertEquals((int) SodiumKeyLength::SYMMETRIC_ENCRYPTION_NONCE * 2, strlen(sodium()->derivation()->generateSymmetricNonce()));
     }
 
     public function test_is_symmetric_encryption_secure() {

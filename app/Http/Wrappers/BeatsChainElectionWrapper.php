@@ -6,9 +6,8 @@ use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
-class BeatsChainWalletWrapper implements Wrapper
+class BeatsChainElectionWrapper implements Wrapper
 {
     private User $user;
 
@@ -18,7 +17,7 @@ class BeatsChainWalletWrapper implements Wrapper
      * @param $initializer
      * @return BeatsChainWrapper|null
      */
-    public static function init($initializer): ?BeatsChainWalletWrapper
+    public static function init($initializer): ?BeatsChainElectionWrapper
     {
         // check if init method was called with an already created user model instance or if it is passed directly
         // from a request
@@ -57,14 +56,9 @@ class BeatsChainWalletWrapper implements Wrapper
         return $this;
     }
 
-    public function getBalance(bool $force_reload = false) {
-        // check if value is stored in the session, in case directly retrieve it and return
-        if(!$force_reload && session()->has("balance")) {
-            return session("balance");
-        }
-
+    public function getPrize() {
         // build the url and send the request
-        $path = "/wallet/{$this->user->wallet->address}/balance";
+        $path = "/election/balance";
         $url = blockchain($this->user)->buildRequestUrl($path);
         $response = Http::get($url)->collect();
 
@@ -75,9 +69,7 @@ class BeatsChainWalletWrapper implements Wrapper
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            $balance = $response->get("balance");
-            session()->put("balance", $response->get("balance"));
-            return $balance;
+            return $response->get("balance");
         }
     }
 }

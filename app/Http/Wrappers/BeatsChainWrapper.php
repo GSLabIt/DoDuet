@@ -5,6 +5,7 @@ namespace App\Http\Wrappers;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 
 class BeatsChainWrapper implements Wrapper
@@ -79,5 +80,21 @@ class BeatsChainWrapper implements Wrapper
     public function airdrop(): BeatsChainAirdropWrapper
     {
         return BeatsChainAirdropWrapper::init($this->user);
+    }
+
+    public function election(): BeatsChainElectionWrapper {
+        return BeatsChainElectionWrapper::init($this->user);
+    }
+
+    public function buildRequestUrl(string $path): string
+    {
+        // load the hostname
+        $chain_host = env("BEATS_CHAIN_CONNECTOR_HOST");
+        // check if ending with a /, if not one is appended
+        if(!Str::endsWith($chain_host, "/") && !Str::startsWith($path, "/")) {
+            $chain_host .= "/";
+        }
+
+        return $chain_host . $path;
     }
 }
