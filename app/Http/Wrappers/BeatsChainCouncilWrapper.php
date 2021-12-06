@@ -2,6 +2,7 @@
 
 namespace App\Http\Wrappers;
 
+use App\Http\Wrappers\Enums\AirdropType;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,7 +76,81 @@ class BeatsChainCouncilWrapper implements Wrapper
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
+        }
+    }
+
+    public function proposeNFTClass(string $class_name, bool $is_mintable, int $minting_fee, string $additional_data = "") {
+        // build the url and send the request
+        $path = "/council/proposal/nft-class";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "owner" => $this->user->wallet->address,
+            "class_name" => $class_name,
+            "mintable" => $is_mintable,
+            "minting_fee" => $minting_fee,
+            "additional_data" => $additional_data,
+        ])->collect();
+
+        // errors occurred, log them and return a safe value
+        if($response->has("errors")) {
+            logger($response->get("errors"));
+            return $response->get("errors");
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return true;
+        }
+    }
+
+    public function proposeNewAirdrop(string $name, bool $explanation_url, AirdropType $type, int $amount) {
+        // build the url and send the request
+        $path = "/council/proposal/create-airdrop";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "name" => $name,
+            "url" => $explanation_url,
+            "type" => $type,
+            "amount" => $amount,
+        ])->collect();
+
+        // errors occurred, log them and return a safe value
+        if($response->has("errors")) {
+            logger($response->get("errors"));
+            return $response->get("errors");
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return null;
+        }
+    }
+
+    public function releaseAirdrop(string $airdrop_id, string $receiver_ss58) {
+        // build the url and send the request
+        $path = "/council/proposal/create-airdrop";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "airdrop_id" => $airdrop_id,
+            "receiver" => $receiver_ss58,
+        ])->collect();
+
+        // errors occurred, log them and return a safe value
+        if($response->has("errors")) {
+            logger($response->get("errors"));
+            return $response->get("errors");
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return null;
         }
     }
 }
