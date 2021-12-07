@@ -153,4 +153,51 @@ class BeatsChainCouncilWrapper implements Wrapper
             return null;
         }
     }
+
+    public function voteProposal(string $proposal_hash, int $proposal_id, bool $approve) {
+        // build the url and send the request
+        $path = "/council/vote";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "proposal_hash" => $proposal_hash,
+            "proposal_id" => $proposal_id,
+            "approve" => $approve
+        ])->collect();
+
+        // errors occurred, log them and return a safe value
+        if($response->has("errors")) {
+            logger($response->get("errors"));
+            return $response->get("errors");
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return null;
+        }
+    }
+
+    public function closeProposal(string $proposal_hash, int $proposal_id) {
+        // build the url and send the request
+        $path = "/council/close";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "airdrop_id" => $proposal_hash,
+            "receiver" => $proposal_id,
+        ])->collect();
+
+        // errors occurred, log them and return a safe value
+        if($response->has("errors")) {
+            logger($response->get("errors"));
+            return $response->get("errors");
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return null;
+        }
+    }
 }
