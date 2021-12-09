@@ -65,13 +65,13 @@ class WalletWrapper implements Wrapper
         $cmd = storage_path("app/subkey") . " generate -n beats --output-type Json -w 24";
 
         // check the user does not have a wallet address yet
-        if($this->user->wallet()->count() === 0) {
+        if ($this->user->wallet()->count() === 0) {
 
             // actually run the command and retrieve the output and exit code
             exec($cmd, $array_output, $exit_code);
 
             // check if the program exited successfully
-            if($exit_code === 0) {
+            if ($exit_code === 0) {
                 // join lines of output forming a valid json
                 $output = join("", $array_output);
 
@@ -79,7 +79,8 @@ class WalletWrapper implements Wrapper
 
                 // get the symmetric encryption key of the current user, this key is used to encrypt all
                 // user's personal data
-                $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"]);
+                $symmetric_key = secureUser($this->user)->
+                    get(secureUser($this->user)->whitelistedItems()["symmetric_key"])["key"];
 
                 // store the mnemonic phrase in the user's session in order to improve performances, it is stored in
                 // plain text.
@@ -114,15 +115,16 @@ class WalletWrapper implements Wrapper
      *
      * @return string
      */
-    public function mnemonic(): string {
+    public function mnemonic(): string
+    {
         $wallet = $this->user->wallet;
 
-        if(is_null($wallet)) {
+        if (is_null($wallet)) {
             $this->generate();
             return session("mnemonic");
         }
 
-        if(!session()->has("mnemonic")) {
+        if (!session()->has("mnemonic")) {
             $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"]);
 
             // store the mnemonic phrase in the user's session in order to improve performances, it is stored in

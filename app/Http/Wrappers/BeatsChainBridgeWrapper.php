@@ -65,7 +65,13 @@ class BeatsChainBridgeWrapper implements Wrapper
         $response = Http::post($url, [
             "mnemonic" => wallet($this->user)->mnemonic(),
             "amount" => $MELD,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {
@@ -87,7 +93,13 @@ class BeatsChainBridgeWrapper implements Wrapper
         $response = Http::post($url, [
             "mnemonic" => wallet($this->user)->mnemonic(),
             "fee" => $fee_percentage,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {
@@ -109,7 +121,13 @@ class BeatsChainBridgeWrapper implements Wrapper
         $response = Http::post($url, [
             "mnemonic" => wallet($this->user)->mnemonic(),
             "amount" => $MELB,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {
@@ -132,7 +150,13 @@ class BeatsChainBridgeWrapper implements Wrapper
             "mnemonic" => wallet($this->user)->mnemonic(),
             "bsc_address" => $address,
             "amount" => $MELB,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {

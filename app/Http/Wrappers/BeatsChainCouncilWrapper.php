@@ -4,8 +4,11 @@ namespace App\Http\Wrappers;
 
 use App\Http\Wrappers\Enums\AirdropType;
 use App\Http\Wrappers\Interfaces\Wrapper;
+use App\Http\Wrappers\SemiModels\BeatsChainCouncilProposal;
+use App\Http\Wrappers\SemiModels\BeatsChainCouncilProposalSet;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class BeatsChainCouncilWrapper implements Wrapper
@@ -65,92 +68,23 @@ class BeatsChainCouncilWrapper implements Wrapper
         // mint the nft
         $response = Http::post($url, [
             "mnemonic" => wallet($this->user)->mnemonic(),
-            "members" => $members_ss58,
+            "members" => implode(",", $members_ss58),
             "prime" => $primary_member_ss58
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
             return true;
-        }
-    }
-
-    public function proposeNFTClass(string $class_name, bool $is_mintable, int $minting_fee, string $additional_data = "") {
-        // build the url and send the request
-        $path = "/council/proposal/nft-class";
-        $url = blockchain($this->user)->buildRequestUrl($path);
-
-        // mint the nft
-        $response = Http::post($url, [
-            "mnemonic" => wallet($this->user)->mnemonic(),
-            "owner" => $this->user->wallet->address,
-            "class_name" => $class_name,
-            "mintable" => $is_mintable,
-            "minting_fee" => $minting_fee,
-            "additional_data" => $additional_data,
-        ])->collect();
-
-        // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
-        }
-        else {
-            // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return true;
-        }
-    }
-
-    public function proposeNewAirdrop(string $name, bool $explanation_url, AirdropType $type, int $amount) {
-        // build the url and send the request
-        $path = "/council/proposal/create-airdrop";
-        $url = blockchain($this->user)->buildRequestUrl($path);
-
-        // mint the nft
-        $response = Http::post($url, [
-            "mnemonic" => wallet($this->user)->mnemonic(),
-            "name" => $name,
-            "url" => $explanation_url,
-            "type" => $type,
-            "amount" => $amount,
-        ])->collect();
-
-        // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
-        }
-        else {
-            // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return null;
-        }
-    }
-
-    public function releaseAirdrop(string $airdrop_id, string $receiver_ss58) {
-        // build the url and send the request
-        $path = "/council/proposal/create-airdrop";
-        $url = blockchain($this->user)->buildRequestUrl($path);
-
-        // mint the nft
-        $response = Http::post($url, [
-            "mnemonic" => wallet($this->user)->mnemonic(),
-            "airdrop_id" => $airdrop_id,
-            "receiver" => $receiver_ss58,
-        ])->collect();
-
-        // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
-        }
-        else {
-            // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return null;
         }
     }
 
@@ -164,21 +98,34 @@ class BeatsChainCouncilWrapper implements Wrapper
             "mnemonic" => wallet($this->user)->mnemonic(),
             "proposal_hash" => $proposal_hash,
             "proposal_id" => $proposal_id,
-            "approve" => $approve
-        ])->collect();
+            "approve" => (int) $approve
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return null;
+            return true;
         }
     }
 
-    public function closeProposal(string $proposal_hash, int $proposal_id) {
+    /**
+     * Close a pending council proposal executing the statements
+     *
+     * @param string $proposal_hash
+     * @param int $proposal_id
+     * @return bool|null
+     */
+    public function closeProposal(string $proposal_hash, int $proposal_id): ?bool
+    {
         // build the url and send the request
         $path = "/council/close";
         $url = blockchain($this->user)->buildRequestUrl($path);
@@ -186,18 +133,84 @@ class BeatsChainCouncilWrapper implements Wrapper
         // mint the nft
         $response = Http::post($url, [
             "mnemonic" => wallet($this->user)->mnemonic(),
-            "airdrop_id" => $proposal_hash,
-            "receiver" => $proposal_id,
-        ])->collect();
+            "proposal_hash" => $proposal_hash,
+            "proposal_id" => $proposal_id,
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return true;
+        }
+    }
+
+    /**
+     * Get the list of council members
+     *
+     * @return mixed
+     */
+    public function getMembers(): mixed
+    {
+        // build the url and send the request
+        $path = "/council/members";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $result = Http::get($url)->collect();
+
+        // errors occurred, log them and return a safe value
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
             return null;
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return $result->get("members");
+        }
+    }
+
+    /**
+     * Get a list of proposals
+     *
+     * @return BeatsChainCouncilProposalSet|null
+     */
+    public function getProposals(): ?BeatsChainCouncilProposalSet
+    {
+        // build the url and send the request
+        $path = "/council/proposals";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $result = Http::get($url)->collect();
+
+        // errors occurred, log them and return a safe value
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+
+            return new BeatsChainCouncilProposalSet($result->get("proposals"));
         }
     }
 }

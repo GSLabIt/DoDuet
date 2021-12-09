@@ -82,7 +82,13 @@ class BeatsChainElectionWrapper implements Wrapper
         $response = Http::post($url, [
             "mnemonic" => wallet($this->user)->mnemonic(),
             "nft_id" => $nft_id,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {
@@ -106,7 +112,13 @@ class BeatsChainElectionWrapper implements Wrapper
             "voter" => $voter->wallet->address,
             "artist" => $artist_ss58,
             "nft_id" => $nft_id,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {
@@ -130,7 +142,13 @@ class BeatsChainElectionWrapper implements Wrapper
             "artist" => $artist_ss58,
             "nft_id" => $nft_id,
             "score" => $score,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {
@@ -153,7 +171,13 @@ class BeatsChainElectionWrapper implements Wrapper
             "mnemonic" => wallet($this->user)->mnemonic(),
             "artist" => $artist_ss58,
             "nft_id" => $nft_id,
-        ])->collect();
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
 
         // errors occurred, log them and return a safe value
         if ($response->has("errors")) {

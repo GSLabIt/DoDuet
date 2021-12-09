@@ -61,7 +61,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
      */
     public function generateSymmetricNonce(): string
     {
-        return $this->generateSalt((int) SodiumKeyLength::SYMMETRIC_ENCRYPTION_NONCE);
+        return $this->generateSalt(SodiumKeyLength::$SYMMETRIC_ENCRYPTION_NONCE);
     }
 
     /**
@@ -72,7 +72,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
      */
     public function generateAsymmetricNonce(): string
     {
-        return $this->generateSalt((int) SodiumKeyLength::ASYMMETRIC_ENCRYPTION_NONCE);
+        return $this->generateSalt(SodiumKeyLength::$ASYMMETRIC_ENCRYPTION_NONCE);
     }
 
     /**
@@ -87,8 +87,8 @@ class SodiumKeyDerivationWrapper implements Wrapper
     public function generateMasterDerivationKey(string $password, string $salt = ""): array
     {
         // Need to keep the salt if we're ever going to be able to check this password
-        if(empty($salt) || strlen(hex2bin($salt)) !== (int) SodiumKeyLength::PWHASH_SALT_BYTES) {
-            $salt = hex2bin($this->generateSalt((int) SodiumKeyLength::PWHASH_SALT_BYTES));
+        if(empty($salt) || strlen(hex2bin($salt)) !== SodiumKeyLength::$PWHASH_SALT_BYTES) {
+            $salt = hex2bin($this->generateSalt(SodiumKeyLength::$PWHASH_SALT_BYTES));
         }
         else {
             // transform the hexed salt to a binary string
@@ -100,7 +100,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
             // derive the password creating the master derivation key, this key is never stored anywhere in the
             // backend
             $key = sodium_crypto_pwhash(
-                (int) SodiumKeyLength::KDF_BYTES,
+                SodiumKeyLength::$KDF_BYTES,
                 $password,
                 $salt,
                 SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
@@ -114,7 +114,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
 
             // fallback to a non cryptographically implementation of the master derivation but that allows to data decoding
             // ideally this point should never be reached unless critical errors occurs on the system
-            $key = str_repeat("0", (int) SodiumKeyLength::KDF_BYTES);
+            $key = str_repeat("0", SodiumKeyLength::$KDF_BYTES);
         }
 
         // Using bin2hex to keep output readable
@@ -146,7 +146,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
                 "key" => bin2hex(sodium_crypto_kdf_derive_from_key(
                     $length,
                     $subkey,
-                    $this->computeKeyDerivationContext($context),
+                    $this->computeKeyDerivationContext($context)->value,
                     hex2bin($master))),
                 "onetime" => false
             ];
@@ -185,7 +185,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
     public function deriveKeypairSeed(string $master, int $subkey): array
     {
-        return $this->deriveKey($master, $subkey, (int) SodiumKeyLength::KEYPAIR_SEED_BYTES, SodiumContexts::KEYPAIR);
+        return $this->deriveKey($master, $subkey, SodiumKeyLength::$KEYPAIR_SEED_BYTES, SodiumContexts::KEYPAIR);
     }
 
     /**
@@ -198,7 +198,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
      */
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
     public function deriveSymmetricEncryptionKey(string $master, int $subkey): array {
-        return $this->deriveKey($master, $subkey, (int) SodiumKeyLength::SYMMETRIC_ENCRYPTION_KEY, SodiumContexts::SYMMETRIC_KEY);
+        return $this->deriveKey($master, $subkey, SodiumKeyLength::$SYMMETRIC_ENCRYPTION_KEY, SodiumContexts::SYMMETRIC_KEY);
     }
 
     /**

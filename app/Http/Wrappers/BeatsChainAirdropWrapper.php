@@ -2,9 +2,11 @@
 
 namespace App\Http\Wrappers;
 
+use App\Http\Wrappers\Enums\AirdropType;
 use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class BeatsChainAirdropWrapper implements Wrapper
 {
@@ -53,5 +55,73 @@ class BeatsChainAirdropWrapper implements Wrapper
     {
         $this->user = $request->user();
         return $this;
+    }
+
+    public function proposeNewAirdrop(string $name, string $explanation_url, AirdropType $type, int|string $amount): ?bool
+    {
+        // build the url and send the request
+        $path = "/council/proposal/create-airdrop";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "name" => $name,
+            "url" => $explanation_url,
+            "type" => $type,
+            "amount" => $amount,
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
+
+        // errors occurred, log them and return a safe value
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return true;
+        }
+    }
+
+    public function releaseAirdrop(string $airdrop_id, string $receiver_ss58): ?bool
+    {
+        // build the url and send the request
+        $path = "/council/proposal/airdrop";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "airdrop_id" => $airdrop_id,
+            "receiver" => $receiver_ss58,
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
+
+        // errors occurred, log them and return a safe value
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return true;
+        }
     }
 }

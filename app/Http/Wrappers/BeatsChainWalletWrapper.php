@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
 
 class BeatsChainWalletWrapper implements Wrapper
 {
@@ -57,7 +58,11 @@ class BeatsChainWalletWrapper implements Wrapper
         return $this;
     }
 
-    public function getBalance(bool $force_reload = false) {
+    /**
+     * @param bool $force_reload
+     * @return array{free: string, fee: string, frozen: string, reserved: string}
+     */
+    public function getBalance(bool $force_reload = false): array {
         // check if value is stored in the session, in case directly retrieve it and return
         if(!$force_reload && session()->has("balance")) {
             return session("balance");
@@ -69,9 +74,14 @@ class BeatsChainWalletWrapper implements Wrapper
         $response = Http::get($url)->collect();
 
         // errors occurred, log them and return a safe value
-        if($response->has("errors")) {
+        if($response->has("errors") && !is_null($response->get("errors"))) {
             logger($response->get("errors"));
-            return "0," . str_repeat("0", 12);
+            return [
+                "free" => "0." . str_repeat("0", 12),
+                "fee" => "0." . str_repeat("0", 12),
+                "frozen" => "0." . str_repeat("0", 12),
+                "reserved" => "0." . str_repeat("0", 12),
+            ];
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
