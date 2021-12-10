@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "ext-gmp": "^8.1",
         "ext-openssl": "^8.0",
         "ext-sodium": "^8.0",
         "beyondcode/laravel-self-diagnosis": "dev-master",
