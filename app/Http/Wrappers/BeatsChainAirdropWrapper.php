@@ -124,4 +124,36 @@ class BeatsChainAirdropWrapper implements Wrapper
             return true;
         }
     }
+
+    public function immediatelyReleaseAirdrop(string $airdrop_id, string $receiver_ss58): ?bool {
+        // build the url and send the request
+        $path = "/airdrop/release";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => env("BEATS_CHAIN_AIRDROP_CONTROLLER_MNEMONIC"),
+            "airdrop_id" => $airdrop_id,
+            "receiver" => $receiver_ss58,
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
+
+        // errors occurred, log them and return a safe value
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return true;
+        }
+    }
 }
