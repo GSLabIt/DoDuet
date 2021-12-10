@@ -4,6 +4,7 @@ namespace App\Http\Wrappers;
 
 use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\User;
+use GMP;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -77,10 +78,10 @@ class BeatsChainWalletWrapper implements Wrapper
         if($response->has("errors") && !is_null($response->get("errors"))) {
             logger($response->get("errors"));
             return [
-                "free" => "0." . str_repeat("0", 12),
-                "fee" => "0." . str_repeat("0", 12),
-                "frozen" => "0." . str_repeat("0", 12),
-                "reserved" => "0." . str_repeat("0", 12),
+                "free" => "0",
+                "fee" => "0",
+                "frozen" => "0",
+                "reserved" => "0",
             ];
         }
         else {

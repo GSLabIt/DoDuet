@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Exceptions\BeatsChainInvalidAddressLength;
 use App\Exceptions\BeatsChainInvalidChecksum;
+use App\Exceptions\BeatsChainNotACouncilMember;
 use App\Exceptions\BeatsChainRequiredSudo;
 use App\Exceptions\BeatsChainUnableToPayFees;
 use App\Http\Wrappers\Enums\AirdropType;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Throwable;
 
 class BeatsChainWrapperTest extends TestCase
 {
@@ -19,7 +21,6 @@ class BeatsChainWrapperTest extends TestCase
     private User $user;
     private User $alice;
     private User $bob;
-    private string $test_user_mnemonic;
 
     public function setUp(): void
     {
@@ -31,27 +32,41 @@ class BeatsChainWrapperTest extends TestCase
         $user = User::factory()->create();
         $this->user = $user;
 
+        $this->actingAs($this->user);
+        secureUser($this->user)->set("password", "password");
+        // get the symmetric encryption key of the current user, this key is used to encrypt all
+        // user's personal data
+        $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"])["key"];
+        session()->put("mnemonic", "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal");
+        $this->user->wallet()->create([
+                "chain" => "beats",
+                "private_key" => sodium()->encryption()->symmetric()->encrypt(
+                    "0xf54dd85831b26ca012ed028fdbedbc73677e4ea60998ceb6111b0c6eebc40c06",
+                    $symmetric_key,
+                    sodium()->derivation()->generateSymmetricNonce()
+                ),
+                "public_key" => "0xec184bd9da1744ee9d3831b053c502cf41d2a0f641ec8bf7ac57cdc20bf6c51f",
+                "seed" => sodium()->encryption()->symmetric()->encrypt(
+                    "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal",
+                    $symmetric_key,
+                    sodium()->derivation()->generateSymmetricNonce()
+                ),
+                "address" => "6nDAFcQv9qgrG3PVtWxGTvFPvRdZjhr2NieScthS1guVp7Qg",
+            ]
+        );
+
         /**@var User $alice */
         $alice = User::factory()->create();
         $this->alice = $alice;
 
-        /**@var User $bob */
-        $bob = User::factory()->create();
-        $this->bob = $bob;
-
-        $this->actingAs($this->user);
-        secureUser($this->user)->set("password", "password");
-        wallet($this->user)->generate();
-        $this->test_user_mnemonic = session("mnemonic");
-
         $this->actingAs($this->alice);
         secureUser($this->alice)->set("password", "password");
-        wallet($this->alice)->generate();
         // get the symmetric encryption key of the current user, this key is used to encrypt all
         // user's personal data
         $symmetric_key = secureUser($this->alice)->get(secureUser($this->alice)->whitelistedItems()["symmetric_key"])["key"];
         session()->put("mnemonic", "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice");
-        $this->alice->wallet->update([
+        $this->alice->wallet()->create([
+                "chain" => "beats",
                 "private_key" => sodium()->encryption()->symmetric()->encrypt(
                     "0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a",
                     $symmetric_key,
@@ -67,14 +82,19 @@ class BeatsChainWrapperTest extends TestCase
             ]
         );
 
+
+        /**@var User $bob */
+        $bob = User::factory()->create();
+        $this->bob = $bob;
+
         $this->actingAs($this->bob);
         secureUser($this->bob)->set("password", "password");
-        wallet($this->bob)->generate();
         // get the symmetric encryption key of the current user, this key is used to encrypt all
         // user's personal data
         $symmetric_key = secureUser($this->bob)->get(secureUser($this->bob)->whitelistedItems()["symmetric_key"])["key"];
         session()->put("mnemonic", "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Bob");
-        $this->bob->wallet->update([
+        $this->bob->wallet()->create([
+                "chain" => "beats",
                 "private_key" => sodium()->encryption()->symmetric()->encrypt(
                     "0x398f0c28f98885e046333d4a41c19cee4c37368a9832c6502f6cfd182e2aef89",
                     $symmetric_key,
@@ -89,8 +109,6 @@ class BeatsChainWrapperTest extends TestCase
                 "address" => "6k6gXPB9idebCxqSJuqpjPaqfYLQbdLHhvsANH8Dg8GQN3tT",
             ]
         );
-
-        $this->actingAs($this->user);
     }
 
     private function authAsAlice()
@@ -108,7 +126,7 @@ class BeatsChainWrapperTest extends TestCase
     private function authAsUser()
     {
         $this->actingAs($this->user);
-        session()->put("mnemonic", $this->test_user_mnemonic);
+        session()->put("mnemonic", "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal");
     }
 
     /**
@@ -118,9 +136,13 @@ class BeatsChainWrapperTest extends TestCase
      */
     public function test_wallet_get_balance()
     {
+        $this->authAsUser();
         $response = blockchain($this->user)->wallet()->getBalance();
 
-        $this->assertEquals("0.000000000000", $response["free"]);
+        $this->assertArrayHasKey("free", $response);
+        $this->assertArrayHasKey("fee", $response);
+        $this->assertArrayHasKey("frozen", $response);
+        $this->assertArrayHasKey("reserved", $response);
     }
 
     public function test_root_can_init_council()
@@ -128,9 +150,9 @@ class BeatsChainWrapperTest extends TestCase
         $this->authAsAlice();
 
         $response = blockchain($this->alice)->council()->initCouncil([
-                $this->alice->wallet->address,
-                $this->bob->wallet->address
-            ],
+            $this->alice->wallet->address,
+            $this->bob->wallet->address
+        ],
             $this->alice->wallet->address
         );
 
@@ -144,8 +166,8 @@ class BeatsChainWrapperTest extends TestCase
         $this->expectExceptionObject(new BeatsChainRequiredSudo());
 
         blockchain($this->bob)->council()->initCouncil([
-                $this->bob->wallet->address,
-            ],
+            $this->bob->wallet->address,
+        ],
             $this->bob->wallet->address
         );
     }
@@ -157,10 +179,10 @@ class BeatsChainWrapperTest extends TestCase
         $this->expectExceptionObject(new BeatsChainInvalidAddressLength());
 
         blockchain($this->alice)->council()->initCouncil([
-                "7k7gXPB9idebCxqSJuqpjPaqfYLQbdLHhvsANH8Dg8GQN3tT",
-                $this->alice->wallet->address,
-                $this->bob->wallet->address
-            ],
+            "7k7gXPB9idebCxqSJuqpjPaqfYLQbdLHhvsANH8Dg8GQN3tT",
+            $this->alice->wallet->address,
+            $this->bob->wallet->address
+        ],
             $this->alice->wallet->address
         );
     }
@@ -172,10 +194,10 @@ class BeatsChainWrapperTest extends TestCase
         $this->expectExceptionObject(new BeatsChainInvalidChecksum());
 
         blockchain($this->alice)->council()->initCouncil([
-                "aaaaa",
-                $this->alice->wallet->address,
-                $this->bob->wallet->address
-            ],
+            "aaaaa",
+            $this->alice->wallet->address,
+            $this->bob->wallet->address
+        ],
             $this->alice->wallet->address
         );
     }
@@ -198,7 +220,7 @@ class BeatsChainWrapperTest extends TestCase
             $this->faker->userName(),
             $this->faker->url(),
             AirdropType::free,
-            1234
+            "12345000000000000"
         );
 
         $this->assertTrue($result);
@@ -208,14 +230,22 @@ class BeatsChainWrapperTest extends TestCase
     {
         $this->authAsUser();
 
-        $this->expectExceptionObject(new BeatsChainUnableToPayFees());
+        try {
+            $result = blockchain($this->user)->airdrop()->proposeNewAirdrop(
+                $this->faker->userName(),
+                $this->faker->url(),
+                AirdropType::free,
+                "12345000000000000"
+            );
 
-        $result = blockchain($this->user)->airdrop()->proposeNewAirdrop(
-            $this->faker->userName(),
-            $this->faker->url(),
-            AirdropType::fee,
-            "12345000000000000"
-        );
+            $this->assertFalse($result);
+        }
+        catch (BeatsChainNotACouncilMember|BeatsChainUnableToPayFees $e) {
+            $this->assertTrue(true);
+        }
+        catch (Throwable $e) {
+            $this->fail("Unexpected exception occurred");
+        }
     }
 
     public function test_can_get_councils_proposals()
@@ -238,15 +268,21 @@ class BeatsChainWrapperTest extends TestCase
 
         $proposal = blockchain($this->user)->council()->getProposals()[0];
 
-        $this->expectExceptionObject(new BeatsChainUnableToPayFees());
+        try {
+            $result = blockchain($this->user)->council()->voteProposal(
+                $proposal->hash,
+                $proposal->id,
+                true
+            );
 
-        $result = blockchain($this->user)->council()->voteProposal(
-            $proposal->hash,
-            $proposal->id,
-            true
-        );
-
-        $this->assertFalse($result);
+            $this->assertFalse($result);
+        }
+        catch (BeatsChainNotACouncilMember|BeatsChainUnableToPayFees $e) {
+            $this->assertTrue(true);
+        }
+        catch (Throwable $e) {
+            $this->fail("Unexpected exception occurred");
+        }
     }
 
     public function test_council_member_can_vote_in_proposal()
@@ -264,34 +300,26 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_user_cannot_close_councils_proposal()
+    public function test_everyone_can_close_councils_proposal()
     {
         $this->authAsUser();
 
         $proposal = blockchain($this->user)->council()->getProposals()[0];
 
-        $this->expectExceptionObject(new BeatsChainUnableToPayFees());
+        try {
+            $result = blockchain($this->user)->council()->closeProposal(
+                $proposal->hash,
+                $proposal->id,
+            );
 
-        $result = blockchain($this->user)->council()->closeProposal(
-            $proposal->hash,
-            $proposal->id,
-        );
-
-        $this->assertFalse($result);
-    }
-
-    public function test_council_member_can_close_councils_proposal()
-    {
-        $this->authAsAlice();
-
-        $proposal = blockchain($this->alice)->council()->getProposals()[0];
-
-        $result = blockchain($this->alice)->council()->closeProposal(
-            $proposal->hash,
-            $proposal->id,
-        );
-
-        $this->assertTrue($result);
+            $this->assertTrue($result);
+        }
+        catch (BeatsChainNotACouncilMember|BeatsChainUnableToPayFees $e) {
+            $this->assertTrue(true);
+        }
+        catch (Throwable $e) {
+            $this->fail("Unexpected exception occurred");
+        }
     }
 
     public function test_council_can_propose_airdrop_release()
@@ -306,7 +334,8 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_council_member_can_vote_airdrop_release() {
+    public function test_council_member_can_vote_airdrop_release()
+    {
         $this->authAsBob();
         $proposal = blockchain($this->bob)->council()->getProposals()[0];
 
@@ -319,9 +348,9 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_council_member_can_close_airdrop_release() {
+    public function test_council_member_can_close_airdrop_release()
+    {
         $proposal = blockchain($this->bob)->council()->getProposals()[0];
-
         $result = blockchain($this->bob)->council()->closeProposal(
             $proposal->hash,
             $proposal->id
@@ -330,11 +359,30 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_airdrop_release_mint_funds() {
+    public function test_airdrop_release_mint_funds()
+    {
         $this->authAsUser();
-
         $response = blockchain($this->user)->wallet()->getBalance(true);
 
-        $this->assertEquals("12345.000000000000", $response["free"]);
+        $this->assertArrayHasKey("free", $response);
+        $this->assertArrayHasKey("fee", $response);
+        $this->assertArrayHasKey("frozen", $response);
+        $this->assertArrayHasKey("reserved", $response);
+    }
+
+    public function test_airdrop_controller_can_immediately_release_airdrop()
+    {
+        $this->authAsUser();
+        $prev_balance = blockchain($this->user)->wallet()->getBalance(true);
+
+        $result = blockchain($this->bob)->airdrop()->immediatelyReleaseAirdrop(
+            0,
+            $this->user->wallet->address
+        );
+
+        $this->assertTrue($result);
+
+        $last_balance = blockchain($this->user)->wallet()->getBalance(true);
+        $this->assertEquals($last_balance["free"], gmp_strval(gmp_add($prev_balance["free"], "12345000000000000")));
     }
 }

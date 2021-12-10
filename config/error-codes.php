@@ -47,4 +47,8 @@ return [
         "message" => "Not enough funds to pay network fees",
         "code" => 1103,
     ],
+    "BEATS_CHAIN_NOT_A_COUNCIL_MEMBER" => [
+        "message" => "You are not a council's member",
+        "code" => 1104,
+    ],
 ];
