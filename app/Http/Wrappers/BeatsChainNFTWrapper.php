@@ -57,7 +57,7 @@ class BeatsChainNFTWrapper implements Wrapper
         return $this;
     }
 
-    public function mint(string $reference_url, BeatsChainNFT $nft_class) {
+    public function mint(string $reference_url, BeatsChainNFT $nft_class): bool|int|null {
         // build the url and send the request
         $path = "/nft/mint";
         $url = blockchain($this->user)->buildRequestUrl($path);
@@ -78,10 +78,11 @@ class BeatsChainNFTWrapper implements Wrapper
         // errors occurred, log them and return a safe value
         if($result->has("errors") && !is_null($result->get("errors"))) {
             BeatsChainCheckErrorWrapper::check($result->get("errors"));
+            return null;
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return intval($result->get("nft_id"));
         }
     }
 

@@ -56,11 +56,43 @@ return [
         "code" => 1105,
     ],
     "BEATS_CHAIN_INSUFFICIENT_BALANCE" => [
-        "message" => "Balance too low",
+        "message" => "Your balance is too low",
         "code" => 1106,
     ],
     "BEATS_CHAIN_INSUFFICIENT_CONVERSION_AMOUNT" => [
         "message" => "Conversion amount is less than required minimum conversion",
         "code" => 1107,
+    ],
+    "BEATS_CHAIN_NOT_OWNED_NFT" => [
+        "message" => "You are not the owner of the provided NFT",
+        "code" => 1108,
+    ],
+    "BEATS_CHAIN_VOTE_NOT_ENABLED" => [
+        "message" => "Vote not yet enabled for this track",
+        "code" => 1109,
+    ],
+    "BEATS_CHAIN_MISSING_NFT" => [
+        "message" => "The provided NFT identifier does not exists",
+        "code" => 1110,
+    ],
+    "BEATS_CHAIN_CLOSING_TOO_EARLY" => [
+        "message" => "You have tried to close a proposal before the end of the voting period",
+        "code" => 1111,
+    ],
+    "BEATS_CHAIN_VOTE_ALREADY_ENABLED" => [
+        "message" => "Vote right already enabled for this pair",
+        "code" => 1112,
+    ],
+    "BEATS_CHAIN_ALREADY_VOTED" => [
+        "message" => "Vote already submitted for this track",
+        "code" => 1113,
+    ],
+    "BEATS_CHAIN_ALREADY_PARTICIPATING_IN_ELECTION" => [
+        "message" => "You are already participating in the current election with this track",
+        "code" => 1114,
+    ],
+    "BEATS_CHAIN_DUPLICATE_PROPOSAL" => [
+        "message" => "Duplicated proposals not allowed",
+        "code" => 1115,
     ],
 ];

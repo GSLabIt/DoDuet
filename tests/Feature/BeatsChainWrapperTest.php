@@ -9,7 +9,11 @@ use App\Exceptions\BeatsChainInvalidChecksum;
 use App\Exceptions\BeatsChainNotACouncilMember;
 use App\Exceptions\BeatsChainRequiredSudo;
 use App\Exceptions\BeatsChainUnableToPayFees;
+use App\Exceptions\BeatsChainVoteNotEnabled;
+use App\Http\Wrappers\BeatsChainUnitsHelper;
 use App\Http\Wrappers\Enums\AirdropType;
+use App\Http\Wrappers\Enums\BeatsChainNFT;
+use App\Http\Wrappers\Enums\BeatsChainUnits;
 use App\Http\Wrappers\GMPHelper;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -217,13 +221,13 @@ class BeatsChainWrapperTest extends TestCase
 
     public function test_council_can_propose_airdrop_creation()
     {
-        $this->authAsBob();
+        $this->authAsAlice();
 
-        $result = blockchain($this->bob)->airdrop()->proposeNewAirdrop(
+        $result = blockchain($this->alice)->airdrop()->proposeNewAirdrop(
             $this->faker->userName(),
             $this->faker->url(),
             AirdropType::free,
-            "12345000000000000"
+            BeatsChainUnitsHelper::make(12345)
         );
 
         $this->assertTrue($result);
@@ -238,7 +242,7 @@ class BeatsChainWrapperTest extends TestCase
                 $this->faker->userName(),
                 $this->faker->url(),
                 AirdropType::free,
-                "12345000000000000"
+                BeatsChainUnitsHelper::make(12345)
             );
 
             $this->assertFalse($result);
@@ -288,13 +292,13 @@ class BeatsChainWrapperTest extends TestCase
         }
     }
 
-    public function test_council_member_can_vote_in_proposal()
+    public function test_council_member_can_vote_proposal()
     {
-        $this->authAsAlice();
+        $this->authAsBob();
 
-        $proposal = blockchain($this->alice)->council()->getProposals()[0];
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
 
-        $result = blockchain($this->alice)->council()->voteProposal(
+        $result = blockchain($this->bob)->council()->voteProposal(
             $proposal->hash,
             $proposal->id,
             true
@@ -318,7 +322,14 @@ class BeatsChainWrapperTest extends TestCase
             $this->assertTrue($result);
         }
         catch (BeatsChainNotACouncilMember|BeatsChainUnableToPayFees $e) {
-            $this->assertTrue(true);
+            $this->authAsBob();
+
+            $result = blockchain($this->bob)->council()->closeProposal(
+                $proposal->hash,
+                $proposal->id,
+            );
+
+            $this->assertTrue($result);
         }
         catch (Throwable $e) {
             $this->fail("Unexpected exception occurred");
@@ -378,7 +389,7 @@ class BeatsChainWrapperTest extends TestCase
 
         $result = blockchain($this->alice)->wallet()->transfer(
             "6hRWB6MwSxhTqRsSUUSLvrUajaQQYWjYB6tNyHLhFLzisbPq",
-            "12345000000000000"
+            BeatsChainUnitsHelper::make(12345)
         );
 
         $this->assertTrue($result);
@@ -391,7 +402,7 @@ class BeatsChainWrapperTest extends TestCase
 
         $result = blockchain($this->alice)->wallet()->transfer(
             "6hRWB6MwSxhTqRsSUUSLvrUajaQQYWjYB6tNyHLhFLzisbPq",     // airdrop controller address
-            "1000000000000000000000"
+            BeatsChainUnitsHelper::make(1, BeatsChainUnits::quadrillion_units)
         );
     }
 
@@ -410,14 +421,14 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
 
         $last_balance = blockchain($this->user)->wallet()->getBalance(true);
-        $this->assertTrue(GMPHelper::init($prev_balance["free"])->add("12345000000000000")->equals($last_balance["free"]));
+        $this->assertTrue(GMPHelper::init($prev_balance["free"])->add(BeatsChainUnitsHelper::make(12345))->equals($last_balance["free"]));
     }
 
     public function test_council_can_update_meld_in_bridge() {
         $this->authAsAlice();
 
         $result = blockchain($this->alice)->bridge()->updateMELDInBridge(
-            "100000000000000000000000000"
+            BeatsChainUnitsHelper::make(1, BeatsChainUnits::quadrillion_units)
         );
 
         $this->assertTrue($result);
@@ -487,7 +498,7 @@ class BeatsChainWrapperTest extends TestCase
         $this->authAsAlice();
 
         $result = blockchain($this->alice)->bridge()->updateMinimumConversionAmount(
-            "11000000000000000"
+            BeatsChainUnitsHelper::make(11000)
         );
 
         $this->assertTrue($result);
@@ -525,14 +536,20 @@ class BeatsChainWrapperTest extends TestCase
 
         $result = blockchain($this->alice)->bridge()->convert(
             "0xFC5dA6A95E0C2C2C23b8C0c387CDd3Af7E56FCC0",
-            "11000000000000000"
+            BeatsChainUnitsHelper::make(11000)
         );
 
         $this->assertTrue($result);
 
         $new_balance = blockchain($this->alice)->wallet()->getBalance(true);
 
-        $this->assertTrue(GMPHelper::init($prev_balance["free"])->sub("11000000000000000")->equals($new_balance["free"]));
+        // check that the reduction was 11k units and the fee does not exceed 2 unit
+        $this->assertTrue(
+            GMPHelper::init($prev_balance["free"])->sub(BeatsChainUnitsHelper::make(11000))->greaterThan($new_balance["free"]) &&
+            GMPHelper::init($new_balance["free"])->greaterThan(
+                GMPHelper::init($prev_balance["free"])->sub(BeatsChainUnitsHelper::make(11002))
+            )
+        );
     }
 
     public function test_alice_cannot_convert_less_than_minimum_conversion_amount() {
@@ -542,7 +559,183 @@ class BeatsChainWrapperTest extends TestCase
 
         $result = blockchain($this->alice)->bridge()->convert(
             "0xFC5dA6A95E0C2C2C23b8C0c387CDd3Af7E56FCC0",
-            "9000000000000000"
+            BeatsChainUnitsHelper::make(9000)
         );
+    }
+
+    public function test_user_can_mint_nft() {
+        $this->authAsUser();
+
+        $result = blockchain($this->user)->nft()->mint(
+            $this->faker->url(),
+            BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+        );
+
+        $this->assertGreaterThanOrEqual(0, $result);
+    }
+
+    public function test_user_can_mint_multiple_nft() {
+        $this->authAsUser();
+
+        $result = blockchain($this->user)->nft()->mint(
+            $this->faker->url(),
+            BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+        );
+
+        $this->assertGreaterThanOrEqual(0, $result);
+    }
+
+    public function test_election_prize_can_be_retrieved() {
+        $this->authAsUser();
+
+        $result = blockchain($this->user)->election()->getPrize();
+
+        $this->assertNotNull($result);
+    }
+
+    public function test_user_can_participate_in_track_election() {
+        $this->authAsUser();
+
+        $prev_prize = blockchain($this->user)->election()->getPrize();
+
+        $result = blockchain($this->user)->election()->participateInElection(0);
+        $this->assertTrue($result);
+
+        $new_prize = blockchain($this->user)->election()->getPrize();
+
+        $this->assertTrue(GMPHelper::init($prev_prize)->add(BeatsChainUnitsHelper::make(900))->equals($new_prize));
+    }
+
+    public function test_company_can_grant_vote_right_to_bob() {
+        $this->authAsBob();
+
+        $result = blockchain($this->bob)->election()->grantVoteAbility(
+            $this->bob,
+            $this->user->wallet->address,
+            0
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_bob_can_vote_track_whose_permission_was_granted_to() {
+        $this->authAsBob();
+
+        $result = blockchain($this->bob)->election()->vote(
+            $this->user->wallet->address,
+            0,
+            5
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_bob_cannot_vote_track_not_participating_in_election() {
+        $this->authAsBob();
+
+        $this->expectExceptionObject(new BeatsChainVoteNotEnabled());
+
+        $result = blockchain($this->bob)->election()->vote(
+            $this->user->wallet->address,
+            1,
+            5
+        );
+    }
+
+    public function test_user_can_participate_in_track_election_with_multiple_track_simultaneously() {
+        $this->authAsUser();
+
+        $prev_prize = blockchain($this->user)->election()->getPrize();
+
+        $result = blockchain($this->user)->election()->participateInElection(1);
+        $this->assertTrue($result);
+
+        $new_prize = blockchain($this->user)->election()->getPrize();
+
+        $this->assertTrue(GMPHelper::init($prev_prize)->add(BeatsChainUnitsHelper::make(900))->equals($new_prize));
+    }
+
+    public function test_bob_cannot_vote_track_whose_permission_was_not_granted_to() {
+        $this->authAsBob();
+
+        $this->expectExceptionObject(new BeatsChainVoteNotEnabled());
+
+        $result = blockchain($this->bob)->election()->vote(
+            $this->user->wallet->address,
+            1,
+            5
+        );
+    }
+
+    public function test_council_can_kick_out_participant() {
+        $this->authAsAlice();
+
+        $result = blockchain($this->alice)->election()->kickOutParticipant(
+            $this->user->wallet->address,
+            1,
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_vote_for_election_kick_out_participant() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->voteProposal(
+            $proposal->hash,
+            $proposal->id,
+            true
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_close_election_kick_out_participant() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->closeProposal(
+            $proposal->hash,
+            $proposal->id,
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_can_kick_out_participant_multiple_times() {
+        $this->authAsAlice();
+
+        $result = blockchain($this->alice)->election()->kickOutParticipant(
+            $this->user->wallet->address,
+            0,
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_vote_for_election_kick_out_participant_multiple_times() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->voteProposal(
+            $proposal->hash,
+            $proposal->id,
+            true
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_close_election_kick_out_participant_multiple_times() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->closeProposal(
+            $proposal->hash,
+            $proposal->id,
+        );
+
+        $this->assertTrue($result);
     }
 }

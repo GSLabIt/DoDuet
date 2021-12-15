@@ -63,16 +63,16 @@ class BeatsChainElectionWrapper implements Wrapper
         $response = Http::get($url)->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
+        if ($response->has("errors") && !is_null($response->get("errors"))) {
             logger($response->get("errors"));
-            return "0," . str_repeat("0", 12);
+            return "0";
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
             return $response->get("balance");
         }
     }
 
-    public function participateInElection(int $nft_id)
+    public function participateInElection(int $nft_id): ?bool
     {
         // build the url and send the request
         $path = "/election/candidate";
@@ -91,16 +91,19 @@ class BeatsChainElectionWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 
-    public function grantVoteAbility(User $voter, string $artist_ss58, int $nft_id)
+    public function grantVoteAbility(User $voter, string $artist_ss58, int $nft_id): ?bool
     {
         // build the url and send the request
         $path = "/election/permit-vote";
@@ -108,7 +111,7 @@ class BeatsChainElectionWrapper implements Wrapper
 
         // mint the nft
         $response = Http::post($url, [
-            "mnemonic" => wallet($this->user)->mnemonic(),
+            "mnemonic" => env("BEATS_CHAIN_COMPANY_MNEMONIC"),
             "voter" => $voter->wallet->address,
             "artist" => $artist_ss58,
             "nft_id" => $nft_id,
@@ -121,16 +124,19 @@ class BeatsChainElectionWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 
-    public function vote(string $artist_ss58, int $nft_id, int $score)
+    public function vote(string $artist_ss58, int $nft_id, int $score): ?bool
     {
         // build the url and send the request
         $path = "/election/vote";
@@ -151,16 +157,19 @@ class BeatsChainElectionWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 
-    public function kickOutParticipant(string $artist_ss58, int $nft_id)
+    public function kickOutParticipant(string $artist_ss58, int $nft_id): ?bool
     {
         // build the url and send the request
         $path = "/council/proposal/track-kick-out";
@@ -180,12 +189,15 @@ class BeatsChainElectionWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 }

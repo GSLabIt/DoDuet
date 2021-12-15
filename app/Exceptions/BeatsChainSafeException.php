@@ -10,7 +10,9 @@ class BeatsChainSafeException extends SafeException
     public function __construct(
         BeatsChainRequiredSudo|BeatsChainInvalidChecksum|BeatsChainInvalidAddressLength|BeatsChainUnableToPayFees|
         BeatsChainNotACouncilMember|BeatsChainCouncilDuplicateVote|BeatsChainInsufficientBalance|
-        BeatsChainInsufficientConversionAmount
+        BeatsChainInsufficientConversionAmount|BeatsChainNotOwnedNFT|BeatsChainVoteNotEnabled|BeatsChainMissingNFT|
+        BeatsChainCouncilCloseTooEarly|BeatsChainVoteAlreadyEnabled|BeatsChainAlreadyVoted|BeatsChainAlreadyInElection|
+        BeatsChainDuplicateProposal
         $exception
     )
     {
