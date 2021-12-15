@@ -115,6 +115,38 @@ class GMPHelper
         return $this->value;
     }
 
+    public function equals(string|int|GMPHelper $value): bool {
+        return self::eq($this, $value);
+    }
+
+    public function notEquals(string|int|GMPHelper $value): bool {
+        return self::neq($this, $value);
+    }
+
+    public function greaterThan(string|int|GMPHelper $value): bool {
+        return self::gt($this, $value);
+    }
+
+    public function lessThan(string|int|GMPHelper $value): bool {
+        return self::lt($this, $value);
+    }
+
+    public static function eq(string|int|GMPHelper $lhs, string|int|GMPHelper $rhs): bool {
+        return (new static($lhs))->raw() === (new static($rhs))->raw();
+    }
+
+    public static function neq(string|int|GMPHelper $lhs, string|int|GMPHelper $rhs): bool {
+        return !self::eq($lhs, $rhs);
+    }
+
+    public static function gt(string|int|GMPHelper $lhs, string|int|GMPHelper $rhs): bool {
+        return gmp_cmp((new static($lhs))->raw(), (new static($rhs))->raw()) > 0;
+    }
+
+    public static function lt(string|int|GMPHelper $lhs, string|int|GMPHelper $rhs): bool {
+        return gmp_cmp((new static($lhs))->raw(), (new static($rhs))->raw()) < 0;
+    }
+
     /**
      * Return the raw representation of the number stored
      * @return string

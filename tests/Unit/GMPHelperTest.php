@@ -56,4 +56,13 @@ class GMPHelperTest extends TestCase
         $this->assertEquals("11.11", GMPHelper::init("1111")->format(2));
         $this->assertEquals("0.0011", GMPHelper::init("11")->format(4));
     }
+
+    public function test_gmp_helper_comparison() {
+        $this->assertTrue(GMPHelper::eq("1", "1"));
+        $this->assertTrue(GMPHelper::neq("1", "2"));
+        $this->assertTrue(GMPHelper::gt("2", "1"));
+        $this->assertFalse(GMPHelper::gt("2", "2"));
+        $this->assertTrue(GMPHelper::lt("1", "2"));
+        $this->assertFalse(GMPHelper::lt("2", "2"));
+    }
 }
