@@ -91,4 +91,36 @@ class BeatsChainWalletWrapper implements Wrapper
             return $balance;
         }
     }
+
+    public function transfer(string $receiver_ss58, string|int $amount): ?bool {
+        // build the url and send the request
+        $path = "/wallet/transfer";
+        $url = blockchain($this->user)->buildRequestUrl($path);
+
+        // mint the nft
+        $response = Http::post($url, [
+            "mnemonic" => wallet($this->user)->mnemonic(),
+            "receiver" => $receiver_ss58,
+            "amount" => $amount,
+        ]);
+
+        if($response->failed()) {
+            return false;
+        }
+
+        $result = $response->collect();
+
+        // errors occurred, log them and return a safe value
+        if($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
+        }
+        else {
+            // retrieve the value, store it in the session, eventually updating older one and return the balance
+            return true;
+        }
+    }
 }
