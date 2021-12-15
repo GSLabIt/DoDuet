@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\BeatsChainInsufficientBalance;
+use App\Exceptions\BeatsChainInsufficientConversionAmount;
 use App\Exceptions\BeatsChainInvalidAddressLength;
 use App\Exceptions\BeatsChainInvalidChecksum;
 use App\Exceptions\BeatsChainNotACouncilMember;
@@ -410,5 +411,138 @@ class BeatsChainWrapperTest extends TestCase
 
         $last_balance = blockchain($this->user)->wallet()->getBalance(true);
         $this->assertTrue(GMPHelper::init($prev_balance["free"])->add("12345000000000000")->equals($last_balance["free"]));
+    }
+
+    public function test_council_can_update_meld_in_bridge() {
+        $this->authAsAlice();
+
+        $result = blockchain($this->alice)->bridge()->updateMELDInBridge(
+            "100000000000000000000000000"
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_vote_for_meld_update_in_bridge() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->voteProposal(
+            $proposal->hash,
+            $proposal->id,
+            true
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_close_meld_update_in_bridge() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->closeProposal(
+            $proposal->hash,
+            $proposal->id
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_can_update_bridge_fees() {
+        $this->authAsAlice();
+
+        $result = blockchain($this->alice)->bridge()->updateFee(
+            "10000"
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_vote_for_bridge_fees_update() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->voteProposal(
+            $proposal->hash,
+            $proposal->id,
+            true
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_close_bridge_fees_update() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->closeProposal(
+            $proposal->hash,
+            $proposal->id
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_can_update_bridge_minimum_conversion_amount() {
+        $this->authAsAlice();
+
+        $result = blockchain($this->alice)->bridge()->updateMinimumConversionAmount(
+            "11000000000000000"
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_vote_for_update_bridge_minimum_conversion_amount() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->voteProposal(
+            $proposal->hash,
+            $proposal->id,
+            true
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_council_member_can_close_update_bridge_minimum_conversion_amount() {
+        $this->authAsBob();
+
+        $proposal = blockchain($this->bob)->council()->getProposals()[0];
+        $result = blockchain($this->bob)->council()->closeProposal(
+            $proposal->hash,
+            $proposal->id
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_alice_can_convert_funds() {
+        $this->authAsAlice();
+
+        $prev_balance = blockchain($this->alice)->wallet()->getBalance(true);
+
+        $result = blockchain($this->alice)->bridge()->convert(
+            "0xFC5dA6A95E0C2C2C23b8C0c387CDd3Af7E56FCC0",
+            "11000000000000000"
+        );
+
+        $this->assertTrue($result);
+
+        $new_balance = blockchain($this->alice)->wallet()->getBalance(true);
+
+        $this->assertTrue(GMPHelper::init($prev_balance["free"])->sub("11000000000000000")->equals($new_balance["free"]));
+    }
+
+    public function test_alice_cannot_convert_less_than_minimum_conversion_amount() {
+        $this->authAsAlice();
+
+        $this->expectExceptionObject(new BeatsChainInsufficientConversionAmount());
+
+        $result = blockchain($this->alice)->bridge()->convert(
+            "0xFC5dA6A95E0C2C2C23b8C0c387CDd3Af7E56FCC0",
+            "9000000000000000"
+        );
     }
 }

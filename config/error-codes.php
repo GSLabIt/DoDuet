@@ -59,4 +59,8 @@ return [
         "message" => "Balance too low",
         "code" => 1106,
     ],
+    "BEATS_CHAIN_INSUFFICIENT_CONVERSION_AMOUNT" => [
+        "message" => "Conversion amount is less than required minimum conversion",
+        "code" => 1107,
+    ],
 ];

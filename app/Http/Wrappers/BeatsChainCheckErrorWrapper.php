@@ -4,6 +4,7 @@ namespace App\Http\Wrappers;
 
 use App\Exceptions\BeatsChainCouncilDuplicateVote;
 use App\Exceptions\BeatsChainInsufficientBalance;
+use App\Exceptions\BeatsChainInsufficientConversionAmount;
 use App\Exceptions\BeatsChainInvalidAddressLength;
 use App\Exceptions\BeatsChainInvalidChecksum;
 use App\Exceptions\BeatsChainNotACouncilMember;
@@ -20,6 +21,7 @@ class BeatsChainCheckErrorWrapper
         "NotMember" => BeatsChainNotACouncilMember::class,
         "DuplicateVote" => BeatsChainCouncilDuplicateVote::class,
         "InsufficientBalance" => BeatsChainInsufficientBalance::class,
+        "ConversionAmountTooLow" => BeatsChainInsufficientConversionAmount::class,
     ];
 
     /**

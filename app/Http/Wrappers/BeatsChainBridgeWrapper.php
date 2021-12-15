@@ -55,7 +55,7 @@ class BeatsChainBridgeWrapper implements Wrapper
         return $this;
     }
 
-    public function updateMELDInBridge(int $MELD)
+    public function updateMELDInBridge(int|string $MELD): ?bool
     {
         // build the url and send the request
         $path = "/council/proposal/bridge/set-meld";
@@ -74,16 +74,19 @@ class BeatsChainBridgeWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 
-    public function updateFee(int $fee_percentage)
+    public function updateFee(int|string $fee_percentage): ?bool
     {
         // build the url and send the request
         $path = "/council/proposal/bridge/set-fee";
@@ -102,16 +105,19 @@ class BeatsChainBridgeWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 
-    public function updateMinimumConversionAmount(int $MELB)
+    public function updateMinimumConversionAmount(int|string $MELB): ?bool
     {
         // build the url and send the request
         $path = "/council/proposal/bridge/set-minimum-conversion";
@@ -130,16 +136,19 @@ class BeatsChainBridgeWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 
-    public function convert(string $address, int $MELB)
+    public function convert(string $address, int|string $MELB): ?bool
     {
         // build the url and send the request
         $path = "/bridge/convert";
@@ -159,12 +168,15 @@ class BeatsChainBridgeWrapper implements Wrapper
         $result = $response->collect();
 
         // errors occurred, log them and return a safe value
-        if ($response->has("errors")) {
-            logger($response->get("errors"));
-            return $response->get("errors");
+        if ($result->has("errors") && !is_null($result->get("errors"))) {
+            BeatsChainCheckErrorWrapper::check($result->get("errors"));
+
+            // this statement won't ever be reached except during the development phase of tests as exception will
+            // be thrown
+            return null;
         } else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return $response->get("nft_id");
+            return true;
         }
     }
 }
