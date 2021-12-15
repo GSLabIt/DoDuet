@@ -2,12 +2,13 @@
 
 namespace App\Http\Wrappers;
 
+use App\Exceptions\BeatsChainCouncilDuplicateVote;
+use App\Exceptions\BeatsChainInsufficientBalance;
 use App\Exceptions\BeatsChainInvalidAddressLength;
 use App\Exceptions\BeatsChainInvalidChecksum;
 use App\Exceptions\BeatsChainNotACouncilMember;
 use App\Exceptions\BeatsChainRequiredSudo;
 use App\Exceptions\BeatsChainUnableToPayFees;
-use Throwable;
 
 class BeatsChainCheckErrorWrapper
 {
@@ -17,7 +18,8 @@ class BeatsChainCheckErrorWrapper
         "Invalid address length" => BeatsChainInvalidAddressLength::class,
         "Invalid Transaction" => BeatsChainUnableToPayFees::class,
         "NotMember" => BeatsChainNotACouncilMember::class,
-        "DuplicateVote" => "",
+        "DuplicateVote" => BeatsChainCouncilDuplicateVote::class,
+        "InsufficientBalance" => BeatsChainInsufficientBalance::class,
     ];
 
     /**

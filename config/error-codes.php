@@ -51,4 +51,12 @@ return [
         "message" => "You are not a council's member",
         "code" => 1104,
     ],
+    "BEATS_CHAIN_COUNCIL_DUPLICATE_VOTE" => [
+        "message" => "You already voted this proposal",
+        "code" => 1105,
+    ],
+    "BEATS_CHAIN_INSUFFICIENT_BALANCE" => [
+        "message" => "Balance too low",
+        "code" => 1106,
+    ],
 ];

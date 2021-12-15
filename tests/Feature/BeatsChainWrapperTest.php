@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Exceptions\BeatsChainInsufficientBalance;
 use App\Exceptions\BeatsChainInvalidAddressLength;
 use App\Exceptions\BeatsChainInvalidChecksum;
 use App\Exceptions\BeatsChainNotACouncilMember;
 use App\Exceptions\BeatsChainRequiredSudo;
 use App\Exceptions\BeatsChainUnableToPayFees;
 use App\Http\Wrappers\Enums\AirdropType;
+use App\Http\Wrappers\GMPHelper;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -370,10 +372,34 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertArrayHasKey("reserved", $response);
     }
 
+    public function test_alice_can_fill_airdrop_controller_with_funds() {
+        $this->authAsAlice();
+
+        $result = blockchain($this->alice)->wallet()->transfer(
+            "6hRWB6MwSxhTqRsSUUSLvrUajaQQYWjYB6tNyHLhFLzisbPq",
+            "12345000000000000"
+        );
+
+        $this->assertTrue($result);
+    }
+
+    public function test_alice_cannot_fill_airdrop_controller_with_more_funds_she_owns() {
+        $this->authAsAlice();
+
+        $this->expectExceptionObject(new BeatsChainInsufficientBalance());
+
+        $result = blockchain($this->alice)->wallet()->transfer(
+            "6hRWB6MwSxhTqRsSUUSLvrUajaQQYWjYB6tNyHLhFLzisbPq",     // airdrop controller address
+            "1000000000000000000000"
+        );
+    }
+
     public function test_airdrop_controller_can_immediately_release_airdrop()
     {
         $this->authAsUser();
         $prev_balance = blockchain($this->user)->wallet()->getBalance(true);
+
+        // NOTE: the airdrop controller address must be filled with enough funds to airdrop anyone anytime
 
         $result = blockchain($this->bob)->airdrop()->immediatelyReleaseAirdrop(
             0,
@@ -383,6 +409,6 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
 
         $last_balance = blockchain($this->user)->wallet()->getBalance(true);
-        $this->assertEquals($last_balance["free"], gmp_strval(gmp_add($prev_balance["free"], "12345000000000000")));
+        $this->assertTrue(GMPHelper::init($prev_balance["free"])->add("12345000000000000")->equals($last_balance["free"]));
     }
 }
