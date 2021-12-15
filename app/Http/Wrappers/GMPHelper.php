@@ -2,14 +2,9 @@
 
 namespace App\Http\Wrappers;
 
+use App\Http\Wrappers\Enums\GMPHelperFormat;
 use Spatie\Regex\Regex;
 use TypeError;
-
-enum GMPHelperFormat {
-    case decimal;
-    case thousand;
-    case both;
-}
 
 class GMPHelper
 {
