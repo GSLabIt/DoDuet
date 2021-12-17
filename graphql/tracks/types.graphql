@@ -24,3 +24,12 @@ input tracksCreationInput {
     lyric: ID
     album: ID
 }
+
+input tracksUpdateInput {
+    id: ID!
+    name: String!
+    description: String!
+    cover: ID
+    lyric: ID
+    album: ID
+}

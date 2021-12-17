@@ -30,6 +30,14 @@ return [
         "message" => "Unable to find the requested album",
         "code" => 1004,
     ],
+    "TRACK_NOT_FOUND" => [
+        "message" => "Unable to find the requested track",
+        "code" => 1005,
+    ],
+    "USER_NOT_FOUND" => [
+        "message" => "Unable to find the request user",
+        "code" => 1006,
+    ],
 
     "BEATS_CHAIN_REQUIRED_SUDO" => [
         "message" => "The sender must be the sudo account",
@@ -95,4 +103,5 @@ return [
         "message" => "Duplicated proposals not allowed",
         "code" => 1115,
     ],
+
 ];

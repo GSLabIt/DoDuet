@@ -30,3 +30,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::post("/register/ref", [CommonController::class, "referralKeeper"])->name("referral_keeper");
+
+Route::get("/track/{id}",function ($id) {
+    abort("501","Not implemented");
+})->name("tracks-get");
