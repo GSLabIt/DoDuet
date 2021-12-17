@@ -344,22 +344,6 @@ class User extends Authenticatable
         );
     }
 
-    public function createdAlbums(): HasMany
-    {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Albums::class, "creator_id")
-        );
-    }
-
-    public function ownedAlbums(): HasMany
-    {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Albums::class, "owner_id")
-        );
-    }
-
     public function listeningRequests(): HasMany
     {
         return $this->multiDatabaseRunQuery(

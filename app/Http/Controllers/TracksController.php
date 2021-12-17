@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BeatsChainSafeException;
 use App\Exceptions\TrackSafeException;
+use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Models\Albums;
 use App\Models\Covers;
 use App\Models\Elections;
@@ -19,6 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Throwable;
 
 class TracksController extends Controller
 {
@@ -33,13 +36,14 @@ class TracksController extends Controller
      * @throws FileNotFoundException
      * @throws TrackSafeException
      * @throws ValidationException
+     * @throws BeatsChainSafeException
      */
-    public function createTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Tracks|null {
+    public function createTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks {
         Validator::validate($args, [
             "name" => "required|string|max:255",
             "description" => "required|string",
             "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/",
-            "mp3" => "required|file|mimes:mp3|max:107374182400", // 100 MB
+            "mp3" => "required|file|mimes:mp3|max:1048576", // 100 MB, computed in kb not bytes
             "cover" => "nullable|uuid|exists:covers,id",
             "lyric" => "nullable|uuid|exists:lyrics,id",
             "album" => "nullable|uuid|exists:albums,id",
@@ -74,6 +78,46 @@ class TracksController extends Controller
                 !is_null($album) // check if album is null ,or it belongs to the user
             )
         ) {
+            // The generated file will be directly uploaded to skynet via API, this record is created with temporary
+            // empty values in order to create a new instance of the track and allow correct nft minting.
+            // The correct values are pushed asap.
+            $skynet = Skynet::create([
+                "link" => "temporary-fake-link",
+                "encryption_key" => "temporary-fake-key",
+            ]);
+
+            $track = Tracks::create([
+                "name" => $args["name"],
+                "description" => $args["description"],
+                "duration" => $args["duration"],
+                "nft_id" => "temporary-fake-nft-id",
+                "skynet_id" => $skynet->id,
+                "creator_id" => $user->id,
+                "owner_id" => $user->id,
+                "cover_id" => $cover?->id,
+                "lyric_id" => $lyric?->id,
+                "album_id" => $album?->id
+            ]);
+
+            // try to mint the NFT, in case it succeeds the integer nft id is returned and the flux may continue straight
+            // away, if an exception occurs it must be propagated and the temporary records must be removed.
+            try {
+                $nft_id = blockchain($user)->nft()->mint(
+                    route("nft-track_display", ["id" => $track->id]),
+                    BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+                );
+            }
+            catch (Throwable $exception) {
+                // remove the temporary records
+                $track->delete();
+                $skynet->delete();
+
+                // usage of the throwable interface instead of the specific error type mark the following statement
+                // as possibly wrong but as the only exception may occur is the blockchain related one, stay chill,
+                // no other strange exception will occur
+                throw new BeatsChainSafeException($exception);
+            }
+
             // Extract the content from the file to start the encryption process
             $content = $mp3->get();
             $key = sodium()->encryption()->symmetric()->key();
@@ -82,29 +126,22 @@ class TracksController extends Controller
 
             // Store the just encrypted file in the skynet folder, the encryption key is used as a unique file
             // identifier
+            // TODO: instead of storing the file it should immediately be uploaded to the skynet api wrapper
             file_put_contents(storage_path("/skynet/$key"), $encrypted_content);
 
-            // The generated file was placed in the skynet folder, the watchdog will take the file and upload it to
-            // skynet then use the file name as a unique identifier to set the skynet link in the appropriate record
-            $skynet = Skynet::create([
-                "link" => "loading",
+            // TODO: fill the values of skynet with the returned states
+            $skynet->update([
+                "link" => "temporary-fake-link",    // TODO: insert the skynet provided link here
                 "encryption_key" => $key,
+            ]);
+
+            $track->update([
+                "nft_id" => $nft_id,
             ]);
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a
             // composed track
-            return Tracks::create([
-                "name" => $args["name"],
-                "description" => $args["description"],
-                "duration" => $args["duration"],
-                "nft_id" => "?????", //TODO: add nft_id
-                "skynet_id" => $skynet->id,
-                "creator_id" => $user->id,
-                "owner_id" => $user->id,
-                "cover_id" => $cover?->id,
-                "lyric_id" => $lyric?->id,
-                "album_id" => $album?->id
-            ]);
+            return $track->fresh();
         }
 
         // handle test errors
@@ -142,7 +179,7 @@ class TracksController extends Controller
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function updateTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Tracks|null
+    public function updateTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
     {
         Validator::validate($args, [
             "id" => "required|uuid|exists:tracks.id",
@@ -257,7 +294,7 @@ class TracksController extends Controller
     }
 
     /**
-     * This function gets all the tracks owned by the user
+     * This function gets all the tracks created by the user
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -286,7 +323,7 @@ class TracksController extends Controller
     }
 
     /**
-     * This function gets the number of listenings of a track
+     * This function gets the number of listening of a track
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -422,7 +459,6 @@ class TracksController extends Controller
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
-
     }
 
     /**
@@ -432,10 +468,11 @@ class TracksController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Tracks
-     * @throws TrackSafeException|ValidationException
+     * @return Tracks|null
+     * @throws TrackSafeException
+     * @throws ValidationException
      */
-    public function linkToAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Tracks
+    public function linkToAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
     {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks.id",
@@ -453,7 +490,7 @@ class TracksController extends Controller
         // check if both album and track exist and are owned by the user
         if(!is_null($track) && !is_null($album)) {
             $track->update([
-                "album_id" => $album?->id
+                "album_id" => $album->id
             ]);
             return $track;
         }
@@ -473,6 +510,7 @@ class TracksController extends Controller
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
         }
+        return null;
     }
 
     /**
@@ -482,11 +520,11 @@ class TracksController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Tracks
+     * @return Tracks|null
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function linkToCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Tracks
+    public function linkToCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
     {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks.id",
@@ -504,7 +542,7 @@ class TracksController extends Controller
         // check if both cover and track exist and are owned by the user
         if(!is_null($track) && !is_null($cover)) {
             $track->update([
-                "cover_id" => $cover?->id
+                "cover_id" => $cover->id
             ]);
             return $track;
         }
@@ -524,6 +562,7 @@ class TracksController extends Controller
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
+        return null;
     }
 
     /**
@@ -533,11 +572,11 @@ class TracksController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Tracks
+     * @return Tracks|null
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function linkToLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Tracks {
+    public function linkToLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks.id",
             "lyric_id" => "required|uuid|exists:lyrics,id",
@@ -554,7 +593,7 @@ class TracksController extends Controller
         // check if both lyric and track exist and are owned by the user
         if(!is_null($track) && !is_null($lyric)) {
             $track->update([
-                "lyric_id" => $lyric?->id
+                "lyric_id" => $lyric->id
             ]);
             return $track;
         }
@@ -574,6 +613,7 @@ class TracksController extends Controller
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
+        return null;
     }
 }
 
