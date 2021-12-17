@@ -1,0 +1,62 @@
+# |--------------------------------------------------------------------------
+# | Tracks
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Tracks model
+# |
+extend type Mutation
+    @guard
+    @namespace(field: "App\\Http\\Controllers") {
+
+    """ This function creates the track and stores the uploaded mp3 file in the file system """
+    createTrack(input: tracksCreationInput @spread): Track!
+    @field(resolver: "TracksController@createTrack")
+
+    """ This function updates the track but not the mp3,nft_id and duration  """
+    updateTrack(input: tracksUpdateInput @spread): Track!
+    @field(resolver: "TracksController@updateTrack")
+
+    """ This function counts the votes of the track  """
+    getTotalVotes(track_id: ID!): Int!
+    @field(resolver: "TracksController@getTotalVotes")
+
+    """ This function gets the average vote of the track  """
+    getAverageVote(track_id: ID!): Int!
+    @field(resolver: "TracksController@getAverageVote")
+
+    """ This function counts the listenings of the track  """
+    getTotalListenings(track_id: ID!): Int!
+    @field(resolver: "TracksController@getTotalListenings")
+
+    """ This function counts the votes of the track  """
+    getUsersTracks(user_id: ID!): [Track!]!
+    @field(resolver: "TracksController@getUsersTracks")
+
+    """ This function gets the most voted track """
+    getMostVotedTracks: [Track!]!
+    @field(resolver: "TracksController@getMostVotedTracks")
+
+    """ This function gets the most listened track """
+    getMostListenedTracks: [Track!]!
+    @field(resolver: "TracksController@getMostListenedTracks")
+
+    """ This function gets the tracks not in the challenge """
+    getNotInChallengeTracks: [Track!]!
+    @field(resolver: "TracksController@getNotInChallengeTracks")
+
+    """ This function generates and returns the link for the track """
+    getTrackLink(track_id: ID!): String!
+    @field(resolver: "TracksController@getTrackLink")
+
+    """ This function links the given track to the given album """
+    linkToAlbum(album_id: ID!,track_id: ID!): String!
+    @field(resolver: "TracksController@linkToAlbum")
+
+    """ This function links the given track to the given cover """
+    linkToCover(cover_id: ID!,track_id: ID!): String!
+    @field(resolver: "TracksController@linkToCover")
+
+    """ This function links the given track to the given lyric """
+    linkToLyric(lyric_id: ID!,track_id: ID!): String!
+    @field(resolver: "TracksController@linkToLyric")
+}
