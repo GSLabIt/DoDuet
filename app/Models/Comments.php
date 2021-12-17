@@ -9,6 +9,7 @@ use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -37,5 +38,10 @@ class Comments extends Model
                 fn() => $this->belongsTo(User::class, "owner_id")
             );
         }
+    }
+
+    function explicit(): MorphOne
+    {
+        return $this->morphOne(Explicits::class, "explicit_content");
     }
 }

@@ -1,0 +1,16 @@
+# |--------------------------------------------------------------------------
+# | Explicits
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Explicits model
+# |
+extend type Mutation @namespace(field: "App\\Http\\Controllers") @guard {
+
+    """ This function creates the explicit instance in the db """
+    setExplicit(input: setExplicitInput @spread): Explicit!
+    @field(resolver: "ExplicitsController@setExplicit")
+
+    """ This function delete the explicit instance in the db """
+    removeExplicit(input: removeExplicitInput @spread): Explicit!
+    @field(resolver: "ExplicitsController@removeExplicit")
+}

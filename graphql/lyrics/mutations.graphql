@@ -1,0 +1,20 @@
+# |--------------------------------------------------------------------------
+# | Lyrics
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Lyrics model
+# |
+extend type Mutation @namespace(field: "App\\Http\\Controllers") @guard {
+
+    """ This function creates the lyric and autoassigns the owner, creator and creates the nft_id """
+    createLyric(input: lyricsCreationInput @spread): Lyric!
+    @field(resolver: "LyricsController@createLyric")
+
+    """ This function updates the lyric"""
+    updateLyric(input: lyricsUpdateInput @spread): Lyric!
+    @field(resolver: "LyricsController@updateLyric")
+
+    """ This function creates the nft"""
+    createNft(id: ID!): Lyric!
+    @field(resolver: "LyricsController@createNft")
+}

@@ -139,14 +139,14 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * @return array
      */
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
-    private function deriveKey(string $master, int $subkey, int $length, string $context = ""): array
+    private function deriveKey(string $master, int $subkey, int $length, SodiumContexts $context = SodiumContexts::DEFAULT): array
     {
         try {
             return [
                 "key" => bin2hex(sodium_crypto_kdf_derive_from_key(
                     $length,
                     $subkey,
-                    $this->computeKeyDerivationContext($context),
+                    $this->computeKeyDerivationContext($context)->value,
                     hex2bin($master))),
                 "onetime" => false
             ];
@@ -167,14 +167,11 @@ class SodiumKeyDerivationWrapper implements Wrapper
     /**
      * Get the provided context and check if it is valid. In case it is not, returns the default context
      *
-     * @param string $context
-     * @return string
+     * @param SodiumContexts $context
+     * @return SodiumContexts
      */
-    private function computeKeyDerivationContext(string $context): string
+    private function computeKeyDerivationContext(SodiumContexts $context = SodiumContexts::DEFAULT): SodiumContexts
     {
-        if(strlen($context) !== SodiumKeyLength::$DERIVATION_CONTEXT_BYTES) {
-            return SodiumContexts::$DEFAULT;
-        }
         return $context;
     }
 
@@ -188,7 +185,20 @@ class SodiumKeyDerivationWrapper implements Wrapper
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
     public function deriveKeypairSeed(string $master, int $subkey): array
     {
-        return $this->deriveKey($master, $subkey, SodiumKeyLength::$KEYPAIR_SEED_BYTES, SodiumContexts::$KEYPAIR);
+        return $this->deriveKey($master, $subkey, SodiumKeyLength::$KEYPAIR_SEED_BYTES, SodiumContexts::KEYPAIR);
+    }
+
+    /**
+     * Derive the symmetric encryption key given the master key, this is used to symmetrically encode all user related
+     * private data (such as wallet mnemonic and private key)
+     *
+     * @param string $master
+     * @param int $subkey
+     * @return array
+     */
+    #[ArrayShape(["key" => "string", "onetime" => "bool"])]
+    public function deriveSymmetricEncryptionKey(string $master, int $subkey): array {
+        return $this->deriveKey($master, $subkey, SodiumKeyLength::$SYMMETRIC_ENCRYPTION_KEY, SodiumContexts::SYMMETRIC_KEY);
     }
 
     /**

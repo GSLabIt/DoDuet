@@ -18,6 +18,7 @@ class CreateWalletsTable extends Migration
             $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->string('chain');
             $table->text('private_key');
+            $table->text('public_key');
             $table->text('seed');
             $table->string('address');
             $table->timestamps();

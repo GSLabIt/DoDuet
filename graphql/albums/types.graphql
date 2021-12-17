@@ -8,4 +8,23 @@ type Album {
     description: String!
     created_at: DateTime!
     updated_at: DateTime!
+    tracks: Track! @hasMany
+    comments: Comment @hasMany
+    tags: Taggable @morphMany
+    reports: Report @morphMany
+    mentions: Mention @morphMany
+    explicit: Explicit @morphOne
+}
+
+input albumsCreationInput {
+    name: String!
+    cover: ID
+    description: String!
+}
+
+input albumsUpdateInput {
+    id: ID!
+    name: String!
+    cover: ID
+    description: String!
 }

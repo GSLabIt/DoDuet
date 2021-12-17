@@ -1,10 +1,28 @@
 type Cover {
     id: ID!
     name: String!
-    skynet: Skynet! @belongsTo
-    nft_id: String
     owner: User! @belongsTo
     creator: User! @belongsTo
+    skynet: Skynet! @belongsTo
+    nft_id: String
     created_at: DateTime!
     updated_at: DateTime!
+    track: Track! @hasOne
+    album: Album! @hasOne
+    comments: Comment @hasMany
+    tags: Taggable @morphMany
+    reports: Report @morphMany
+    mentions: Mention @morphMany
+    explicit: Explicit @morphOne
+}
+
+input coversCreationInput {
+    name: String!
+    img: Upload!
+}
+
+input coversUpdateInput {
+    id: ID!
+    name: String!
+    img: Upload
 }

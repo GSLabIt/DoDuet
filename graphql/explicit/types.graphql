@@ -1,0 +1,17 @@
+union Explicitable = Cover | Lyric | Album | Track | Comment
+
+type Explicit {
+    id: ID!
+    explicitContent: Explicitable @morphTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input setExplicitInput {
+    explicit_content_id: ID!
+    explicit_content_type: String!
+}
+
+input removeExplicitInput {
+    id: ID!
+}

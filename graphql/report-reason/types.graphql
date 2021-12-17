@@ -1,0 +1,7 @@
+type ReportReason {
+    id: ID!
+    name: String!
+    description: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

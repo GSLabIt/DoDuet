@@ -1,0 +1,20 @@
+# |--------------------------------------------------------------------------
+# | Covers
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Covers model
+# |
+extend type Mutation @namespace(field: "App\\Http\\Controllers") @guard {
+
+    """ This function creates the Cover and autoassigns the owner, creator and creates the nft_id """
+    createCover(input: coversCreationInput @spread): Cover!
+    @field(resolver: "CoversController@createCover")
+
+    """ This function updates the Cover"""
+    updateCover(input: coversUpdateInput @spread): Cover!
+    @field(resolver: "CoversController@updateCover")
+
+    """ This function creates the nft"""
+    createNft(id: ID!): Cover!
+    @field(resolver: "CoversController@createNft")
+}

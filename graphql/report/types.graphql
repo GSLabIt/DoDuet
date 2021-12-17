@@ -1,0 +1,10 @@
+union Reportable = Lyric | Cover | Comment | Track | User | Message
+
+type Report {
+    id: ID!
+    reportable: Reportable @morphTo
+    reason: ReportReason @belongsTo
+    extra_informations: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

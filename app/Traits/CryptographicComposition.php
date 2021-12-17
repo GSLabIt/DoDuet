@@ -107,7 +107,7 @@ trait CryptographicComposition
                     $message,
                     sodium()->derivation()->packSharedKeypair(
                         secureUser($sender)->get(secureUser($sender)->whitelistedItems()["public_key"]),
-                        secureUser($this)->get(secureUser($this)->whitelistedItems()["secret_key"])
+                        secureUser($this)->get(secureUser($this)->whitelistedItems()["secret_key"]),
                     )
                 )
         ];

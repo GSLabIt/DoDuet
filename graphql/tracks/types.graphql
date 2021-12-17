@@ -12,6 +12,7 @@ type Track {
     album: Album @belongsTo
     created_at: DateTime!
     updated_at: DateTime!
+    tags: Taggable @morphMany
 }
 
 input tracksCreationInput {
