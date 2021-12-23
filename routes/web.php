@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\SocialController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +24,13 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+
+// Social login routes
+Route::get('/oauth/{social}', [SocialController::class, 'redirect']);
+Route::get('/oauth/{social}/callback', [SocialController::class, 'callback']);
+Route::get('/privacy-policy', function() {
+    return Redirect::to('https://app.termly.io/document/privacy-policy/82476885-9144-4483-af30-804968838f49');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {

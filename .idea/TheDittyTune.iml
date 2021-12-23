@@ -21,7 +21,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/jenssegers/agent" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/routing" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-client-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/css-selector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/error-handler" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
@@ -191,6 +190,26 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/dbal" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psy/psysh" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/manager" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/github" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/google" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/twitter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/facebook" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/microsoft" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/wordpress" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/yahoo" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/discord" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/twitch" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/asana" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/atlassian" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/bitly" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/bitbucket" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/digitalocean" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/dropbox" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/envato" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/eventbrite" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/socialiteproviders/heroku" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

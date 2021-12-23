@@ -7,7 +7,6 @@ use App\Http\Controllers\UserSegmentsController;
 use App\Models\Referral;
 use App\Models\User;
 use App\Notifications\NewReferralNotification;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -27,6 +26,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        //NOTE: modify also SocialController.php when modifying this file
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:common.users'],
@@ -40,8 +40,8 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        wallet($user)->generate();
         secureUser($user)->set("password", $input["password"]);
+        wallet($user)->generate();
 
         UserSegmentsController::assignToSegment($user);
 

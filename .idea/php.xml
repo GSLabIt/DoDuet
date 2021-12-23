@@ -16,7 +16,6 @@
       <path value="$PROJECT_DIR$/vendor/jenssegers/agent" />
       <path value="$PROJECT_DIR$/vendor/symfony/routing" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
       <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
       <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
@@ -182,6 +181,27 @@
       <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
       <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
       <path value="$PROJECT_DIR$/vendor/psy/psysh" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/manager" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/github" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/google" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/twitter" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/facebook" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/instagram" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/microsoft" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/wordpress" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/yahoo" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/discord" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/twitch" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/asana" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/atlassian" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/bitly" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/bitbucket" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/digitalocean" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/dropbox" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/envato" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/eventbrite" />
+      <path value="$PROJECT_DIR$/vendor/socialiteproviders/heroku" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

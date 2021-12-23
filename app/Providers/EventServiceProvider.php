@@ -18,6 +18,27 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            \SocialiteProviders\GitHub\GitHubExtendSocialite::class.'@handle',
+            \SocialiteProviders\Google\GoogleExtendSocialite::class.'@handle',
+            \SocialiteProviders\Twitter\TwitterExtendSocialite::class.'@handle',
+            \SocialiteProviders\Facebook\FacebookExtendSocialite::class.'@handle',
+            \SocialiteProviders\Microsoft\MicrosoftExtendSocialite::class.'@handle',
+            \SocialiteProviders\WordPress\WordPressExtendSocialite::class.'@handle',
+            \SocialiteProviders\Yahoo\YahooExtendSocialite::class.'@handle',
+            \SocialiteProviders\Discord\DiscordExtendSocialite::class.'@handle',
+            \SocialiteProviders\Twitch\TwitchExtendSocialite::class.'@handle',
+            \SocialiteProviders\Asana\AsanaExtendSocialite::class.'@handle',
+            \SocialiteProviders\Atlassian\AtlassianExtendSocialite::class.'@handle',
+            \SocialiteProviders\Bitly\BitlyExtendSocialite::class.'@handle',
+            \SocialiteProviders\Bitbucket\BitbucketExtendSocialite::class.'@handle',
+            \SocialiteProviders\DigitalOcean\DigitalOceanExtendSocialite::class.'@handle',
+            \SocialiteProviders\Dropbox\DropboxExtendSocialite::class.'@handle',
+            \SocialiteProviders\Envato\EnvatoExtendSocialite::class.'@handle',
+            \SocialiteProviders\Eventbrite\EventbriteExtendSocialite::class.'@handle',
+            \SocialiteProviders\Heroku\HerokuExtendSocialite::class.'@handle',
+        ],
     ];
 
     /**
