@@ -738,4 +738,84 @@ class BeatsChainWrapperTest extends TestCase
 
         $this->assertTrue($result);
     }
+
+    public function test_can_get_leaderboard() {
+        $this->authAsAlice();
+
+        // here nft ids starts from 2 as 0 and 1 have been already used
+        blockchain($this->alice)->nft()->mint(
+            $this->faker->url(),
+            BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+        );  // id: 2
+        blockchain($this->alice)->nft()->mint(
+            $this->faker->url(),
+            BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+        );  // id: 3
+        blockchain($this->alice)->nft()->mint(
+            $this->faker->url(),
+            BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+        );  // id: 4
+        blockchain($this->alice)->nft()->mint(
+            $this->faker->url(),
+            BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
+        );  // id: 5
+
+        // alice participate in election
+        blockchain($this->alice)->election()->participateInElection(2);
+        blockchain($this->alice)->election()->participateInElection(3);
+        blockchain($this->alice)->election()->participateInElection(4);
+        blockchain($this->alice)->election()->participateInElection(5);
+
+        // bob can vote alice tracks
+        $this->authAsBob();
+        blockchain($this->bob)->election()->grantVoteAbility(
+            $this->bob,
+            $this->alice->wallet->address,
+            2
+        );
+        blockchain($this->bob)->election()->grantVoteAbility(
+            $this->bob,
+            $this->alice->wallet->address,
+            3
+        );
+        blockchain($this->bob)->election()->grantVoteAbility(
+            $this->bob,
+            $this->alice->wallet->address,
+            4
+        );
+        blockchain($this->bob)->election()->grantVoteAbility(
+            $this->bob,
+            $this->alice->wallet->address,
+            5
+        );
+
+        // bob votes alice tracks
+        blockchain($this->bob)->election()->vote(
+            $this->alice->wallet->address,
+            2,
+            5
+        );      // this should be 4th
+        blockchain($this->bob)->election()->vote(
+            $this->alice->wallet->address,
+            3,
+            6
+        );      // this should be 3rd
+        blockchain($this->bob)->election()->vote(
+            $this->alice->wallet->address,
+            4,
+            7
+        );      // this should be 2nd
+        blockchain($this->bob)->election()->vote(
+            $this->alice->wallet->address,
+            5,
+            8
+        );      // this should be 1st
+
+        $leaderboard = blockchain($this->bob)->election()->leaderboard();
+
+        $this->assertEquals(5, $leaderboard[0]["nft_id"]);
+        $this->assertEquals(4, $leaderboard[1]["nft_id"]);
+        $this->assertEquals(3, $leaderboard[2]["nft_id"]);
+        $this->assertEquals(2, $leaderboard[3]["nft_id"]);
+    }
 }
