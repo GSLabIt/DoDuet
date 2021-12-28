@@ -7,7 +7,7 @@ use App\Exceptions\TrackSafeException;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Models\Albums;
 use App\Models\Covers;
-use App\Models\Elections;
+use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Lyrics;
 use App\Models\Skynet;
@@ -421,11 +421,11 @@ class TracksController extends Controller
      * @return Collection
      */
     public function getNotInChallengeTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
-        // get current election
-        $election = Elections::orderByDesc("created_at")->first();
+        // get current challenge
+        $challenge = Challenges::orderByDesc("created_at")->first();
 
         // Get not voted tracks ( means not in challenge )
-        return Tracks::all()->filter(fn(Tracks $track) => $election->votes()->where("track_id", $track->id)->count() === 0);
+        return Tracks::all()->filter(fn(Tracks $track) => $challenge->votes()->where("track_id", $track->id)->count() === 0);
     }
 
     /**

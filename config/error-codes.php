@@ -38,6 +38,11 @@ return [
         "message" => "Unable to find the request user",
         "code" => 1006,
     ],
+    "CHALLENGE_NOT_FOUND" => [
+        "message" => "Unable to find the request challenge",
+        "code" => 1007,
+    ],
+
 
     "BEATS_CHAIN_REQUIRED_SUDO" => [
         "message" => "The sender must be the sudo account",
@@ -95,8 +100,8 @@ return [
         "message" => "Vote already submitted for this track",
         "code" => 1113,
     ],
-    "BEATS_CHAIN_ALREADY_PARTICIPATING_IN_ELECTION" => [
-        "message" => "You are already participating in the current election with this track",
+    "BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE" => [
+        "message" => "You are already participating in the current challenge with this track",
         "code" => 1114,
     ],
     "BEATS_CHAIN_DUPLICATE_PROPOSAL" => [

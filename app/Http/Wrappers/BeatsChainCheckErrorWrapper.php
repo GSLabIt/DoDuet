@@ -2,7 +2,7 @@
 
 namespace App\Http\Wrappers;
 
-use App\Exceptions\BeatsChainAlreadyInElection;
+use App\Exceptions\BeatsChainAlreadyInChallenge;
 use App\Exceptions\BeatsChainAlreadyInPool;
 use App\Exceptions\BeatsChainAlreadyVoted;
 use App\Exceptions\BeatsChainCouncilCloseTooEarly;
@@ -37,7 +37,7 @@ class BeatsChainCheckErrorWrapper
         "TooEarly" => BeatsChainCouncilCloseTooEarly::class,
         "VoteAlreadyEnabled" => BeatsChainVoteAlreadyEnabled::class,
         "AlreadyVoted" => BeatsChainAlreadyVoted::class,
-        "AlreadyInPool" => BeatsChainAlreadyInElection::class,
+        "AlreadyInPool" => BeatsChainAlreadyInChallenge::class,
         "DuplicateProposal" => BeatsChainDuplicateProposal::class,
     ];
 

@@ -10,8 +10,8 @@ CRUD("track", TrackController::class, "track", "track");
 Route::prefix("track")->group(function() {
     Route::post("solo-validation", [TrackController::class, "soloValidation"])->name("track-solo_validation");
 
-    Route::post("election/{nft_id}/participate", [TrackController::class, "participateToElection"])
-        ->name("track-participate_to_election")
+    Route::post("challenge/{nft_id}/participate", [TrackController::class, "participateToChallenge"])
+        ->name("track-participate_to_challenge")
         ->middleware(["owns-track:nft_id"]);
 
     Route::middleware(["owns-track:track"])->group(function() {
@@ -19,7 +19,7 @@ Route::prefix("track")->group(function() {
             Route::get("listening/{track}", [TrackController::class, "getListeningNumber"])->name("track-insight_listening");
             Route::get("votes/{track}", [TrackController::class, "getVotesNumber"])->name("track-insight_votes");
             Route::get("average-vote/{track}", [TrackController::class, "getAverageVote"])->name("track-insight_average_vote");
-            Route::get("in-election/{track}", [TrackController::class, "isParticipatingInElection"])->name("track-insight_participating_in_election");
+            Route::get("in-challenge/{track}", [TrackController::class, "isParticipatingInChallenge"])->name("track-insight_participating_in_challenge");
         });
     });
 });

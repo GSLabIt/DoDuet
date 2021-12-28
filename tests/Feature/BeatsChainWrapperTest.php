@@ -585,23 +585,23 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $result);
     }
 
-    public function test_election_prize_can_be_retrieved() {
+    public function test_challenge_prize_can_be_retrieved() {
         $this->authAsUser();
 
-        $result = blockchain($this->user)->election()->getPrize();
+        $result = blockchain($this->user)->challenge()->getPrize();
 
         $this->assertNotNull($result);
     }
 
-    public function test_user_can_participate_in_track_election() {
+    public function test_user_can_participate_in_track_challenge() {
         $this->authAsUser();
 
-        $prev_prize = blockchain($this->user)->election()->getPrize();
+        $prev_prize = blockchain($this->user)->challenge()->getPrize();
 
-        $result = blockchain($this->user)->election()->participateInElection(0);
+        $result = blockchain($this->user)->challenge()->participateInChallenge(0);
         $this->assertTrue($result);
 
-        $new_prize = blockchain($this->user)->election()->getPrize();
+        $new_prize = blockchain($this->user)->challenge()->getPrize();
 
         $this->assertTrue(GMPHelper::init($prev_prize)->add(BeatsChainUnitsHelper::make(900))->equals($new_prize));
     }
@@ -609,7 +609,7 @@ class BeatsChainWrapperTest extends TestCase
     public function test_company_can_grant_vote_right_to_bob() {
         $this->authAsBob();
 
-        $result = blockchain($this->bob)->election()->grantVoteAbility(
+        $result = blockchain($this->bob)->challenge()->grantVoteAbility(
             $this->bob,
             $this->user->wallet->address,
             0
@@ -621,7 +621,7 @@ class BeatsChainWrapperTest extends TestCase
     public function test_bob_can_vote_track_whose_permission_was_granted_to() {
         $this->authAsBob();
 
-        $result = blockchain($this->bob)->election()->vote(
+        $result = blockchain($this->bob)->challenge()->vote(
             $this->user->wallet->address,
             0,
             5
@@ -630,27 +630,27 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_bob_cannot_vote_track_not_participating_in_election() {
+    public function test_bob_cannot_vote_track_not_participating_in_challenge() {
         $this->authAsBob();
 
         $this->expectExceptionObject(new BeatsChainVoteNotEnabled());
 
-        $result = blockchain($this->bob)->election()->vote(
+        $result = blockchain($this->bob)->challenge()->vote(
             $this->user->wallet->address,
             1,
             5
         );
     }
 
-    public function test_user_can_participate_in_track_election_with_multiple_track_simultaneously() {
+    public function test_user_can_participate_in_track_challenge_with_multiple_track_simultaneously() {
         $this->authAsUser();
 
-        $prev_prize = blockchain($this->user)->election()->getPrize();
+        $prev_prize = blockchain($this->user)->challenge()->getPrize();
 
-        $result = blockchain($this->user)->election()->participateInElection(1);
+        $result = blockchain($this->user)->challenge()->participateInChallenge(1);
         $this->assertTrue($result);
 
-        $new_prize = blockchain($this->user)->election()->getPrize();
+        $new_prize = blockchain($this->user)->challenge()->getPrize();
 
         $this->assertTrue(GMPHelper::init($prev_prize)->add(BeatsChainUnitsHelper::make(900))->equals($new_prize));
     }
@@ -660,7 +660,7 @@ class BeatsChainWrapperTest extends TestCase
 
         $this->expectExceptionObject(new BeatsChainVoteNotEnabled());
 
-        $result = blockchain($this->bob)->election()->vote(
+        $result = blockchain($this->bob)->challenge()->vote(
             $this->user->wallet->address,
             1,
             5
@@ -670,7 +670,7 @@ class BeatsChainWrapperTest extends TestCase
     public function test_council_can_kick_out_participant() {
         $this->authAsAlice();
 
-        $result = blockchain($this->alice)->election()->kickOutParticipant(
+        $result = blockchain($this->alice)->challenge()->kickOutParticipant(
             $this->user->wallet->address,
             1,
         );
@@ -678,7 +678,7 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_council_member_can_vote_for_election_kick_out_participant() {
+    public function test_council_member_can_vote_for_challenge_kick_out_participant() {
         $this->authAsBob();
 
         $proposal = blockchain($this->bob)->council()->getProposals()[0];
@@ -691,7 +691,7 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_council_member_can_close_election_kick_out_participant() {
+    public function test_council_member_can_close_challenge_kick_out_participant() {
         $this->authAsBob();
 
         $proposal = blockchain($this->bob)->council()->getProposals()[0];
@@ -706,7 +706,7 @@ class BeatsChainWrapperTest extends TestCase
     public function test_council_can_kick_out_participant_multiple_times() {
         $this->authAsAlice();
 
-        $result = blockchain($this->alice)->election()->kickOutParticipant(
+        $result = blockchain($this->alice)->challenge()->kickOutParticipant(
             $this->user->wallet->address,
             0,
         );
@@ -714,7 +714,7 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_council_member_can_vote_for_election_kick_out_participant_multiple_times() {
+    public function test_council_member_can_vote_for_challenge_kick_out_participant_multiple_times() {
         $this->authAsBob();
 
         $proposal = blockchain($this->bob)->council()->getProposals()[0];
@@ -727,7 +727,7 @@ class BeatsChainWrapperTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_council_member_can_close_election_kick_out_participant_multiple_times() {
+    public function test_council_member_can_close_challenge_kick_out_participant_multiple_times() {
         $this->authAsBob();
 
         $proposal = blockchain($this->bob)->council()->getProposals()[0];

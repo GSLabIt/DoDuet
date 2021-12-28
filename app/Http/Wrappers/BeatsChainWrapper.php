@@ -82,8 +82,8 @@ class BeatsChainWrapper implements Wrapper
         return BeatsChainAirdropWrapper::init($this->user);
     }
 
-    public function election(): BeatsChainElectionWrapper {
-        return BeatsChainElectionWrapper::init($this->user);
+    public function challenge(): BeatsChainChallengeWrapper {
+        return BeatsChainChallengeWrapper::init($this->user);
     }
 
     public function buildRequestUrl(string $path): string

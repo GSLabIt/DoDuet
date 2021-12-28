@@ -11,7 +11,7 @@ class BeatsChainSafeException extends SafeException
         BeatsChainRequiredSudo|BeatsChainInvalidChecksum|BeatsChainInvalidAddressLength|BeatsChainUnableToPayFees|
         BeatsChainNotACouncilMember|BeatsChainCouncilDuplicateVote|BeatsChainInsufficientBalance|
         BeatsChainInsufficientConversionAmount|BeatsChainNotOwnedNFT|BeatsChainVoteNotEnabled|BeatsChainMissingNFT|
-        BeatsChainCouncilCloseTooEarly|BeatsChainVoteAlreadyEnabled|BeatsChainAlreadyVoted|BeatsChainAlreadyInElection|
+        BeatsChainCouncilCloseTooEarly|BeatsChainVoteAlreadyEnabled|BeatsChainAlreadyVoted|BeatsChainAlreadyInChallenge|
         BeatsChainDuplicateProposal
         $exception
     )

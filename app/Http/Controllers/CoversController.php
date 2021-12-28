@@ -116,7 +116,7 @@ class CoversController extends Controller
      * @throws ValidationException
      * @throws CoverSafeException
      */
-    public function createNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
+    public function createCoverNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
     {
         $this->validate($args, [
             "id" => "required|uuid|exists:covers,id",

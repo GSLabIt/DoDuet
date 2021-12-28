@@ -249,10 +249,10 @@ class User extends Authenticatable
 
     /**
      * |--------------------------------------------------------------------------
-     * | Tracks & Elections section
+     * | Tracks & Challenges section
      * |--------------------------------------------------------------------------
      * |
-     * | Define all the _tracks_ and _elections_ related methods here
+     * | Define all the _tracks_ and _challenges_ related methods here
      * |
      */
 
@@ -276,7 +276,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(Elections::class, "first_place_id")
+            fn() => $this->hasMany(Challenges::class, "first_place_id")
         );
     }
 
@@ -284,7 +284,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(Elections::class, "second_place_id")
+            fn() => $this->hasMany(Challenges::class, "second_place_id")
         );
     }
 
@@ -292,7 +292,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(Elections::class, "third_place_id")
+            fn() => $this->hasMany(Challenges::class, "third_place_id")
         );
     }
 

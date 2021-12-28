@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Elections;
+use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
 use App\Models\Votes;
@@ -28,7 +28,7 @@ class ListeningRequestFactory extends Factory
             "id" => $this->faker->uuid(),
             "voter_id" => Votes::factory(),
             "track_id" => Tracks::factory(),
-            "election_id" => Elections::factory(),
+            "challenge_id" => Challenges::factory(),
 
         ];
     }

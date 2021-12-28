@@ -29,8 +29,8 @@ class ListeningRequest extends Model
         return $this->belongsTo(Tracks::class);
     }
 
-    function election(): BelongsTo
+    function challenge(): BelongsTo
     {
-        return $this->belongsTo(Elections::class);
+        return $this->belongsTo(Challenges::class);
     }
 }

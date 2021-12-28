@@ -1,0 +1,54 @@
+# |--------------------------------------------------------------------------
+# | Challenges
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to queries on the Challenges model
+# |
+extend type Query
+    @guard
+    @namespace(field: "App\\Http\\Controllers") {
+
+    """ This function gets all the tracks participating in the latest challenge """
+    getAllTracksInLatestChallenge: [Track!]!
+    @field(resolver: "ChallengesController@getAllTracksInLatestChallenge")
+
+    """ This function gets all the tracks participating in the specified challenge  """
+    getAllTracksInChallenge(challenge_id: ID!): [Track!]!
+    @field(resolver: "ChallengesController@getAllTracksInChallenge")
+
+    """ This function retrieves all the previously received prizes by user  """
+    getAllUserPrizes: [ID!]!
+    @field(resolver: "ChallengesController@getAllUserPrizes")
+
+    """ This function returns the number of participating tracks in the current challenge """
+    getNumberOfParticipatingTracks: Int!
+    @field(resolver: "ChallengesController@getNumberOfParticipatingTracks")
+
+    """ This function gets the average vote of a track participating in either the current challenge (if the challenge_id is not specified) or in a specified challenge """
+    getAverageVoteInChallenge(track_id: ID!, challenge_id: ID): Float!
+    @field(resolver: "ChallengesController@getAverageVoteInChallenge")
+
+    """ This function gets the number of listening requests of a track participating in either the current challenge (if the challenge_id is not specified) or in a specified challenge """
+    getNumberOfListeningInChallenge(track_id: ID!, challenge_id: ID): Int!
+    @field(resolver: "ChallengesController@getNumberOfListeningInChallenge")
+
+    """ This function returns the number of participating users (as owners) in the current challenge """
+    getNumberOfParticipatingUsers: Int!
+    @field(resolver: "ChallengesController@getNumberOfParticipatingUsers")
+
+    """ This function gets the vote of a track id given by a user, it uses the default user if not specified. The challenge is either the current one (if challenge_id is null) or the specified one. """
+    getTrackVoteByUserAndChallenge(track_id: ID!, user_id: ID, challenge_id: ID): Int!
+    @field(resolver: "ChallengesController@getTrackVoteByUserAndChallenge")
+
+    """ This function gets the number of listening requests of a track by user (context user if not specified) and challenge (current challenge if not specified) """
+    getNumberOfTrackListeningByUserAndChallenge(track_id: ID!, user_id: ID): Int!
+    @field(resolver: "ChallengesController@getNumberOfTrackListeningByUserAndChallenge")
+
+    """ This function gets the average of total votes by track id """
+    getNumberOfTotalVotesByTrack(track_id: ID): Int!
+    @field(resolver: "ChallengesController@getNumberOfTotalVotesByTrack")
+
+    """ This function gets the number of total listening requests by track id """
+    getNumberOfTotalListeningByTrack(track_id: ID): Int!
+    @field(resolver: "ChallengesController@getNumberOfTotalListeningByTrack")
+}
