@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class BeatsChainChallengeWrapper implements Wrapper
+class BeatsChainElectionWrapper implements Wrapper
 {
     private User $user;
     private string $leaderboard_cache_name = "beats_chain-leaderboard";
@@ -22,7 +22,7 @@ class BeatsChainChallengeWrapper implements Wrapper
      * @param $initializer
      * @return BeatsChainWrapper|null
      */
-    public static function init($initializer): ?BeatsChainChallengeWrapper
+    public static function init($initializer): ?BeatsChainElectionWrapper
     {
         // check if init method was called with an already created user model instance or if it is passed directly
         // from a request
@@ -63,7 +63,7 @@ class BeatsChainChallengeWrapper implements Wrapper
     public function getPrize()
     {
         // build the url and send the request
-        $path = "/challenge/balance";
+        $path = "/election/balance";
         $url = blockchain($this->user)->buildRequestUrl($path);
         $response = Http::get($url)->collect();
 
@@ -77,10 +77,10 @@ class BeatsChainChallengeWrapper implements Wrapper
         }
     }
 
-    public function participateInChallenge(int $nft_id): ?bool
+    public function participateInElection(int $nft_id): ?bool
     {
         // build the url and send the request
-        $path = "/challenge/candidate";
+        $path = "/election/candidate";
         $url = blockchain($this->user)->buildRequestUrl($path);
 
         // mint the nft
@@ -111,7 +111,7 @@ class BeatsChainChallengeWrapper implements Wrapper
     public function grantVoteAbility(User $voter, string $artist_ss58, int $nft_id): ?bool
     {
         // build the url and send the request
-        $path = "/challenge/permit-vote";
+        $path = "/election/permit-vote";
         $url = blockchain($this->user)->buildRequestUrl($path);
 
         // mint the nft
@@ -144,7 +144,7 @@ class BeatsChainChallengeWrapper implements Wrapper
     public function vote(string $artist_ss58, int $nft_id, int $score): ?bool
     {
         // build the url and send the request
-        $path = "/challenge/vote";
+        $path = "/election/vote";
         $url = blockchain($this->user)->buildRequestUrl($path);
 
         // mint the nft

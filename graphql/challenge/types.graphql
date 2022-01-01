@@ -1,0 +1,5 @@
+type Prize {
+    challenge: ID!,
+    prize: Float!,
+    place: String!
+}

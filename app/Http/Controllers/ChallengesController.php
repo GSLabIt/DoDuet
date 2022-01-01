@@ -43,7 +43,7 @@ class ChallengesController extends Controller
      */
     public function getAllTracksInChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
         Validator::validate($args, [
-            "challenge_id" => "required|uuid|exists:challenges,id",
+            "challenge_id" => "required|integer|exists:challenges,id",
         ]);
 
         /** @var Challenges $challenge */
@@ -113,7 +113,7 @@ class ChallengesController extends Controller
      * @return int
      */
     public function getNumberOfParticipatingTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
-        return Challenges::orderByDesc("created_at")->first()->tracks()->count();
+        return Challenges::orderByDesc("created_at")->first()->tracks()->get()->count();
     }
 
     /**
@@ -124,18 +124,18 @@ class ChallengesController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return float
+     * @return float | null
      * @throws ChallengeSafeException
      * @throws ValidationException
      */
-    public function getAverageVoteInChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float {
+    public function getAverageVoteInChallengeOfTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float | null {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks,id",
-            "challenge_id" => "nullable|uuid|exists:challenges,id"
+            "challenge_id" => "nullable|integer|exists:challenges,id"
         ]);
 
         // if challenge_id is specified select that challenge, else select the last challenge
-        if (!is_null($args["challenge_id"])) {
+        if (isset($args["challenge_id"])) {
             /** @var Challenges $challenge */
             $challenge = Challenges::where("id", $args["challenge_id"])->first();
 
@@ -180,11 +180,11 @@ class ChallengesController extends Controller
     public function getNumberOfListeningInChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks,id",
-            "challenge_id" => "nullable|uuid|exists:challenges,id"
+            "challenge_id" => "nullable|integer|exists:challenges,id"
         ]);
 
         // if challenge_id is specified select that challenge, else select the last challenge
-        if (!is_null($args["challenge_id"])) {
+        if (isset($args["challenge_id"])) {
             /** @var Challenges $challenge */
             $challenge = Challenges::where("id", $args["challenge_id"])->first();
 
@@ -224,7 +224,9 @@ class ChallengesController extends Controller
      * @return int
      */
     public function getNumberOfParticipatingUsers($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
-        return Challenges::orderByDesc("created_at")->first()->tracks()->get(['owner_id'])->distinct()->count();
+        /** @var Challenges $challenge */
+        $challenge = Challenges::orderByDesc("created_at")->first();
+        return $challenge->tracks()->get(['owner_id'])->uniqueStrict('owner_id')->count();
     }
 
     /**
@@ -242,12 +244,12 @@ class ChallengesController extends Controller
     public function getTrackVoteByUserAndChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks,id",
-            "user_id" => "nullable|uuid|exists:users,id",
-            "challenge_id" => "nullable|uuid|exists:challenges,id"
+            "user_id" => "nullable|uuid|exists:common.users,id",
+            "challenge_id" => "nullable|integer|exists:challenges,id"
         ]);
 
         // if challenge_id is specified select that challenge, else select the last challenge
-        if (!is_null($args["challenge_id"])) {
+        if (isset($args["challenge_id"])) {
             /** @var Challenges $challenge */
             $challenge = Challenges::where("id", $args["challenge_id"])->first();
 
@@ -267,7 +269,7 @@ class ChallengesController extends Controller
         $track = Tracks::where("id", $args["track_id"])->first();
 
         // if user_id is specified select that user, else select the user from context
-        if (!is_null($args["user_id"])) {
+        if (isset($args["user_id"])) {
             /** @var User $user */
             $user = User::where("id", $args["user_id"])->first();
 
@@ -284,7 +286,7 @@ class ChallengesController extends Controller
         }
 
         if(!is_null($track)) {
-            return Votes::where(["voter_id" => $user->id, "track_id" => $track->id, "challenge_id" => $challenge->id])->get("vote")["vote"];
+            return Votes::where(["voter_id" => $user->id, "track_id" => $track->id, "challenge_id" => $challenge->id])->get("vote")[0]["vote"];
         }
 
         // handle track not found error
@@ -308,12 +310,12 @@ class ChallengesController extends Controller
     public function getNumberOfTrackListeningByUserAndChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks,id",
-            "user_id" => "nullable|uuid|exists:users,id",
-            "challenge_id" => "nullable|uuid|exists:challenges,id"
+            "user_id" => "nullable|uuid|exists:common.users,id",
+            "challenge_id" => "nullable|integer|exists:challenges,id"
         ]);
 
         // if challenge_id is specified select that challenge, else select the last challenge
-        if (!is_null($args["challenge_id"])) {
+        if (isset($args["challenge_id"])) {
             /** @var Challenges $challenge */
             $challenge = Challenges::where("id", $args["challenge_id"])->first();
 
@@ -333,7 +335,7 @@ class ChallengesController extends Controller
         $track = Tracks::where("id", $args["track_id"])->first();
 
         // if user_id is specified select that user, else select the user from context
-        if (!is_null($args["user_id"])) {
+        if (isset($args["user_id"])) {
             /** @var User $user */
             $user = User::where("id", $args["user_id"])->first();
 
@@ -367,11 +369,11 @@ class ChallengesController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return int
+     * @return float
      * @throws ChallengeSafeException
      * @throws ValidationException
      */
-    public function getNumberOfTotalVotesByTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
+    public function getTotalAverageTrackVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float {
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
@@ -422,42 +424,42 @@ class ChallengesController extends Controller
 
     /**
      * This function notifies the winners of the current challenge
-     *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
+     * NOTE: test not passed
      * @return void
      */
-    public function notifyWinners($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): void {
+    public static function notifyWinners(): void {
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
-        // get a collection of the top three tracks
-        $top_three = $challenge->tracks()->orderByDesc(fn(Tracks $track) => $track->votes_count)->limit(3)->get();
 
-        blockchain($context->user())->challenge()->getPrize(); // TODO: usa il wrapper per top 3
+        // get the leaderboard (all the tracks in the elections ranked)
+        $leaderboard = blockchain(User::first())->election()->leaderboard();
 
-        //notify all the winners
-        $challenge->firstPlace->notify(new ChallengeWinNotification(
-            $challenge->id,
-            $top_three->get(0)->id,
-            "first",
-            $challenge->total_prize * $challenge->first_prize_rate
-        ));
-
-        $challenge->secondPlace->notify(new ChallengeWinNotification(
-            $challenge->id,
-            $top_three->get(1)->id,
-            "second",
-            $challenge->total_prize * $challenge->second_prize_rate
-        ));
-
-        $challenge->thirdPlace->notify(new ChallengeWinNotification(
-            $challenge->id,
-            $top_three->get(2)->id,
-            "third",
-            $challenge->total_prize * $challenge->third_prize_rate
-        ));
+        $leaderboard_count = $leaderboard->count();
+        //notify the winners based on the number of tracks participating
+        if ($leaderboard_count > 0) {
+            $challenge->firstPlace->notify(new ChallengeWinNotification(
+                $challenge->id,
+                $leaderboard[0],
+                "first",
+                $challenge->total_prize * $challenge->first_prize_rate
+            ));
+        }
+        if ($leaderboard_count > 1) {
+            $challenge->secondPlace->notify(new ChallengeWinNotification(
+                $challenge->id,
+                $leaderboard[1],
+                "second",
+                $challenge->total_prize * $challenge->second_prize_rate
+            ));
+        }
+        if ($leaderboard_count > 2) {
+            $challenge->thirdPlace->notify(new ChallengeWinNotification(
+                $challenge->id,
+                $leaderboard[2],
+                "third",
+                $challenge->total_prize * $challenge->third_prize_rate
+            ));
+        }
     }
 }
 

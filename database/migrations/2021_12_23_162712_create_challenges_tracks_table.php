@@ -15,7 +15,7 @@ class CreateChallengesTracksTable extends Migration
     {
         Schema::create('challenges_tracks', function (Blueprint $table) {
             $table->foreignUuid("tracks_id");
-            $table->foreignUuid("challenges_id");
+            $table->foreignId("challenges_id");
 
             $table->primary(["tracks_id", "challenges_id"], "challenges_tracks_id");
         });
