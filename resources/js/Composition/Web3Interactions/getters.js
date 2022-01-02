@@ -17,7 +17,7 @@ module.exports = function getters(contracts) {
     const getICOContract = (web3) => { return getContract(web3, "ico") }
     const getMelodyContract = (web3) => { return getContract(web3, "melody") }
     const getTrackContract = (web3) => { return getContract(web3, "track") }
-    const getElectionContract = (web3) => { return getContract(web3, "election") }
+    const getChallengeContract = (web3) => { return getContract(web3, "challenge") }
 
     return {
         getWalletProvider,
@@ -25,6 +25,6 @@ module.exports = function getters(contracts) {
         getICOContract,
         getMelodyContract,
         getTrackContract,
-        getElectionContract,
+        getChallengeContract,
     }
 }

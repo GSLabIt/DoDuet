@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Elections;
+use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
+use App\Models\User;
 use App\Models\Votes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,9 +27,9 @@ class ListeningRequestFactory extends Factory
     {
         return [
             "id" => $this->faker->uuid(),
-            "voter_id" => Votes::factory(),
+            "voter_id" => User::factory(),
             "track_id" => Tracks::factory(),
-            "election_id" => Elections::factory(),
+            "challenge_id" => Challenges::factory(),
 
         ];
     }

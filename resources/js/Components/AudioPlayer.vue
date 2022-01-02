@@ -120,7 +120,7 @@ export default {
             currentTrack: null,
             currentTrackIndex: 0,
             transitionName: null,
-            election: null,
+            challenge: null,
             web3: null,
             nft_participation_popup: {
                 open: false,
@@ -146,11 +146,11 @@ export default {
             }
 
             const half_stars = stars * 2,
-                election = this.getElectionContract(this.web3)
+                challenge = this.getChallengeContract(this.web3)
 
             let tx;
 
-            this.subscribeElectionVoteEvent(this.web3, async (_, event) => {
+            this.subscribeChallengeVoteEvent(this.web3, async (_, event) => {
                 if (tx === event.transactionHash) {
                     this.nft_participation_popup.state = `Transaction approved, waiting final confirmation...`
 
@@ -182,7 +182,7 @@ export default {
             })
 
             try {
-                await election.methods.vote(this.nft_id, half_stars).send({
+                await challenge.methods.vote(this.nft_id, half_stars).send({
                     from: this.address,
                     gasPrice: `1${"0".repeat(10)}`,
                     gasLimit: 500000
@@ -324,7 +324,7 @@ export default {
                         this.popup.open = true
                         this.popup.title = "Unsupported network"
                     } else {
-                        await this.checkElectionAllowance(this.web3)
+                        await this.checkChallengeAllowance(this.web3)
                     }
                 })
             }

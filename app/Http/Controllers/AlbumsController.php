@@ -118,7 +118,7 @@ class AlbumsController extends Controller
      * @throws ValidationException
      * @throws AlbumSafeException
      */
-    public function createNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Albums {
+    public function createAlbumNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Albums {
         $this->validate($args, [
             "id" => "required|uuid|exists:albums,id",
         ]);

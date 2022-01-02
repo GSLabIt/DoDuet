@@ -35,9 +35,9 @@ export default function web3Interactions() {
             address: "0x665e8D25E06Be4faf6c04faa21692851169Bb5Ec",
 			json: require("./contracts/Track.json").abi
 		},
-        election: {
+        challenge: {
             address: "0xADaC452d05206f3266f9228ab0E6B1fAd3605C40",
-            json: require("./contracts/TrackElection.json").abi
+            json: require("./contracts/TrackChallenge.json").abi
         }
 	}
 
@@ -50,7 +50,7 @@ export default function web3Interactions() {
 	const {
 	    getTrackContract,
         getMelodyContract,
-        getElectionContract,
+        getChallengeContract,
         getICOContract,
         getBaseTxUrl,
         getWalletProvider,
@@ -76,8 +76,8 @@ export default function web3Interactions() {
     const {
 	    subscribeICOEvents,
         subscribeTrackRegistrationEvent,
-        subscribeElectionParticipationEvent,
-        subscribeElectionVoteEvent,
+        subscribeChallengeParticipationEvent,
+        subscribeChallengeVoteEvent,
     } = eventSubscribers(getters(contracts))
 
     // methods
@@ -112,9 +112,9 @@ export default function web3Interactions() {
         return true
     }
 
-    const checkElectionAllowance = async (web3) => {
-        const election = getElectionContract(web3)
-        return await _checkAllowance(web3, election.options.address)
+    const checkChallengeAllowance = async (web3) => {
+        const challenge = getChallengeContract(web3)
+        return await _checkAllowance(web3, challenge.options.address)
     }
 
 	return {
@@ -122,15 +122,15 @@ export default function web3Interactions() {
 
         subscribeICOEvents,
         subscribeTrackRegistrationEvent,
-        subscribeElectionParticipationEvent,
-        subscribeElectionVoteEvent,
+        subscribeChallengeParticipationEvent,
+        subscribeChallengeVoteEvent,
 
         getWalletProvider,
         getBaseTxUrl,
         getICOContract,
         getMelodyContract,
         getTrackContract,
-        getElectionContract,
+        getChallengeContract,
 
         handleChainChange,
         handleAccountChange,
@@ -144,7 +144,7 @@ export default function web3Interactions() {
 
 		connect,
         checkAllowance,
-        checkElectionAllowance,
+        checkChallengeAllowance,
 
 		address,
 		network,

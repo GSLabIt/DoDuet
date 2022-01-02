@@ -95,4 +95,9 @@ class Tracks extends Model
     {
         return $this->morphMany(Mentions::class, "mentionable");
     }
+
+    public function challenges(): BelongsToMany
+    {
+        return $this->belongsToMany(Challenges::class);
+    }
 }

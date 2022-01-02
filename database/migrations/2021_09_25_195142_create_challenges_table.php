@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateElectionsTable extends Migration
+class CreateChallengesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateElectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('elections', function (Blueprint $table) {
+        Schema::create('challenges', function (Blueprint $table) {
             $table->id();
             $table->string('total_prize');
             $table->double('first_prize_rate', 8, 4);
@@ -32,7 +32,7 @@ class CreateElectionsTable extends Migration
 
         // Creates nullable foreign keys
         Schema::disableForeignKeyConstraints();
-        Schema::table("elections", function (Blueprint $table) {
+        Schema::table("challenges", function (Blueprint $table) {
             $table->uuid("first_place_id")->nullable()->change();
             $table->uuid("second_place_id")->nullable()->change();
             $table->uuid("third_place_id")->nullable()->change();
@@ -47,6 +47,6 @@ class CreateElectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('elections');
+        Schema::dropIfExists('challenges');
     }
 }

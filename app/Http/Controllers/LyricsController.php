@@ -90,7 +90,7 @@ class LyricsController extends Controller
      * @throws ValidationException
      * @throws LyricSafeException
      */
-    public function createNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Lyrics
+    public function createLyricNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Lyrics
     {
         $this->validate($args, [
             "id" => "required|uuid|exists:lyrics,id",

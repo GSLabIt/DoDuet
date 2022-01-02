@@ -15,6 +15,6 @@ extend type Mutation @namespace(field: "App\\Http\\Controllers") @guard {
     @field(resolver: "CoversController@updateCover")
 
     """ This function creates the nft"""
-    createNft(id: ID!): Cover!
-    @field(resolver: "CoversController@createNft")
+    createCoverNft(id: ID!): Cover!
+    @field(resolver: "CoversController@createCoverNft")
 }

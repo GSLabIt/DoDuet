@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Elections;
+use App\Models\Challenges;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ElectionsFactory extends Factory
+class ChallengesFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Elections::class;
+    protected $model = Challenges::class;
 
     /**
      * Define the model's default state.

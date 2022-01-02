@@ -7,10 +7,11 @@ use App\Traits\MultiDatabaseRelation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Elections extends Model
+class Challenges extends Model
 {
     use HasFactory, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
 
@@ -48,5 +49,10 @@ class Elections extends Model
     public function votes(): HasMany
     {
         return $this->hasMany(Votes::class);
+    }
+
+    public function tracks(): BelongsToMany
+    {
+        return $this->belongsToMany(Tracks::class);
     }
 }
