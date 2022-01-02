@@ -743,22 +743,26 @@ class BeatsChainWrapperTest extends TestCase
         $this->authAsAlice();
 
         // here nft ids starts from 2 as 0 and 1 have been already used
-        blockchain($this->alice)->nft()->mint(
+        $id = blockchain($this->alice)->nft()->mint(
             $this->faker->url(),
             BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
         );  // id: 2
-        blockchain($this->alice)->nft()->mint(
+        $this->assertEquals(2, $id);
+        $id = blockchain($this->alice)->nft()->mint(
             $this->faker->url(),
             BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
         );  // id: 3
-        blockchain($this->alice)->nft()->mint(
+        $this->assertEquals(3, $id);
+        $id = blockchain($this->alice)->nft()->mint(
             $this->faker->url(),
             BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
         );  // id: 4
-        blockchain($this->alice)->nft()->mint(
+        $this->assertEquals(4, $id);
+        $id = blockchain($this->alice)->nft()->mint(
             $this->faker->url(),
             BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
         );  // id: 5
+        $this->assertEquals(5, $id);
 
         // alice participate in election
         blockchain($this->alice)->election()->participateInElection(2);

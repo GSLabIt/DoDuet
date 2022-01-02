@@ -82,7 +82,7 @@ class BeatsChainNFTWrapper implements Wrapper
         }
         else {
             // retrieve the value, store it in the session, eventually updating older one and return the balance
-            return intval($result->get("nft_id"));
+            return intval($result["result"]["nft_id"]);
         }
     }
 
