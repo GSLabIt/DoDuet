@@ -1569,7 +1569,7 @@ class ChallengesControllerTest extends TestCase
         $mint = blockchain($this->alice)->nft()->mint("https://adsad.asd", BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT);
         blockchain($this->alice)->election()->participateInElection($mint);
 
-        blockchain($this->alice)->wallet()->transfer($this->bob->wallet->address, GMPHelper::init("1000000000"));
+        blockchain($this->alice)->wallet()->transfer($this->bob->wallet->address, GMPHelper::init("100000000"));
 
         $this->authAsBob();
 
@@ -1578,9 +1578,11 @@ class ChallengesControllerTest extends TestCase
         $mint1 = blockchain($this->bob)->nft()->mint("https://adsada.asd", BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT);
         blockchain($this->bob)->election()->participateInElection($mint1);
 
+        blockchain($this->bob)->election()->grantVoteAbility($this->bob, $this->alice->wallet->address, $mint);
         blockchain($this->bob)->election()->vote($this->alice->wallet->address, $mint, 10);
 
         $this->authAsAlice();
+        blockchain($this->alice)->election()->grantVoteAbility($this->alice, $this->bob->wallet->address, $mint1);
         blockchain($this->alice)->election()->vote($this->bob->wallet->address, $mint1, 2);
 
         /** @var Votes $vote_a */
