@@ -15,4 +15,16 @@ extend type Mutation
     """ This function updates the track but not the mp3,nft_id and duration  """
     updateTrack(input: tracksUpdateInput @spread): Track!
     @field(resolver: "TracksController@updateTrack")
+
+    """ This function links the given track to the given album """
+    linkToAlbum(album_id: ID!,track_id: ID!): String!
+    @field(resolver: "TracksController@linkToAlbum")
+
+    """ This function links the given track to the given cover """
+    linkToCover(cover_id: ID!,track_id: ID!): String!
+    @field(resolver: "TracksController@linkToCover")
+
+    """ This function links the given track to the given lyric """
+    linkToLyric(lyric_id: ID!,track_id: ID!): String!
+    @field(resolver: "TracksController@linkToLyric")
 }

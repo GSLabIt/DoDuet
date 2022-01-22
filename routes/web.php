@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\ListeningRequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,3 +41,8 @@ Route::prefix("nft")->group(function() {
 Route::get("/track/{id}", function ($id) {
     abort("501","Not implemented");
 })->name("tracks-get");
+
+Route::get(
+    "/listen/in-challenge/{track_id}",
+    [ListeningRequestController::class, "listenToTrackInChallenge"]
+)->name("listen_to_track_in_challenge");

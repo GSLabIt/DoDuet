@@ -1,0 +1,16 @@
+# |--------------------------------------------------------------------------
+# | Vote
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to mutations on the Vote model
+# |
+extend type Mutation @guard @namespace(field: "App\\Http\\Controllers") {
+
+    """ This function check and give permission to vote a listened track """
+    requestPermissionToVote(track_id: ID!): Boolean!
+    @field(resolver: "VotesController@requestPermissionToVote")
+
+    """ This function votes a track in the current challenge """
+    vote(track_id: ID!, vote: Int!): Vote
+    @field(resolver: "VotesController@vote")
+}

@@ -58,6 +58,59 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Challenges
+ *
+ * @property int $id
+ * @property string $total_prize
+ * @property float $first_prize_rate
+ * @property string|null $first_place_id
+ * @property float $second_prize_rate
+ * @property string|null $second_place_id
+ * @property float $third_prize_rate
+ * @property string|null $third_place_id
+ * @property float $treasury_rate
+ * @property float $fee_rate
+ * @property float $burning_rate
+ * @property string|null $started_at
+ * @property string|null $ended_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User|null $firstPlace
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
+ * @property-read int|null $listening_requests_count
+ * @property-read \App\Models\User|null $secondPlace
+ * @property-read \App\Models\User|null $thirdPlace
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tracks[] $tracks
+ * @property-read int|null $tracks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
+ * @property-read int|null $votes_count
+ * @method static \Database\Factories\ChallengesFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereBurningRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereEndedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereFeeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereFirstPlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereFirstPrizeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereSecondPlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereSecondPrizeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereStartedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereThirdPlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereThirdPrizeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTotalPrize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTreasuryRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereUpdatedAt($value)
+ */
+	class Challenges extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Comments
  *
  * @property string $id
@@ -70,7 +123,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
- * @property-read \App\Models\User $commentor
+ * @property-read \App\Models\User|null $commentor
  * @property-read \App\Models\Explicits|null $explicit
  * @method static \Database\Factories\CommentsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments newModelQuery()
@@ -129,57 +182,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereUpdatedAt($value)
  */
 	class Covers extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\Challenges
- *
- * @property int $id
- * @property string $total_prize
- * @property float $first_prize_rate
- * @property string|null $first_place_id
- * @property float $second_prize_rate
- * @property string|null $second_place_id
- * @property float $third_prize_rate
- * @property string|null $third_place_id
- * @property float $treasury_rate
- * @property float $fee_rate
- * @property float $burning_rate
- * @property string|null $started_at
- * @property string|null $ended_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\User|null $firstPlace
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
- * @property-read int|null $listening_requests_count
- * @property-read \App\Models\User|null $secondPlace
- * @property-read \App\Models\User|null $thirdPlace
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
- * @property-read int|null $votes_count
- * @method static \Database\Factories\ChallengesFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereBurningRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereEndedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereFeeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereFirstPlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereFirstPrizeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereSecondPlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereSecondPrizeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereStartedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereThirdPlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereThirdPrizeRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTotalPrize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTreasuryRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereUpdatedAt($value)
- */
-	class Challenges extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -312,13 +314,13 @@ namespace App\Models{
  * @property-read int|null $activities_count
  * @property-read \App\Models\Challenges $challenge
  * @property-read \App\Models\Tracks $track
- * @property-read \App\Models\User $voter
+ * @property-read \App\Models\User|null $voter
  * @method static \Database\Factories\ListeningRequestFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereChallengeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereTrackId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereUpdatedAt($value)
@@ -595,7 +597,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\User $owner
+ * @property-read \App\Models\User|null $owner
  * @method static \Database\Factories\ReferralFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newQuery()
@@ -680,7 +682,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\ReportReasons $reportReason
+ * @property-read \App\Models\ReportReasons|null $reportReason
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $reportable
  * @method static \Database\Factories\ReportsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports newModelQuery()
@@ -802,7 +804,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\SocialChannels $socialChannels
+ * @property-read \App\Models\SocialChannels|null $socialChannels
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $userSettings
  * @property-read int|null $user_settings_count
  * @method static \Database\Factories\SocialsFactory factory(...$parameters)
@@ -884,7 +886,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Test $test
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Database\Factories\TestResultFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newQuery()
@@ -946,6 +948,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Albums|null $album
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Challenges[] $challenges
+ * @property-read int|null $challenges_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Covers|null $cover
@@ -1126,7 +1130,7 @@ namespace App\Models{
  * @property string $id
  * @property string $owner_id
  * @property string $settings_id
- * @property \App\Models\Settings $setting
+ * @property \App\Models\Settings|null $setting
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
@@ -1163,13 +1167,13 @@ namespace App\Models{
  * @property-read int|null $activities_count
  * @property-read \App\Models\Challenges $challenge
  * @property-read \App\Models\Tracks $track
- * @property-read \App\Models\User $voter
+ * @property-read \App\Models\User|null $voter
  * @method static \Database\Factories\VotesFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereChallengeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereTrackId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereUpdatedAt($value)
@@ -1194,7 +1198,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\User $owner
+ * @property-read \App\Models\User|null $owner
  * @method static \Database\Factories\WalletFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newQuery()
