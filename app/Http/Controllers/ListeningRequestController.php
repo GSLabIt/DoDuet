@@ -43,7 +43,6 @@ class ListeningRequestController extends Controller
         if (!is_null($track)) {
             //check that this is the only listening
             $last_listening_request = ListeningRequest::where(["voter_id" => $user->id])->orderByDesc("created_at")->first();
-            //$last_listening_request = null;
             if (!is_null($last_listening_request)) {
                 $timeArr = array_reverse(explode(":", $last_listening_request->track->duration));
                 $seconds = 0;
@@ -85,16 +84,8 @@ class ListeningRequestController extends Controller
                 ]);
 
                 // stream the mp3
-                return response()->stream(function () use ($stream_mp3) {
-                    $chunks = str_split($stream_mp3, 50000); // split the file in chunks of 50kB
-                    foreach ($chunks as $chunk) {
-                        $start = microtime(1); // start timing
-                        echo $chunk;
-                        $stop = round(microtime(1) - $start, 6); // stop timing
-                        if ($stop < 0.95) { // if stop time is less than 0.95 seconds then
-                            usleep(950000 - $stop * 1000000); // sleep for the remaining time to reach 1 second
-                        }
-                    }
+                return response()->streamDownload(function () use ($stream_mp3) {
+                    echo $stream_mp3;
                 });
             }
 
