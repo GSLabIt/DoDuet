@@ -44,6 +44,24 @@ return [
     ],
 
 
+    "ALREADY_LISTENING" => [
+        "message" => "User is already listening to a track",
+        "code" => 1050,
+    ],
+    "VOTE_PERMISSION_NOT_ALLOWED" => [
+        "message" => "User is not allowed to get permission to vote this track",
+        "code" => 1051,
+    ],
+    "TRACK_NOT_LISTENED" => [
+        "message" => "User has never listened to this track",
+        "code" => 1052,
+    ],
+    "TIME_ERROR" => [
+        "message" => "The time is wrong",
+        "code" => 1053,
+    ],
+
+
     "BEATS_CHAIN_REQUIRED_SUDO" => [
         "message" => "The sender must be the sudo account",
         "code" => 1100,

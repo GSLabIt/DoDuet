@@ -1,0 +1,15 @@
+# |--------------------------------------------------------------------------
+# | Listening Request
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to queries on the ListeningRequest model
+# |
+extend type Query
+    @guard
+    @namespace(field: "App\\Http\\Controllers") {
+
+    """ This function streams the track requested """
+    listenToTrackInChallenge(track_id: ID!): String
+    @field(resolver: "ListeningRequestController@listenToTrackInChallenge")
+
+}
