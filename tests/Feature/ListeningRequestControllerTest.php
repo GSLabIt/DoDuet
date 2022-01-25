@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\ListeningRequestSafeException;
+use App\Http\Controllers\ListeningRequestController;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -66,7 +67,7 @@ class ListeningRequestControllerTest extends TestCase
 
         $response = $this->get(route("listen_to_track_in_challenge", [
             "track_id" => $track->id
-        ]))->assertDownload();
+        ]))->assertStatus(200);
     }
 
 
@@ -92,6 +93,7 @@ class ListeningRequestControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
+        $this->withoutExceptionHandling();
         $this->expectExceptionObject(new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
@@ -100,7 +102,6 @@ class ListeningRequestControllerTest extends TestCase
         $response = $this->get(route('listen_to_track_in_challenge', [
             "track_id" => $track->id
         ]));
-        logger("response", [$this->getExpectedException(), $response]);
     }
 
     /**
@@ -127,6 +128,7 @@ class ListeningRequestControllerTest extends TestCase
         /** @var ListeningRequest $listening_request */
         $listening_request = ListeningRequest::factory()->for($challenge, "challenge")->for($track, "track")->create(["voter_id" => $user]);
 
+        $this->withoutExceptionHandling();
         $this->expectExceptionObject(new Exception(
             config("error-codes.ALREADY_LISTENING.message"),
             config("error-codes.ALREADY_LISTENING.code")
@@ -152,6 +154,7 @@ class ListeningRequestControllerTest extends TestCase
             $user = User::factory()->create()
         );
 
+        $this->withoutExceptionHandling();
         $this->expectException(ValidationException::class);
 
         $response = $this->get(route('listen_to_track_in_challenge', [
