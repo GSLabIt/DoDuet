@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Http\Wrappers\BeatsChainUnitsHelper;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
+use App\Http\Wrappers\Enums\BeatsChainUnits;
+use App\Http\Wrappers\GMPHelper;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -84,6 +87,11 @@ class VotesControllerTest extends TestCase
                 ),
                 "address" => "6mfqoTMHrMeVMyKwjqomUjVomPMJ4AjdCm1VReFtk7Be8wqr",
             ]
+        );
+
+        blockchain($this->alice)->wallet()->transfer(
+            "6mNG6spGnab7DTdB4NnAscrW8AyA2fh8MsUaBtHYFx6vYyeB",
+            BeatsChainUnitsHelper::make(1, BeatsChainUnits::million_units)
         );
 
 
@@ -181,14 +189,12 @@ class VotesControllerTest extends TestCase
             mutation {
                 requestPermissionToVote(track_id: \"{$track->id}\")
             }
-        ");
-        logger("response:",[$response]);/*
+        ")
             ->assertJsonStructure([
                 "data" => [
                     "requestPermissionToVote"
                 ]
-            ])
-            ->assertJsonCount(1, "data.requestPermissionToVote");*/
+            ]);
 
         $this->assertEquals(1, $response->json("data.requestPermissionToVote"));
     }
@@ -350,8 +356,7 @@ class VotesControllerTest extends TestCase
                     vote
                 }
             }
-        ");
-        logger("response:",[$response]);/*
+        ")
             ->assertJsonStructure([
                 "data" => [
                     "vote" => [
@@ -359,12 +364,13 @@ class VotesControllerTest extends TestCase
                             "id"
                         ],
                         "vote"
+                    ]
                 ]
             ])
-            ->assertJsonCount(1, "data.vote");
+            ->assertJsonCount(1, "data.vote.track");
 
         $this->assertEquals(8, $response->json("data.vote.vote"));
-        $this->assertEquals($track->id, $response->json("data.vote.track.id"));*/
+        $this->assertEquals($track->id, $response->json("data.vote.track.id"));
     }
 
     /**
