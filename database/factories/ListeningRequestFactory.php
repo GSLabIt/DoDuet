@@ -29,8 +29,7 @@ class ListeningRequestFactory extends Factory
             "id" => $this->faker->uuid(),
             "voter_id" => User::factory(),
             "track_id" => Tracks::factory(),
-            "challenge_id" => Challenges::factory(),
-
+            "challenge_id" => null,
         ];
     }
 }

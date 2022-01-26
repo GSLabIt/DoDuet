@@ -140,11 +140,11 @@ class ListeningRequestControllerTest extends TestCase
     }
 
     /**
-     * Test the function requestPermissionToVote with wrong track_id.
+     * Test the function listenToTrackInChallenge with wrong track_id.
      *
      * @return void
      */
-    public function test_request_permission_to_vote_with_wrong_track_id()
+    public function test_request_listen_to_track_in_challenge_with_wrong_track_id()
     {
         $this->seed();
         $this->bootClearsSchemaCache();
@@ -158,6 +158,94 @@ class ListeningRequestControllerTest extends TestCase
         $this->expectException(ValidationException::class);
 
         $response = $this->get(route('listen_to_track_in_challenge', [
+            "track_id" => "wrong-id"
+        ]));
+    }
+
+    /**
+     *
+     *  Testing listenToTrack
+     *
+     */
+
+    /**
+     * Test the function listenToTrack.
+     *
+     * @return void
+     */
+    public function test_listen_to_track()
+    {
+        $this->seed();
+        $this->bootClearsSchemaCache();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        Cache::put("track:nft1", Storage::get("colossus.mp3"));
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create(["nft_id" => "nft1"]);
+
+        $response = $this->get(route("listen_to_track", [
+            "track_id" => $track->id
+        ]))->assertStatus(200);
+    }
+
+    /**
+     * Test the function listenToTrack while already listening to a track.
+     *
+     * @return void
+     */
+    public function test_listen_to_track_while_already_listening()
+    {
+        $this->seed();
+        $this->bootClearsSchemaCache();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        /** @var ListeningRequest $listening_request */
+        $listening_request = ListeningRequest::factory()->for($track, "track")->create(["voter_id" => $user]);
+
+        $this->withoutExceptionHandling();
+        $this->expectExceptionObject(new Exception(
+            config("error-codes.ALREADY_LISTENING.message"),
+            config("error-codes.ALREADY_LISTENING.code")
+        ));
+
+        $response = $this->get(route('listen_to_track', [
+            "track_id" => $track->id
+        ]));
+    }
+
+    /**
+     * Test the function listenToTrack with wrong track_id.
+     *
+     * @return void
+     */
+    public function test_listen_to_track_with_wrong_track_id()
+    {
+        $this->seed();
+        $this->bootClearsSchemaCache();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        $this->withoutExceptionHandling();
+        $this->expectException(ValidationException::class);
+
+        $response = $this->get(route('listen_to_track', [
             "track_id" => "wrong-id"
         ]));
     }
