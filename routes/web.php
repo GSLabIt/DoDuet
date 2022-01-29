@@ -46,3 +46,8 @@ Route::get(
     "/listen/in-challenge/{track_id}",
     [ListeningRequestController::class, "listenToTrackInChallenge"]
 )->name("listen_to_track_in_challenge");
+
+Route::get(
+    "/listen/track/{track_id}",
+    [ListeningRequestController::class, "listenToTrack"]
+)->name("listen_to_track");
