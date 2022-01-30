@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use PHPUnit\Exception;
 use Throwable;
 
 class TracksController extends Controller
@@ -397,10 +398,7 @@ class TracksController extends Controller
      * @return Collection
      */
     public function getMostVotedTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
-        //return Tracks::orderByDesc(fn(Tracks $track) => $track->votes_count)->limit(3)->get(); this doesn't actually work since you pass query builder to foreach instead of a track
-        // THIS UPPER CODE is cool because it works at db level, so you don't have to bring up in the php the whole track list, instead the code below is ***** and ******* slow, but works
-        // my idea is to actualy make a raw query, so it works at db level and is faster, but i'm bad at coding and emanuele would kill me,
-        return Tracks::get()->sortByDesc(fn(Tracks $track) => $track->votes()->count())->take(3); // this works but is actually a ***** also votes_count returns null TODO fix this
+        return Tracks::withCount('votes')->orderByDesc('votes_count')->limit(3)->get();
     }
 
     /**
@@ -413,8 +411,7 @@ class TracksController extends Controller
      * @return Collection
      */
     public function getMostListenedTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
-        //return Tracks::orderByDesc(fn(Tracks $track) => $track->listening_requests_count)->limit(3)->get();
-        return Tracks::get()->sortByDesc(fn(Tracks $track) => $track->listeningRequests()->count())->take(3); // like upper method  TODO fix this
+        return Tracks::withCount('listeningRequests')->orderByDesc('listeningsRequests_count')->limit(3)->get();
     }
 
     /**
