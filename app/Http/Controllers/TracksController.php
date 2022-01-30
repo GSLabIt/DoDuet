@@ -127,7 +127,7 @@ class TracksController extends Controller
             // Store the just encrypted file in the skynet folder, the encryption key is used as a unique file
             // identifier
             // TODO: instead of storing the file it should immediately be uploaded to the skynet api wrapper
-            file_put_contents(storage_path("/skynet/$key"), $encrypted_content);
+            file_put_contents(storage_path("skynet/$key"), $encrypted_content);
 
             // TODO: fill the values of skynet with the returned states
             $skynet->update([
@@ -135,9 +135,12 @@ class TracksController extends Controller
                 "encryption_key" => $key,
             ]);
 
+            // TODO: uncomment this
+            /*
             $track->update([
                 "nft_id" => $nft_id,
             ]);
+            */
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a
             // composed track
@@ -145,21 +148,21 @@ class TracksController extends Controller
         }
 
         // handle test errors
-        if(is_null($cover)){
+        if(!is_null($args["cover"]) && is_null($cover)){
             throw new TrackSafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
 
-        if(is_null($lyric)){
+        if(!is_null($args["lyric"]) && is_null($lyric)){
             throw new TrackSafeException(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
 
-        if(is_null($album)){
+        if(!is_null($args["album"]) && is_null($album)){
             throw new TrackSafeException(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
@@ -182,9 +185,9 @@ class TracksController extends Controller
     public function updateTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
     {
         Validator::validate($args, [
-            "id" => "required|uuid|exists:tracks.id",
-            "name" => "required|string|max:255",
-            "description" => "required|string",
+            "id" => "required|uuid|exists:tracks,id",
+            "name" => "required|string|min:1|max:255",
+            "description" => "required|string", // NOTE: do we need more validation for this field?
             "cover" => "nullable|uuid|exists:covers,id",
             "lyric" => "nullable|uuid|exists:lyrics,id",
             "album" => "nullable|uuid|exists:albums,id",
@@ -194,7 +197,6 @@ class TracksController extends Controller
         $user = $context->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["id"])->first();
-
 
         // Initialize test variables
         /** @var Covers $cover */
@@ -239,21 +241,21 @@ class TracksController extends Controller
             );
         }
 
-        if(is_null($cover)){
+        if(!is_null($args["cover"]) && is_null($cover)){
             throw new TrackSafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
 
-        if(is_null($lyric)){
+        if(!is_null($args["lyric"]) && is_null($lyric)){
             throw new TrackSafeException(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
 
-        if(is_null($album)){
+        if(!is_null($args["album"]) && is_null($album)){
             throw new TrackSafeException(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
@@ -306,13 +308,13 @@ class TracksController extends Controller
      */
     public function getUsersTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
         Validator::validate($args, [
-            "user_id" => "required|uuid|exists:users,id",
+            "user_id" => "required|uuid|exists:common.users,id",
         ]);
 
         /** @var User $user */
-        $user = User::where("id", $args["user_id"]);
+        $user = User::where("id", $args["user_id"])->first();
         if(!is_null($user)) {
-            return $user->createdTracks;
+            return $user->createdTracks; //NOTE: should this be created by or owned by?
         }
 
         // handle track not found error
@@ -365,7 +367,7 @@ class TracksController extends Controller
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function getAverageVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float|int {
+    public function getAverageVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float|int|null {
 
         Validator::validate($args, [
             "track_id" => "required|uuid|exists:tracks,id",
@@ -395,7 +397,10 @@ class TracksController extends Controller
      * @return Collection
      */
     public function getMostVotedTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
-        return Tracks::orderByDesc(fn(Tracks $track) => $track->votes_count)->limit(3)->get();
+        //return Tracks::orderByDesc(fn(Tracks $track) => $track->votes_count)->limit(3)->get(); this doesn't actually work since you pass query builder to foreach instead of a track
+        // THIS UPPER CODE is cool because it works at db level, so you don't have to bring up in the php the whole track list, instead the code below is ***** and ******* slow, but works
+        // my idea is to actualy make a raw query, so it works at db level and is faster, but i'm bad at coding and emanuele would kill me,
+        return Tracks::get()->sortByDesc(fn(Tracks $track) => $track->votes()->count())->take(3); // this works but is actually a ***** also votes_count returns null TODO fix this
     }
 
     /**
@@ -407,8 +412,9 @@ class TracksController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Collection
      */
-    public function getMostListenedTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
-        return Tracks::orderByDesc(fn(Tracks $track) => $track->listening_requests_count)->limit(3)->get();
+    public function getMostListenedTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
+        //return Tracks::orderByDesc(fn(Tracks $track) => $track->listening_requests_count)->limit(3)->get();
+        return Tracks::get()->sortByDesc(fn(Tracks $track) => $track->listeningRequests()->count())->take(3); // like upper method  TODO fix this
     }
 
     /**
@@ -422,6 +428,7 @@ class TracksController extends Controller
      */
     public function getNotInChallengeTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
         // get current challenge
+        /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
 
         // Get not voted tracks ( means not in challenge )
@@ -468,14 +475,14 @@ class TracksController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Tracks|null
+     * @return string|null
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function linkToAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
+    public function linkToAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?string
     {
         Validator::validate($args, [
-            "track_id" => "required|uuid|exists:tracks.id",
+            "track_id" => "required|uuid|exists:tracks,id",
             "album_id" => "required|uuid|exists:albums,id",
         ]);
 
@@ -490,9 +497,9 @@ class TracksController extends Controller
         // check if both album and track exist and are owned by the user
         if(!is_null($track) && !is_null($album)) {
             $track->update([
-                "album_id" => $album->id
+                "album_id" => $album?->id
             ]);
-            return $track;
+            return $track->id;
         }
 
 
@@ -520,14 +527,14 @@ class TracksController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Tracks|null
+     * @return string|null
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function linkToCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
+    public function linkToCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?string
     {
         Validator::validate($args, [
-            "track_id" => "required|uuid|exists:tracks.id",
+            "track_id" => "required|uuid|exists:tracks,id",
             "cover_id" => "required|uuid|exists:covers,id",
         ]);
 
@@ -542,9 +549,9 @@ class TracksController extends Controller
         // check if both cover and track exist and are owned by the user
         if(!is_null($track) && !is_null($cover)) {
             $track->update([
-                "cover_id" => $cover->id
+                "cover_id" => $cover?->id
             ]);
-            return $track;
+            return $track->id;
         }
 
 
@@ -572,13 +579,13 @@ class TracksController extends Controller
      * @param array<string, mixed> $args The field arguments passed by the client.
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Tracks|null
+     * @return string|null
      * @throws TrackSafeException
      * @throws ValidationException
      */
-    public function linkToLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks {
+    public function linkToLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?string {
         Validator::validate($args, [
-            "track_id" => "required|uuid|exists:tracks.id",
+            "track_id" => "required|uuid|exists:tracks,id",
             "lyric_id" => "required|uuid|exists:lyrics,id",
         ]);
 
@@ -593,9 +600,9 @@ class TracksController extends Controller
         // check if both lyric and track exist and are owned by the user
         if(!is_null($track) && !is_null($lyric)) {
             $track->update([
-                "lyric_id" => $lyric->id
+                "lyric_id" => $lyric?->id
             ]);
-            return $track;
+            return $track->id;
         }
 
 
@@ -615,17 +622,5 @@ class TracksController extends Controller
         }
         return null;
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

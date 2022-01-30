@@ -48,7 +48,7 @@ class Challenges extends Model
 
     public function votes(): HasMany
     {
-        return $this->hasMany(Votes::class);
+        return $this->hasMany(Votes::class,"challenge_id","id");
     }
 
     public function tracks(): BelongsToMany

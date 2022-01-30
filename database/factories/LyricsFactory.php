@@ -25,7 +25,7 @@ class LyricsFactory extends Factory
         return [
             "id" => $this->faker->uuid(),
             "name" => $this->faker->sentence(),
-            "lyric" => $this->faker->paragraphs(),
+            "lyric" => $this->faker->sentence(),
             "owner_id" => User::factory(),
             "creator_id" => fn (array $attributes) => $attributes['owner_id'],
             "nft_id" => $this->faker->text(255),
