@@ -58,12 +58,12 @@ class Tracks extends Model
 
     public function listeningRequests(): HasMany
     {
-        return $this->hasMany(ListeningRequest::class);
+        return $this->hasMany(ListeningRequest::class,"track_id","id");
     }
 
     public function votes(): HasMany
     {
-        return $this->hasMany(Votes::class);
+        return $this->hasMany(Votes::class,"track_id","id");
     }
 
     function explicit(): MorphOne
