@@ -118,22 +118,8 @@ class TracksController extends Controller
                 throw new BeatsChainSafeException($exception);
             }
 
-            // Extract the content from the file to start the encryption process
-            $content = $mp3->get();
-            $key = sodium()->encryption()->symmetric()->key();
-            $nonce = sodium()->derivation()->generateSymmetricNonce();
-            $encrypted_content = sodium()->encryption()->symmetric()->encrypt($content, $key, $nonce);
-
-            // Store the just encrypted file in the skynet folder, the encryption key is used as a unique file
-            // identifier
-            // TODO: instead of storing the file it should immediately be uploaded to the skynet api wrapper
-            file_put_contents(storage_path("skynet/$key"), $encrypted_content);
-
-            // TODO: fill the values of skynet with the returned states
-            $skynet->update([
-                "link" => "temporary-fake-link",    // TODO: insert the skynet provided link here
-                "encryption_key" => $key,
-            ]);
+            // Store the just encrypted file in the skynet folder
+            skynet()->upload($mp3, $track->skynet);
 
             // TODO: uncomment this
             /*

@@ -60,6 +60,10 @@ return [
         "message" => "The time is wrong",
         "code" => 1053,
     ],
+    "INVALID_LINK" => [
+        "message" => "The link is invalid",
+        "code" => 1054,
+    ],
 
 
     "BEATS_CHAIN_REQUIRED_SUDO" => [
