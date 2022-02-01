@@ -21,7 +21,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use PHPUnit\Exception;
 use Throwable;
 
 class TracksController extends Controller
@@ -411,7 +410,7 @@ class TracksController extends Controller
      * @return Collection
      */
     public function getMostListenedTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
-        return Tracks::withCount('listeningRequests')->orderByDesc('listeningsRequests_count')->limit(3)->get();
+        return Tracks::withCount('listeningRequests')->orderByDesc('listening_requests_count')->limit(3)->get();
     }
 
     /**
