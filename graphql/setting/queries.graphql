@@ -14,8 +14,8 @@ extend type Query
 
 
     """ This function retrieves and return the user private key """
-    getUserPrivateKey: String
-    @field(resolver: "SettingsController@getUserPrivateKey")
+    getUserSecretKey: String
+    @field(resolver: "SettingsController@getUserSecretKey")
 
     """ This function retrieves and return the user public key of a specified user """
     getUserPublicKey(id: ID!): String

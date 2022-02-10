@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use GraphQL\Type\Definition\ResolveInfo;
 
 class SettingsController extends Controller
 {
@@ -33,6 +34,7 @@ class SettingsController extends Controller
      * @return string
      */
     public function getUserSecretKey($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): string {
+        /** @var User $user */
         $user = $context->user;
         return secureUser($user)->get(secureUser($user)->whitelistedItems()["secret_key"]);
     }
@@ -45,16 +47,16 @@ class SettingsController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return string
-     * @throw SettingSafeException
-     * @throw ValidationException
+     * @throws SettingSafeException
+     * @throws ValidationException
      */
     public function getUserPublicKey($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): string {
         Validator::validate($args, [
-            "id" => "required|uuid|exists:users,id",
+            "id" => "required|uuid|exists:common.users,id",
         ]);
 
         /** @var User $user */
-        $user = User::whereId($args["user"])->first();
+        $user = User::where("id", $args["id"])->first();
 
         if(!is_null($user)) {
             return secureUser($user)->get(secureUser($user)->whitelistedItems()["public_key"]);
