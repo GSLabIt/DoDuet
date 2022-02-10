@@ -1,0 +1,23 @@
+# |--------------------------------------------------------------------------
+# | Setting
+# |--------------------------------------------------------------------------
+# |
+# | Section assigned to queries on the Setting model
+# |
+extend type Query
+    @guard
+    @namespace(field: "App\\Http\\Controllers") {
+
+    """ This function retrieves and return the server public key """
+    getServerPublicKey: String
+    @field(resolver: "SettingsController@getServerPublicKey")
+
+
+    """ This function retrieves and return the user private key """
+    getUserPrivateKey: String
+    @field(resolver: "SettingsController@getUserPrivateKey")
+
+    """ This function retrieves and return the user public key of a specified user """
+    getUserPublicKey(id: ID!): String
+    @field(resolver: "SettingsController@getUserPublicKey")
+}
