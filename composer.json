@@ -15,7 +15,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "hedii/laravel-gelf-logger": "^6.0",
         "inertiajs/inertia-laravel": "^0.4.3",
-        "laravel/framework": "^8.54",
+        "laravel/framework": "^8.0",
         "laravel/jetstream": "^2.4",
         "laravel/octane": "^1.0",
         "laravel/sanctum": "^2.11",
@@ -31,11 +31,10 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.10",
         "brianium/paratest": "^6.3",
-        "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
+        "nunomaduro/collision": "^5.11",
         "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {
