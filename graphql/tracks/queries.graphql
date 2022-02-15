@@ -20,11 +20,11 @@ extend type Query
     getTotalListenings(track_id: ID!): Int!
     @field(resolver: "TracksController@getTotalListenings")
 
-    """ This function counts the votes of the track  """
+    """ This function get the user's tracks  """
     getUsersTracks(user_id: ID!): [Track!]!
     @field(resolver: "TracksController@getUsersTracks")
 
-    """ This function gets the most voted track """
+    """ This function gets the most voted tracks """
     getMostVotedTracks: [Track!]!
     @field(resolver: "TracksController@getMostVotedTracks")
 
@@ -39,16 +39,4 @@ extend type Query
     """ This function generates and returns the link for the track """
     getTrackLink(track_id: ID!): String!
     @field(resolver: "TracksController@getTrackLink")
-
-    """ This function links the given track to the given album """
-    linkToAlbum(album_id: ID!,track_id: ID!): String!
-    @field(resolver: "TracksController@linkToAlbum")
-
-    """ This function links the given track to the given cover """
-    linkToCover(cover_id: ID!,track_id: ID!): String!
-    @field(resolver: "TracksController@linkToCover")
-
-    """ This function links the given track to the given lyric """
-    linkToLyric(lyric_id: ID!,track_id: ID!): String!
-    @field(resolver: "TracksController@linkToLyric")
 }

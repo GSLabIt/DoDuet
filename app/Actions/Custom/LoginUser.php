@@ -2,6 +2,7 @@
 
 namespace App\Actions\Custom;
 
+use App\Http\Controllers\SettingsController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -30,8 +31,9 @@ class LoginUser
 
         if ($user &&
             Hash::check($request->password, $user->password)) {
-            wallet($user)->generate();
             secureUser($user)->set("password", $request->password);
+            wallet($user)->generate();
+            SettingsController::graphQLBearer($user);
             return $user;
         }
 

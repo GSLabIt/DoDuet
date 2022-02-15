@@ -4,6 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <meta name="xsrf" content="{{ csrf_token() }}">
+        @auth()
+            <meta name="bearer" content="{{ session("bearer") }}">
+        @endauth
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
@@ -14,13 +18,15 @@
 
         <!-- Scripts -->
         @routes
+        <script src="{{ mix('js/manifest.js') }}"></script>
+        <script src="{{ mix('js/vendor.js') }}" defer></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
-        @inertia
+    @inertia
 
-        @env ('local')
-            <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
-        @endenv
+    @env ('local')
+        <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
+    @endenv
     </body>
 </html>

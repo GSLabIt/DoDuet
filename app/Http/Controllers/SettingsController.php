@@ -67,4 +67,17 @@ class SettingsController extends Controller
             config("error-codes.USER_NOT_FOUND.code")
         );
     }
+
+    /**
+     * This function set and create the graphql token
+     * @param User $user
+     *
+     * @return string
+     */
+    public static function graphQLBearer(User $user): string {
+        $tkn = settings($user)->has("graphql-bearer") ? settings($user)->get("graphql-bearer") : $user->createToken("default")->plainTextToken;
+        settings($user)->set("graphql-bearer", $tkn);
+        session()->put("bearer", $tkn);
+        return $tkn;
+    }
 }

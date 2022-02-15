@@ -40,8 +40,8 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        wallet($user)->generate();
         secureUser($user)->set("password", $input["password"]);
+        wallet($user)->generate();
 
         UserSegmentsController::assignToSegment($user);
 

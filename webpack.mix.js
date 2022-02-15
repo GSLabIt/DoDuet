@@ -16,8 +16,30 @@ mix.ts('resources/js/app.js', 'public/js').vue()
         require('postcss-import'),
         require('tailwindcss'),
     ])
-    .webpackConfig(require('./webpack.config'));
+    .webpackConfig(require('./webpack.config'))
+    .extract([
+        "vue",
+        "@apollo/client",
+        "@vue/apollo-option",
+        "boxicons",
+        "cleave.js",
+        "graphql",
+        "graphql-tag",
+        "luxon",
+        "tippy.js",
+        "toastify-js",
+        "@inertiajs/inertia",
+        "@inertiajs/inertia-vue3",
+        "@inertiajs/progress",
+        "axios",
+        "lodash",
+    ]);
 
 if (mix.inProduction()) {
     mix.version();
 }
+else {
+    mix.browserSync('localhost:8000');
+}
+
+mix.disableNotifications();
