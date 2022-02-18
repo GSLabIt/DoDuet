@@ -18,6 +18,10 @@ class Questionnaire extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
+    protected $casts = [
+        "link" => "encrypted"
+    ];
+
     function tests(): HasMany
     {
         return $this->hasMany(Test::class);

@@ -16,6 +16,11 @@ class Skynet extends Model
 
     protected $guarded = ["updated_at", "created_at"];
 
+    protected $casts = [
+        "link" => "encrypted",
+        "encryption_key" => "encrypted",
+    ];
+
     function track(): HasOne
     {
         return $this->hasOne(Tracks::class);

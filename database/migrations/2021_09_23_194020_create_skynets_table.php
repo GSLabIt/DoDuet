@@ -15,9 +15,9 @@ class CreateSkynetsTable extends Migration
     {
         Schema::create('skynets', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->text('link');
+            $table->longText('link'); // encrypted
             $table->boolean('encrypted')->default(true);
-            $table->string('encryption_key', 512);
+            $table->longText('encryption_key'); // encrypted
             $table->timestamps();
         });
     }

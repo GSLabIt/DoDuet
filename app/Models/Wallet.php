@@ -16,6 +16,14 @@ class Wallet extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
+    protected $casts = [
+        "chain" => "encrypted",
+        "private_key" => "encrypted",
+        "public_key" => "encrypted",
+        "seed" => "encrypted",
+        "address" => "encrypted",
+    ];
+
     function owner(): BelongsTo
     {
         return $this->multiDatabaseRunQuery(

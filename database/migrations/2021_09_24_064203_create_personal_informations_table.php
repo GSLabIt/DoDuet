@@ -17,7 +17,7 @@ class CreatePersonalInformationsTable extends Migration
             $table->uuid("id")->primary();
             $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users")->cascadeOnDelete();
             $table->string("alias")->nullable();
-            $table->string("mobile")->nullable();
+            $table->longText("mobile")->nullable(); // encrypted
             $table->text("profile_cover_path")->nullable();
             $table->longText("description")->nullable();
             $table->timestamps();

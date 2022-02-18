@@ -20,6 +20,10 @@ class Settings extends Model
 
     protected $casts = [
         "has_default_value" => "boolean",
+        "allowed_values" => "encrypted:array",
+        "default_value" => "encrypted",
+        "name" => "encrypted",
+        "type" => "encrypted",
     ];
 
     function userSettings(): HasMany

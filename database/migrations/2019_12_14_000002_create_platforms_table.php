@@ -15,11 +15,11 @@ class CreatePlatformsTable extends Migration
     {
         Schema::connection("common")->create('platforms', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->string('name');
-            $table->text("domain");
+            $table->longText('name'); // encrypted
+            $table->longText("domain"); // encrypted
             $table->boolean("is_public")->default(false);
             $table->boolean("is_password_protected")->default(false);
-            $table->text("password")->nullable();
+            $table->text("password")->nullable(); // already hashed
             $table->timestamps();
         });
     }
