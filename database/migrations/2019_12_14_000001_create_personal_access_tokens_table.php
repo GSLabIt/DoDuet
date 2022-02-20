@@ -17,8 +17,8 @@ class CreatePersonalAccessTokensTable extends Migration
             $table->bigIncrements('id');
             $table->uuidMorphs('tokenable');
             $table->string('name');
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable();
+            $table->string('token', 64)->unique(); // already a hash
+            $table->longText('abilities')->nullable();    // encrypted
             $table->timestamp('last_used_at')->nullable();
             $table->timestamps();
         });

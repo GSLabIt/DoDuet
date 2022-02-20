@@ -18,6 +18,10 @@ class PersonalInformations extends Model
 
     protected $guarded = ["created_at", "updated_at"];
 
+    protected $casts = [
+        "mobile" => "encrypted",
+    ];
+
     function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, "owner_id");

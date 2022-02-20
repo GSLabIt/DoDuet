@@ -20,7 +20,9 @@ class Platforms extends Model
 
     protected $casts = [
         "is_public" => "boolean",
-        "is_password_protected" => "boolean"
+        "is_password_protected" => "boolean",
+        "name" => "encrypted",
+        "domain" => "encrypted",
     ];
 
     public function functionalities(): BelongsToMany

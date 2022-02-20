@@ -19,6 +19,10 @@ class UserSettings extends Model
 
     protected $guarded = ["created_at", "updated_at", "deleted_at"];
 
+    protected $casts = [
+        "setting" => "encrypted"
+    ];
+
     function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, "owner_id");

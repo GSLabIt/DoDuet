@@ -15,7 +15,7 @@ class CreateQuestionnairesTable extends Migration
     {
         Schema::connection("common")->create('questionnaires', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->text("link");
+            $table->longText("link"); // encrypted
             $table->timestamps();
         });
     }

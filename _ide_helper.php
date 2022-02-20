@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.82.0.
+ * Generated for Laravel 8.83.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2340,6 +2340,17 @@
                         return \Illuminate\View\Compilers\BladeCompiler::render($string, $data, $deleteCachedView);
         }
                     /**
+         * Render a component instance to HTML.
+         *
+         * @param \Illuminate\View\Component $component
+         * @return string 
+         * @static 
+         */ 
+        public static function renderComponent($component)
+        {
+                        return \Illuminate\View\Compilers\BladeCompiler::renderComponent($component);
+        }
+                    /**
          * Strip the parentheses from the given expression.
          *
          * @param string $expression
@@ -3869,6 +3880,50 @@
                         return $instance->macroCall($method, $parameters);
         }
                     /**
+         * Remove all items from the cache.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function flush()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->flush();
+        }
+                    /**
+         * Get the Filesystem instance.
+         *
+         * @return \Illuminate\Filesystem\Filesystem 
+         * @static 
+         */ 
+        public static function getFilesystem()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getFilesystem();
+        }
+                    /**
+         * Get the working directory of the cache.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getDirectory()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getDirectory();
+        }
+                    /**
+         * Get the cache key prefix.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getPrefix()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getPrefix();
+        }
+                    /**
          * Get a lock instance.
          *
          * @param string $name
@@ -3879,7 +3934,7 @@
          */ 
         public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
                     /**
@@ -3892,99 +3947,8 @@
          */ 
         public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->restoreLock($name, $owner);
-        }
-                    /**
-         * Remove all items from the cache.
-         *
-         * @return bool 
-         * @static 
-         */ 
-        public static function flush()
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        return $instance->flush();
-        }
-                    /**
-         * Get the Redis connection instance.
-         *
-         * @return \Illuminate\Redis\Connections\Connection 
-         * @static 
-         */ 
-        public static function connection()
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        return $instance->connection();
-        }
-                    /**
-         * Get the Redis connection instance that should be used to manage locks.
-         *
-         * @return \Illuminate\Redis\Connections\Connection 
-         * @static 
-         */ 
-        public static function lockConnection()
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        return $instance->lockConnection();
-        }
-                    /**
-         * Specify the name of the connection that should be used to store data.
-         *
-         * @param string $connection
-         * @return void 
-         * @static 
-         */ 
-        public static function setConnection($connection)
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        $instance->setConnection($connection);
-        }
-                    /**
-         * Specify the name of the connection that should be used to manage locks.
-         *
-         * @param string $connection
-         * @return \Illuminate\Cache\RedisStore 
-         * @static 
-         */ 
-        public static function setLockConnection($connection)
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        return $instance->setLockConnection($connection);
-        }
-                    /**
-         * Get the Redis database instance.
-         *
-         * @return \Illuminate\Contracts\Redis\Factory 
-         * @static 
-         */ 
-        public static function getRedis()
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        return $instance->getRedis();
-        }
-                    /**
-         * Get the cache key prefix.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getPrefix()
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        return $instance->getPrefix();
-        }
-                    /**
-         * Set the cache key prefix.
-         *
-         * @param string $prefix
-         * @return void 
-         * @static 
-         */ 
-        public static function setPrefix($prefix)
-        {
-                        /** @var \Illuminate\Cache\RedisStore $instance */
-                        $instance->setPrefix($prefix);
         }
          
     }
@@ -4339,102 +4303,6 @@
         public static function flushMacros()
         {
                         \Illuminate\Cookie\CookieJar::flushMacros();
-        }
-         
-    }
-            /**
-     * 
-     *
-     * @see \Illuminate\Encryption\Encrypter
-     */ 
-        class Crypt {
-                    /**
-         * Determine if the given key and cipher combination is valid.
-         *
-         * @param string $key
-         * @param string $cipher
-         * @return bool 
-         * @static 
-         */ 
-        public static function supported($key, $cipher)
-        {
-                        return \Illuminate\Encryption\Encrypter::supported($key, $cipher);
-        }
-                    /**
-         * Create a new encryption key for the given cipher.
-         *
-         * @param string $cipher
-         * @return string 
-         * @static 
-         */ 
-        public static function generateKey($cipher)
-        {
-                        return \Illuminate\Encryption\Encrypter::generateKey($cipher);
-        }
-                    /**
-         * Encrypt the given value.
-         *
-         * @param mixed $value
-         * @param bool $serialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
-         * @static 
-         */ 
-        public static function encrypt($value, $serialize = true)
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->encrypt($value, $serialize);
-        }
-                    /**
-         * Encrypt a string without serialization.
-         *
-         * @param string $value
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
-         * @static 
-         */ 
-        public static function encryptString($value)
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->encryptString($value);
-        }
-                    /**
-         * Decrypt the given value.
-         *
-         * @param string $payload
-         * @param bool $unserialize
-         * @return mixed 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
-         * @static 
-         */ 
-        public static function decrypt($payload, $unserialize = true)
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->decrypt($payload, $unserialize);
-        }
-                    /**
-         * Decrypt the given string without unserialization.
-         *
-         * @param string $payload
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
-         * @static 
-         */ 
-        public static function decryptString($payload)
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->decryptString($payload);
-        }
-                    /**
-         * Get the encryption key.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getKey()
-        {
-                        /** @var \Illuminate\Encryption\Encrypter $instance */
-                        return $instance->getKey();
         }
          
     }
@@ -9070,92 +8938,6 @@
                         return $instance->setConnectionName($name);
         }
                     /**
-         * Migrate the delayed jobs that are ready to the regular queue.
-         *
-         * @param string $from
-         * @param string $to
-         * @return array 
-         * @static 
-         */ 
-        public static function migrateExpiredJobs($from, $to)
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        return $instance->migrateExpiredJobs($from, $to);
-        }
-                    /**
-         * Delete a reserved job from the queue.
-         *
-         * @param string $queue
-         * @param \Illuminate\Queue\Jobs\RedisJob $job
-         * @return void 
-         * @static 
-         */ 
-        public static function deleteReserved($queue, $job)
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        $instance->deleteReserved($queue, $job);
-        }
-                    /**
-         * Delete a reserved job from the reserved queue and release it.
-         *
-         * @param string $queue
-         * @param \Illuminate\Queue\Jobs\RedisJob $job
-         * @param int $delay
-         * @return void 
-         * @static 
-         */ 
-        public static function deleteAndRelease($queue, $job, $delay)
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        $instance->deleteAndRelease($queue, $job, $delay);
-        }
-                    /**
-         * Delete all of the jobs from the queue.
-         *
-         * @param string $queue
-         * @return int 
-         * @static 
-         */ 
-        public static function clear($queue)
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        return $instance->clear($queue);
-        }
-                    /**
-         * Get the queue or return the default.
-         *
-         * @param string|null $queue
-         * @return string 
-         * @static 
-         */ 
-        public static function getQueue($queue)
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        return $instance->getQueue($queue);
-        }
-                    /**
-         * Get the connection for the queue.
-         *
-         * @return \Illuminate\Redis\Connections\Connection 
-         * @static 
-         */ 
-        public static function getConnection()
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        return $instance->getConnection();
-        }
-                    /**
-         * Get the underlying Redis instance.
-         *
-         * @return \Illuminate\Contracts\Redis\Factory 
-         * @static 
-         */ 
-        public static function getRedis()
-        {
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
-                        return $instance->getRedis();
-        }
-                    /**
          * Get the backoff for an object-based queue handler.
          *
          * @param mixed $job
@@ -9164,7 +8946,7 @@
          */ 
         public static function getJobBackoff($job)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        /** @var \Illuminate\Queue\SyncQueue $instance */
                         return $instance->getJobBackoff($job);
         }
                     /**
@@ -9176,7 +8958,7 @@
          */ 
         public static function getJobExpiration($job)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        /** @var \Illuminate\Queue\SyncQueue $instance */
                         return $instance->getJobExpiration($job);
         }
                     /**
@@ -9188,7 +8970,7 @@
          */ 
         public static function createPayloadUsing($callback)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        \Illuminate\Queue\RedisQueue::createPayloadUsing($callback);
+                        \Illuminate\Queue\SyncQueue::createPayloadUsing($callback);
         }
                     /**
          * Get the container instance being used by the connection.
@@ -9198,7 +8980,7 @@
          */ 
         public static function getContainer()
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        /** @var \Illuminate\Queue\SyncQueue $instance */
                         return $instance->getContainer();
         }
                     /**
@@ -9210,7 +8992,7 @@
          */ 
         public static function setContainer($container)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        /** @var \Illuminate\Queue\SyncQueue $instance */
                         $instance->setContainer($container);
         }
          
@@ -16157,299 +15939,7 @@
      
 }
 
-        namespace Facade\Ignition\Facades { 
-            /**
-     * Class Flare.
-     *
-     * @see \Facade\FlareClient\Flare
-     */ 
-        class Flare {
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function register($apiKey, $apiSecret = null, $contextDetector = null, $container = null)
-        {
-                        return \Facade\FlareClient\Flare::register($apiKey, $apiSecret, $contextDetector, $container);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function determineVersionUsing($determineVersionCallable)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->determineVersionUsing($determineVersionCallable);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function reportErrorLevels($reportErrorLevels)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->reportErrorLevels($reportErrorLevels);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function filterExceptionsUsing($filterExceptionsCallable)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->filterExceptionsUsing($filterExceptionsCallable);
-        }
-                    /**
-         * 
-         *
-         * @return null|string 
-         * @static 
-         */ 
-        public static function version()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->version();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getMiddleware()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->getMiddleware();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function registerFlareHandlers()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->registerFlareHandlers();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function registerExceptionHandler()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->registerExceptionHandler();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function registerErrorHandler()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->registerErrorHandler();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function registerMiddleware($callable)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->registerMiddleware($callable);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getMiddlewares()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->getMiddlewares();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function glow($name, $messageLevel = 'info', $metaData = [])
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->glow($name, $messageLevel, $metaData);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function handleException($throwable)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->handleException($throwable);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function handleError($code, $message, $file = '', $line = 0)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->handleError($code, $message, $file, $line);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function applicationPath($applicationPath)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->applicationPath($applicationPath);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function report($throwable, $callback = null)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->report($throwable, $callback);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function reportMessage($message, $logLevel, $callback = null)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->reportMessage($message, $logLevel, $callback);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function sendTestReport($throwable)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->sendTestReport($throwable);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function reset()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->reset();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function anonymizeIp()
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->anonymizeIp();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function censorRequestBodyFields($fieldNames)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->censorRequestBodyFields($fieldNames);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function createReport($throwable)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->createReport($throwable);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function createReportFromMessage($message, $logLevel)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->createReportFromMessage($message, $logLevel);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function stage($stage)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->stage($stage);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function messageLevel($messageLevel)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->messageLevel($messageLevel);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getGroup($groupName = 'context', $default = [])
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->getGroup($groupName, $default);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function context($key, $value)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->context($key, $value);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function group($groupName, $properties)
-        {
-                        /** @var \Facade\FlareClient\Flare $instance */
-                        return $instance->group($groupName, $properties);
-        }
-         
-    }
-     
-}
-
-    namespace Jenssegers\Agent\Facades { 
+        namespace Jenssegers\Agent\Facades { 
             /**
      * 
      *
@@ -17473,7 +16963,6 @@ namespace  {
             class Cache extends \Illuminate\Support\Facades\Cache {}
             class Config extends \Illuminate\Support\Facades\Config {}
             class Cookie extends \Illuminate\Support\Facades\Cookie {}
-            class Crypt extends \Illuminate\Support\Facades\Crypt {}
             class Date extends \Illuminate\Support\Facades\Date {}
             class DB extends \Illuminate\Support\Facades\DB {}
             class Eloquent extends \Illuminate\Database\Eloquent\Model {             
@@ -20938,7 +20427,6 @@ namespace  {
             class URL extends \Illuminate\Support\Facades\URL {}
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
-            class Flare extends \Facade\Ignition\Facades\Flare {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Octane extends \Laravel\Octane\Facades\Octane {}
             class Socialite extends \Laravel\Socialite\Facades\Socialite {}
