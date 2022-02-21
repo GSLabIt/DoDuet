@@ -13,9 +13,10 @@ scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload
 #import album/*.graphql
 #import cover/*.graphql
 #import lyrics/*.graphql
+#import explicit/*.graphql
 #import challenge/*.graphql
 #import vote/*.graphql
-#import setting/*.graphql
+#import settings/*.graphql
 
 type Query {
     # |--------------------------------------------------------------------------

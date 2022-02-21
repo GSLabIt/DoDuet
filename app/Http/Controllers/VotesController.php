@@ -79,6 +79,11 @@ class VotesController extends Controller
                     try {
                         blockchain($user)->election()->grantVoteAbility($user, $track->owner->wallet->address, $track->nft_id);
                         // if no exception is thrown, return true
+
+                        // set in settings challenge_nine_random_tracks listened += 1
+                        $challenge_nine_random_tracks = settings($user)->get("challenge_nine_random_tracks");
+                        $challenge_nine_random_tracks["listened"] += 1;
+                        settings($user)->set("challenge_nine_random_tracks", $challenge_nine_random_tracks);
                         return true;
                     } catch (Throwable $e) {
                         throw new BeatsChainSafeException($e);

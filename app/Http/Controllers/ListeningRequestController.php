@@ -81,6 +81,14 @@ class ListeningRequestController extends Controller
                     "challenge_id" => $challenge->id
                 ]);
 
+                // update challenge_nine_random_tracks in the settings (add 1 to listened)
+                $settings_content = settings($user)->get("challenge_nine_random_tracks");
+                settings($user)->set("challenge_nine_random_tracks", [
+                    "challenge_id" => $settings_content->challenge_id,
+                    "tracks_id" => $settings_content->tracks_id,
+                    "listened" => $settings_content->listened + 1
+                ]);
+
                 // stream the mp3
                 return response()->streamDownload(function () use ($stream_mp3) {
                     echo $stream_mp3;

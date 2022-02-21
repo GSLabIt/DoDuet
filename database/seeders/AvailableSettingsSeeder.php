@@ -39,10 +39,30 @@ class AvailableSettingsSeeder extends Seeder
                 "has_default_value" => false,
             ],
             [
+                "name" => "secret_key",
+                "type" => "string",
+                "has_default_value" => false,
+            ],
+            [
+                "name" => "symmetric_key",
+                "type" => "json",
+                "has_default_value" => false,
+            ],
+            [
                 "name" => "has_messages",
                 "type" => "bool",
                 "has_default_value" => true,
                 "default_value" => true
+            ],
+            [
+                "name" => "graphql_bearer",
+                "type" => "string",
+                "has_default_value" => false,
+            ],
+            [
+                "name" => "challenge_nine_random_tracks",
+                "type" => "json",
+                "has_default_value" => false,
             ],
         ];
 

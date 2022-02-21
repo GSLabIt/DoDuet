@@ -75,11 +75,11 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
             $this->whitelistedItems()["master_derivation_key"] =>
                 settings($this->user)->has($this->whitelistedItems()["master_derivation_key"]),
             $this->whitelistedItems()["secret_key"] =>
-                session()->has($this->whitelistedItems()["secret_key"]),
+                settings($this->user)->has($this->whitelistedItems()["secret_key"]),
             $this->whitelistedItems()["public_key"] =>
                 settings($this->user)->has($this->whitelistedItems()["public_key"]),
             $this->whitelistedItems()["symmetric_key"] =>
-                session($this->user)->has($this->whitelistedItems()["symmetric_key"]),
+                settings($this->user)->has($this->whitelistedItems()["symmetric_key"]),
             "all" =>
                 $this->has($this->whitelistedItems()["master_salt"]) &&
                 $this->has($this->whitelistedItems()["master_derivation_key"]) &&
@@ -104,11 +104,11 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
             $this->whitelistedItems()["master_derivation_key"] =>
                 settings($this->user)->get($this->whitelistedItems()["master_derivation_key"]),
             $this->whitelistedItems()["secret_key"] =>
-                session($this->whitelistedItems()["secret_key"]),
+                decrypt(settings($this->user)->get($this->whitelistedItems()["secret_key"])),
             $this->whitelistedItems()["public_key"] =>
                 settings($this->user)->get($this->whitelistedItems()["public_key"]),
             $this->whitelistedItems()["symmetric_key"] =>
-                session($this->whitelistedItems()["symmetric_key"]),
+                settings($this->user)->get($this->whitelistedItems()["symmetric_key"]),
             default => null,
         };
     }
@@ -192,8 +192,8 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
         // generate a random int for the key derivation index
         $derivation_key_id = is_null($derivation_key) ? sodium()->randomInt(1, 1e10) : $derivation_key;
 
-        session()->put("personal_encryption_key",
-            sodium()->derivation()->deriveSymmetricEncryptionKey($master_key_pair["key"], $derivation_key_id)
+        settings($this->user)->set("symmetric_key",
+            json_encode(sodium()->derivation()->deriveSymmetricEncryptionKey($master_key_pair["key"], $derivation_key_id))
         );
 
         // retrieve the keypair seed, the random int used must be stored in user's settings for key regeneration @ login
@@ -234,10 +234,10 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
             // the public key needs to be stored in the settings
             if (is_null($master_salt) || is_null($derivation_key)) {
                 settings($this->user)->set("public_key", $asymmetric_keypair["public_key"]);
-            }
 
-            // store the secret key for easily usage without the need to regenerate it
-            session()->put("secret_key", $asymmetric_keypair["secret_key"]);
+                // store the secret key for easily usage without the need to regenerate it
+                settings($this->user)->set("secret_key", encrypt($asymmetric_keypair["secret_key"]));
+            }
 
             // enable messaging functionalities
             settings($this->user)->set("has_messages", true);
@@ -263,7 +263,7 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
             "master_derivation_key" => "master_derivation_key",
             "public_key" => "public_key",
             "secret_key" => "secret_key",
-            "symmetric_key" => "personal_encryption_key",
+            "symmetric_key" => "symmetric_key",
         ];
     }
 

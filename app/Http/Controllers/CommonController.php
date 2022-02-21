@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class CommonController extends Controller
 {
@@ -12,5 +14,13 @@ class CommonController extends Controller
         ]);
 
         session()->put("referral_code", $request->input("ref"));
+    }
+
+    public function dashboard(): Response|ResponseFactory {
+        return inertia('Dashboard');
+    }
+
+    public function challengeIndex(): Response|ResponseFactory {
+        return inertia('Challenge/Index');
     }
 }

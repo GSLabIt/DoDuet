@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserSegmentsController;
 use App\Models\Referral;
 use App\Models\User;
@@ -42,6 +43,7 @@ class CreateNewUser implements CreatesNewUsers
 
         secureUser($user)->set("password", $input["password"]);
         wallet($user)->generate();
+        SettingsController::graphQLBearer($user);
 
         UserSegmentsController::assignToSegment($user);
 

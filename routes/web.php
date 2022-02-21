@@ -26,9 +26,24 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    // Basic
+    Route::get('/dashboard', [CommonController::class, "dashboard"])->name('dashboard');
+
+    // Challenge
+    Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('challenge-index');
+
+    // Listen to tracks
+    Route::get(
+        "/listen/in-challenge/{track_id}",
+        [ListeningRequestController::class, "listenToTrackInChallenge"]
+    )->name("listen_to_track_in_challenge");
+    Route::get(
+        "/listen/track/{track_id}",
+        [ListeningRequestController::class, "listenToTrack"]
+    )->name("listen_to_track");
+});
 
 Route::post("/register/ref", [CommonController::class, "referralKeeper"])->name("referral_keeper");
 
@@ -41,13 +56,3 @@ Route::prefix("nft")->group(function() {
 Route::get("/track/{id}", function ($id) {
     abort("501","Not implemented");
 })->name("tracks-get");
-
-Route::get(
-    "/listen/in-challenge/{track_id}",
-    [ListeningRequestController::class, "listenToTrackInChallenge"]
-)->name("listen_to_track_in_challenge");
-
-Route::get(
-    "/listen/track/{track_id}",
-    [ListeningRequestController::class, "listenToTrack"]
-)->name("listen_to_track");

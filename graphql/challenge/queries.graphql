@@ -51,4 +51,12 @@ extend type Query
     """ This function gets the number of total listening requests by track id """
     getNumberOfTotalListeningByTrack(track_id: ID!): Int!
     @field(resolver: "ChallengesController@getNumberOfTotalListeningByTrack")
+
+    """ This function gets the nine random tracks """
+    getNineRandomTracks: [Track!]
+    @field(resolver: "ChallengesController@getNineRandomTracks")
+
+    """ This function refreshes the nine random tracks """
+    refreshNineRandomTracks: [Track!]
+    @field(resolver: "ChallengesController@refreshNineRandomTracks")
 }

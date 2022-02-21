@@ -75,8 +75,8 @@ class SettingsController extends Controller
      * @return string
      */
     public static function graphQLBearer(User $user): string {
-        $tkn = settings($user)->has("graphql-bearer") ? settings($user)->get("graphql-bearer") : $user->createToken("default")->plainTextToken;
-        settings($user)->set("graphql-bearer", $tkn);
+        $tkn = settings($user)->has("graphql_bearer") ? settings($user)->get("graphql_bearer") : $user->createToken("default")->plainTextToken;
+        settings($user)->set("graphql_bearer", $tkn);
         session()->put("bearer", $tkn);
         return $tkn;
     }

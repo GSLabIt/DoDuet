@@ -461,13 +461,79 @@ class ChallengesController extends Controller
             ));
         }
     }
+
+    /**
+     * This functions checks and retrieve nine random tracks from the settings, if they are all already listened or expired it rotates them
+     *
+     * @param null $root Always null, since this field has no parent.
+     * @param array<string, mixed> $args The field arguments passed by the client.
+     * @param GraphQLContext $context Shared between all fields.
+     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
+     * @return Collection
+     */
+    public function getNineRandomTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
+        /** @var User $user */
+        $user = $context->user();
+        /** @var Challenges $current_challenge */
+        $current_challenge = Challenges::orderByDesc("created_at")->first();
+        if (settings($user)->has("challenge_nine_random_tracks")) {
+            $settings_content = settings($user)->get("challenge_nine_random_tracks");
+            if ($settings_content["challenge_id"] == $current_challenge->id) {
+                // if the challenge is the same and the user has not finished listening to all the tracks, return them
+                if ($settings_content["listened"] < 9) return $settings_content["tracks_id"];
+            }
+        }
+        // ROTATING tracks because they are all already listened/the challenge has changed/this is the first time
+        // get the track id of the tracks already listened in this challenge
+        $listened_tracks = $user->listeningRequests()->where(["challenge_id" == $current_challenge->id])->get("track_id");
+        // get nine random tracks that the user has not listened yet
+        $nine_random_tracks = $current_challenge->tracks()->whereNotIn("id", $listened_tracks)->get()->random(9);
+        // update the settings
+        settings($user)->set("challenge_nine_random_tracks", [
+            "challenge_id" => $current_challenge->id,
+            "tracks_id" => $nine_random_tracks,
+            "listened" => 0
+        ]);
+        return $nine_random_tracks;
+    }
+
+    /**
+     * This functions rotates and returns nine random tracks from the settings if al least 4 are already listened or if the challenge is expired
+     *
+     * @param null $root Always null, since this field has no parent.
+     * @param array<string, mixed> $args The field arguments passed by the client.
+     * @param GraphQLContext $context Shared between all fields.
+     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
+     * @return Collection
+     * @throws ChallengeSafeException
+     */
+    public function refreshNineRandomTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
+        /** @var User $user */
+        $user = $context->user();
+        /** @var Challenges $current_challenge */
+        $current_challenge = Challenges::orderByDesc("created_at")->first();
+        // check if settings exists for malicious requests
+        if (settings($user)->has("challenge_nine_random_tracks")) {
+            $settings_content = settings($user)->get("challenge_nine_random_tracks");
+            if ($settings_content["challenge_id"] == $current_challenge->id) {
+                // if the challenge is the same and the user has not finished listening to all the tracks, throw an error
+                if ($settings_content["listened"] < 4) throw new ChallengeSafeException(
+                    config("error-codes.NOT_ENOUGH_LISTENED.message"),
+                    config("error-codes.NOT_ENOUGH_LISTENED.code")
+                );
+            }
+        }
+        // ROTATING tracks because at least 4 of them are already listened/the challenge has changed/this is the first time
+        // get the track id of the tracks already listened in this challenge
+        $listened_tracks = $user->listeningRequests()->where(["challenge_id" == $current_challenge->id])->get("track_id");
+        // get nine random tracks that the user has not listened yet
+        $nine_random_tracks = $current_challenge->tracks()->whereNotIn("id", $listened_tracks)->get()->random(9);
+        // update the settings
+        settings($user)->set("challenge_nine_random_tracks", [
+            "challenge_id" => $current_challenge->id,
+            "tracks_id" => $nine_random_tracks,
+            "listened" => 0
+        ]);
+        return $nine_random_tracks;
+    }
 }
-
-
-
-
-
-
-
-
-
