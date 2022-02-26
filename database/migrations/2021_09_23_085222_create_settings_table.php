@@ -15,8 +15,8 @@ class CreateSettingsTable extends Migration
     {
         Schema::connection("common")->create('settings', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->longText("name")->unique(); // encrypted
-            $table->longText("type")->index(); // encrypted
+            $table->longText("name"); // encrypted
+            $table->longText("type"); // encrypted
             $table->longText("allowed_values")->nullable(); // encrypted
             $table->boolean("has_default_value")->default(false);
             $table->longText("default_value")->nullable(); // encrypted
