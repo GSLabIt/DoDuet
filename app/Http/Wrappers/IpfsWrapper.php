@@ -3,12 +3,13 @@
 namespace App\Http\Wrappers;
 
 use App\Http\Wrappers\Interfaces\Wrapper;
-use App\Models\Skynet;
+use App\Models\Ipfs;
+use App\Models\Tracks;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 use Exception;
-use Storage;
 
 class IpfsWrapper implements Wrapper
 {
@@ -25,11 +26,7 @@ class IpfsWrapper implements Wrapper
         return new static();
     }
 
-    public function upload(UploadedFile $file) {
-        // build the url and send the request
-        //$path = "/upload";
-        //$url = $this->buildRequestUrl($path);
-
+    public function upload(UploadedFile $file,Ipfs $ipfs) {
         // get file content
         $content = $file->get();
         // generate a random encryption key
@@ -39,55 +36,36 @@ class IpfsWrapper implements Wrapper
         // encrypt the nonce
         $encrypted_content = sodium()->encryption()->symmetric()->encrypt($content, $key, $nonce);
         // send the request to the connector
-        $filename = Str::random(18);
-        Storage::put("ipfs/".$filename,$encrypted_content);
-        /*try {
+        $response = Http::asForm()->withHeaders([
+            "Content-Type" => "application/x-www-form-urlencoded",
+            "Authorization" => "Bearer ".env("NFT_STORAGE_API_KEY")
+        ])->post(env("NFT_STORAGE_UPLOAD_LINK"),[
+            "file" => $encrypted_content
+        ]);
 
-        } finally {
-
-        }*/
-        /*$response = Http::asForm()->post($url, [
-            "user" => env("SKYNET_USER"),
-            "filename" => Str::random(18),
-            "file" => $encrypted_content,
-        ]);*/
-
-
-        // update the skynet model
-        /*$skynet->update([
-            "link" => $response->json("upload.skylink"),
+        $ipfs->update([
+            "cid" => $response->json("value.cid"),
             "encryption_key" => $key,
-        ]);*/
+        ]);
     }
 
     /**
      * @return string
      * @throws Exception
      */
-    public function download(Skynet $skynet): string
+    public function download(Ipfs $ipfs): string
     {
         try {
-            // get file from skynet
-            $content = file_get_contents(env("SKYNET_BASE_LINK").$skynet->link);
+            // get file from ipfs
+            $content = str_replace("file=","",str_replace("%3A",":",file_get_contents(env("IPFS_BASE_LINK").$ipfs->cid)));
+            // REPLACE %3A URL ENCODED VERSION OF : and replace file=
             // decode and return the file content
-            return sodium()->encryption()->symmetric()->decrypt($content, $skynet->encryption_key);
+            return sodium()->encryption()->symmetric()->decrypt($content, $ipfs->encryption_key);
         } catch (Exception $e) {
             throw new Exception(
                 config("error-codes.INVALID_LINK.message"),
                 config("error-codes.INVALID_LINK.code")
             );
         }
-    }
-
-    public function buildRequestUrl(string $path): string
-    {
-        // load the hostname
-        $chain_host = env("SKYNET_CONNECTOR_HOST");
-        // check if ending with a /, if not one is appended
-        if(!Str::endsWith($chain_host, "/") && !Str::startsWith($path, "/")) {
-            $chain_host .= "/";
-        }
-
-        return $chain_host . $path;
     }
 }

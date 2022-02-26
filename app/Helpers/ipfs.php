@@ -5,7 +5,7 @@ use JetBrains\PhpStorm\Pure;
 
 if(!function_exists("ipfs")) {
     /**
-     * Initialize an instance of the Skynet wrapper
+     * Initialize an instance of the Ipfs wrapper
      *
      * @return IpfsWrapper
      */

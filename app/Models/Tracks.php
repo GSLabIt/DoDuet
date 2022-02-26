@@ -36,9 +36,9 @@ class Tracks extends Model
         );
     }
 
-    function skynet(): BelongsTo
+    function ipfs(): BelongsTo
     {
-        return $this->belongsTo(Skynet::class);
+        return $this->belongsTo(Ipfs::class,"ipfs_id","id");
     }
 
     function cover(): BelongsTo

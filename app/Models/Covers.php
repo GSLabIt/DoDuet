@@ -40,9 +40,9 @@ class Covers extends Model
         );
     }
 
-    function skynet(): BelongsTo
+    function ipfs(): BelongsTo
     {
-        return $this->belongsTo(Skynet::class);
+        return $this->belongsTo(Ipfs::class);
     }
 
     function album(): HasOne
