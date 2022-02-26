@@ -12927,6 +12927,50 @@
         {
                         return \Illuminate\Routing\Router::inertia($uri, $component, $props);
         }
+                    /**
+         * Set the name of route class
+         *
+         * @param \App\Enums\RouteClass $class
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rclass($class)
+        {
+                        return \Illuminate\Routing\Router::rclass($class);
+        }
+                    /**
+         * Set the name of route group
+         *
+         * @param \App\Enums\RouteGroup $group
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rgroup($group)
+        {
+                        return \Illuminate\Routing\Router::rgroup($group);
+        }
+                    /**
+         * Set the name of route method
+         *
+         * @param \App\Enums\RouteMethod $method
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rmethod($method)
+        {
+                        return \Illuminate\Routing\Router::rmethod($method);
+        }
+                    /**
+         * Set the name of route name
+         *
+         * @param \App\Enums\RouteName $name
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rname($name)
+        {
+                        return \Illuminate\Routing\Router::rname($name);
+        }
          
     }
             /**
@@ -17577,6 +17621,50 @@
         public static function inertia($uri, $component, $props = [])
         {
                         return \Illuminate\Routing\Router::inertia($uri, $component, $props);
+        }
+                    /**
+         * Set the name of route class
+         *
+         * @param \App\Enums\RouteClass $class
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rclass($class)
+        {
+                        return \Illuminate\Routing\Router::rclass($class);
+        }
+                    /**
+         * Set the name of route group
+         *
+         * @param \App\Enums\RouteGroup $group
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rgroup($group)
+        {
+                        return \Illuminate\Routing\Router::rgroup($group);
+        }
+                    /**
+         * Set the name of route method
+         *
+         * @param \App\Enums\RouteMethod $method
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rmethod($method)
+        {
+                        return \Illuminate\Routing\Router::rmethod($method);
+        }
+                    /**
+         * Set the name of route name
+         *
+         * @param \App\Enums\RouteName $name
+         * @return \Illuminate\Routing\RouteRegistrar 
+         * @static 
+         */ 
+        public static function rname($name)
+        {
+                        return \Illuminate\Routing\Router::rname($name);
         }
          
     }
