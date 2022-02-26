@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\LyricSafeException;
+use App\Exceptions\Exception;
 use App\Models\Lyrics;
 use App\Models\User;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -47,7 +47,7 @@ class LyricsController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Lyrics
      * @throws ValidationException
-     * @throws LyricSafeException
+     * @throws Exception
      */
     public function updateLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Lyrics
     {
@@ -73,7 +73,7 @@ class LyricsController extends Controller
             return $lyric;
         }
 
-        throw new LyricSafeException(
+        throw new Exception(
             config("error-codes.LYRIC_NOT_FOUND.message"),
             config("error-codes.LYRIC_NOT_FOUND.code")
         );
@@ -88,7 +88,7 @@ class LyricsController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Lyrics
      * @throws ValidationException
-     * @throws LyricSafeException
+     * @throws Exception
      */
     public function createLyricNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Lyrics
     {
@@ -111,7 +111,7 @@ class LyricsController extends Controller
             return $lyric;
         }
 
-        throw new LyricSafeException(
+        throw new Exception(
             config("error-codes.LYRIC_NOT_FOUND.message"),
             config("error-codes.LYRIC_NOT_FOUND.code")
         );

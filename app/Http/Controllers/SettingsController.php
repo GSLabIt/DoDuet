@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\SettingSafeException;
+use App\Exceptions\Exception;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -47,7 +47,7 @@ class SettingsController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return string
-     * @throws SettingSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getUserPublicKey($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): string {
@@ -62,7 +62,7 @@ class SettingsController extends Controller
             return secureUser($user)->get(secureUser($user)->whitelistedItems()["public_key"]);
         }
 
-        throw new SettingSafeException(
+        throw new Exception(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
         );

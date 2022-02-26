@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Validation\ValidationException;
-use App\Exceptions\CoverSafeException;
+use App\Exceptions\Exception;
 use App\Models\User;
 use App\Models\Covers;
 use App\Models\Skynet;
@@ -55,7 +55,7 @@ class CoversController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Covers
      * @throws ValidationException
-     * @throws CoverSafeException
+     * @throws Exception
      */
     public function updateCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
     {
@@ -99,7 +99,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new CoverSafeException(
+        throw new Exception(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
@@ -114,7 +114,7 @@ class CoversController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Covers
      * @throws ValidationException
-     * @throws CoverSafeException
+     * @throws Exception
      */
     public function createCoverNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
     {
@@ -137,7 +137,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new CoverSafeException(
+        throw new Exception(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );

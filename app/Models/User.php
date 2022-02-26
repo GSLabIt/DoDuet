@@ -349,7 +349,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(ListeningRequest::class)
+            fn() => $this->hasMany(ListeningRequest::class, "voter_id")
         );
     }
 
@@ -357,7 +357,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(Votes::class)
+            fn() => $this->hasMany(Votes::class, "voter_id")
         );
     }
 

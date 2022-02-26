@@ -64,6 +64,10 @@ return [
         "message" => "The link is invalid",
         "code" => 1054,
     ],
+    "NOT_ENOUGH_LISTENED" => [
+        "message" => "User has not listened to at least 4 tracks",
+        "code" => 1055,
+    ],
 
 
     "BEATS_CHAIN_REQUIRED_SUDO" => [

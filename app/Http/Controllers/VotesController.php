@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\BeatsChainSafeException;
-use App\Exceptions\VoteSafeException;
+use App\Exceptions\Exception;
+use App\Exceptions\Exception;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -27,8 +27,8 @@ class VotesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return bool
-     * @throws VoteSafeException
-     * @throws BeatsChainSafeException
+     * @throws Exception
+     * @throws Exception
      * @throws ValidationException
      */
     public function requestPermissionToVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): bool {
@@ -64,7 +64,7 @@ class VotesController extends Controller
                     $seconds += pow(60, $key) * $value;
                 }
                 if ($seconds > 86400) {
-                    throw new VoteSafeException(
+                    throw new Exception(
                         config("error-codes.TIME_ERROR.message"),
                         config("error-codes.TIME_ERROR.code")
                     );
@@ -81,24 +81,24 @@ class VotesController extends Controller
                         // if no exception is thrown, return true
                         return true;
                     } catch (Throwable $e) {
-                        throw new BeatsChainSafeException($e);
+                        throw new Exception($e);
                     }
                 }
                 // handle vote when not in allowed time
-                throw new VoteSafeException(
+                throw new Exception(
                     config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.message"),
                     config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.code")
                 );
             }
             // handle track not found listened to
-            throw new VoteSafeException(
+            throw new Exception(
                 config("error-codes.TRACK_NOT_LISTENED.message"),
                 config("error-codes.TRACK_NOT_LISTENED.code")
             );
         }
 
         // handle track not found error
-        throw new VoteSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -112,8 +112,8 @@ class VotesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Votes
-     * @throws VoteSafeException
-     * @throws BeatsChainSafeException
+     * @throws Exception
+     * @throws Exception
      * @throws ValidationException
      */
     public function vote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Votes {
@@ -143,12 +143,12 @@ class VotesController extends Controller
                 ]);
                 return $vote;
             } catch (Throwable $e) {
-                throw new BeatsChainSafeException($e);
+                throw new Exception($e);
             }
         }
 
         // handle track not found error
-        throw new VoteSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );

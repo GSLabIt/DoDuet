@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CommonController extends Controller
 {
@@ -12,5 +13,9 @@ class CommonController extends Controller
         ]);
 
         session()->put("referral_code", $request->input("ref"));
+    }
+
+    public function dashboard(Request $request) {
+        return Inertia::render('Dashboard');
     }
 }
