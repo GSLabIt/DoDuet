@@ -47,37 +47,37 @@ return [
         [
             "min" => 0,
             "max" => 10,
-            "prize" => 15
+            "prize" => 2    
         ],
         [
             "min" => 11,
             "max" => 25,
-            "prize" => 25
+            "prize" => 5
         ],
         [
             "min" => 26,
             "max" => 50,
-            "prize" => 40
+            "prize" => 9
         ],
         [
             "min" => 51,
             "max" => 100,
-            "prize" => 60
+            "prize" => 14
         ],
         [
             "min" => 101,
             "max" => 200,
-            "prize" => 85
+            "prize" => 20
         ],
         [
             "min" => 201,
             "max" => 500,
-            "prize" => 115
+            "prize" => 27
         ],
         [
             "min" => 501,
             "max" => PHP_INT_MAX,
-            "prize" => 150
+            "prize" => 35
         ],
     ],
 ];

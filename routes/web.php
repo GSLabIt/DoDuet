@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RouteClass;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ListeningRequestController;
 use Illuminate\Foundation\Application;
@@ -26,14 +27,46 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+/*
+ |----------------------------------------------------------------------
+ | Authenticated routes
+ |----------------------------------------------------------------------
+ |
+ | Insert all authenticated routes inside the following function.
+ | Always use a semantically correct division for routes path grouping
+ | common routes under the same folder.
+ | All authenticated routes gets loaded by the index.php, always add new
+ | route groups in /web/authenticated/index.php.
+ |
+ */
+Route::middleware(['auth:sanctum', 'verified'])->name(r(RouteClass::AUTHENTICATED))->group(function() {
+    Route::group([], __DIR__ . "/web/authenticated/index.php");
 
-Route::post("/register/ref", [CommonController::class, "referralKeeper"])->name("referral_keeper");
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+});
+
+
+/*
+ |----------------------------------------------------------------------
+ | Public routes
+ |----------------------------------------------------------------------
+ |
+ | Insert all unauthenticated routes here.
+ | Always use a semantically correct division for routes path grouping
+ | common routes under the same folder.
+ | All unauthenticated routes gets loaded by the index.php, always add new
+ | route groups in /web/public/index.php.
+ |
+ */
+//Route::name(r(RouteClass::PUBLIC))->group(__DIR__ . "/web/public/index.php");
+
+Route::rclass(RouteClass::PUBLIC)->group(__DIR__ . "/web/public/index.php");
 
 Route::prefix("nft")->group(function() {
     Route::get("/track/{id}", function ($id) {
+        route(rn(RouteClass::PUBLIC, \App\Enums\RouteGroup::REGISTER, \App\Enums\RouteMethod::POST, \App\Enums\RouteName::REFERRAL_KEEPER));
         abort("501","Not implemented");
     })->name("nft-track_display");
 });

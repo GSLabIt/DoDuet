@@ -2,95 +2,106 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\ReferralSafeException;
+use App\Enums\RouteClass;
+use App\Enums\RouteGroup;
+use App\Enums\RouteMethod;
+use App\Enums\RouteName;
 use App\Models\Referred;
 use App\Models\User;
 use Exception;
-use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class ReferralController extends Controller
 {
     /**
      * Generates the referral url for the current user.
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return string
+     * @return JsonResponse
      */
-    public function getReferralURL($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): string
+    public function getReferralURL(): JsonResponse
     {
-        // User won't ever be null here as in the query definition we check it is authenticated using the @guard
-        // directive
-        /**@var User $user*/
-        $user = $context->user();
+        /**@var User $user */
+        $user = auth()->user();
 
-        return route("register", ["ref" => $user->referral->code]);
+        return response()->json([
+            "url" => rroute()->class(RouteClass::PUBLIC)
+                ->group(RouteGroup::REGISTER)
+                ->method(RouteMethod::POST)
+                ->name(RouteName::REFERRAL_KEEPER)
+                ->route(["ref" => $user->referral->code])
+        ]);
     }
 
     /**
      * Get the prize that will be received by the referrer for the next referred user.
      * This is a graphql accessor around the static method "computePrizeForNewReferer"
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return int
+     * @return JsonResponse
      */
-    public function getPrizeForNewRefer($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
-        // User won't ever be null here as in the query definition we check it is authenticated using the @guard
-        // directive
-        /**@var User $user*/
-        $user = $context->user();
+    public function getPrizeForNewRefer(): JsonResponse
+    {
+        /**@var User $user */
+        $user = auth()->user();
 
         // call the actual computing function and reflect it
-        return self::computePrizeForNewReferer($user);
+        return response()->json([
+            "prize" => self::computePrizeForNewReferer($user)
+        ]);
     }
 
     /**
      * Get the prize that will be received by the referrer for the next referred user
+     *
      * @param User $user
      * @return int
      */
-    public static function computePrizeForNewReferer(User $user): int {
+    public static function computePrizeForNewReferer(User $user): int
+    {
         // retrieve the amount of referred users
         $referred_users = $user->referred()->count();
 
         // check with the configuration which prize will be given for the next referred user based on the amount of
         // already referred ones
+        return config("platforms.referral_prizes")[self::getReferralPrizeIndex($referred_users)]["prize"];
+    }
+
+    /**
+     * Return the current index of the referral_prizes array based on the number of referred users
+     *
+     * @param int $referred_users
+     * @return int
+     */
+    private static function getReferralPrizeIndex(int $referred_users): int {
+        $index = 0;
         foreach (config("platforms.referral_prizes") as $ref_pack) {
-            if($referred_users >= $ref_pack["min"] && $referred_users <= $ref_pack["max"]) {
-                return $ref_pack["prize"];
+            if ($referred_users >= $ref_pack["min"] && $referred_users <= $ref_pack["max"]) {
+                return $index;
             }
+            $index++;
         }
-        return 0;
+
+        return $index;
     }
 
     /**
      * Sum the prizes received for all the referred users and returns it
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return int
+     * @return JsonResponse
      */
-    public function getTotalPrizeForRefers($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
-        // User won't ever be null here as in the query definition we check it is authenticated using the @guard
-        // directive
-        /**@var User $user*/
-        $user = $context->user();
+    public function getTotalPrizeForRefers(): JsonResponse
+    {
+        /**@var User $user */
+        $user = auth()->user();
 
-        return $user->referred->sum("prize");
+        return response()->json([
+            "totalPrize" => $user->referred->sum("prize")
+        ]);
     }
 
     /**
-     * Redeem and send to the owner wallet the prize for the referral of the given
+     * Redeem and send to the owner wallet the prize for the referral of the given user id
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -100,26 +111,28 @@ class ReferralController extends Controller
      * @throws ValidationException
      * @throws Exception
      */
-    public function redeemReferredPrizeForUser($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
-        Validator::validate($args, [
+    public function redeemReferredPrizeForUser(string $referred_id): int
+    {
+        Validator::validate([
+            "referred_id" => $referred_id
+        ], [
             "referred_id" => "required|uuid|exists:referreds,id"
         ]);
 
-        // User won't ever be null here as in the query definition we check it is authenticated using the @guard
-        // directive
-        /**@var User $user*/
-        $user = $context->user();
+        /**@var User $user */
+        $user = auth()->user();
 
-        $referred = $user->referred()->where("id", $args["referred_id"])->first();
-        if(!is_null($referred)) {
-            if(!$referred->is_redeemed) {
+        $referred = $user->referred()->where("id", $referred_id)->first();
+        if (!is_null($referred)) {
+            if (!$referred->is_redeemed) {
+
+                blockchain(null)->airdrop()->immediatelyReleaseAirdrop()
                 // TODO: release the MELB amount to the wallet of the user
 
                 // mark the referred row as redeemed
                 $referred->update(["is_redeemed" => true]);
                 return $referred->prize;
-            }
-            else {
+            } else {
                 // referred already redeamed
                 throw new ReferralSafeException(
                     config("error-codes.REFERRED_USER_ALREADY_REDEEMED.message"),
@@ -148,17 +161,18 @@ class ReferralController extends Controller
      * @return mixed
      * @throws ValidationException
      */
-    public function redeemAllReferredPrizes($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
+    public function redeemAllReferredPrizes($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int
+    {
         // User won't ever be null here as in the query definition we check it is authenticated using the @guard
         // directive
-        /**@var User $user*/
+        /**@var User $user */
         $user = $context->user();
 
         $total_redeemed = 0;
 
         $referreds = $user->referred()->where("is_redeemed", false)->get();
         foreach ($referreds as $referred) {
-            /**@var $referred Referred*/
+            /**@var $referred Referred */
             $total_redeemed += $this->redeemReferredPrizeForUser($root, ["referred_id" => $referred->id], $context, $resolveInfo);
         }
 
