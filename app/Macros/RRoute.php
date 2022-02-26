@@ -21,7 +21,7 @@ class RRoute
      * @return RRoute
      */
     public function class(RouteClass $class): static {
-        $this->_class .= r($class);
+        $this->_class = r($class);
         return $this;
     }
 
@@ -33,7 +33,7 @@ class RRoute
      */
     public function group(RouteGroup $group): static
     {
-        $this->_group .= r($group);
+        $this->_group = r($group);
         return $this;
     }
 

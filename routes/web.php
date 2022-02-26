@@ -39,7 +39,7 @@ Route::get('/', function () {
  | route groups in /web/authenticated/index.php.
  |
  */
-Route::middleware(['auth:sanctum', 'verified'])->name(r(RouteClass::AUTHENTICATED))->group(function() {
+Route::rclass(RouteClass::AUTHENTICATED)->middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::group([], __DIR__ . "/web/authenticated/index.php");
 
     Route::get('/dashboard', function () {
@@ -60,8 +60,6 @@ Route::middleware(['auth:sanctum', 'verified'])->name(r(RouteClass::AUTHENTICATE
  | route groups in /web/public/index.php.
  |
  */
-//Route::name(r(RouteClass::PUBLIC))->group(__DIR__ . "/web/public/index.php");
-
 Route::rclass(RouteClass::PUBLIC)->group(__DIR__ . "/web/public/index.php");
 
 Route::prefix("nft")->group(function() {
