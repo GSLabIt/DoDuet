@@ -1,0 +1,20 @@
+{
+    "name": "Referral",
+    "alias": "referral",
+    "description": "Module that gives the possibility to track and give prizes to users for referring a service to other people",
+    "keywords": [
+        "referral",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Modules\\Referral\\Providers\\ReferralServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "minimumCoreVersion": "^9.0",
+    "title": "Referral module",
+    "version": "1.0.0",
+    "author": "Emanuele (ebalo) Balsamo"
+}

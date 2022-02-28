@@ -1,4 +1,10 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 // @formatter:off
 /**
@@ -588,61 +594,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Referral
- *
- * @property string $id
- * @property string $code
- * @property string $owner_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\User|null $owner
- * @method static \Database\Factories\ReferralFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referral whereUpdatedAt($value)
- */
-	class Referral extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\Referred
- *
- * @property string $id
- * @property string $referrer_id
- * @property string $referred_id
- * @property bool $is_redeemed
- * @property int $prize
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\User $referred
- * @property-read \App\Models\User $referrer
- * @method static \Database\Factories\ReferredFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereIsRedeemed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred wherePrize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferredId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereReferrerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Referred whereUpdatedAt($value)
- */
-	class Referred extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * App\Models\ReportReasons
  *
  * @property string $id
@@ -1048,10 +999,10 @@ namespace App\Models{
  * @property-read int|null $received_messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tips[] $receivedTips
  * @property-read int|null $received_tips_count
- * @property-read \App\Models\Referral|null $referral
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Referred[] $referred
+ * @property-read \Modules\Referral\Models\Referral|null $referral
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Referral\Models\Referred[] $referred
  * @property-read int|null $referred_count
- * @property-read \App\Models\Referred|null $referredBy
+ * @property-read \Modules\Referral\Models\Referred|null $referredBy
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles

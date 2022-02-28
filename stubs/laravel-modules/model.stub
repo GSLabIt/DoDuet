@@ -1,0 +1,24 @@
+<?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
+
+namespace $NAMESPACE$;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class $CLASS$ extends Model
+{
+    use HasFactory;
+
+    protected $fillable = $FILLABLE$;
+
+    protected static function newFactory()
+    {
+        return \$MODULE_NAMESPACE$\$MODULE$\Database\factories\$NAME$Factory::new();
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "name": "do-inc/referral",
+    "description": "Module that gives the possibility to track and give prizes to users for referring a service to other people",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Emanuele (ebalo) Balsamo",
+            "email": "emanuele.balsamo@do-inc.co"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Referral\\Providers\\ReferralServiceProvider"
+            ],
+            "aliases": {
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Referral\\": ""
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.1"
+    }
+}

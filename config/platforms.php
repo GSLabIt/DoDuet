@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
+
 return [
     /**
      * |--------------------------------------------------------------------------
@@ -33,51 +40,4 @@ return [
      * |
      */
     "platform_name" => env("APP_NAME", "Unknown app name"),
-
-    /**
-     * |--------------------------------------------------------------------------
-     * | Referral prizes definition
-     * |--------------------------------------------------------------------------
-     * |
-     * | Defines the minimum and maximum number of users to refer in order to
-     * | receive the associated prize
-     * |
-     */
-    "referral_prizes" => [
-        [
-            "min" => 0,
-            "max" => 10,
-            "prize" => 2    
-        ],
-        [
-            "min" => 11,
-            "max" => 25,
-            "prize" => 5
-        ],
-        [
-            "min" => 26,
-            "max" => 50,
-            "prize" => 9
-        ],
-        [
-            "min" => 51,
-            "max" => 100,
-            "prize" => 14
-        ],
-        [
-            "min" => 101,
-            "max" => 200,
-            "prize" => 20
-        ],
-        [
-            "min" => 201,
-            "max" => 500,
-            "prize" => 27
-        ],
-        [
-            "min" => 501,
-            "max" => PHP_INT_MAX,
-            "prize" => 35
-        ],
-    ],
 ];

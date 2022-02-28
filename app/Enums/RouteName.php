@@ -1,13 +1,14 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 namespace App\Enums;
 
 enum RouteName: string
 {
-    case REFERRAL_KEEPER = "referral_keeper";
-    case REFERRAL_GET_URL = "referral_get_url";
-    case REFERRAL_GET_PRIZE_FOR_NEW_REF = "referral_get_prize_for_new_ref";
-    case REFERRAL_GET_TOTAL_PRIZE_FOR_REF = "referral_get_total_prize_for_ref";
-    case REFERRAL_REDEEM_PRIZE_FOR_USER = "referral_redeem_prize_for_user";
-    case REFERRAL_REDEEM_ALL = "referral_redeem_all";
+
 }

@@ -1,18 +1,23 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 namespace App\Actions\Fortify;
 
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\UserSegmentsController;
-use App\Models\Referral;
 use App\Models\User;
 use App\Notifications\NewReferralNotification;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Modules\Referral\models\Referral;
 
 class CreateNewUser implements CreatesNewUsers
 {

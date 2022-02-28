@@ -1,4 +1,10 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 return [
     /**
@@ -10,14 +16,6 @@ return [
      * |
      */
 
-    "REFERRED_USER_ALREADY_REDEEMED" => [
-        "message" => "Referral prize already redeemed",
-        "code" => 1000,
-    ],
-    "REFERRED_USER_NOT_FOUND" => [
-        "message" => "Unable to find the requested referral",
-        "code" => 1001,
-    ],
     "COVER_NOT_FOUND" => [
         "message" => "Unable to find the requested cover",
         "code" => 1002,
