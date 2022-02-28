@@ -10,6 +10,7 @@ use App\Models\Referred;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -73,10 +74,30 @@ class ReferralController extends Controller
      * @param int $referred_users
      * @return int
      */
-    private static function getReferralPrizeIndex(int $referred_users): int {
+    private static function getReferralPrizeIndex(int $referred_users): int
+    {
         $index = 0;
         foreach (config("platforms.referral_prizes") as $ref_pack) {
             if ($referred_users >= $ref_pack["min"] && $referred_users <= $ref_pack["max"]) {
+                return $index;
+            }
+            $index++;
+        }
+
+        return $index;
+    }
+
+    /**
+     * Return the current index of the referral_prizes array based on the provided prize
+     *
+     * @param int $prize
+     * @return int
+     */
+    private static function getReferralPrizeIndexFromPrize(int $prize): int
+    {
+        $index = 0;
+        foreach (config("platforms.referral_prizes") as $ref_pack) {
+            if ($prize === $ref_pack["prize"]) {
                 return $index;
             }
             $index++;
@@ -103,38 +124,42 @@ class ReferralController extends Controller
     /**
      * Redeem and send to the owner wallet the prize for the referral of the given user id
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return int
+     * @param Request $request
+     * @param string $referred_id
+     * @param bool $raw
+     * @return JsonResponse|int
      * @throws ValidationException
      * @throws Exception
      */
-    public function redeemReferredPrizeForUser(string $referred_id): int
+    public function redeemReferredPrizeForUser(Request $request, string $referred_id, bool $raw = false): JsonResponse|int
     {
-        Validator::validate([
-            "referred_id" => $referred_id
-        ], [
+        Validator::validate($request->route()->parameters, [
             "referred_id" => "required|uuid|exists:referreds,id"
         ]);
 
         /**@var User $user */
         $user = auth()->user();
 
+        /**@var Referred $referred */
         $referred = $user->referred()->where("id", $referred_id)->first();
         if (!is_null($referred)) {
             if (!$referred->is_redeemed) {
 
-                blockchain(null)->airdrop()->immediatelyReleaseAirdrop()
-                // TODO: release the MELB amount to the wallet of the user
+                // retrieve the amount of referred users
+                blockchain(null)->airdrop()
+                    ->immediatelyReleaseAirdrop(
+                        self::getReferralPrizeIndexFromPrize($referred->prize),
+                        $user->wallet->address
+                    );
 
                 // mark the referred row as redeemed
                 $referred->update(["is_redeemed" => true]);
-                return $referred->prize;
+                return $raw ? $referred->prize : response()->json([
+                    "prize" => $referred->prize
+                ]);
             } else {
                 // referred already redeamed
-                throw new ReferralSafeException(
+                throw new Exception(
                     config("error-codes.REFERRED_USER_ALREADY_REDEEMED.message"),
                     config("error-codes.REFERRED_USER_ALREADY_REDEEMED.code")
                 );
@@ -144,7 +169,7 @@ class ReferralController extends Controller
         // owned by the current user
         else {
             // referral not found
-            throw new ReferralSafeException(
+            throw new Exception(
                 config("error-codes.REFERRED_USER_NOT_FOUND.message"),
                 config("error-codes.REFERRED_USER_NOT_FOUND.code")
             );
@@ -154,29 +179,25 @@ class ReferralController extends Controller
     /**
      * Redeem and send to the owner wallet the prize for all not yet redeemed referred users
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return mixed
+     * @return JsonResponse
      * @throws ValidationException
      */
-    public function redeemAllReferredPrizes($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int
+    public function redeemAllReferredPrizes(): JsonResponse
     {
-        // User won't ever be null here as in the query definition we check it is authenticated using the @guard
-        // directive
         /**@var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         $total_redeemed = 0;
 
         $referreds = $user->referred()->where("is_redeemed", false)->get();
         foreach ($referreds as $referred) {
             /**@var $referred Referred */
-            $total_redeemed += $this->redeemReferredPrizeForUser($root, ["referred_id" => $referred->id], $context, $resolveInfo);
+            $total_redeemed += $this->redeemReferredPrizeForUser($referred->id, true);
         }
 
-        return $total_redeemed;
+        return response()->json([
+            "redeemed" => $total_redeemed
+        ]);
     }
 }
 

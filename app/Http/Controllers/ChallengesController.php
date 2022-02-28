@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\ChallengeSafeException;
+
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
-use GraphQL\Type\Definition\ResolveInfo;
+
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
 
 class ChallengesController extends Controller
 {
@@ -38,7 +38,7 @@ class ChallengesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Collection
-     * @throws ChallengeSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getAllTracksInChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
@@ -54,7 +54,7 @@ class ChallengesController extends Controller
         }
 
         // handle challenge not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.CHALLENGE_NOT_FOUND.message"),
             config("error-codes.CHALLENGE_NOT_FOUND.code")
         );
@@ -71,7 +71,7 @@ class ChallengesController extends Controller
      */
     public function getAllUserPrizes($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         $final_object = collect(); // prepare the object that will be returned
 
@@ -125,7 +125,7 @@ class ChallengesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return float | null
-     * @throws ChallengeSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getAverageVoteInChallengeOfTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float | null {
@@ -141,7 +141,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new ChallengeSafeException(
+                throw new Exception(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -159,7 +159,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -174,7 +174,7 @@ class ChallengesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return float
-     * @throws ChallengeSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getNumberOfListeningInChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float {
@@ -190,7 +190,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new ChallengeSafeException(
+                throw new Exception(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -208,7 +208,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -239,7 +239,7 @@ class ChallengesController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return int
      * @throws ValidationException
-     * @throws ChallengeSafeException
+     * @throws Exception
      */
     public function getTrackVoteByUserAndChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
         Validator::validate($args, [
@@ -255,7 +255,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new ChallengeSafeException(
+                throw new Exception(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -275,14 +275,14 @@ class ChallengesController extends Controller
 
             // handle user not found error
             if (is_null($user)) {
-                throw new ChallengeSafeException(
+                throw new Exception(
                     config("error-codes.USER_NOT_FOUND.message"),
                     config("error-codes.USER_NOT_FOUND.code")
                 );
             }
         } else {
             /** @var User $user */
-            $user = $context->user();
+            $user = auth()->user();
         }
 
         if(!is_null($track)) {
@@ -290,7 +290,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -304,7 +304,7 @@ class ChallengesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return int
-     * @throws ChallengeSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getNumberOfTrackListeningByUserAndChallenge($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
@@ -321,7 +321,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new ChallengeSafeException(
+                throw new Exception(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -341,14 +341,14 @@ class ChallengesController extends Controller
 
             // handle user not found error
             if (is_null($user)) {
-                throw new ChallengeSafeException(
+                throw new Exception(
                     config("error-codes.USER_NOT_FOUND.message"),
                     config("error-codes.USER_NOT_FOUND.code")
                 );
             }
         } else {
             /** @var User $user */
-            $user = $context->user();
+            $user = auth()->user();
         }
 
         if(!is_null($track)) {
@@ -356,7 +356,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -370,7 +370,7 @@ class ChallengesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return float
-     * @throws ChallengeSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getTotalAverageTrackVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float {
@@ -386,7 +386,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -400,7 +400,7 @@ class ChallengesController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return int
-     * @throws ChallengeSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getNumberOfTotalListeningByTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int {
@@ -416,7 +416,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new ChallengeSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );

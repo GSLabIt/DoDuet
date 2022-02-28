@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\BeatsChainSafeException;
-use App\Exceptions\TrackSafeException;
+
+
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Models\Albums;
 use App\Models\Covers;
@@ -14,13 +14,13 @@ use App\Models\Skynet;
 use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
-use GraphQL\Type\Definition\ResolveInfo;
+
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
 use Throwable;
 
 class TracksController extends Controller
@@ -34,9 +34,9 @@ class TracksController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Tracks|null
      * @throws FileNotFoundException
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
-     * @throws BeatsChainSafeException
+     * @throws Exception
      */
     public function createTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks {
         Validator::validate($args, [
@@ -50,7 +50,7 @@ class TracksController extends Controller
         ]);
 
         /** @var $user User */
-        $user = $context->user();
+        $user = auth()->user();
 
         // Retrieve the uploaded mp3
         /** @var UploadedFile $mp3 */
@@ -115,7 +115,7 @@ class TracksController extends Controller
                 // usage of the throwable interface instead of the specific error type mark the following statement
                 // as possibly wrong but as the only exception may occur is the blockchain related one, stay chill,
                 // no other strange exception will occur
-                throw new BeatsChainSafeException($exception);
+                throw new Exception($exception);
             }
 
             // Store the just encrypted file in the skynet folder
@@ -135,21 +135,21 @@ class TracksController extends Controller
 
         // handle test errors
         if(!is_null($args["cover"]) && is_null($cover)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
 
         if(!is_null($args["lyric"]) && is_null($lyric)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
 
         if(!is_null($args["album"]) && is_null($album)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
@@ -165,7 +165,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Tracks|null
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function updateTrack($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?Tracks
@@ -180,7 +180,7 @@ class TracksController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["id"])->first();
 
@@ -221,28 +221,28 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(!is_null($args["cover"]) && is_null($cover)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
 
         if(!is_null($args["lyric"]) && is_null($lyric)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
 
         if(!is_null($args["album"]) && is_null($album)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
@@ -259,7 +259,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return int
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getTotalVotes($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int
@@ -275,7 +275,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new TrackSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -289,7 +289,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Collection
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getUsersTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
@@ -304,7 +304,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new TrackSafeException(
+        throw new Exception(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
         );
@@ -318,7 +318,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return int
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getTotalListenings($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): int
@@ -335,7 +335,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new TrackSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -350,7 +350,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return float|int
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function getAverageVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): float|int|null {
@@ -367,7 +367,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new TrackSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -426,7 +426,7 @@ class TracksController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return string
      * @throws ValidationException
-     * @throws TrackSafeException
+     * @throws Exception
      */
     public function getTrackLink($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): string {
         Validator::validate($args, [
@@ -444,7 +444,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new TrackSafeException(
+        throw new Exception(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -458,7 +458,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return string|null
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function linkToAlbum($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?string
@@ -470,7 +470,7 @@ class TracksController extends Controller
 
         // initialize test variables
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["track_id"])->first();
         /** @var Albums $album */
@@ -487,14 +487,14 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(is_null($album)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
@@ -510,7 +510,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return string|null
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function linkToCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?string
@@ -522,7 +522,7 @@ class TracksController extends Controller
 
         // initialize test variables
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["track_id"])->first();
         /** @var Covers $cover */
@@ -539,14 +539,14 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(is_null($cover)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
@@ -562,7 +562,7 @@ class TracksController extends Controller
      * @param GraphQLContext $context Shared between all fields.
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return string|null
-     * @throws TrackSafeException
+     * @throws Exception
      * @throws ValidationException
      */
     public function linkToLyric($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): ?string {
@@ -573,7 +573,7 @@ class TracksController extends Controller
 
         // initialize test variables
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["track_id"])->first();
         /** @var Lyrics $lyric */
@@ -590,14 +590,14 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(is_null($lyric)){
-            throw new TrackSafeException(
+            throw new Exception(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Exceptions\ChallengeSafeException;
+
 use App\Http\Controllers\ChallengesController;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Http\Wrappers\GMPHelper;

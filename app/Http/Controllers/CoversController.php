@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Validation\ValidationException;
-use App\Exceptions\CoverSafeException;
+
 use App\Models\User;
 use App\Models\Covers;
 use App\Models\Skynet;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
+
 
 class CoversController extends Controller
 {
@@ -32,7 +32,7 @@ class CoversController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // Retrieve the uploaded image and call the uploadOnSkynet function
         /** @var UploadedFile $img */
@@ -55,7 +55,7 @@ class CoversController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Covers
      * @throws ValidationException
-     * @throws CoverSafeException
+     * @throws Exception
      */
     public function updateCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
     {
@@ -66,7 +66,7 @@ class CoversController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */
@@ -99,7 +99,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new CoverSafeException(
+        throw new Exception(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
@@ -114,7 +114,7 @@ class CoversController extends Controller
      * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return Covers
      * @throws ValidationException
-     * @throws CoverSafeException
+     * @throws Exception
      */
     public function createCoverNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
     {
@@ -123,7 +123,7 @@ class CoversController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */
@@ -137,7 +137,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new CoverSafeException(
+        throw new Exception(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );

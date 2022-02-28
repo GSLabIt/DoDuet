@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Exceptions\ListeningRequestSafeException;
+
 use App\Http\Controllers\ListeningRequestController;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;

@@ -1,7 +1,0 @@
-type Referral {
-    id: ID!
-    code: String!
-    owner: User! @belongsTo
-    created_at: DateTime!
-    updated_at: DateTime!
-}
