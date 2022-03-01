@@ -1,8 +1,11 @@
 {
-    "name": "$STUDLY_NAME$",
-    "alias": "$LOWER_NAME$",
+    "name": "$LOWER_NAME$",
+    "alias": "$LOWER_NAME$-module",
     "description": "",
     "keywords": [
+        "do-inc",
+        "laravel",
+        "$LOWER_NAME$",
         "module"
     ],
     "priority": 0,

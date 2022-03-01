@@ -2,6 +2,13 @@
     "name": "$VENDOR$/$LOWER_NAME$",
     "description": "",
     "version": "1.0.0",
+    "type": "laravel-module",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "$LOWER_NAME$",
+        "module"
+    ],
     "authors": [
         {
             "name": "$AUTHOR_NAME$",
@@ -26,11 +33,30 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.2",
+        "illuminate/contracts": "^9.0",
+        "nwidart/laravel-modules": "^9.0"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^6.0",
+        "nunomaduro/larastan": "^2.0.1",
+        "orchestra/testbench": "^7.0",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.1",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpunit/phpunit": "^9.5",
+        "spatie/laravel-ray": "^1.26"
     }
 }

@@ -1,8 +1,10 @@
 {
-    "name": "Referral",
-    "alias": "referral",
+    "name": "do-inc/referral-module",
+    "alias": "referral-module",
     "description": "Module that gives the possibility to track and give prizes to users for referring a service to other people",
     "keywords": [
+        "do-inc",
+        "laravel",
         "referral",
         "module"
     ],
@@ -15,6 +17,6 @@
     "requires": [],
     "minimumCoreVersion": "^9.0",
     "title": "Referral module",
-    "version": "1.0.0",
+    "version": "1.0.7",
     "author": "Emanuele (ebalo) Balsamo"
 }

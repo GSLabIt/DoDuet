@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -10,10 +13,12 @@
         "ext-openssl": "^8.1",
         "ext-sodium": "^8.1",
         "do-inc/laravel-persona-kyc": "^0.10.20",
+        "do-inc/referral-module": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "hedii/laravel-gelf-logger": "^7.0",
         "inertiajs/inertia-laravel": "^0.5.4",
+        "joshbrw/laravel-module-installer": "^2.0",
         "laravel/framework": "^9.0",
         "laravel/jetstream": "^2.4",
         "laravel/octane": "^1.0",
@@ -74,13 +79,23 @@
     "extra": {
         "laravel": {
             "dont-discover": []
-        }
+        },
+        "module-dir": "modules"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "joshbrw/laravel-module-installer": true
+        }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/Laravel-module-referral.git"
+        }
+    ]
 }
