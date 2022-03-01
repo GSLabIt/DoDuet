@@ -16,7 +16,7 @@ class CreateCoversTable extends Migration
         Schema::create('covers', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->text('name');
-            $table->foreignUuid("skynet_id")->references("id")->on("skynets");
+            $table->foreignUuid("ipfs_id")->references("id")->on("ipfs");
             $table->string('nft_id')->nullable();
             $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->foreignUuid("creator_id")->references("id")->on(env("COMMON_DATABASE") . ".users");

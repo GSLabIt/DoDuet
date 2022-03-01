@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSkynetsTable extends Migration
+class CreateIpfsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateSkynetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('skynets', function (Blueprint $table) {
+        Schema::create('ipfs', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->longText('link'); // encrypted
+            $table->string('cid'); // encrypted
             $table->boolean('encrypted')->default(true);
             $table->longText('encryption_key'); // encrypted
             $table->timestamps();
@@ -29,6 +29,6 @@ class CreateSkynetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('skynets');
+        Schema::dropIfExists('ipfs');
     }
 }

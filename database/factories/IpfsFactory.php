@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Skynet;
+use App\Models\Ipfs;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SkynetFactory extends Factory
+class IpfsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Skynet::class;
+    protected $model = Ipfs::class;
 
     /**
      * Define the model's default state.
@@ -23,8 +23,8 @@ class SkynetFactory extends Factory
     {
         return [
             "id" => $this->faker->uuid(),
-            "link" => $this->faker->url(),
-            "encrypted" => $this->faker->boolean(100),
+            "cid" => "",
+            "encrypted" => true,
             "encryption_key" => sodium()->encryption()->symmetric()->key(),
         ];
     }
