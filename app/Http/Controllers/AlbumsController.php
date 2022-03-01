@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 
-
 use App\Models\User;
 use App\Models\Albums;
 use App\Models\Covers;
-
+use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Validation\ValidationException;
-
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class AlbumsController extends Controller
 {
@@ -32,7 +31,7 @@ class AlbumsController extends Controller
         ]);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user = $context->user();
 
         // Initialize test Cover variable
         /** @var Covers $cover*/
@@ -74,7 +73,7 @@ class AlbumsController extends Controller
         ]);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user = $context->user();
 
         // selects the album owned by the user that called the update function which has an id specified in the args
         /** @var Albums $album */
@@ -124,7 +123,7 @@ class AlbumsController extends Controller
         ]);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user = $context->user();
 
         // selects the album created by the user that called the update function which has an id specified in the args
         /** @var Albums $album */

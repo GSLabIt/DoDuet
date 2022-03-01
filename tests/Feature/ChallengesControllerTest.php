@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
-
+use App\Enums\RouteClass;
+use App\Enums\RouteGroup;
+use App\Enums\RouteMethod;
+use App\Enums\RouteName;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Http\Wrappers\GMPHelper;
@@ -13,17 +16,14 @@ use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
-use Nette\Schema\ValidationException;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
+use Exception;
 
 class ChallengesControllerTest extends TestCase
 {
-    use MakesGraphQLRequests, ClearsSchemaCache, RefreshDatabase;
+    use RefreshDatabase;
 
     private User $user;
     private User $alice;
@@ -37,7 +37,6 @@ class ChallengesControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
 
         $this->refreshDatabase();
 
@@ -156,7 +155,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_all_tracks_in_latest_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -170,26 +169,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track1 */
         $track1 = Tracks::factory()->hasAttached($challenge)->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAllTracksInLatestChallenge {
-                    id
-                }
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_LATEST_TRACKS)
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getAllTracksInLatestChallenge" => [
-                        "*" => [
-                            "id"
-                        ]
-                    ]
-                ]
+                "tracks" => []
             ])
-            ->assertJsonCount(2, "data.getAllTracksInLatestChallenge.*.id");
+            ->assertJsonCount(2, "tracks");
 
-        $this->assertTrue(collect($response->json("data.getAllTracksInLatestChallenge.*.id"))->contains($track->id));
-        $this->assertTrue(collect($response->json("data.getAllTracksInLatestChallenge.*.id"))->contains($track1->id));
+        $this->assertTrue(collect($response->json("tracks"))->contains($track->id));
+        $this->assertTrue(collect($response->json("tracks"))->contains($track1->id));
     }
 
     /**
@@ -206,7 +198,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_all_tracks_in_specified_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -224,26 +216,20 @@ class ChallengesControllerTest extends TestCase
         $track1 = Tracks::factory()->hasAttached($challenge)->create();
 
         // test challenge1
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAllTracksInChallenge(challenge_id: \"{$challenge->id}\") {
-                    id
-                }
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACKS)
+            ->route(["challenge_id" => $challenge->id])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getAllTracksInChallenge" => [
-                        "*" => [
-                            "id"
-                        ]
-                    ]
-                ]
+                "tracks" => []
             ])
-            ->assertJsonCount(2, "data.getAllTracksInChallenge.*.id");
+            ->assertJsonCount(2, "tracks");
 
-        $this->assertTrue(collect($response->json("data.getAllTracksInChallenge.*.id"))->contains($track->id));
-        $this->assertTrue(collect($response->json("data.getAllTracksInChallenge.*.id"))->contains($track1->id));
+        $this->assertTrue(collect($response->json("tracks"))->contains($track->id));
+        $this->assertTrue(collect($response->json("tracks"))->contains($track1->id));
     }
 
     /**
@@ -254,36 +240,23 @@ class ChallengesControllerTest extends TestCase
     public function test_get_all_tracks_in_specified_challenge_with_wrong_or_invalid_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        // test wrong id
-        $response = $this->graphQL(/** @lang GraphQL */ '
-            query {
-                getAllTracksInChallenge(challenge_id: "wrong-and-invalid-id") {
-                    id
-                }
-            }
-        ')
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "challenge_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The challenge id must be an integer.", $response->json("errors.0.extensions.validation.challenge_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACKS)
+            ->route(["challenge_id" => "worng-and-invalid-id"])
+        );
     }
 
     /**
@@ -300,13 +273,12 @@ class ChallengesControllerTest extends TestCase
     public function test_get_all_prizes_won_by_the_user()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
-
 
         /** @var Challenges $challenge */
         $challenge = Challenges::factory()->for($user, "firstPlace")->create();
@@ -318,32 +290,27 @@ class ChallengesControllerTest extends TestCase
         $track1 = Tracks::factory()->hasAttached($challenge1)->for($user, "owner")->create();
 
         // test challenge1
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAllUserPrizes {
-                    challenge
-                    prize
-                    place
-                }
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_PRIZES_WON)
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getAllUserPrizes" => [
-                        "*" => [
-                            "challenge",
-                            "prize",
-                            "place"
-                        ]
+                "prizes" => [
+                    "*" => [
+                        "challenge",
+                        "prize",
+                        "place"
                     ]
                 ]
             ])
-            ->assertJsonCount(2, "data.getAllUserPrizes.*.challenge");
+            ->assertJsonCount(2, "prizes.*.challenge");
 
-        $this->assertTrue(collect($response->json("data.getAllUserPrizes.*.challenge"))->contains($challenge->id));
-        $this->assertTrue(collect($response->json("data.getAllUserPrizes.*.place"))->contains("first"));
-        $this->assertTrue(collect($response->json("data.getAllUserPrizes.*.challenge"))->contains($challenge1->id));
-        $this->assertTrue(collect($response->json("data.getAllUserPrizes.*.place"))->contains("second"));
+        $this->assertTrue(collect($response->json("prizes.*.challenge"))->contains($challenge->id));
+        $this->assertTrue(collect($response->json("prizes.*.place"))->contains("first"));
+        $this->assertTrue(collect($response->json("prizes.*.challenge"))->contains($challenge1->id));
+        $this->assertTrue(collect($response->json("prizes.*.place"))->contains("second"));
     }
 
     /**
@@ -360,7 +327,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_participating_tracks()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -375,25 +342,24 @@ class ChallengesControllerTest extends TestCase
             Tracks::factory()->hasAttached($challenge)->create();
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfParticipatingTracks
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_PARTICIPATING_TRACKS_NUMBER)
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfParticipatingTracks"
-                ]
+                "participatingTracks"
             ]);
 
-        $this->assertEquals($tracks_number, $response->json("data.getNumberOfParticipatingTracks"));
+        $this->assertEquals($tracks_number, $response->json("participatingTracks"));
     }
 
     /**
-    *
-    *  Testing getAverageVoteInChallengeOfTrack
-    *
-    */
+     *
+     *  Testing getAverageVoteInChallengeOfTrack
+     *
+     */
 
     /**
      * Test the function getAverageVoteInChallengeOfTrack with no challenge_id.
@@ -403,7 +369,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_average_vote_in_challenge_of_track_with_no_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -421,58 +387,18 @@ class ChallengesControllerTest extends TestCase
         /** @var Votes $vote1 */
         $vote1 = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAverageVoteInChallengeOfTrack(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getAverageVoteInChallengeOfTrack"
-                ]
+                "vote"
             ]);
 
-        $this->assertEquals(($vote->vote + $vote1->vote) / 2, $response->json("data.getAverageVoteInChallengeOfTrack"));
-    }
-
-    /**
-     * Test the function getAverageVoteInChallengeOfTrack with null challenge_id.
-     *
-     * @return void
-     */
-    public function test_get_average_vote_in_challenge_of_track_with_null_challenge()
-    {
-        $this->seed();
-        $this->bootClearsSchemaCache();
-
-        /**@var User $user */
-        $this->actingAs(
-            $user = User::factory()->create()
-        );
-
-        /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
-        /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
-        /** @var Tracks $track */
-        $track = Tracks::factory()->hasAttached($challenge)->create();
-        /** @var Votes $vote */
-        $vote = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create();
-        /** @var Votes $vote1 */
-        $vote1 = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create();
-
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAverageVoteInChallengeOfTrack(track_id: \"{$track->id}\", challenge_id: null)
-            }
-        ")
-            ->assertJsonStructure([
-                "data" => [
-                    "getAverageVoteInChallengeOfTrack"
-                ]
-            ]);
-
-        $this->assertEquals(($vote->vote + $vote1->vote) / 2, $response->json("data.getAverageVoteInChallengeOfTrack"));
+        $this->assertEquals(($vote->vote + $vote1->vote) / 2, $response->json("vote"));
     }
 
     /**
@@ -483,7 +409,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_average_vote_in_challenge_of_track_with_specified_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -501,18 +427,21 @@ class ChallengesControllerTest extends TestCase
         /** @var Votes $vote1 */
         $vote1 = Votes::factory()->for($track, "track")->for($challenge_older, "challenge")->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAverageVoteInChallengeOfTrack(track_id: \"{$track->id}\", challenge_id: \"{$challenge_older->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "challenge_id" => $challenge_older->id
+            ])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getAverageVoteInChallengeOfTrack"
-                ]
+                "vote"
             ]);
 
-        $this->assertEquals(($vote->vote + $vote1->vote) / 2, $response->json("data.getAverageVoteInChallengeOfTrack"));
+        $this->assertEquals(($vote->vote + $vote1->vote) / 2, $response->json("vote"));
     }
 
     /**
@@ -523,33 +452,23 @@ class ChallengesControllerTest extends TestCase
     public function test_get_average_vote_in_challenge_of_track_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAverageVoteInChallengeOfTrack(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE)
+            ->route(["track_id" => "wrong-and-invalid-id"])
+        );
     }
 
     /**
@@ -560,7 +479,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_average_vote_in_challenge_of_track_with_wrong_challenge_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -570,26 +489,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getAverageVoteInChallengeOfTrack(track_id: \"{$track->id}\", challenge_id: \"wrong-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "challenge_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The challenge id must be an integer.", $response->json("errors.0.extensions.validation.challenge_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "challenge_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -606,7 +518,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_listening_in_challenge_with_no_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -625,59 +537,18 @@ class ChallengesControllerTest extends TestCase
             ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create();
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfListeningInChallenge(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfListeningInChallenge"
-                ]
+                "listeningRequests"
             ]);
 
-        $this->assertEquals($listening_number, $response->json("data.getNumberOfListeningInChallenge"));
-    }
-
-    /**
-     * Test the function getNumberOfListeningInChallenge with null challenge_id.
-     *
-     * @return void
-     */
-    public function test_get_number_of_listening_in_challenge_with_null_challenge()
-    {
-        $this->seed();
-        $this->bootClearsSchemaCache();
-
-        /**@var User $user */
-        $this->actingAs(
-            $user = User::factory()->create()
-        );
-
-        /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
-        /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
-        /** @var Tracks $track */
-        $track = Tracks::factory()->hasAttached($challenge)->create();
-
-        $listening_number = 5;
-        for ($i = 0; $i < $listening_number; $i++) {
-            ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create();
-        }
-
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfListeningInChallenge(track_id: \"{$track->id}\", challenge_id: null)
-            }
-        ")
-            ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfListeningInChallenge"
-                ]
-            ]);
-
-        $this->assertEquals($listening_number, $response->json("data.getNumberOfListeningInChallenge"));
+        $this->assertEquals($listening_number, $response->json("listeningRequests"));
     }
 
     /**
@@ -688,7 +559,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_listening_in_challenge_with_specified_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -708,18 +579,21 @@ class ChallengesControllerTest extends TestCase
             ListeningRequest::factory()->for($track, "track")->for($challenge_older, "challenge")->create();
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfListeningInChallenge(track_id: \"{$track->id}\", challenge_id: \"{$challenge_older->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "challenge_id" => $challenge_older->id
+            ])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfListeningInChallenge"
-                ]
+                "listeningRequests"
             ]);
 
-        $this->assertEquals($listening_number, $response->json("data.getNumberOfListeningInChallenge"));
+        $this->assertEquals($listening_number, $response->json("listeningRequests"));
     }
 
     /**
@@ -730,33 +604,23 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_listening_in_challenge_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfListeningInChallenge(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE)
+            ->route(["track_id" => "wrong-id"])
+        );
     }
 
     /**
@@ -767,7 +631,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_listening_in_challenge_with_wrong_challenge_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -777,26 +641,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfListeningInChallenge(track_id: \"{$track->id}\", challenge_id: \"wrong-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "challenge_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The challenge id must be an integer.", $response->json("errors.0.extensions.validation.challenge_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "challenge_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -810,10 +667,10 @@ class ChallengesControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_get_number_pf_participating_users_in_latest_challenge()
+    public function test_get_number_of_participating_users_in_latest_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -836,18 +693,17 @@ class ChallengesControllerTest extends TestCase
             Tracks::factory()->hasAttached($challenge)->create();
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfParticipatingUsers
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_PARTICIPATING_USERS_NUMBER)
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfParticipatingUsers"
-                ]
+                "participatingUsers"
             ]);
 
-        $this->assertEquals($tracks_number + 1, $response->json("data.getNumberOfParticipatingUsers"));
+        $this->assertEquals($tracks_number + 1, $response->json("participatingUsers"));
     }
 
     /**
@@ -864,7 +720,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_track_vote_by_user_and_challenge_with_no_challenge_and_no_user()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -885,61 +741,18 @@ class ChallengesControllerTest extends TestCase
         /** @var Votes $vote1 */
         $vote1 = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user]);
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTrackVoteByUserAndChallenge(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_VOTE_BY_USER_AND_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getTrackVoteByUserAndChallenge"
-                ]
+                "vote"
             ]);
 
-        $this->assertEquals($vote1->vote, $response->json("data.getTrackVoteByUserAndChallenge"));
-    }
-
-    /**
-     * Test the function getTrackVoteByUserAndChallenge with null challenge_id and null user_id.
-     *
-     * @return void
-     */
-    public function test_get_track_vote_by_user_and_challenge_with_null_challenge_and_null_user()
-    {
-        $this->seed();
-        $this->bootClearsSchemaCache();
-
-        /**@var User $user */
-        $this->actingAs(
-            $user = User::factory()->create()
-        );
-
-        /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
-        /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
-        /** @var Tracks $track */
-        $track = Tracks::factory()->hasAttached($challenge)->create();
-        /**@var User $user1 */
-        $user1 = User::factory()->create();
-
-        /** @var Votes $vote */
-        $vote = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user1]);
-        /** @var Votes $vote1 */
-        $vote1 = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user]);
-
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTrackVoteByUserAndChallenge(track_id: \"{$track->id}\", user_id: null, challenge_id: null)
-            }
-        ")
-            ->assertJsonStructure([
-                "data" => [
-                    "getTrackVoteByUserAndChallenge"
-                ]
-            ]);
-
-        $this->assertEquals($vote1->vote, $response->json("data.getTrackVoteByUserAndChallenge"));
+        $this->assertEquals($vote1->vote, $response->json("vote"));
     }
 
     /**
@@ -950,7 +763,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_track_vote_by_user_and_challenge_with_specified_challenge_and_user()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -971,18 +784,22 @@ class ChallengesControllerTest extends TestCase
         /** @var Votes $vote1 */
         $vote1 = Votes::factory()->for($track, "track")->for($challenge_older, "challenge")->create(["voter_id" => $user]);
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTrackVoteByUserAndChallenge(track_id: \"{$track->id}\", user_id: \"{$user1->id}\", challenge_id: \"{$challenge_older->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_VOTE_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "user_id" => $user1->id,
+                "challenge_id" => $challenge_older->id
+            ])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getTrackVoteByUserAndChallenge"
-                ]
+                "vote"
             ]);
 
-        $this->assertEquals($vote->vote, $response->json("data.getTrackVoteByUserAndChallenge"));
+        $this->assertEquals($vote->vote, $response->json("vote"));
     }
 
 
@@ -994,33 +811,25 @@ class ChallengesControllerTest extends TestCase
     public function test_get_track_vote_by_user_and_challenge_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTrackVoteByUserAndChallenge(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_VOTE_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -1031,7 +840,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_track_vote_by_user_and_challenge_with_wrong_user_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1041,26 +850,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTrackVoteByUserAndChallenge(track_id: \"{$track->id}\", user_id: \"wrong-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "user_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The user id must be a valid UUID.", $response->json("errors.0.extensions.validation.user_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_VOTE_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "user_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -1071,7 +873,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_track_vote_by_user_and_challenge_with_wrong_challenge_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1081,26 +883,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTrackVoteByUserAndChallenge(track_id: \"{$track->id}\", challenge_id: \"wrong-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "challenge_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The challenge id must be an integer.", $response->json("errors.0.extensions.validation.challenge_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_VOTE_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "challenge_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -1117,7 +912,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_track_listening_by_user_and_challenge_with_no_challenge_and_no_user()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1133,74 +928,27 @@ class ChallengesControllerTest extends TestCase
         /**@var User $user1 */
         $user1 = User::factory()->create();
 
-        $listening_number_user = 5;
+        $listening_number_user = 4;
         for ($i = 0; $i < $listening_number_user; $i++) {
             ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user]);
         }
-        $listening_number_user1 = 5;
+        $listening_number_user1 = 6;
         for ($i = 0; $i < $listening_number_user1; $i++) {
             ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user1]);
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTrackListeningByUserAndChallenge(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_BY_USER_AND_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfTrackListeningByUserAndChallenge"
-                ]
+                "listeningRequests"
             ]);
 
-        $this->assertEquals($listening_number_user, $response->json("data.getNumberOfTrackListeningByUserAndChallenge"));
-    }
-
-    /**
-     * Test the function getNumberOfTrackListeningByUserAndChallenge with null challenge_id and null user_id.
-     *
-     * @return void
-     */
-    public function test_get_number_of_track_listening_by_user_and_challenge_with_null_challenge_and_null_user()
-    {
-        $this->seed();
-        $this->bootClearsSchemaCache();
-
-        /**@var User $user */
-        $this->actingAs(
-            $user = User::factory()->create()
-        );
-
-        /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
-        /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
-        /** @var Tracks $track */
-        $track = Tracks::factory()->hasAttached($challenge)->create();
-        /**@var User $user1 */
-        $user1 = User::factory()->create();
-
-        $listening_number_user = 5;
-        for ($i = 0; $i < $listening_number_user; $i++) {
-            ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user]);
-        }
-        $listening_number_user1 = 5;
-        for ($i = 0; $i < $listening_number_user1; $i++) {
-            ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create(["voter_id" => $user1]);
-        }
-
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTrackListeningByUserAndChallenge(track_id: \"{$track->id}\", user_id: null, challenge_id: null)
-            }
-        ")
-            ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfTrackListeningByUserAndChallenge"
-                ]
-            ]);
-
-        $this->assertEquals($listening_number_user, $response->json("data.getNumberOfTrackListeningByUserAndChallenge"));
+        $this->assertEquals($listening_number_user, $response->json("listeningRequests"));
     }
 
     /**
@@ -1211,7 +959,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_track_listening_by_user_and_challenge_with_specified_challenge_and_user()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1227,27 +975,31 @@ class ChallengesControllerTest extends TestCase
         /**@var User $user1 */
         $user1 = User::factory()->create();
 
-        $listening_number_user = 5;
+        $listening_number_user = 4;
         for ($i = 0; $i < $listening_number_user; $i++) {
             ListeningRequest::factory()->for($track, "track")->for($challenge_older, "challenge")->create(["voter_id" => $user]);
         }
-        $listening_number_user1 = 5;
+        $listening_number_user1 = 6;
         for ($i = 0; $i < $listening_number_user1; $i++) {
             ListeningRequest::factory()->for($track, "track")->for($challenge_older, "challenge")->create(["voter_id" => $user1]);
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTrackListeningByUserAndChallenge(track_id: \"{$track->id}\", user_id: \"{$user1->id}\", challenge_id: \"{$challenge_older->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "user_id" => $user1->id,
+                "challenge_id" => $challenge_older->id
+            ])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfTrackListeningByUserAndChallenge"
-                ]
+                "listeningRequests"
             ]);
 
-        $this->assertEquals($listening_number_user1, $response->json("data.getNumberOfTrackListeningByUserAndChallenge"));
+        $this->assertEquals($listening_number_user1, $response->json("listeningRequests"));
     }
 
     /**
@@ -1258,33 +1010,25 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_track_listening_by_user_and_challenge_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTrackListeningByUserAndChallenge(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -1295,7 +1039,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_track_listening_by_user_and_challenge_with_wrong_user_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1305,26 +1049,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTrackListeningByUserAndChallenge(track_id: \"{$track->id}\", user_id: \"wrong-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "user_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The user id must be a valid UUID.", $response->json("errors.0.extensions.validation.user_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "user_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -1335,7 +1072,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_track_listening_by_user_and_challenge_with_wrong_challenge_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1345,26 +1082,19 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTrackListeningByUserAndChallenge(track_id: \"{$track->id}\", challenge_id: \"wrong-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "challenge_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The challenge id must be an integer.", $response->json("errors.0.extensions.validation.challenge_id.0"));
+        // test wrong id
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_LISTENING_NUMBER_BY_USER_AND_CHALLENGE)
+            ->route([
+                "track_id" => $track->id,
+                "challenge_id" => "wrong-and-invalid-id"
+            ])
+        );
     }
 
     /**
@@ -1381,7 +1111,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_total_average_track_vote_with_specified_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1400,18 +1130,20 @@ class ChallengesControllerTest extends TestCase
         /** @var Votes $vote1 */
         $vote1 = Votes::factory()->for($track, "track")->for($challenge, "challenge")->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTotalAverageTrackVote(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_TOTAL_AVERAGE_VOTE)
+            ->route([
+                "track_id" => $track->id,
+            ])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getTotalAverageTrackVote"
-                ]
+                "vote"
             ]);
 
-        $this->assertEquals(($vote1->vote + $vote->vote) / 2, $response->json("data.getTotalAverageTrackVote"));
+        $this->assertEquals(($vote1->vote + $vote->vote) / 2, $response->json("vote"));
     }
 
     /**
@@ -1422,33 +1154,24 @@ class ChallengesControllerTest extends TestCase
     public function test_get_total_average_track_vote_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getTotalAverageTrackVote(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_TOTAL_AVERAGE_VOTE)
+            ->route([
+                "track_id" => "wrong-id",
+            ])
+        );
     }
 
     /**
@@ -1465,7 +1188,7 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_total_track_listening_with_specified_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
@@ -1479,27 +1202,29 @@ class ChallengesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge_older)->hasAttached($challenge)->create();
 
-        $listening_number_challenge = 5;
+        $listening_number_challenge = 4;
         for ($i = 0; $i < $listening_number_challenge; $i++) {
             ListeningRequest::factory()->for($track, "track")->for($challenge, "challenge")->create();
         }
-        $listening_number_challenge_older = 5;
+        $listening_number_challenge_older = 6;
         for ($i = 0; $i < $listening_number_challenge_older; $i++) {
             ListeningRequest::factory()->for($track, "track")->for($challenge_older, "challenge")->create();
         }
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTotalListeningByTrack(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_TOTAL_LISTENING_REQUESTS)
+            ->route([
+                "track_id" => $track->id,
+            ])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "getNumberOfTotalListeningByTrack"
-                ]
+                "totalListening"
             ]);
 
-        $this->assertEquals($listening_number_challenge + $listening_number_challenge_older, $response->json("data.getNumberOfTotalListeningByTrack"));
+        $this->assertEquals($listening_number_challenge + $listening_number_challenge_older, $response->json("totalListening"));
     }
 
     /**
@@ -1510,33 +1235,24 @@ class ChallengesControllerTest extends TestCase
     public function test_get_number_of_total_track_listening_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
+
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            query {
-                getNumberOfTotalListeningByTrack(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        $response = $this->withoutExceptionHandling()->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_TRACK_TOTAL_LISTENING_REQUESTS)
+            ->route([
+                "track_id" => "wrong-id",
+            ])
+        );
     }
 
     /**
@@ -1554,7 +1270,7 @@ class ChallengesControllerTest extends TestCase
     {
         //NOTE: test not passed
         $this->seed();
-        $this->bootClearsSchemaCache();
+
         Notification::fake();
 
         /** @var Challenges $challenge_older */
@@ -1602,5 +1318,560 @@ class ChallengesControllerTest extends TestCase
             $this->bob,
             ChallengeWinNotification::class
         );
+    }
+
+    /**
+     *
+     *  Testing getNineRandomTracks
+     *
+     */
+
+    /**
+     * Test the function getNineRandomTracks as if it was called for the first time.
+     *
+     * @return void
+     */
+    public function test_get_nine_random_tracks_first_time()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $participating_tracks = 12;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            Tracks::factory()->hasAttached($challenge)->create();
+        }
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 9 elements
+        $this->assertCount(9, $response->json("tracks"));
+
+        // check settings content
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
+        $this->assertCount(9, $settings_content["tracks_id"]);
+        $this->assertEquals(0, $settings_content["listened"]);
+    }
+
+    /**
+     * Test the function getNineRandomTracks as if it was called for the nth time.
+     *
+     * @return void
+     */
+    public function test_get_nine_random_tracks_nth_time()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $participating_tracks = 18;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create());
+        }
+
+        // get nine random tracks
+        $required_columns = ["id", "name", "description"];
+        $nine_random_tracks = $tracks
+            ->random(9)
+            ->sortBy("created_at")
+            ->map(function (Tracks $item) use ($required_columns) {
+                return $item->only($required_columns);
+            });
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+
+        // set up the setting so that it is not the first time
+        settings($user)->set("challenge_nine_random_tracks", json_encode([
+            "challenge_id" => $challenge->id,
+            "tracks_id" => $nine_random_tracks_ids,
+            "listened" => 6
+        ]));
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 9 elements
+        $this->assertCount(9, $response->json("tracks"));
+
+        // use the escape to sort the two arrays as sortBy() does not work (no clue why)
+        $array1 = $nine_random_tracks_ids->toArray();
+        sort($array1);
+        $array2 = collect($response->json("tracks"))->pluck("id")->toArray();
+        sort($array2);
+        // check that the array are the same
+        $this->assertEquals($array1, $array2);
+
+        // check settings content not edited
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals(6, $settings_content["listened"]);
+    }
+
+
+    /**
+     * Test the function getNineRandomTracks if the challenge is changed.
+     *
+     * @return void
+     */
+    public function test_get_nine_random_tracks_changed_challenge()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $participating_tracks = 12;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create());
+        }
+
+        // get nine random tracks
+        $required_columns = ["id", "name", "description"];
+        $nine_random_tracks = $tracks
+            ->random(9)
+            ->sortBy("created_at")
+            ->map(function (Tracks $item) use ($required_columns) {
+                return $item->only($required_columns);
+            });
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+
+        // set up the setting so that it is not the first time
+        settings($user)->set("challenge_nine_random_tracks", json_encode([
+            "challenge_id" => $challenge->id - 1,
+            "tracks_id" => $nine_random_tracks_ids,
+            "listened" => 6
+        ]));
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 9 elements
+        $this->assertCount(9, $response->json("tracks"));
+
+
+        // check settings content, listened MUST be equal to 0 now
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
+        $this->assertCount(9, $settings_content["tracks_id"]);
+        $this->assertEquals(0, $settings_content["listened"]);
+    }
+
+    /**
+     * Test the function getNineRandomTracks if all the tracks are listened with already listened tracks.
+     *
+     * @return void
+     */
+    public function test_get_nine_random_tracks_all_listened()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $participating_tracks = 15;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create());
+        }
+
+        // get nine random tracks
+        $required_columns = ["id", "name", "description"];
+        $nine_random_tracks = $tracks
+            ->random(9)
+            ->sortBy("created_at")
+            ->map(function (Tracks $item) use ($required_columns) {
+                return $item->only($required_columns);
+            });
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $ar_nine_random_tracks_ids = $nine_random_tracks_ids->toArray();
+
+        $listened_tracks = 9;
+        for ($i = 0; $i < $listened_tracks; $i++) {
+            ListeningRequest::factory()
+                ->for($challenge, "challenge")
+                ->create([
+                    "voter_id" => $user,
+                    "track_id" => $ar_nine_random_tracks_ids[$i]
+                ]);
+        }
+
+        // set up the setting so that it is not the first time
+        settings($user)->set("challenge_nine_random_tracks", json_encode([
+            "challenge_id" => $challenge->id,
+            "tracks_id" => $nine_random_tracks_ids,
+            "listened" => 9
+        ]));
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 6 elements
+        $this->assertCount(6, $response->json("tracks"));
+
+        // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 6 now (15 - 9)
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
+        $this->assertCount(6, $settings_content["tracks_id"]);
+        $this->assertEquals(0, $settings_content["listened"]);
+    }
+
+    /**
+     *
+     *  Testing refreshNineRandomTracks
+     *
+     */
+
+    /**
+     * Test the function getNineRandomTracks as if it was called for the first time without having ever called getNineRandomTracks (probably malicious).
+     *
+     * @return void
+     */
+    public function test_refresh_nine_random_tracks_settings_absent()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $participating_tracks = 12;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            Tracks::factory()->hasAttached($challenge)->create();
+        }
+
+        // check that settings is empty
+        $this->assertFalse(settings($user)->has("challenge_nine_random_tracks"));
+
+        $response = $this->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_REFRESH_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 9 elements
+        $this->assertCount(9, $response->json("tracks"));
+
+        // check settings content
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
+        $this->assertCount(9, $settings_content["tracks_id"]);
+        $this->assertEquals(0, $settings_content["listened"]);
+    }
+
+    /**
+     * Test the function refreshNineRandomTracks with at least 4 tracks listened.
+     *
+     * @return void
+     */
+    public function test_refresh_nine_random_tracks_four_listened()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $participating_tracks = 12;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create());
+        }
+
+        // get four random tracks
+        $required_columns = ["id", "name", "description"];
+        $nine_random_tracks = $tracks
+            ->random(9)
+            ->sortBy("created_at")
+            ->map(function (Tracks $item) use ($required_columns) {
+                return $item->only($required_columns);
+            });
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $ar_nine_random_tracks_ids = $nine_random_tracks_ids->toArray();
+
+        // listen to 4 tracks
+        $listened_tracks = 4;
+        for ($i = 0; $i < $listened_tracks; $i++) {
+            ListeningRequest::factory()
+                ->for($challenge, "challenge")
+                ->create([
+                    "voter_id" => $user,
+                    "track_id" => $ar_nine_random_tracks_ids[$i]
+                ]);
+        }
+
+        // set up the setting so that it is not the first time
+        settings($user)->set("challenge_nine_random_tracks", json_encode([
+            "challenge_id" => $challenge->id,
+            "tracks_id" => $nine_random_tracks_ids,
+            "listened" => 4
+        ]));
+
+        $response = $this->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_REFRESH_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 6 elements
+        $this->assertCount(8, $response->json("tracks"));
+
+        // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 8 now (12 - 4)
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
+        $this->assertCount(8, $settings_content["tracks_id"]);
+        $this->assertEquals(0, $settings_content["listened"]);
+    }
+
+    /**
+     * Test the function refreshNineRandomTracks with at less than 4 tracks listened.
+     *
+     * @return void
+     */
+    public function test_refresh_nine_random_tracks_three_listened()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $participating_tracks = 12;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create());
+        }
+
+        // get four random tracks
+        $required_columns = ["id", "name", "description"];
+        $nine_random_tracks = $tracks
+            ->random(9)
+            ->sortBy("created_at")
+            ->map(function (Tracks $item) use ($required_columns) {
+                return $item->only($required_columns);
+            });
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $ar_nine_random_tracks_ids = $nine_random_tracks_ids->toArray();
+
+        // listen to 4 tracks
+        $listened_tracks = 3;
+        for ($i = 0; $i < $listened_tracks; $i++) {
+            ListeningRequest::factory()
+                ->for($challenge, "challenge")
+                ->create([
+                    "voter_id" => $user,
+                    "track_id" => $ar_nine_random_tracks_ids[$i]
+                ]);
+        }
+
+        // set up the setting so that it is not the first time
+        settings($user)->set("challenge_nine_random_tracks", json_encode([
+            "challenge_id" => $challenge->id,
+            "tracks_id" => $nine_random_tracks_ids,
+            "listened" => 3
+        ]));
+
+        $this->expectExceptionObject(new Exception(
+            config("error-codes.NOT_ENOUGH_LISTENED.message"),
+            config("error-codes.NOT_ENOUGH_LISTENED.code")
+        ));
+
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_REFRESH_NINE_RANDOM_TRACKS)
+        );
+    }
+
+
+    /**
+     * Test the function refreshNineRandomTracks if the challenge is changed.
+     *
+     * @return void
+     */
+    public function test_refresh_nine_random_tracks_changed_challenge()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        secureUser($user)->set("password", "password");
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $participating_tracks = 12;
+        for ($i = 0; $i < $participating_tracks; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create());
+        }
+
+        // get nine random tracks
+        $required_columns = ["id", "name", "description"];
+        $nine_random_tracks = $tracks
+            ->random(9)
+            ->sortBy("created_at")
+            ->map(function (Tracks $item) use ($required_columns) {
+                return $item->only($required_columns);
+            });
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+
+        // set up the setting so that it is not the first time
+        settings($user)->set("challenge_nine_random_tracks", json_encode([
+            "challenge_id" => $challenge->id - 1,
+            "tracks_id" => $nine_random_tracks_ids,
+            "listened" => 6
+        ]));
+
+        $response = $this->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_REFRESH_NINE_RANDOM_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks" => [
+                    "*" => [
+                        "id",
+                        "name",
+                        "description"
+                    ]
+                ]
+            ]);
+
+        // check that the function returned 9 elements
+        $this->assertCount(9, $response->json("tracks"));
+
+
+        // check settings content, listened MUST be equal to 0 now
+        $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
+        $this->assertCount(9, $settings_content["tracks_id"]);
+        $this->assertEquals(0, $settings_content["listened"]);
     }
 }

@@ -17,8 +17,9 @@
 |
 */
 
-use Modules\Referral\Enums\ReferralRoutes;
-use Modules\Referral\http\controllers\ReferralController;
+use Illuminate\Support\Facades\Route;
+use Doinc\Modules\Referral\Enums\ReferralRoutes;
+use Doinc\Modules\Referral\http\controllers\ReferralController;
 
 Route::middleware(['auth:sanctum', 'verified'])
     ->prefix('referral')
@@ -61,4 +62,16 @@ Route::middleware(['auth:sanctum', 'verified'])
             "/redeem/{referred_id}",
             [ReferralController::class, "redeem"]
         )->name(ReferralRoutes::GET_TOTAL_REF_PRIZE->value);
+    });
+
+Route::prefix("referral")
+    ->group(function() {
+        // +----------+
+        // |   POST   |
+        // +----------+
+
+        Route::post(
+            '/',
+            [ReferralController::class, "store"]
+        )->name(ReferralRoutes::POST_STORE_REFERRAL->value);
     });

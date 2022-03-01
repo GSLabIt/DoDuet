@@ -1,4 +1,10 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 namespace App\Models;
 
@@ -14,6 +20,9 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @mixin IdeHelperTracks
+ */
 class Tracks extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
@@ -36,9 +45,9 @@ class Tracks extends Model
         );
     }
 
-    function skynet(): BelongsTo
+    function ipfs(): BelongsTo
     {
-        return $this->belongsTo(Skynet::class);
+        return $this->belongsTo(Ipfs::class,"ipfs_id","id");
     }
 
     function cover(): BelongsTo

@@ -44,6 +44,11 @@ class AvailableSettingsSeeder extends Seeder
                 "has_default_value" => true,
                 "default_value" => true
             ],
+            [
+                "name" => "challenge_nine_random_tracks",
+                "type" => "json",
+                "has_default_value" => false,
+            ],
         ];
 
         foreach ($settings as $setting) {

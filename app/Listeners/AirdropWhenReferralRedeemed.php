@@ -8,10 +8,11 @@
 
 namespace App\Listeners;
 
+use App\Models\User;
+use Doinc\Modules\Referral\Events\ReferralRedeemed;
+use Doinc\Modules\Referral\Facades\Referral;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Modules\Referral\Events\ReferralRedeemed;
-use Modules\Referral\Http\Controllers\ReferralStaticController;
 
 class AirdropWhenReferralRedeemed
 {
@@ -28,16 +29,18 @@ class AirdropWhenReferralRedeemed
     /**
      * Handle the event.
      *
-     * @param  \Modules\Referral\Events\ReferralRedeemed  $event
+     * @param ReferralRedeemed $event
      * @return void
      */
     public function handle(ReferralRedeemed $event)
     {
+        /** @var User $user */
         $user = $event->referrer;
         $referred = $event->referred;
+
         blockchain(null)->airdrop()
             ->immediatelyReleaseAirdrop(
-                ReferralStaticController::referralIndexFromPrize($referred->prize),
+                Referral::referralIndexFromPrize($referred->prize),
                 $user->wallet->address
             );
     }

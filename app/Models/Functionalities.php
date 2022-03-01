@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @mixin IdeHelperFunctionalities
+ */
 class Functionalities extends Model
 {
     use HasFactory, SoftDeletes, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;

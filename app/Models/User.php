@@ -13,6 +13,8 @@ use App\Traits\CryptographicComposition;
 use App\Traits\MultiDatabaseRelation;
 use App\Traits\PlatformIsolatedNotifications;
 use App\Traits\Uuid;
+use Doinc\Modules\Referral\Models\Interfaces\IReferrable;
+use Doinc\Modules\Referral\Models\Traits\Referrable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,11 +24,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Modules\Referral\Models\Traits\Referrable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+/**
+ * @mixin IdeHelperUser
+ */
+class User extends Authenticatable implements IReferrable
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, PlatformIsolatedNotifications, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
     use ActivityLogAll, CryptographicComposition, MultiDatabaseRelation, Referrable;
@@ -330,7 +334,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(ListeningRequest::class)
+            fn() => $this->hasMany(ListeningRequest::class, "voter_id")
         );
     }
 
@@ -338,7 +342,7 @@ class User extends Authenticatable
     {
         return $this->multiDatabaseRunQuery(
             "mysql",
-            fn() => $this->hasMany(Votes::class)
+            fn() => $this->hasMany(Votes::class, "voter_id")
         );
     }
 

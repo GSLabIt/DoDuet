@@ -1,11 +1,12 @@
 <?php
 
-use App\Enums\RouteClass;
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\ListeningRequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Enums\RouteClass;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +47,6 @@ Route::rclass(RouteClass::AUTHENTICATED)->middleware(['auth:sanctum', 'verified'
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
-
-
 /*
  |----------------------------------------------------------------------
  | Public routes
@@ -62,9 +61,26 @@ Route::rclass(RouteClass::AUTHENTICATED)->middleware(['auth:sanctum', 'verified'
  */
 Route::rclass(RouteClass::PUBLIC)->group(__DIR__ . "/web/public/index.php");
 
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    // Basic
+    Route::get('/dashboard', [CommonController::class, "dashboard"])->name('dashboard');
+
+    // Challenge
+    Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('challenge-index');
+
+    // Listen to tracks
+    Route::get(
+        "/listen/in-challenge/{track_id}",
+        [ListeningRequestController::class, "listenToTrackInChallenge"]
+    )->name("listen-to-track-in-challenge");
+    Route::get(
+        "/listen/track/{track_id}",
+        [ListeningRequestController::class, "listenToTrack"]
+    )->name("listen-to-track");
+});
+
 Route::prefix("nft")->group(function() {
     Route::get("/track/{id}", function ($id) {
-        route(rn(RouteClass::PUBLIC, \App\Enums\RouteGroup::REGISTER, \App\Enums\RouteMethod::POST, \App\Enums\RouteName::REFERRAL_KEEPER));
         abort("501","Not implemented");
     })->name("nft-track_display");
 });

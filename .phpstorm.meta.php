@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
+
 // @formatter:off
 
 namespace PHPSTORM_META {
@@ -251,6 +258,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -504,6 +512,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -757,6 +766,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -1010,6 +1020,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -1263,6 +1274,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -1516,6 +1528,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -1769,6 +1782,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -2022,6 +2036,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -2275,6 +2290,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -2528,6 +2544,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
@@ -2781,6 +2798,7 @@ namespace PHPSTORM_META {
             'redirect' => \Illuminate\Routing\Redirector::class,
             'redis' => \Illuminate\Redis\RedisManager::class,
             'redis.connection' => \Illuminate\Redis\Connections\PhpRedisConnection::class,
+            'referral' => \Doinc\Modules\Referral\Referral::class,
             'router' => \Illuminate\Routing\Router::class,
             'session' => \Illuminate\Session\SessionManager::class,
             'session.store' => \Illuminate\Session\EncryptedStore::class,
