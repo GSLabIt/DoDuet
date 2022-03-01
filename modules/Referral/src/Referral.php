@@ -8,9 +8,10 @@
 
 namespace Doinc\Modules\Referral;
 
+use Doinc\Modules\Referral\Enums\ReferralRoutes;
 use Doinc\Modules\Referral\Events\NewReferralReceived;
 use Doinc\Modules\Referral\Events\ReferralRedeemed;
-use Doinc\Modules\Referral\Models\Interfaces\ReferrableModel;
+use Doinc\Modules\Referral\Models\Interfaces\IReferrable;
 use Doinc\Modules\Referral\models\Referred;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -26,10 +27,10 @@ class Referral
      */
     public function url(): string
     {
-        /**@var ReferrableModel $user */
+        /**@var IReferrable $user */
         $user = auth()->user();
 
-        return route("authenticated.referral.get.url", ["ref" => $user->referral->code]);
+        return route(ReferralRoutes::POST_STORE_REFERRAL->value, ["ref" => $user->referral()->get(["code"])->first()["code"]]);
     }
 
     /**
@@ -53,15 +54,16 @@ class Referral
      */
     public function getOrCreate(bool $random = true): string
     {
-        /**@var ReferrableModel $user */
+        /**@var IReferrable $user */
         $user = auth()->user();
 
         if($user->referral()->exists()) {
-            return $user->referral->code;
+            return $user->referral()->get(["code"])->first()["code"];
         }
 
         $code = $this->generate($random);
         $user->referral()->create([
+            "id" => Str::uuid()->toString(),
             "code" => $code
         ]);
 
@@ -90,7 +92,7 @@ class Referral
                 // the prize for the referrer is computed on the fly based on the amount of refs it has
                 $prize = $this->computeNewRefPrize($referral->owner);
 
-                /**@var ReferrableModel $user */
+                /**@var IReferrable $user */
                 $user = auth()->user();
 
                 // actually create the association
@@ -112,7 +114,7 @@ class Referral
      */
     public function newRefPrize(): int
     {
-        /**@var ReferrableModel $user */
+        /**@var IReferrable $user */
         $user = auth()->user();
 
         // call the actual computing function and reflect it
@@ -122,17 +124,17 @@ class Referral
     /**
      * Get the prize that will be received by the referrer for the next referred user.
      *
-     * @param ReferrableModel $user
+     * @param IReferrable $user
      * @return int
      */
-    public function computeNewRefPrize(ReferrableModel $user): int
+    public function computeNewRefPrize(IReferrable $user): int
     {
         // retrieve the amount of referred users
         $referred_users = $user->referred()->count();
 
         // check with the configuration which prize will be given for the next referred user based on the amount of
         // already referred ones
-        return config("platforms.referral_prizes")[$this->getReferralPrizeIndex($referred_users)]["prize"];
+        return config("referral.prizes")[$this->getReferralPrizeIndex($referred_users +1)]["prize"];
     }
 
     /**
@@ -144,7 +146,7 @@ class Referral
     private function getReferralPrizeIndex(int $referred_users): int
     {
         $index = 0;
-        foreach (config("platforms.referral_prizes") as $ref_pack) {
+        foreach (config("referral.prizes") as $ref_pack) {
             if ($referred_users >= $ref_pack["min"] && $referred_users <= $ref_pack["max"]) {
                 return $index;
             }
@@ -161,10 +163,10 @@ class Referral
      */
     public function totalRefPrize(): int
     {
-        /**@var ReferrableModel $user */
+        /**@var IReferrable $user */
         $user = auth()->user();
 
-        return $user->referred->sum("prize");
+        return $user->referred()->sum("prize");
     }
 
     /**
@@ -189,7 +191,7 @@ class Referral
             ]
         );
 
-        /**@var ReferrableModel $user */
+        /**@var IReferrable $user */
         $user = auth()->user();
 
         /**@var Referred $referred */
@@ -233,7 +235,7 @@ class Referral
      */
     public function redeemAll(): int
     {
-        /**@var ReferrableModel $user */
+        /**@var IReferrable $user */
         $user = auth()->user();
 
         $total_redeemed = 0;
@@ -260,7 +262,7 @@ class Referral
     public function referralIndexFromPrize(int $prize): int
     {
         $index = 0;
-        foreach (config("referral.referral_prizes") as $ref_pack) {
+        foreach (config("referral.prizes") as $ref_pack) {
             if ($prize === $ref_pack["prize"]) {
                 return $index;
             }

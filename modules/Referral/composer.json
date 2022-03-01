@@ -30,6 +30,11 @@
             "Doinc\\Modules\\Referral\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Doinc\\Modules\\Referral\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",

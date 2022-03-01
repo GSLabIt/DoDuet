@@ -32,7 +32,7 @@ class CreateReferredsTable extends Migration
                 ->references("id")
                 ->on(
                     config("referral.is_multi_db.active") ?
-                        config("referral.is_multi_db.connection") . ".users" :
+                        config("referral.is_multi_db.common_connection") . ".users" :
                         "users"
                 );
             $table->boolean("is_redeemed")->default(false);

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Single file test" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/artisan" scriptParameters="test --without-tty tests/Feature/BeatsChainWrapperTest.php">
+  <configuration default="false" name="Single file test" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/artisan" scriptParameters="test --without-tty modules/Referral/tests/Feature/ReferralTest.php">
     <method v="2" />
   </configuration>
 </component>
