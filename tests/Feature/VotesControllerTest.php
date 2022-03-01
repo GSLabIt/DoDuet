@@ -2,22 +2,25 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RouteClass;
+use App\Enums\RouteGroup;
+use App\Enums\RouteMethod;
+use App\Enums\RouteName;
 use App\Http\Wrappers\BeatsChainUnitsHelper;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Http\Wrappers\Enums\BeatsChainUnits;
-use App\Http\Wrappers\GMPHelper;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
+use Exception;
 
 class VotesControllerTest extends TestCase
 {
-    use MakesGraphQLRequests, ClearsSchemaCache, RefreshDatabase;
+    use RefreshDatabase;
 
     private User $user;
     private User $alice;
@@ -31,7 +34,6 @@ class VotesControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
 
         $this->refreshDatabase();
 
@@ -155,7 +157,6 @@ class VotesControllerTest extends TestCase
     public function test_request_permission_to_vote()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsAlice();
 
@@ -185,18 +186,18 @@ class VotesControllerTest extends TestCase
             ->for($track, "track")
             ->create(["voter_id" => $this->bob, "created_at" => now()->subSeconds($seconds)]);
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                requestPermissionToVote(track_id: \"{$track->id}\")
-            }
-        ")
+        $response = $this->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_REQUEST_PERMISSION)
+            ->route(["track_id" => $track->id])
+        )
             ->assertJsonStructure([
-                "data" => [
-                    "requestPermissionToVote"
-                ]
+                "success"
             ]);
 
-        $this->assertEquals(1, $response->json("data.requestPermissionToVote"));
+        $this->assertTrue($response->json("success"));
     }
 
 
@@ -208,7 +209,6 @@ class VotesControllerTest extends TestCase
     public function test_request_permission_to_vote_not_within_time()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsAlice();
 
@@ -219,27 +219,18 @@ class VotesControllerTest extends TestCase
         /** @var ListeningRequest $listening_request */
         $listening_request = ListeningRequest::factory()->for($challenge, "challenge")->for($track, "track")->create(["voter_id" => $this->alice]);
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                requestPermissionToVote(track_id: \"{$track->id}\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "message",
-                        "extensions" => [
-                            "message",
-                            "code",
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectExceptionObject(new Exception(
+            config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.message"),
+            config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.code")
+        ));
 
-        $this->assertEquals("vote", $response->json("errors.0.extensions.category"));
-        $this->assertEquals(config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.code"), $response->json("errors.0.extensions.code"));
-        $this->assertEquals(config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.message"), $response->json("errors.0.extensions.message"));
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_REQUEST_PERMISSION)
+            ->route(["track_id" => $track->id])
+        );
     }
 
     /**
@@ -250,7 +241,6 @@ class VotesControllerTest extends TestCase
     public function test_request_permission_to_vote_track_not_listened()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsAlice();
 
@@ -259,27 +249,18 @@ class VotesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                requestPermissionToVote(track_id: \"{$track->id}\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "message",
-                        "extensions" => [
-                            "message",
-                            "code",
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectExceptionObject(new Exception(
+            config("error-codes.TRACK_NOT_LISTENED.message"),
+            config("error-codes.TRACK_NOT_LISTENED.code")
+        ));
 
-        $this->assertEquals("vote", $response->json("errors.0.extensions.category"));
-        $this->assertEquals(config("error-codes.TRACK_NOT_LISTENED.code"), $response->json("errors.0.extensions.code"));
-        $this->assertEquals(config("error-codes.TRACK_NOT_LISTENED.message"), $response->json("errors.0.extensions.message"));
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_REQUEST_PERMISSION)
+            ->route(["track_id" => $track->id])
+        );
     }
 
     /**
@@ -290,30 +271,18 @@ class VotesControllerTest extends TestCase
     public function test_request_permission_to_vote_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsUser();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                requestPermissionToVote(track_id: \"wrond-id\")
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_REQUEST_PERMISSION)
+            ->route(["track_id" => "wrong-id"])
+        );
     }
 
     /**
@@ -330,7 +299,6 @@ class VotesControllerTest extends TestCase
     public function test_vote()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsAlice();
 
@@ -347,30 +315,25 @@ class VotesControllerTest extends TestCase
         $this->authAsBob();
         blockchain($this->bob)->election()->grantVoteAbility($this->bob, $track->owner->wallet->address, $track->nft_id);
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                vote(track_id: \"{$track->id}\", vote: 8){
-                    track  {
-                        id
-                    }
-                    vote
-                }
-            }
-        ")
-            ->assertJsonStructure([
-                "data" => [
-                    "vote" => [
-                        "track" => [
-                            "id"
-                        ],
-                        "vote"
-                    ]
-                ]
+        $response = $this->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_VOTE)
+            ->route([
+                "track_id" => $track->id,
+                "vote" => 8
             ])
-            ->assertJsonCount(1, "data.vote.track");
+        )
+            ->assertJsonStructure([
+                "vote" => [
+                    "vote",
+                    "track_id"
+                ]
+            ]);
 
-        $this->assertEquals(8, $response->json("data.vote.vote"));
-        $this->assertEquals($track->id, $response->json("data.vote.track.id"));
+        $this->assertEquals(8, $response->json("vote.vote"));
+        $this->assertEquals($track->id, $response->json("vote.track_id"));
     }
 
     /**
@@ -381,38 +344,24 @@ class VotesControllerTest extends TestCase
     public function test_vote_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
             $user = User::factory()->create()
         );
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                vote(track_id: \"wrond-id\", vote: 8) {
-                    track  {
-                        id
-                    }
-                    vote
-                }
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "track_id"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The track id must be a valid UUID.", $response->json("errors.0.extensions.validation.track_id.0"));
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_VOTE)
+            ->route([
+                "track_id" => "wrong-id",
+                "vote" => 8
+            ])
+        );
     }
 
     /**
@@ -423,7 +372,6 @@ class VotesControllerTest extends TestCase
     public function test_vote_less_than_0()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsUser();
 
@@ -433,31 +381,18 @@ class VotesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                vote(track_id: \"{$track->id}\", vote: -1) {
-                    track {
-                        id
-                    }
-                    vote
-                }
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "vote"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The vote must be at least 0.", $response->json("errors.0.extensions.validation.vote.0"));
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_VOTE)
+            ->route([
+                "track_id" => $track->id,
+                "vote" => -1
+            ])
+        );
     }
 
     /**
@@ -468,7 +403,6 @@ class VotesControllerTest extends TestCase
     public function test_vote_more_than_10()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         $this->authAsUser();
 
@@ -478,30 +412,17 @@ class VotesControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
 
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation {
-                vote(track_id: \"{$track->id}\", vote: 11) {
-                    track  {
-                        id
-                    }
-                    vote
-                }
-            }
-        ")
-            ->assertJsonStructure([
-                "errors" => [
-                    0 => [
-                        "extensions" => [
-                            "validation" => [
-                                "vote"
-                            ],
-                            "category"
-                        ]
-                    ]
-                ]
-            ]);
+        $this->expectException(ValidationException::class);
 
-        $this->assertEquals("validation", $response->json("errors.0.extensions.category"));
-        $this->assertEquals("The vote must not be greater than 10.", $response->json("errors.0.extensions.validation.vote.0"));
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::VOTE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::VOTE_VOTE)
+            ->route([
+                "track_id" => $track->id,
+                "vote" => 11
+            ])
+        );
     }
 }

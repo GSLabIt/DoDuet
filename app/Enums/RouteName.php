@@ -10,5 +10,6 @@ namespace App\Enums;
 
 enum RouteName: string
 {
-
+    case VOTE_REQUEST_PERMISSION = "vote_request_permission";
+    case VOTE_VOTE = "vote_vote";
 }

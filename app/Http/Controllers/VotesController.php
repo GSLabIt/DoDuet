@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 
-
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use Carbon\Carbon;
-
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -22,17 +22,15 @@ class VotesController extends Controller
     /**
      * This function check and give permission to vote a listened track
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return bool
-     * @throws Exception
+     * @param Request $request
+     * @param string $track_id
+     * @return JsonResponse
      * @throws Exception
      * @throws ValidationException
      */
-    public function requestPermissionToVote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): bool {
-        Validator::validate($args, [
+    public function requestPermissionToVote(Request $request, string $track_id): JsonResponse
+    {
+        Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
 
@@ -40,7 +38,7 @@ class VotesController extends Controller
         $challenge = Challenges::orderByDesc("created_at")->first(); // select current challenge
 
         /** @var Tracks $track */
-        $track = Tracks::where("id", $args["track_id"])->first();
+        $track = Tracks::where("id", $track_id)->first();
 
         /** @var User $user */
         $user = auth()->user(); // select current user
@@ -79,7 +77,7 @@ class VotesController extends Controller
                     try {
                         blockchain($user)->election()->grantVoteAbility($user, $track->owner->wallet->address, $track->nft_id);
                         // if no exception is thrown, return true
-                        return true;
+                        return response()->json(["success" => true]);
                     } catch (Throwable $e) {
                         throw new Exception($e);
                     }
@@ -107,17 +105,16 @@ class VotesController extends Controller
     /**
      * This function votes a track in the current challenge
      *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Votes
-     * @throws Exception
+     * @param Request $request
+     * @param string $track_id
+     * @param int $vote
+     * @return JsonResponse
      * @throws Exception
      * @throws ValidationException
      */
-    public function vote($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Votes {
-        Validator::validate($args, [
+    public function vote(Request $request, string $track_id, int $vote): JsonResponse
+    {
+        Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
             "vote" => "required|integer|min:0|max:10",
         ]);
@@ -126,22 +123,29 @@ class VotesController extends Controller
         $challenge = Challenges::orderByDesc("created_at")->first(); // select current challenge
 
         /** @var Tracks $track */
-        $track = Tracks::where("id", $args["track_id"])->first();
+        $track = Tracks::where("id", $track_id)->first();
 
         /** @var User $user */
         $user = auth()->user(); // select current user
 
         if (!is_null($track)) {
             try {
-                blockchain($user)->election()->vote($track->owner->wallet->address, $track->nft_id, $args["vote"]);
+                blockchain($user)->election()->vote($track->owner->wallet->address, $track->nft_id, $vote);
                 // if no exceptions are thrown, log the vote
-                $vote = Votes::create([
+                $vote_model = Votes::create([
                     "voter_id" => $user->id,
                     "track_id" => $track->id,
                     "challenge_id" => $challenge->id,
-                    "vote" => $args["vote"]
+                    "vote" => $vote
                 ]);
-                return $vote;
+
+                // return just vote and track_id of the Votes Model just created
+                return response()->json([
+                    "vote" => $vote_model->get([
+                        "vote",
+                        "track_id"
+                    ])->first()
+                ]);
             } catch (Throwable $e) {
                 throw new Exception($e);
             }
