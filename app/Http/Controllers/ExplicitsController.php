@@ -9,8 +9,8 @@ use App\Models\Explicits;
 use App\Models\Lyrics;
 use App\Models\Tracks;
 use Dotenv\Exception\ValidationException;
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
+
 
 class ExplicitsController extends Controller
 {

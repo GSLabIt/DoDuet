@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Lyrics;
 use App\Models\User;
-use GraphQL\Type\Definition\ResolveInfo;
+
 use Illuminate\Validation\ValidationException;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
 
 class LyricsController extends Controller
 {
@@ -29,7 +29,7 @@ class LyricsController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         return $user->createdLyrics()->create([
             "name" => $args["name"],
@@ -58,7 +58,7 @@ class LyricsController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // selects the lyric created by the user that called the update function which has an id specified in the args
         /** @var Lyrics $lyric */
@@ -97,7 +97,7 @@ class LyricsController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // selects the lyric created by the user that called the update function which has an id specified in the args
         /** @var Lyrics $lyric */

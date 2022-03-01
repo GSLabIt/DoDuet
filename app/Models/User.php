@@ -1,4 +1,10 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 namespace App\Models;
 
@@ -7,9 +13,9 @@ use App\Traits\CryptographicComposition;
 use App\Traits\MultiDatabaseRelation;
 use App\Traits\PlatformIsolatedNotifications;
 use App\Traits\Uuid;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Doinc\Modules\Referral\Models\Interfaces\IReferrable;
+use Doinc\Modules\Referral\Models\Traits\Referrable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -21,10 +27,13 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+/**
+ * @mixin IdeHelperUser
+ */
+class User extends Authenticatable implements IReferrable
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, PlatformIsolatedNotifications, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
-    use ActivityLogAll, CryptographicComposition, MultiDatabaseRelation;
+    use ActivityLogAll, CryptographicComposition, MultiDatabaseRelation, Referrable;
 
     public $connection = "common";
 
@@ -155,30 +164,6 @@ class User extends Authenticatable
         return $this->multiDatabaseRunQuery(
             "mysql",
             fn() => $this->hasMany(Mentions::class, "mentioner_id")
-        );
-    }
-
-    public function referral(): HasOne
-    {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasOne(Referral::class, "owner_id")
-        );
-    }
-
-    public function referred(): HasMany
-    {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Referred::class, "referrer_id")
-        );
-    }
-
-    public function referredBy(): HasOne
-    {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasOne(Referred::class, "referred_id")
         );
     }
 

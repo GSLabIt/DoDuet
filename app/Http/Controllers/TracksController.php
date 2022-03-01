@@ -8,19 +8,19 @@ use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Models\Albums;
 use App\Models\Covers;
 use App\Models\Challenges;
+use App\Models\Ipfs;
 use App\Models\ListeningRequest;
 use App\Models\Lyrics;
-use App\Models\Skynet;
 use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
-use GraphQL\Type\Definition\ResolveInfo;
+
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
 use Throwable;
 
 class TracksController extends Controller
@@ -50,7 +50,7 @@ class TracksController extends Controller
         ]);
 
         /** @var $user User */
-        $user = $context->user();
+        $user = auth()->user();
 
         // Retrieve the uploaded mp3
         /** @var UploadedFile $mp3 */
@@ -78,11 +78,11 @@ class TracksController extends Controller
                 !is_null($album) // check if album is null ,or it belongs to the user
             )
         ) {
-            // The generated file will be directly uploaded to skynet via API, this record is created with temporary
+            // The generated file will be directly uploaded to ipfs via API, this record is created with temporary
             // empty values in order to create a new instance of the track and allow correct nft minting.
             // The correct values are pushed asap.
-            $skynet = Skynet::create([
-                "link" => "temporary-fake-link",
+            $ipfs = Ipfs::create([
+                "cid" => "temporary-fake-cid",
                 "encryption_key" => "temporary-fake-key",
             ]);
 
@@ -91,7 +91,7 @@ class TracksController extends Controller
                 "description" => $args["description"],
                 "duration" => $args["duration"],
                 "nft_id" => "temporary-fake-nft-id",
-                "skynet_id" => $skynet->id,
+                "ipfs_id" => $ipfs->id,
                 "creator_id" => $user->id,
                 "owner_id" => $user->id,
                 "cover_id" => $cover?->id,
@@ -110,7 +110,7 @@ class TracksController extends Controller
             catch (Throwable $exception) {
                 // remove the temporary records
                 $track->delete();
-                $skynet->delete();
+                $ipfs->delete();
 
                 // usage of the throwable interface instead of the specific error type mark the following statement
                 // as possibly wrong but as the only exception may occur is the blockchain related one, stay chill,
@@ -118,8 +118,8 @@ class TracksController extends Controller
                 throw new Exception($exception);
             }
 
-            // Store the just encrypted file in the skynet folder
-            skynet()->upload($mp3, $track->skynet);
+            // Upload the just encrypted file to ipfs
+            ipfs()->upload($mp3, $track->ipfs);
 
             // TODO: uncomment this
             /*
@@ -180,7 +180,7 @@ class TracksController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["id"])->first();
 
@@ -470,7 +470,7 @@ class TracksController extends Controller
 
         // initialize test variables
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["track_id"])->first();
         /** @var Albums $album */
@@ -522,7 +522,7 @@ class TracksController extends Controller
 
         // initialize test variables
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["track_id"])->first();
         /** @var Covers $cover */
@@ -573,7 +573,7 @@ class TracksController extends Controller
 
         // initialize test variables
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
         /** @var Tracks $track */
         $track = $user->ownedTracks()->where("id",$args["track_id"])->first();
         /** @var Lyrics $lyric */

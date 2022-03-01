@@ -21,21 +21,12 @@ class CreateTracksTable extends Migration
             $table->string('nft_id');
             $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
             $table->foreignUuid("creator_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
-            $table->foreignUuid('skynet_id')->references("id")->on("skynets");
-            $table->foreignUuid('cover_id')->references("id")->on("covers");
-            $table->foreignUuid('lyric_id')->references("id")->on("lyrics");
-            $table->foreignUuid('album_id')->references("id")->on("albums");
+            $table->foreignUuid('ipfs_id')->references("id")->on("ipfs");
+            $table->foreignUuid('cover_id')->nullable()->references("id")->on("covers");
+            $table->foreignUuid('lyric_id')->nullable()->references("id")->on("lyrics");
+            $table->foreignUuid('album_id')->nullable()->references("id")->on("albums");
             $table->timestamps();
         });
-
-        // Creates nullable foreign keys
-        Schema::disableForeignKeyConstraints();
-        Schema::table("tracks", function (Blueprint $table) {
-            $table->uuid("cover_id")->nullable()->change();
-            $table->uuid("lyric_id")->nullable()->change();
-            $table->uuid("album_id")->nullable()->change();
-        });
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

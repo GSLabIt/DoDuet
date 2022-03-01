@@ -9,8 +9,8 @@ use App\Models\Covers;
 use App\Models\Skynet;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
+
 
 class CoversController extends Controller
 {
@@ -32,7 +32,7 @@ class CoversController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // Retrieve the uploaded image and call the uploadOnSkynet function
         /** @var UploadedFile $img */
@@ -66,7 +66,7 @@ class CoversController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */
@@ -123,7 +123,7 @@ class CoversController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $context->user();
+        $user = auth()->user();
 
         // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */

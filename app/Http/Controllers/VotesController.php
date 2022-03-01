@@ -10,11 +10,11 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use Carbon\Carbon;
-use GraphQL\Type\Definition\ResolveInfo;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
 use Throwable;
 
 class VotesController extends Controller
@@ -43,7 +43,7 @@ class VotesController extends Controller
         $track = Tracks::where("id", $args["track_id"])->first();
 
         /** @var User $user */
-        $user = $context->user(); // select current user
+        $user = auth()->user(); // select current user
 
         if (!is_null($track)) {
             // get the listening request to the specified track
@@ -129,7 +129,7 @@ class VotesController extends Controller
         $track = Tracks::where("id", $args["track_id"])->first();
 
         /** @var User $user */
-        $user = $context->user(); // select current user
+        $user = auth()->user(); // select current user
 
         if (!is_null($track)) {
             try {

@@ -1,11 +1,16 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 namespace Database\Factories;
 
-use App\Models\Referred;
 use App\Models\User;
-use App\Models\Referral;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Referral\models\Referred;
 
 class ReferredFactory extends Factory
 {

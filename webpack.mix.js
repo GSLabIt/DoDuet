@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
+
 const mix = require('laravel-mix');
 
 /*
@@ -11,12 +18,17 @@ const mix = require('laravel-mix');
  |
  */
 
+/* Allow multiple Laravel Mix applications*/
+require('laravel-mix-merge-manifest');
+
 mix.ts('resources/js/app.js', 'public/js').vue()
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
     ])
-    .webpackConfig(require('./webpack.config'));
+    .webpackConfig(require('./webpack.config'))
+    .extract(["vue"])
+    .mergeManifest();
 
 if (mix.inProduction()) {
     mix.version();

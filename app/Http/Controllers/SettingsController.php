@@ -6,8 +6,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use GraphQL\Type\Definition\ResolveInfo;
+
+
 
 class SettingsController extends Controller
 {

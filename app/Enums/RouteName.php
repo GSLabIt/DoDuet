@@ -1,13 +1,15 @@
 <?php
+/*
+ * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
+ */
 
 namespace App\Enums;
 
 enum RouteName: string
 {
-    case REFERRAL_KEEPER = "referral_keeper";
-    case REFERRAL_GET_URL = "referral_get_url";
-    case REFERRAL_GET_PRIZE_FOR_NEW_REF = "referral_get_prize_for_new_ref";
-
     case CHALLENGE_LATEST_TRACKS = "challenge_latest_tracks";
     case CHALLENGE_TRACKS = "challenge_tracks";
     case CHALLENGE_NINE_RANDOM_TRACKS = "challenge_nine_random_tracks";

@@ -4,8 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Albums;
 use App\Models\Covers;
+use App\Models\Ipfs;
 use App\Models\Lyrics;
-use App\Models\Skynet;
 use App\Models\Tracks;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -34,7 +34,7 @@ class TracksFactory extends Factory
             "nft_id" => $this->faker->sentence(),
             "owner_id" => User::factory(),
             "creator_id" => fn (array $attributes) => $attributes['owner_id'],
-            "skynet_id" => Skynet::factory(),
+            "ipfs_id" => Ipfs::factory(),
             "cover_id" => null,
             "lyric_id" => null,
             "album_id" => null,

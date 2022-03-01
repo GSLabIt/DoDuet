@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @mixin IdeHelperTaggable
+ */
 class Taggable extends Model
 {
     use HasFactory, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
