@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Validation\ValidationException;
-use App\Exceptions\Exception;
+
 use App\Models\User;
 use App\Models\Covers;
 use App\Models\Skynet;

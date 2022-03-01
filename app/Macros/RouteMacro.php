@@ -43,6 +43,6 @@ class RouteMacro
      * @return \Illuminate\Routing\RouteRegistrar
      */
     public static function rname(\App\Enums\RouteName $name): \Illuminate\Routing\RouteRegistrar {
-        return Route::name(r($name) . ".");
+        return Route::name(r($name));
     }
 }

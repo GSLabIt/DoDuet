@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\Exception;
+
 use App\Models\Lyrics;
 use App\Models\User;
 use GraphQL\Type\Definition\ResolveInfo;

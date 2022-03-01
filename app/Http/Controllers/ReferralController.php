@@ -126,7 +126,7 @@ class ReferralController extends Controller
         if (!is_null($referred)) {
             if (!$referred->is_redeemed) {
 
-                blockchain(null)->airdrop()->immediatelyReleaseAirdrop()
+                //blockchain(null)->airdrop()->immediatelyReleaseAirdrop()
                 // TODO: release the MELB amount to the wallet of the user
 
                 // mark the referred row as redeemed

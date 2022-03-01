@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\Exception;
-use App\Exceptions\Exception;
+
 use App\Models\User;
 use App\Models\Albums;
 use App\Models\Covers;

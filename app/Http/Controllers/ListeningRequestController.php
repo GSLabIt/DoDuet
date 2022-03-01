@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\Exception;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
