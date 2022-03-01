@@ -8,5 +8,6 @@
 
 use App\Enums\RouteGroup;
 
+Route::rgroup(RouteGroup::VOTE)->prefix("vote")->group(__DIR__ . "/vote/index.php");
 Route::rgroup(RouteGroup::CHALLENGE)->prefix("challenge")->group(__DIR__ . "/challenge/index.php");
 

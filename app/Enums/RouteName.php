@@ -10,6 +10,9 @@ namespace App\Enums;
 
 enum RouteName: string
 {
+    case VOTE_REQUEST_PERMISSION = "vote_request_permission";
+    case VOTE_VOTE = "vote_vote";
+
     case CHALLENGE_LATEST_TRACKS = "challenge_latest_tracks";
     case CHALLENGE_TRACKS = "challenge_tracks";
     case CHALLENGE_NINE_RANDOM_TRACKS = "challenge_nine_random_tracks";
