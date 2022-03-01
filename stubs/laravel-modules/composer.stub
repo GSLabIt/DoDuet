@@ -18,18 +18,18 @@
     "extra": {
         "laravel": {
             "providers": [
-                "$MODULE_NAMESPACE$\\$STUDLY_NAME$\\$PROVIDER_NAMESPACE$\\$STUDLY_NAME$ServiceProvider"
+                "Doinc\\$MODULE_NAMESPACE$\\$STUDLY_NAME$\\Providers\\$STUDLY_NAME$ServiceProvider"
             ],
             "aliases": {
-
+                "$STUDLY_NAME$": "Doinc\\$MODULE_NAMESPACE$\\$STUDLY_NAME$\\Facades\\$STUDLY_NAME$"
             }
         }
     },
     "autoload": {
         "psr-4": {
-            "$MODULE_NAMESPACE$\\$STUDLY_NAME$\\": ""
+            "Doinc\\$MODULE_NAMESPACE$\\$STUDLY_NAME$\\": "src"
         }
-    }
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -45,7 +45,8 @@
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/contracts": "^9.0",
-        "nwidart/laravel-modules": "^9.0"
+        "nwidart/laravel-modules": "^9.0",
+        "inertiajs/inertia-laravel": "^0.5.4"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",

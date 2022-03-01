@@ -6,7 +6,7 @@
  * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
  */
 
-namespace $CLASS_NAMESPACE$;
+namespace Doinc\Modules\$STUDLY_NAME$\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;

@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @mixin IdeHelperSettings
+ */
 class Settings extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;

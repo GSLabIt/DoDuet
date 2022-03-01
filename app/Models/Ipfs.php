@@ -10,7 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Ipfs extends Model
+/**
+ * @mixin IdeHelperSkynet
+ */
+class Skynet extends Model
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
 

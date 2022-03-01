@@ -6,7 +6,7 @@
  * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
  */
 
-namespace Modules\Referral\database\seeders;
+namespace Doinc\Modules\Referral\database\seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

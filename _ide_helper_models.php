@@ -59,7 +59,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereUpdatedAt($value)
  */
-	class Albums extends \Eloquent {}
+	class IdeHelperAlbums {}
 }
 
 namespace App\Models{
@@ -112,7 +112,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTreasuryRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereUpdatedAt($value)
  */
-	class Challenges extends \Eloquent {}
+	class IdeHelperChallenges {}
 }
 
 namespace App\Models{
@@ -143,7 +143,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereUpdatedAt($value)
  */
-	class Comments extends \Eloquent {}
+	class IdeHelperComments {}
 }
 
 namespace App\Models{
@@ -187,7 +187,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereSkynetId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereUpdatedAt($value)
  */
-	class Covers extends \Eloquent {}
+	class IdeHelperCovers {}
 }
 
 namespace App\Models{
@@ -212,7 +212,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereUpdatedAt($value)
  */
-	class Explicits extends \Eloquent {}
+	class IdeHelperExplicits {}
 }
 
 namespace App\Models{
@@ -238,7 +238,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereUpdatedAt($value)
  */
-	class Follows extends \Eloquent {}
+	class IdeHelperFollows {}
 }
 
 namespace App\Models{
@@ -279,7 +279,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withoutTrashed()
  */
-	class Functionalities extends \Eloquent {}
+	class IdeHelperFunctionalities {}
 }
 
 namespace App\Models{
@@ -303,7 +303,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereUpdatedAt($value)
  */
-	class Hashtags extends \Eloquent {}
+	class IdeHelperHashtags {}
 }
 
 namespace App\Models{
@@ -332,7 +332,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereVoterId($value)
  */
-	class ListeningRequest extends \Eloquent {}
+	class IdeHelperListeningRequest {}
 }
 
 namespace App\Models{
@@ -374,7 +374,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereUpdatedAt($value)
  */
-	class Lyrics extends \Eloquent {}
+	class IdeHelperLyrics {}
 }
 
 namespace App\Models{
@@ -405,7 +405,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereUpdatedAt($value)
  */
-	class Mentions extends \Eloquent {}
+	class IdeHelperMentions {}
 }
 
 namespace App\Models{
@@ -440,7 +440,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereUpdatedAt($value)
  */
-	class Messages extends \Eloquent {}
+	class IdeHelperMessages {}
 }
 
 namespace App\Models{
@@ -471,7 +471,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class PersonalAccessToken extends \Eloquent {}
+	class IdeHelperPersonalAccessToken {}
 }
 
 namespace App\Models{
@@ -502,7 +502,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereProfileCoverPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereUpdatedAt($value)
  */
-	class PersonalInformations extends \Eloquent {}
+	class IdeHelperPersonalInformations {}
 }
 
 namespace App\Models{
@@ -533,7 +533,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereUpdatedAt($value)
  */
-	class PersonalLibraries extends \Eloquent {}
+	class IdeHelperPersonalLibraries {}
 }
 
 namespace App\Models{
@@ -565,7 +565,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereUpdatedAt($value)
  */
-	class Platforms extends \Eloquent {}
+	class IdeHelperPlatforms {}
 }
 
 namespace App\Models{
@@ -589,7 +589,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereUpdatedAt($value)
  */
-	class Questionnaire extends \Eloquent {}
+	class IdeHelperQuestionnaire {}
 }
 
 namespace App\Models{
@@ -617,7 +617,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereReportableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereUpdatedAt($value)
  */
-	class ReportReasons extends \Eloquent {}
+	class IdeHelperReportReasons {}
 }
 
 namespace App\Models{
@@ -647,7 +647,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereUpdatedAt($value)
  */
-	class Reports extends \Eloquent {}
+	class IdeHelperReports {}
 }
 
 namespace App\Models{
@@ -681,7 +681,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereUpdatedAt($value)
  */
-	class Settings extends \Eloquent {}
+	class IdeHelperSettings {}
 }
 
 namespace App\Models{
@@ -709,7 +709,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereUpdatedAt($value)
  */
-	class Skynet extends \Eloquent {}
+	class IdeHelperSkynet {}
 }
 
 namespace App\Models{
@@ -740,7 +740,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withoutTrashed()
  */
-	class SocialChannels extends \Eloquent {}
+	class IdeHelperSocialChannels {}
 }
 
 namespace App\Models{
@@ -769,7 +769,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereUpdatedAt($value)
  */
-	class Socials extends \Eloquent {}
+	class IdeHelperSocials {}
 }
 
 namespace App\Models{
@@ -790,7 +790,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableType($value)
  */
-	class Taggable extends \Eloquent {}
+	class IdeHelperTaggable {}
 }
 
 namespace App\Models{
@@ -822,7 +822,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUserSegmentId($value)
  */
-	class Test extends \Eloquent {}
+	class IdeHelperTest {}
 }
 
 namespace App\Models{
@@ -848,7 +848,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTesterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereUtilizations($value)
  */
-	class TestResult extends \Eloquent {}
+	class IdeHelperTestResult {}
 }
 
 namespace App\Models{
@@ -876,7 +876,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTipperId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereUpdatedAt($value)
  */
-	class Tips extends \Eloquent {}
+	class IdeHelperTips {}
 }
 
 namespace App\Models{
@@ -939,7 +939,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereSkynetId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereUpdatedAt($value)
  */
-	class Tracks extends \Eloquent {}
+	class IdeHelperTracks {}
 }
 
 namespace App\Models{
@@ -999,10 +999,10 @@ namespace App\Models{
  * @property-read int|null $received_messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tips[] $receivedTips
  * @property-read int|null $received_tips_count
- * @property-read \Modules\Referral\Models\Referral|null $referral
- * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Referral\Models\Referred[] $referred
+ * @property-read \Doinc\Modules\Referral\Models\Referral|null $referral
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Modules\Referral\Models\Referred[] $referred
  * @property-read int|null $referred_count
- * @property-read \Modules\Referral\Models\Referred|null $referredBy
+ * @property-read \Doinc\Modules\Referral\Models\Referred|null $referredBy
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
@@ -1044,7 +1044,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  */
-	class User extends \Eloquent {}
+	class IdeHelperUser {}
 }
 
 namespace App\Models{
@@ -1071,7 +1071,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereUpdatedAt($value)
  */
-	class UserSegments extends \Eloquent {}
+	class IdeHelperUserSegments {}
 }
 
 namespace App\Models{
@@ -1100,7 +1100,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereUpdatedAt($value)
  */
-	class UserSettings extends \Eloquent {}
+	class IdeHelperUserSettings {}
 }
 
 namespace App\Models{
@@ -1131,7 +1131,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVoterId($value)
  */
-	class Votes extends \Eloquent {}
+	class IdeHelperVotes {}
 }
 
 namespace App\Models{
@@ -1164,6 +1164,63 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereSeed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereUpdatedAt($value)
  */
-	class Wallet extends \Eloquent {}
+	class IdeHelperWallet {}
+}
+
+namespace Doinc\Modules\Referral\Models{
+/**
+ * Doinc\Modules\Referral\Models\Referral
+ *
+ * @property string $id
+ * @property string $code
+ * @property string $owner_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User|null $owner
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperReferral {}
+}
+
+namespace Doinc\Modules\Referral\Models{
+/**
+ * Doinc\Modules\Referral\Models\Referred
+ *
+ * @property string $id
+ * @property string $referrer_id
+ * @property string $referred_id
+ * @property bool $is_redeemed
+ * @property int $prize
+ * @property \Illuminate\Support\Carbon|null $redeemed_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $referred
+ * @property-read \App\Models\User $referrer
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereIsRedeemed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred wherePrize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereRedeemedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereReferredId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereReferrerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperReferred {}
 }
 

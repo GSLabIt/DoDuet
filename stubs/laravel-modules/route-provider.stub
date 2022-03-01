@@ -6,7 +6,7 @@
  * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
  */
 
-namespace $NAMESPACE$;
+namespace Doinc\Modules\$STUDLY_NAME$\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -18,7 +18,7 @@ class $CLASS$ extends ServiceProvider
      *
      * @var string
      */
-    protected $moduleNamespace = '$MODULE_NAMESPACE$\$MODULE$\$CONTROLLER_NAMESPACE$';
+    protected string $moduleNamespace = '$MODULE_NAMESPACE$\$MODULE$\Http\Controllers';
 
     /**
      * Called before routes are registered.
@@ -55,7 +55,7 @@ class $CLASS$ extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/../$WEB_ROUTES_PATH$');
+            ->group(__DIR__ . '/../..$WEB_ROUTES_PATH$');
     }
 
     /**
@@ -70,6 +70,6 @@ class $CLASS$ extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/../$API_ROUTES_PATH$');
+            ->group(__DIR__ . '/../..$API_ROUTES_PATH$');
     }
 }
