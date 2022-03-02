@@ -17,43 +17,16 @@ trait Referrable
 {
     public function referral(): HasOne
     {
-        // if multi db is on use the multi database query
-        if (config("referral.is_multi_db.active")) {
-            return $this->multiDatabaseRunQuery(
-                config("referral.is_multi_db.default_connection"),
-                fn() => $this->hasOne(Referral::class, "owner_id")
-            );
-        }
-
-        // fallback to standard relation
         return $this->hasOne(Referral::class, "owner_id");
     }
 
     public function referred(): HasMany
     {
-        // if multi db is on use the multi database query
-        if (config("referral.is_multi_db.active")) {
-            return $this->multiDatabaseRunQuery(
-                config("referral.is_multi_db.default_connection"),
-                fn() => $this->hasMany(Referred::class, "referrer_id")
-            );
-        }
-
-        // fallback to standard relation
         return $this->hasMany(Referred::class, "referrer_id");
     }
 
     public function referredBy(): HasOne
     {
-        // if multi db is on use the multi database query
-        if (config("referral.is_multi_db.active")) {
-            return $this->multiDatabaseRunQuery(
-                config("referral.is_multi_db.default_connection"),
-                fn() => $this->hasOne(Referred::class, "referred_id")
-            );
-        }
-
-        // fallback to standard relation
         return $this->hasOne(Referred::class, "referred_id");
     }
 }

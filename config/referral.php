@@ -9,32 +9,6 @@
 return [
     /*
      * |--------------------------------------------------------------------------
-     * | Base model class
-     * |--------------------------------------------------------------------------
-     * |
-     * | The base model class used for relations, this is usually the
-     * | App\Models\User::class.
-     * |
-     */
-    "model" => \App\Models\User::class,
-
-    /*
-     * |--------------------------------------------------------------------------
-     * | Multi database models
-     * |--------------------------------------------------------------------------
-     * |
-     * | Whether the models should implement a multi database relation model.
-     * | If `active` is true `connection` defines the connection name to use.
-     * |
-     */
-    "is_multi_db" => [
-        "active" => env("REFERRAL_MULTI_DB", true),
-        "common_connection" => env("COMMON_DATABASE", "common"),
-        "default_connection" => env("DB_CONNECTION", "mysql"),
-    ],
-
-    /*
-     * |--------------------------------------------------------------------------
      * | Referral prizes definition
      * |--------------------------------------------------------------------------
      * |

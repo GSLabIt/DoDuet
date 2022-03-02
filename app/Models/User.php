@@ -10,10 +10,7 @@ namespace App\Models;
 
 use App\Traits\ActivityLogAll;
 use App\Traits\CryptographicComposition;
-use App\Traits\MultiDatabaseRelation;
-use App\Traits\PlatformIsolatedNotifications;
 use App\Traits\Uuid;
-use Doinc\Modules\Referral\Models\Interfaces\IReferrable;
 use Doinc\Modules\Referral\Models\Traits\Referrable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,21 +18,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
+
 /**
  * @mixin IdeHelperUser
  */
-class User extends Authenticatable implements IReferrable
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasProfilePhoto, PlatformIsolatedNotifications, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
-    use ActivityLogAll, CryptographicComposition, MultiDatabaseRelation, Referrable;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
+    use ActivityLogAll, CryptographicComposition, Referrable;
 
-    public $connection = "common";
+
 
     /**
      * The attributes that are mass assignable.
@@ -134,10 +133,7 @@ class User extends Authenticatable implements IReferrable
 
     public function wallet(): HasOne
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasOne(Wallet::class, "owner_id")
-        );
+        return $this->hasOne(Wallet::class, "owner_id");
     }
 
 
@@ -153,82 +149,52 @@ class User extends Authenticatable implements IReferrable
 
     public function mentions(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Mentions::class, "mentioned_id")
-        );
+        return $this->hasMany(Mentions::class, "mentioned_id");
     }
 
     public function mentioner(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Mentions::class, "mentioner_id")
-        );
+        return $this->hasMany(Mentions::class, "mentioner_id");
     }
 
     public function comments(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Comments::class)
-        );
+        return $this->hasMany(Comments::class);
     }
 
     public function followed(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Follows::class, "follower_id")
-        );
+        return $this->hasMany(Follows::class, "follower_id");
     }
 
     public function followers(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Follows::class, "followed_id")
-        );
+        return $this->hasMany(Follows::class, "followed_id");
     }
 
     public function sentMessages(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Messages::class, "sender_id")
-        );
+        return $this->hasMany(Messages::class, "sender_id");
     }
 
     public function receivedMessages(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Messages::class, "receiver_id")
-        );
+        return $this->hasMany(Messages::class, "receiver_id");
     }
 
     public function reports(): MorphMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->morphMany(Reports::class, "reportable")
-        );
+        return $this->morphMany(Reports::class, "reportable");
     }
 
     public function tipped(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Tips::class, "tipper_id")
-        );
+        return $this->hasMany(Tips::class, "tipper_id");
     }
 
     public function receivedTips(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Tips::class, "tipped_id")
-        );
+        return $this->hasMany(Tips::class, "tipped_id");
     }
 
 
@@ -244,113 +210,71 @@ class User extends Authenticatable implements IReferrable
 
     public function ownedTracks(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Tracks::class, "owner_id")
-        );
+        return $this->hasMany(Tracks::class, "owner_id");
     }
 
     public function createdTracks(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Tracks::class, "creator_id")
-        );
+        return $this->hasMany(Tracks::class, "creator_id");
     }
 
     public function firstPlaces(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Challenges::class, "first_place_id")
-        );
+        return $this->hasMany(Challenges::class, "first_place_id");
     }
 
     public function secondPlaces(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Challenges::class, "second_place_id")
-        );
+        return $this->hasMany(Challenges::class, "second_place_id");
     }
 
     public function thirdPlaces(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Challenges::class, "third_place_id")
-        );
+        return $this->hasMany(Challenges::class, "third_place_id");
     }
 
     public function ownedCovers(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Covers::class, "owner_id")
-        );
+        return $this->hasMany(Covers::class, "owner_id");
     }
 
     public function createdCovers(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Covers::class, "creator_id")
-        );
+        return $this->hasMany(Covers::class, "creator_id");
     }
 
     public function ownedAlbums(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Albums::class, "owner_id")
-        );
+        return $this->hasMany(Albums::class, "owner_id");
     }
 
     public function createdAlbums(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Albums::class, "creator_id")
-        );
+        return $this->hasMany(Albums::class, "creator_id");
     }
 
     public function ownedLyrics(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Lyrics::class, "owner_id")
-        );
+        return $this->hasMany(Lyrics::class, "owner_id");
     }
 
     public function createdLyrics(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Lyrics::class, "creator_id")
-        );
+        return $this->hasMany(Lyrics::class, "creator_id");
     }
 
     public function listeningRequests(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(ListeningRequest::class, "voter_id")
-        );
+        return $this->hasMany(ListeningRequest::class, "voter_id");
     }
 
     public function votes(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(Votes::class, "voter_id")
-        );
+        return $this->hasMany(Votes::class, "voter_id");
     }
 
     public function libraries(): HasMany
     {
-        return $this->multiDatabaseRunQuery(
-            "mysql",
-            fn() => $this->hasMany(PersonalLibraries::class, "owner_id")
-        );
+        return $this->hasMany(PersonalLibraries::class, "owner_id");
     }
 }

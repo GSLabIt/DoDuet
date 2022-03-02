@@ -22,13 +22,7 @@ class CreateReferralsTable extends Migration
         Schema::create('referrals', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string('code');
-            $table->foreignUuid("owner_id")
-                ->references("id")
-                ->on(
-                    config("referral.is_multi_db.active") ?
-                        config("referral.is_multi_db.common_connection") . ".users" :
-                        "users"
-                );
+            $table->foreignUuid("owner_id")->references("id")->on("users");
             $table->timestamps();
         });
     }

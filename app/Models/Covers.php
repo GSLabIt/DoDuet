@@ -9,7 +9,7 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
-use App\Traits\MultiDatabaseRelation;
+
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,12 +19,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+
 /**
  * @mixin IdeHelperCovers
  */
 class Covers extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["updated_at", "created_at"];
 
@@ -35,18 +36,12 @@ class Covers extends Model
 
     function owner(): BelongsTo
     {
-        return $this->multiDatabaseRunQuery(
-            "common",
-            fn() => $this->belongsTo(User::class, "owner_id")
-        );
+        return $this->belongsTo(User::class, "owner_id");
     }
 
     function creator(): BelongsTo
     {
-        return $this->multiDatabaseRunQuery(
-            "common",
-            fn() => $this->belongsTo(User::class, "creator_id")
-        );
+        return $this->belongsTo(User::class, "creator_id");
     }
 
     function ipfs(): BelongsTo

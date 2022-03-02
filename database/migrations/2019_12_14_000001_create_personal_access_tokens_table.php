@@ -13,7 +13,7 @@ class CreatePersonalAccessTokensTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('personal_access_tokens', function (Blueprint $table) {
+        Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuidMorphs('tokenable');
             $table->string('name');
@@ -31,6 +31,6 @@ class CreatePersonalAccessTokensTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('personal_access_tokens');
+        Schema::dropIfExists('personal_access_tokens');
     }
 }

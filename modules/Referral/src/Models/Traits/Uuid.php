@@ -30,7 +30,7 @@ trait Uuid
      *
      * @return bool
      */
-    public function getIncrementing(): bool
+    public function getIncrementing()
     {
         return false;
     }
@@ -40,7 +40,7 @@ trait Uuid
      *
      * @return string
      */
-    public function getKeyType(): string
+    public function getKeyType()
     {
         return 'string';
     }

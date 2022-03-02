@@ -1,10 +1,4 @@
 <?php
-/*
- * Copyright (c) 2022 - Do Group LLC - All Right Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
- */
 
 // @formatter:off
 /**
@@ -129,7 +123,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
- * @property-read \App\Models\User|null $commentor
+ * @property-read \App\Models\User $commentor
  * @property-read \App\Models\Explicits|null $explicit
  * @method static \Database\Factories\CommentsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments newModelQuery()
@@ -152,7 +146,7 @@ namespace App\Models{
  *
  * @property string $id
  * @property string $name
- * @property string $skynet_id
+ * @property string $ipfs_id
  * @property string|null $nft_id
  * @property string $owner_id
  * @property string $creator_id
@@ -165,12 +159,12 @@ namespace App\Models{
  * @property-read int|null $comments_count
  * @property-read \App\Models\User $creator
  * @property-read \App\Models\Explicits|null $explicit
+ * @property-read \App\Models\Ipfs $ipfs
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \App\Models\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
- * @property-read \App\Models\Skynet $skynet
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \App\Models\Tracks|null $track
@@ -181,10 +175,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereCreatorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereIpfsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereNftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereSkynetId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereUpdatedAt($value)
  */
 	class IdeHelperCovers {}
@@ -308,6 +302,34 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Ipfs
+ *
+ * @property string $id
+ * @property string $cid
+ * @property int $encrypted
+ * @property mixed $encryption_key
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\Covers|null $cover
+ * @property-read \App\Models\Tracks|null $track
+ * @method static \Database\Factories\IpfsFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereCid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereEncryptionKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereUpdatedAt($value)
+ */
+	class IdeHelperIpfs {}
+}
+
+namespace App\Models{
+/**
  * App\Models\ListeningRequest
  *
  * @property string $id
@@ -320,7 +342,7 @@ namespace App\Models{
  * @property-read int|null $activities_count
  * @property-read \App\Models\Challenges|null $challenge
  * @property-read \App\Models\Tracks $track
- * @property-read \App\Models\User|null $voter
+ * @property-read \App\Models\User $voter
  * @method static \Database\Factories\ListeningRequestFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest newQuery()
@@ -686,34 +708,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Skynet
- *
- * @property string $id
- * @property mixed $link
- * @property int $encrypted
- * @property mixed $encryption_key
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\Covers|null $cover
- * @property-read \App\Models\Tracks|null $track
- * @method static \Database\Factories\SkynetFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereEncrypted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereEncryptionKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Skynet whereUpdatedAt($value)
- */
-	class IdeHelperSkynet {}
-}
-
-namespace App\Models{
-/**
  * App\Models\SocialChannels
  *
  * @property string $id
@@ -890,7 +884,7 @@ namespace App\Models{
  * @property string $nft_id
  * @property string $owner_id
  * @property string $creator_id
- * @property string $skynet_id
+ * @property string $ipfs_id
  * @property string|null $cover_id
  * @property string|null $lyric_id
  * @property string|null $album_id
@@ -906,6 +900,7 @@ namespace App\Models{
  * @property-read \App\Models\Covers|null $cover
  * @property-read \App\Models\User $creator
  * @property-read \App\Models\Explicits|null $explicit
+ * @property-read \App\Models\Ipfs $ipfs
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PersonalLibraries[] $libraries
  * @property-read int|null $libraries_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
@@ -916,7 +911,6 @@ namespace App\Models{
  * @property-read \App\Models\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
- * @property-read \App\Models\Skynet $skynet
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
@@ -932,11 +926,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereIpfsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereLyricId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereNftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereSkynetId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereUpdatedAt($value)
  */
 	class IdeHelperTracks {}
@@ -984,6 +978,8 @@ namespace App\Models{
  * @property-read int|null $mentioner_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Albums[] $ownedAlbums
  * @property-read int|null $owned_albums_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Covers[] $ownedCovers
@@ -1118,7 +1114,7 @@ namespace App\Models{
  * @property-read int|null $activities_count
  * @property-read \App\Models\Challenges $challenge
  * @property-read \App\Models\Tracks $track
- * @property-read \App\Models\User|null $voter
+ * @property-read \App\Models\User $voter
  * @method static \Database\Factories\VotesFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newQuery()
@@ -1149,7 +1145,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\User|null $owner
+ * @property-read \App\Models\User $owner
  * @method static \Database\Factories\WalletFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newQuery()
@@ -1178,7 +1174,7 @@ namespace Doinc\Modules\Referral\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\User|null $owner
+ * @property-read \App\Models\User $owner
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral query()
@@ -1187,7 +1183,6 @@ namespace Doinc\Modules\Referral\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereUpdatedAt($value)
- * @mixin \Eloquent
  */
 	class IdeHelperReferral {}
 }
@@ -1219,7 +1214,6 @@ namespace Doinc\Modules\Referral\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereReferredId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereReferrerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereUpdatedAt($value)
- * @mixin \Eloquent
  */
 	class IdeHelperReferred {}
 }

@@ -13,7 +13,7 @@ class CreateTestsTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('tests', function (Blueprint $table) {
+        Schema::create('tests', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->foreignUuid("functionality_id")->references("id")->on("functionalities");
             $table->foreignUuid("user_segment_id")->references("id")->on("user_segments");
@@ -29,6 +29,6 @@ class CreateTestsTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('tests');
+        Schema::dropIfExists('tests');
     }
 }

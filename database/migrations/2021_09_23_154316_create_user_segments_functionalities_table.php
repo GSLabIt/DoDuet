@@ -13,7 +13,7 @@ class CreateUserSegmentsFunctionalitiesTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('functionalities_user_segments', function (Blueprint $table) {
+        Schema::create('functionalities_user_segments', function (Blueprint $table) {
             $table->foreignUuid("user_segments_id");
             $table->foreignUuid("functionalities_id");
             $table->boolean("is_active")->default(false);
@@ -29,6 +29,6 @@ class CreateUserSegmentsFunctionalitiesTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('user_segments_functionalities');
+        Schema::dropIfExists('user_segments_functionalities');
     }
 }

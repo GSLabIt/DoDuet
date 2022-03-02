@@ -13,7 +13,7 @@ class CreatePlatformsTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('platforms', function (Blueprint $table) {
+        Schema::create('platforms', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->longText('name'); // encrypted
             $table->longText("domain"); // encrypted
@@ -31,6 +31,6 @@ class CreatePlatformsTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('platforms');
+        Schema::dropIfExists('platforms');
     }
 }

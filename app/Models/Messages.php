@@ -9,7 +9,7 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
-use App\Traits\MultiDatabaseRelation;
+
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,29 +17,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+
 /**
  * @mixin IdeHelperMessages
  */
 class Messages extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["updated_at", "created_at"];
 
     function sender(): BelongsTo
     {
-        return $this->multiDatabaseRunQuery(
-            "common",
-            fn() => $this->belongsTo(User::class, "sender_id")
-        );
+        return $this->belongsTo(User::class, "sender_id");
     }
 
     function receiver(): BelongsTo
     {
-        return $this->multiDatabaseRunQuery(
-            "common",
-            fn() => $this->belongsTo(User::class, "receiver_id")
-        );
+        return $this->belongsTo(User::class, "receiver_id");
     }
 
     public function reports(): MorphOne

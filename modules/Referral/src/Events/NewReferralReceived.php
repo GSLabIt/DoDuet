@@ -8,10 +8,10 @@
 
 namespace Doinc\Modules\Referral\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Doinc\Modules\Referral\Models\Interfaces\ReferrableModel;
 
 class NewReferralReceived
 {
@@ -23,8 +23,8 @@ class NewReferralReceived
      * @return void
      */
     public function __construct(
-        public ReferrableModel $referrer,
-        public ReferrableModel $referred,
+        public User $referrer,
+        public User $referred,
         public int $prize
     )
     {

@@ -41,7 +41,7 @@ use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
  */
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
-    public $connection = "common";
+
 
     protected $casts = [
         "abilities" => "encrypted:array"

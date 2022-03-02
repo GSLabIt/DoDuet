@@ -13,7 +13,7 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('settings', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->longText("name"); // encrypted
             $table->longText("type"); // encrypted
@@ -33,6 +33,6 @@ class CreateSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('settings');
+        Schema::dropIfExists('settings');
     }
 }

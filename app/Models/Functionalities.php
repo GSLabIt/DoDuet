@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
-use App\Traits\MultiDatabaseRelation;
+
 use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,14 +13,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+
 /**
  * @mixin IdeHelperFunctionalities
  */
 class Functionalities extends Model
 {
-    use HasFactory, SoftDeletes, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
+    use HasFactory, SoftDeletes, Uuid, LogsActivity, ActivityLogAll;
 
-    public $connection = "common";
+
 
     protected $guarded = ["created_at", "updated_at"];
 

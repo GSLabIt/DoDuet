@@ -15,8 +15,8 @@ class CreateTipsTable extends Migration
     {
         Schema::create('tips', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('tipper_id')->references('id')->on(env("COMMON_DATABASE") . ".users");
-            $table->foreignUuid('tipped_id')->references('id')->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid('tipper_id')->references('id')->on("users");
+            $table->foreignUuid('tipped_id')->references('id')->on("users");
             $table->string('tip');
 
             $table->timestamps();

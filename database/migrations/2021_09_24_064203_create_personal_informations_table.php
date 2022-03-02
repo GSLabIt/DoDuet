@@ -13,9 +13,9 @@ class CreatePersonalInformationsTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('personal_informations', function (Blueprint $table) {
+        Schema::create('personal_informations', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users")->cascadeOnDelete();
+            $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
             $table->string("alias")->nullable();
             $table->longText("mobile")->nullable(); // encrypted
             $table->text("profile_cover_path")->nullable();
@@ -31,6 +31,6 @@ class CreatePersonalInformationsTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('personal_informations');
+        Schema::dropIfExists('personal_informations');
     }
 }

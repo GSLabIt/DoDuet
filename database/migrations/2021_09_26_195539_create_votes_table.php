@@ -15,7 +15,7 @@ class CreateVotesTable extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("voter_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid("voter_id")->references("id")->on("users");
             $table->foreignUuid("track_id")->references("id")->on("tracks");
             $table->foreignId("challenge_id")->references("id")->on("challenges");
             $table->unsignedSmallInteger("vote");

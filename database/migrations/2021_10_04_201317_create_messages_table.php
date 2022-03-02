@@ -15,8 +15,8 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("sender_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
-            $table->foreignUuid("receiver_id")->references("id")->on(env("COMMON_DATABASE") . ".users");
+            $table->foreignUuid("sender_id")->references("id")->on("users");
+            $table->foreignUuid("receiver_id")->references("id")->on("users");
             $table->longText('content'); // encrypted with asymmetric encryption linked to users
             $table->timestamp('read_at');
             $table->timestamp('sender_deleted_at')->nullable();

@@ -6,10 +6,11 @@
  * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
  */
 
-namespace Doinc\Modules\Referral\Tests;
+namespace Doinc\Modules\Referral\Tests\Feature;
 
 use App\Models\User;
 use Doinc\Modules\Referral\Enums\ReferralRoutes;
+use Doinc\Modules\Referral\Events\NewReferralReceived;
 use Doinc\Modules\Referral\Events\ReferralRedeemed;
 use Doinc\Modules\Referral\Facades\Referral;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -196,6 +197,7 @@ class ReferralTest extends TestCase
     {
         $this->seed();
         Event::fake();
+
         $this->actingAs($user = User::factory()->create());
         Referral::getOrCreate();
 
@@ -211,5 +213,39 @@ class ReferralTest extends TestCase
 
         $this->expectExceptionMessage(config("referral.error_codes.REFERRED_USER_ALREADY_REDEEMED.message"));
         Referral::redeem($referred->id);
+    }
+
+    public function test_finds_referral_in_actions()
+    {
+        $this->seed();
+        Event::fake();
+
+        /** @var User $user */
+        $this->actingAs($user = User::factory()->create());
+        $ref = Referral::getOrCreate();
+
+        /** @var User $u1 */
+        $this->actingAs($u1 = User::factory()->create());
+        session()->put("referral_code", $ref);
+
+        Referral::check();
+
+        $this->assertEquals($user->id, $u1->referredBy->referrer->id);
+        $this->assertEquals($u1->id, $u1->referredBy->referred->id);
+
+        Event::assertDispatched(NewReferralReceived::class);
+    }
+
+    public function test_providing_invalid_referral_dont_emit_event()
+    {
+        $this->seed();
+        Event::fake();
+
+        /** @var User $user */
+        $this->actingAs($user = User::factory()->create());
+        session()->put("referral_code", Str::uuid()->toString());
+
+        Referral::check();
+        Event::assertNotDispatched(NewReferralReceived::class);
     }
 }

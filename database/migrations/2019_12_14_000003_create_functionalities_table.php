@@ -13,7 +13,7 @@ class CreateFunctionalitiesTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('functionalities', function (Blueprint $table) {
+        Schema::create('functionalities', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string("name");
             $table->longText("description");
@@ -32,6 +32,6 @@ class CreateFunctionalitiesTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('functionalities');
+        Schema::dropIfExists('functionalities');
     }
 }

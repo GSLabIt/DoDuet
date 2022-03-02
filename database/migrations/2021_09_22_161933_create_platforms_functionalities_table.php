@@ -13,7 +13,7 @@ class CreatePlatformsFunctionalitiesTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('functionalities_platforms', function (Blueprint $table) {
+        Schema::create('functionalities_platforms', function (Blueprint $table) {
             $table->foreignUuid("functionalities_id");
             $table->foreignUuid("platforms_id");
 
@@ -28,6 +28,6 @@ class CreatePlatformsFunctionalitiesTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('platforms_functionalities');
+        Schema::dropIfExists('platforms_functionalities');
     }
 }

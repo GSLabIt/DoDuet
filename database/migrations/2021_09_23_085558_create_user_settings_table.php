@@ -13,9 +13,9 @@ class CreateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('user_settings', function (Blueprint $table) {
+        Schema::create('user_settings', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("owner_id")->references("id")->on(env("COMMON_DATABASE") . ".users")->cascadeOnDelete();
+            $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
             $table->foreignUuid("settings_id")->references("id")->on("settings")->cascadeOnDelete();
             $table->longText("setting"); // encrypted
 
@@ -30,6 +30,6 @@ class CreateUserSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('user_settings');
+        Schema::dropIfExists('user_settings');
     }
 }

@@ -15,8 +15,8 @@ class CreateMentionsTable extends Migration
     {
         Schema::create('mentions', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("mentioner_id")->references("id")->on(env("COMMON_DATABASE") . ".users")->cascadeOnDelete();
-            $table->foreignUuid("mentioned_id")->references("id")->on(env("COMMON_DATABASE") . ".users")->cascadeOnDelete();
+            $table->foreignUuid("mentioner_id")->references("id")->on("users")->cascadeOnDelete();
+            $table->foreignUuid("mentioned_id")->references("id")->on("users")->cascadeOnDelete();
             $table->uuidMorphs("mentionable");
             $table->timestamps();
         });

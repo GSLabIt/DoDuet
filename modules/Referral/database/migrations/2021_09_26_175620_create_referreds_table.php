@@ -21,20 +21,8 @@ class CreateReferredsTable extends Migration
     {
         Schema::create('referreds', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid("referrer_id")
-                ->references("id")
-                ->on(
-                    config("referral.is_multi_db.active") ?
-                        config("referral.is_multi_db.common_connection") . ".users" :
-                        "users"
-                );
-            $table->foreignUuid("referred_id")
-                ->references("id")
-                ->on(
-                    config("referral.is_multi_db.active") ?
-                        config("referral.is_multi_db.common_connection") . ".users" :
-                        "users"
-                );
+            $table->foreignUuid("referrer_id")->references("id")->on("users");
+            $table->foreignUuid("referred_id")->references("id")->on("users");
             $table->boolean("is_redeemed")->default(false);
             $table->integer("prize");
             $table->timestamp("redeemed_at")->nullable();

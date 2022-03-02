@@ -8,11 +8,11 @@
 
 namespace Doinc\Modules\Referral;
 
+use App\Models\User;
 use Doinc\Modules\Referral\Enums\ReferralRoutes;
 use Doinc\Modules\Referral\Events\NewReferralReceived;
 use Doinc\Modules\Referral\Events\ReferralRedeemed;
-use Doinc\Modules\Referral\Models\Interfaces\IReferrable;
-use Doinc\Modules\Referral\models\Referred;
+use Doinc\Modules\Referral\Models\Referred;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -27,10 +27,10 @@ class Referral
      */
     public function url(): string
     {
-        /**@var IReferrable $user */
+        /**@var User $user */
         $user = auth()->user();
 
-        return route(ReferralRoutes::POST_STORE_REFERRAL->value, ["ref" => $user->referral()->get(["code"])->first()["code"]]);
+        return route(ReferralRoutes::POST_STORE_REFERRAL->value, ["ref" => $user->referral->code]);
     }
 
     /**
@@ -54,14 +54,15 @@ class Referral
      */
     public function getOrCreate(bool $random = true): string
     {
-        /**@var IReferrable $user */
+        /**@var User $user */
         $user = auth()->user();
 
         if($user->referral()->exists()) {
-            return $user->referral()->get(["code"])->first()["code"];
+            return $user->referral->code;
         }
 
         $code = $this->generate($random);
+        /** @var \Doinc\Modules\Referral\Models\Referral $r */
         $user->referral()->create([
             "id" => Str::uuid()->toString(),
             "code" => $code
@@ -89,14 +90,15 @@ class Referral
             $referral = Models\Referral::where("code", $ref)->first();
             if (!is_null($referral)) {
                 // if the referral code exists than associate the just created user with the referrer
-                // the prize for the referrer is computed on the fly based on the amount of refs it has
+                // the prizvfe for the referrer is computed on the fly based on the amount of refs it has
                 $prize = $this->computeNewRefPrize($referral->owner);
 
-                /**@var IReferrable $user */
+                /**@var User $user */
                 $user = auth()->user();
 
                 // actually create the association
                 $user->referredBy()->create([
+                    "id" => Str::uuid()->toString(),
                     "referrer_id" => $referral->owner->id,
                     "prize" => $prize
                 ]);
@@ -114,7 +116,7 @@ class Referral
      */
     public function newRefPrize(): int
     {
-        /**@var IReferrable $user */
+        /**@var User $user */
         $user = auth()->user();
 
         // call the actual computing function and reflect it
@@ -124,10 +126,10 @@ class Referral
     /**
      * Get the prize that will be received by the referrer for the next referred user.
      *
-     * @param IReferrable $user
+     * @param User $user
      * @return int
      */
-    public function computeNewRefPrize(IReferrable $user): int
+    public function computeNewRefPrize(User $user): int
     {
         // retrieve the amount of referred users
         $referred_users = $user->referred()->count();
@@ -163,7 +165,7 @@ class Referral
      */
     public function totalRefPrize(): int
     {
-        /**@var IReferrable $user */
+        /**@var User $user */
         $user = auth()->user();
 
         return $user->referred()->sum("prize");
@@ -191,7 +193,7 @@ class Referral
             ]
         );
 
-        /**@var IReferrable $user */
+        /**@var User $user */
         $user = auth()->user();
 
         /**@var Referred $referred */
@@ -235,7 +237,7 @@ class Referral
      */
     public function redeemAll(): int
     {
-        /**@var IReferrable $user */
+        /**@var User $user */
         $user = auth()->user();
 
         $total_redeemed = 0;

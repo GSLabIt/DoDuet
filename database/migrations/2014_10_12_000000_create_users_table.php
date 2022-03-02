@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::connection("common")->create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->longText('name');  // encrypted
             $table->string('email')->unique();
@@ -32,6 +32,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::connection("common")->dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 }

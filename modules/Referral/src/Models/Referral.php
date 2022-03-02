@@ -13,30 +13,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Doinc\Modules\Referral\Models\Traits\ActivityLogAll;
-use Doinc\Modules\Referral\Models\Traits\MultiDatabaseRelation;
 use Doinc\Modules\Referral\Models\Traits\Uuid;
 use Spatie\Activitylog\Traits\LogsActivity;
+
 
 /**
  * @mixin IdeHelperReferral
  */
 class Referral extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll, MultiDatabaseRelation;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
     protected $guarded = ["created_at", "updated_at"];
 
     function owner(): BelongsTo
     {
-        // if multi db is on use the multi database query
-        if(config("referral.is_multi_db.active")) {
-            return $this->multiDatabaseRunQuery(
-                config("referral.is_multi_db.common_connection"),
-                fn() => $this->belongsTo(User::class)
-            );
-        }
-
-        // fallback to standard relation
         return $this->belongsTo(User::class);
     }
 }

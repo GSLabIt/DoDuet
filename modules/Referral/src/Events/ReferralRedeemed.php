@@ -8,7 +8,7 @@
 
 namespace Doinc\Modules\Referral\Events;
 
-use Doinc\Modules\Referral\Models\Interfaces\IReferrable;
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -24,7 +24,7 @@ class ReferralRedeemed
      * @return void
      */
     public function __construct(
-        public IReferrable $referrer,
+        public User $referrer,
         public Referred $referred
     )
     {
