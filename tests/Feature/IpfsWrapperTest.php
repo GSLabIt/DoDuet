@@ -23,7 +23,6 @@ class IpfsWrapperTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
         $this->refreshDatabase();
     }
 

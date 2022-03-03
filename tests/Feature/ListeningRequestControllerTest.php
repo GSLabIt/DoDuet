@@ -14,12 +14,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 
 class ListeningRequestControllerTest extends TestCase
 {
-    use MakesGraphQLRequests, ClearsSchemaCache, RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * Set up function.
@@ -29,7 +27,6 @@ class ListeningRequestControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
 
         $this->refreshDatabase();
     }
@@ -48,7 +45,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_in_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -79,7 +75,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_in_challenge_with_track_not_in_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->startSession();
 
         /**@var User $user */
@@ -112,7 +107,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_in_challenge_while_already_listening()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -147,7 +141,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_request_listen_to_track_in_challenge_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -176,7 +169,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -203,7 +195,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_while_already_listening()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -235,7 +226,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(

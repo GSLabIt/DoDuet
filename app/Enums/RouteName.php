@@ -26,4 +26,9 @@ enum RouteName: string
     case CHALLENGE_TRACK_TOTAL_LISTENING_REQUESTS = "challenge_track_total_listening_requests";
     case CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE = "challenge_average_vote_track_in_challenge";
     case CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE = "challenge_track_listening_number_in_challenge";
+
+    case SETTINGS_SERVER_PUBLIC_KEY = "settings_server_public_key";
+    case SETTINGS_USER_PUBLIC_KEY = "settings_user_public_key";
+    case SETTINGS_USER_SECRET_KEY = "settings_user_secret_key";
+    case SETTINGS_LISTENED_CHALLENGE_RANDOM_TRACKS = "settings_listened_challenge_random_tracks";
 }

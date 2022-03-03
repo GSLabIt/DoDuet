@@ -10,4 +10,5 @@ use App\Enums\RouteGroup;
 
 Route::rgroup(RouteGroup::VOTE)->prefix("vote")->group(__DIR__ . "/vote/index.php");
 Route::rgroup(RouteGroup::CHALLENGE)->prefix("challenge")->group(__DIR__ . "/challenge/index.php");
+Route::rgroup(RouteGroup::SETTINGS)->prefix("settings")->group(__DIR__ . "/settings/index.php");
 
