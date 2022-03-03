@@ -26,4 +26,7 @@ enum RouteName: string
     case CHALLENGE_TRACK_TOTAL_LISTENING_REQUESTS = "challenge_track_total_listening_requests";
     case CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE = "challenge_average_vote_track_in_challenge";
     case CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE = "challenge_track_listening_number_in_challenge";
+
+    case LISTENING_REQUEST_TO_TRACK_IN_CHALLENGE = "listening_request_to_track_in_challenge";
+    case LISTENING_REQUEST_TO_TRACK= "listening_request_to_track";
 }

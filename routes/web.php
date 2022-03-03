@@ -67,16 +67,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // Challenge
     Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('challenge-index');
-
-    // Listen to tracks
-    Route::get(
-        "/listen/in-challenge/{track_id}",
-        [ListeningRequestController::class, "listenToTrackInChallenge"]
-    )->name("listen-to-track-in-challenge");
-    Route::get(
-        "/listen/track/{track_id}",
-        [ListeningRequestController::class, "listenToTrack"]
-    )->name("listen-to-track");
 });
 
 Route::prefix("nft")->group(function() {
@@ -88,13 +78,3 @@ Route::prefix("nft")->group(function() {
 Route::get("/track/{id}", function ($id) {
     abort("501","Not implemented");
 })->name("tracks-get");
-
-Route::get(
-    "/listen/in-challenge/{track_id}",
-    [ListeningRequestController::class, "listenToTrackInChallenge"]
-)->name("listen_to_track_in_challenge");
-
-Route::get(
-    "/listen/track/{track_id}",
-    [ListeningRequestController::class, "listenToTrack"]
-)->name("listen_to_track");
