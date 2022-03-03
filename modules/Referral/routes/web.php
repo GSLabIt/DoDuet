@@ -56,12 +56,12 @@ Route::middleware(['auth:sanctum', 'verified'])
         Route::post(
             "/redeem",
             [ReferralController::class, "redeemAll"]
-        )->name(ReferralRoutes::GET_TOTAL_REF_PRIZE->value);
+        )->name(ReferralRoutes::POST_REDEEM_ALL_PRIZES->value);
 
         Route::post(
             "/redeem/{referred_id}",
             [ReferralController::class, "redeem"]
-        )->name(ReferralRoutes::GET_TOTAL_REF_PRIZE->value);
+        )->name(ReferralRoutes::POST_REDEEM_PRIZE->value);
     });
 
 Route::prefix("referral")

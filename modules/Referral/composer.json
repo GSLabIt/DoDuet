@@ -1,7 +1,7 @@
 {
     "name": "do-inc/referral-module",
     "description": "Module that gives the possibility to track and give prizes to users for referring a service to other people",
-    "version": "1.4.26",
+    "version": "1.4.28",
     "type": "laravel-module",
     "keywords": [
         "do-inc",

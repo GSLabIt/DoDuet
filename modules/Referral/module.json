@@ -12,11 +12,13 @@
     "providers": [
         "Doinc\\Modules\\Referral\\Providers\\ReferralServiceProvider"
     ],
-    "aliases": {},
+    "aliases": {
+        "Referral": "Doinc\\Modules\\Referral\\Facades\\Referral"
+    },
     "files": [],
     "requires": [],
     "minimumCoreVersion": "^9.0",
     "title": "Referral module",
-    "version": "1.4.26",
+    "version": "1.4.28",
     "author": "Emanuele (ebalo) Balsamo"
 }

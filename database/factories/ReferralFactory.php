@@ -10,16 +10,16 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Referral\models\Referral;
+use Modules\{{$capitalized}}\models\{{$capitalized}};
 
-class ReferralFactory extends Factory
+class {{$capitalized}}Factory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Referral::class;
+    protected $model = {{$capitalized}}::class;
 
     /**
      * Define the model's default state.

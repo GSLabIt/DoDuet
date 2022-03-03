@@ -8,6 +8,10 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/modules" isTestSource="false" packagePrefix="Modules\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Commander/src" isTestSource="false" packagePrefix="Doinc\Modules\Commander\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Referral/src" isTestSource="false" packagePrefix="Doinc\Modules\Referral\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Referral/database/factories" isTestSource="false" packagePrefix="Doinc\Modules\Referral\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Referral/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Referral\Database\Seeders\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fruitcake/laravel-cors" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
@@ -172,6 +176,26 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/do-inc/laravel-persona-kyc" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nwidart/laravel-modules" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/joshbrw/laravel-module-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/stopwatch" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-iconv" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zbateson/stream-decorators" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zbateson/mail-mime-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zbateson/mb-wrapper" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest-plugin-laravel" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan-deprecation-rules" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/laravel-ray" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan-phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/extension-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/macroable" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/ray" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nunomaduro/larastan" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pimple/pimple" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/orchestra/testbench-core" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/orchestra/testbench" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

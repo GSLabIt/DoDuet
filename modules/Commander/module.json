@@ -1,0 +1,23 @@
+{
+    "name": "commander",
+    "alias": "commander-module",
+    "description": "___",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "commander",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Doinc\\Modules\\Commander\\Providers\\CommanderServiceProvider"
+    ],
+    "aliases": {
+    },
+    "files": [],
+    "requires": [],
+    "minimumCoreVersion": "^9.0",
+    "title": "Commander module",
+    "version": "1.0.0",
+    "author": "Emanuele (ebalo) Balsamo"
+}

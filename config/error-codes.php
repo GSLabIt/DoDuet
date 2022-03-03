@@ -9,7 +9,7 @@
 return [
     /**
      * |--------------------------------------------------------------------------
-     * | Referrals related error codes
+     * | {{$capitalized}}s related error codes
      * |--------------------------------------------------------------------------
      * |
      * | NOTE: codes should be universal, never ever repeated

@@ -18,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Referral\http\controllers';
+    protected string $moduleNamespace = 'Doinc\Modules\Referral\Http\Controllers';
 
     /**
      * Called before routes are registered.

@@ -56,7 +56,6 @@ php artisan module:publish-migration
 
 ## Setup
 ### Mandatory steps
-* Implement the `IReferrable` interface to your `User` model
 * Apply the `Referrable` trait to your `User` model
 
 ### Optional steps

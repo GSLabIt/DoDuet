@@ -10,7 +10,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Referral\models\Referred;
+use Modules\{{$capitalized}}\models\Referred;
 
 class ReferredFactory extends Factory
 {
@@ -33,7 +33,7 @@ class ReferredFactory extends Factory
             "referrer_id" => User::factory(),
             "referred_id" => User::factory(),
             "is_redeemed" => $this->faker->boolean(0),
-            "prize" => config("platforms.referral_prizes")[0]["prize"]
+            "prize" => config("platforms.{{$capitalized}}_prizes")[0]["prize"]
         ];
     }
 
