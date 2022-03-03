@@ -1,12 +1,12 @@
 {
-    "name": "do-inc/referral-module",
-    "description": "Module that gives the possibility to track and give prizes to users for referring a service to other people",
-    "version": "1.4.29",
+    "name": "do-inc/settings-module",
+    "description": "___",
+    "version": "1.0.0",
     "type": "laravel-module",
     "keywords": [
         "do-inc",
         "laravel",
-        "referral",
+        "settings",
         "module"
     ],
     "authors": [
@@ -18,21 +18,21 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Doinc\\Modules\\Referral\\Providers\\ReferralServiceProvider"
+                "Doinc\\Modules\\Settings\\Providers\\SettingsServiceProvider"
             ],
             "aliases": {
-                "Referral": "Doinc\\Modules\\Referral\\Facades\\Referral"
+                "Settings": "Doinc\\Modules\\Settings\\Facades\\Settings"
             }
         }
     },
     "autoload": {
         "psr-4": {
-            "Doinc\\Modules\\Referral\\": "src/"
+            "Doinc\\Modules\\Settings\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Doinc\\Modules\\Referral\\Tests\\": "tests/"
+            "Doinc\\Modules\\Settings\\Tests\\": "tests/"
         }
     },
     "config": {

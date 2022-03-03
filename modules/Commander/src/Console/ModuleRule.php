@@ -10,21 +10,21 @@ namespace Doinc\Modules\Commander\Console;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
-use Nwidart\Modules\Commands\PolicyMakeCommand;
+use Nwidart\Modules\Commands\RuleMakeCommand;
 
-class ModulePolicy extends PolicyMakeCommand
+class ModuleRule extends RuleMakeCommand
 {
     use BladeCompiler;
 
-    protected $name = "module:policy";
+    protected $name = "module:rule";
 
     /**
      * @return mixed
      */
     protected function getTemplateContents()
     {
-        $base_path = resource_path("stubs/modules/src/Policies");
-        $file = "{{\$policy}}.php.blade.php";
+        $base_path = resource_path("stubs/modules/src/Rules");
+        $file = "{{\$rule}}.php.blade.php";
         return Blade::render(
             file_get_contents($base_path . "/$file"),
             [

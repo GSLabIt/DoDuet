@@ -19,7 +19,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Doinc\Modules\Referral\Enums\ReferralRoutes;
-use Doinc\Modules\Referral\http\controllers\ReferralController;
+use Doinc\Modules\Referral\Http\Controllers\ReferralController;
 
 Route::middleware(['auth:sanctum', 'verified'])
     ->prefix('referral')

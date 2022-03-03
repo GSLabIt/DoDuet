@@ -59,7 +59,10 @@
             "Doinc\\Modules\\Commander\\": "modules/Commander/src/",
             "Doinc\\Modules\\Referral\\": "modules/Referral/src/",
             "Doinc\\Modules\\Referral\\Database\\Factories\\": "modules/Referral/database/factories/",
-            "Doinc\\Modules\\Referral\\Database\\Seeders\\": "modules/Referral/database/seeders/"
+            "Doinc\\Modules\\Referral\\Database\\Seeders\\": "modules/Referral/database/seeders/",
+            "Doinc\\Modules\\Settings\\": "modules/Settings/src/",
+            "Doinc\\Modules\\Settings\\Database\\Factories\\": "modules/Settings/database/factories/",
+            "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/"
         },
         "files": [
             "app/Helpers/index.php"
@@ -67,7 +70,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Doinc\\Modules\\Referral\\Tests\\Feature\\": "modules/Referral/tests/Feature/",
+            "Doinc\\Modules\\Referral\\Tests\\Unit\\": "modules/Referral/tests/Unit/",
+            "Doinc\\Modules\\Settings\\Tests\\Feature\\": "modules/Settings/tests/Feature/",
+            "Doinc\\Modules\\Settings\\Tests\\Unit\\": "modules/Settings/tests/Unit/"
         }
     },
     "scripts": {

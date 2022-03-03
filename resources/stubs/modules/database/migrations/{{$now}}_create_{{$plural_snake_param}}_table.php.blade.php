@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Create{{$studly}}Table extends Migration
+class Create{{$studly_param}}Table extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,7 @@ class Create{{$studly}}Table extends Migration
      */
     public function up()
     {
-        Schema::create('{{$plural_snake}}', function (Blueprint $table) {
+        Schema::create('{{$plural_snake_param}}', function (Blueprint $table) {
             $table->uuid("id")->primary();
 
             $table->timestamps();
@@ -33,7 +33,7 @@ class Create{{$studly}}Table extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('{{$plural_snake}}');
+        Schema::dropIfExists('{{$plural_snake_param}}');
     }
 }
 
