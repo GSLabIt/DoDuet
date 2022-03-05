@@ -26,4 +26,20 @@ enum RouteName: string
     case CHALLENGE_TRACK_TOTAL_LISTENING_REQUESTS = "challenge_track_total_listening_requests";
     case CHALLENGE_AVERAGE_VOTE_TRACK_IN_CHALLENGE = "challenge_average_vote_track_in_challenge";
     case CHALLENGE_TRACK_LISTENING_NUMBER_IN_CHALLENGE = "challenge_track_listening_number_in_challenge";
+
+    case TRACK_CREATE = "track_create";
+    case TRACK_UPDATE = "track_update";
+    case TRACK_VOTES = "track_votes";
+    case TRACK_CREATED = "track_created";
+    case TRACK_OWNED = "track_owned";
+    case TRACK_LISTENINGS = "track_listenings";
+    case TRACK_AVERAGE_VOTE = "track_average_vote";
+    case TRACK_MOST_VOTED = "track_most_voted";
+    case TRACK_MOST_LISTENED = "track_most_listened";
+    case TRACK_NOT_IN_CHALLENGE = "track_not_in_challenge";
+    case TRACK_LINK = "track_link";
+    case TRACK_LINK_TO_ALBUM = "track_link_to_album";
+    case TRACK_LINK_TO_COVER = "track_link_to_cover";
+    case TRACK_LINK_TO_LYRIC = "track_link_to_lyric";
+    case TRACK_GET = "track_get";
 }
