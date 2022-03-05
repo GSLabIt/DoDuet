@@ -13,5 +13,6 @@ enum RouteGroup: string
     case REGISTER = "register";
     case VOTE = "vote";
     case CHALLENGE = "challenge";
+    case LISTENING_REQUEST = "listening_request";
     case SETTINGS = "settings";
 }
