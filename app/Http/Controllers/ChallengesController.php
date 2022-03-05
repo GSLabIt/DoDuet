@@ -258,7 +258,7 @@ class ChallengesController extends Controller
             ...$request->all()
         ], [
             "track_id" => "required|uuid|exists:tracks,id",
-            "user_id" => "nullable|uuid|exists:common.users,id",
+            "user_id" => "nullable|uuid|exists:users,id",
             "challenge_id" => "nullable|integer|exists:challenges,id"
         ]);
 
@@ -331,7 +331,7 @@ class ChallengesController extends Controller
             ...$request->all()
         ], [
             "track_id" => "required|uuid|exists:tracks,id",
-            "user_id" => "nullable|uuid|exists:common.users,id",
+            "user_id" => "nullable|uuid|exists:users,id",
             "challenge_id" => "nullable|integer|exists:challenges,id"
         ]);
 

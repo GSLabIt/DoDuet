@@ -294,7 +294,7 @@ class TracksController extends Controller
      */
     public function getUsersTracks($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection {
         Validator::validate($args, [
-            "user_id" => "required|uuid|exists:common.users,id",
+            "user_id" => "required|uuid|exists:users,id",
         ]);
 
         /** @var User $user */

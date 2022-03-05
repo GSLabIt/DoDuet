@@ -30,7 +30,6 @@ class TracksControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
 
         $this->refreshDatabase();
 
@@ -72,7 +71,6 @@ class TracksControllerTest extends TestCase
     /** Test well-formed Track creation */
     public function test_track_creation() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -112,7 +110,6 @@ class TracksControllerTest extends TestCase
     /** Test well-formed Track creation with null name */
     public function test_track_creation_null_name() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->authAsUser();
 
         $response = $this->multipartGraphQL(/** @lang GraphQL */
@@ -156,7 +153,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation submitting a long name. */
     public function test_track_creation_long_name() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -204,7 +200,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation submitting a null description.  */
     public function test_track_creation_null_description() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -249,7 +244,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation submitting a null duration.  */
     public function test_track_creation_null_duration() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -295,7 +289,6 @@ class TracksControllerTest extends TestCase
     /** Test well-formed Track creation with wrong file format */
     public function test_track_creation_wrong_file_format() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -344,7 +337,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with album. */
     public function test_track_creation_with_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -390,7 +382,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with unowned album. */
     public function test_track_creation_with_unowned_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -441,7 +432,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with bad-formed album UUID. */
     public function test_track_creation_with_wrong_album_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -496,7 +486,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with a not existing album. */
     public function test_track_creation_with_not_existing_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -552,7 +541,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed creation edit with cover. */
     public function test_track_creation_with_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -598,7 +586,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with unowned cover. */
     public function test_track_creation_with_unowned_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -649,7 +636,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with bad-formed cover UUID. */
     public function test_track_creation_with_wrong_cover_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -698,7 +684,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with a not existing cover. */
     public function test_track_creation_with_not_existing_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -748,7 +733,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with lyric. */
     public function test_track_creation_with_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -795,7 +779,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with unowned lyric. */
     public function test_track_creation_with_unowned_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -845,7 +828,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with bad-formed lyric UUID. */
     public function test_track_creation_with_wrong_lyric_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -894,7 +876,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with a not existing lyric. */
     public function test_track_creation_not_existing_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -947,7 +928,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit. */
     public function test_track_edit() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -984,7 +964,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit submitting a bad-formed uuid. */
     public function test_track_edit_wrong_uuid() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1023,7 +1002,6 @@ class TracksControllerTest extends TestCase
     /** Test a not existing track edit. */
     public function test_not_existing_track_edit() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1063,7 +1041,6 @@ class TracksControllerTest extends TestCase
     /** Test an unowned track edit. */
     public function test_unowned_track_edit() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1103,7 +1080,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit submitting a null name. */
     public function test_track_edit_null_name() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1144,7 +1120,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit submitting a long name. */
     public function test_track_edit_long_name() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1187,7 +1162,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit submitting a null description.  */
     public function test_track_edit_null_description() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1228,7 +1202,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with album. */
     public function test_track_edit_with_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1271,7 +1244,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with unowned album. */
     public function test_track_edit_with_unowned_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1317,7 +1289,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with bad-formed album UUID. */
     public function test_track_edit_with_wrong_album_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1362,7 +1333,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with a not existing album. */
     public function test_track_edit_with_not_existing_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1408,7 +1378,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with cover. */
     public function test_track_edit_with_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1451,7 +1420,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with unowned cover. */
     public function test_track_edit_with_unowned_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1497,7 +1465,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with bad-formed cover UUID. */
     public function test_track_edit_with_wrong_cover_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1542,7 +1509,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with a not existing cover. */
     public function test_track_edit_with_not_existing_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1588,7 +1554,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with lyric. */
     public function test_track_edit_with_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1630,7 +1595,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with unowned lyric. */
     public function test_track_edit_with_unowned_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1676,7 +1640,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with bad-formed lyric UUID. */
     public function test_track_edit_with_wrong_lyric_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1721,7 +1684,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with a not existing lyric. */
     public function test_track_edit_not_existing_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1770,7 +1732,6 @@ class TracksControllerTest extends TestCase
      */
     public function test_track_edit_with_lyric_album_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1827,7 +1788,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalVotes" */
     public function test_get_total_votes() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1865,7 +1825,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalVotes" with a bad-formed uuid */
     public function test_get_total_votes_wrong_uuid() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1899,7 +1858,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalVotes" with a not existing uuid */
     public function test_get_total_votes_not_existing_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -1936,7 +1894,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getUsersTracks" */
     public function test_get_users_tracks() {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         // create a dummy track, just to get sure it's not counted
         Tracks::factory()->create();
@@ -1971,7 +1928,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getUsersTracks" with a bad-formed uuid */
     public function test_get_users_tracks_with_wrong_uuid() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2001,7 +1957,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getUsersTracks" with a not existing uuid */
     public function test_get_users_tracks_with_not_existing_user() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2033,7 +1988,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalListenings" */
     public function test_get_total_listenings() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2066,7 +2020,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalListenings" with a bad-formed uuid */
     public function test_get_total_listenings_with_wrong_uuid() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2095,7 +2048,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalListenings" with a not existing uuid */
     public function test_get_total_listenings_with_not_existing_user() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2127,7 +2079,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getAverageVote" */
     public function test_get_average_vote() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2161,7 +2112,6 @@ class TracksControllerTest extends TestCase
      */
     public function test_get_average_vote_on_unvoted_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2186,7 +2136,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getAverageVote" with a bad-formed uuid */
     public function test_get_average_vote_wrong_uuid() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2215,7 +2164,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getAverageVote" with a not existing uuid */
     public function test_get_average_vote_not_existing_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2248,7 +2196,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getMostVotedTracks" */
     public function test_get_most_voted_tracks() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2317,7 +2264,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getMostListenedTracks" */
     public function test_get_most_listened_tracks() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2381,7 +2327,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getNotInChallengeTracks" */
     public function test_get_not_in_challenge_tracks() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2409,7 +2354,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTrackLink" */
     public function test_get_track_link() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2435,7 +2379,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTrackLink" with a bad-formed uuid */
     public function test_get_track_link_wrong_uuid() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2464,7 +2407,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTrackLink" with a not existing uuid */
     public function test_get_track_link_not_existing_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2497,7 +2439,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" */
     public function test_link_to_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2531,7 +2472,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with wrong track id */
     public function test_link_to_album_wrong_track_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2567,7 +2507,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with unowned track id */
     public function test_link_to_album_unowned_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2605,7 +2544,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with not existing track id */
     public function test_link_to_album_not_existing_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2639,7 +2577,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with wrong album id*/
     public function test_link_to_album_wrong_album_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2675,7 +2612,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with unowned album id */
     public function test_link_to_album_unowned_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2713,7 +2649,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with not existing album id */
     public function test_link_to_album_not_existing_album() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2750,7 +2685,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" */
     public function test_link_to_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2784,7 +2718,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with wrong track id */
     public function test_link_to_cover_wrong_track_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2820,7 +2753,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with unowned track id */
     public function test_link_to_cover_unowned_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2858,7 +2790,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with not existing track id */
     public function test_link_to_cover_not_existing_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2892,7 +2823,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with wrong cover id*/
     public function test_link_to_cover_wrong_cover_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2928,7 +2858,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with unowned cover id */
     public function test_link_to_cover_unowned_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -2966,7 +2895,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with not existing cover id */
     public function test_link_to_cover_not_existing_cover() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3003,7 +2931,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" */
     public function test_link_to_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3037,7 +2964,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with wrong track id */
     public function test_link_to_lyric_wrong_track_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3073,7 +2999,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with unowned track id */
     public function test_link_to_lyric_unowned_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3111,7 +3036,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with not existing track id */
     public function test_link_to_lyric_not_existing_track() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3145,7 +3069,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with wrong lyric id*/
     public function test_link_to_lyric_wrong_lyric_id() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3181,7 +3104,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with unowned lyric id */
     public function test_link_to_lyric_unowned_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
@@ -3219,7 +3141,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with not existing lyric id */
     public function test_link_to_lyric_not_existing_lyric() {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->actingAs(
             $this->user
         );
