@@ -12,6 +12,13 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/src" isTestSource="false" packagePrefix="Doinc\Modules\Referral\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/database/factories" isTestSource="false" packagePrefix="Doinc\Modules\Referral\Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Referral\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Referral/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Referral\Tests\Feature\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Referral/tests/Unit" isTestSource="true" packagePrefix="Doinc\Modules\Referral\Tests\Unit\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Settings/database/factories" isTestSource="false" packagePrefix="Doinc\Modules\Settings\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Settings/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Settings\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Settings/src" isTestSource="false" packagePrefix="Doinc\Modules\Settings\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Settings/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Settings\Tests\Feature\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Settings/tests/Unit" isTestSource="true" packagePrefix="Doinc\Modules\Settings\Tests\Unit\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fruitcake/laravel-cors" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />

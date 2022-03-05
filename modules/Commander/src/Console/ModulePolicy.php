@@ -23,8 +23,8 @@ class ModulePolicy extends PolicyMakeCommand
      */
     protected function getTemplateContents()
     {
-        $base_path = resource_path("stubs/modules/database/factories");
-        $file = "{{\$factory}}.php.blade.php";
+        $base_path = resource_path("stubs/modules/src/Policies");
+        $file = "{{\$policy}}.php.blade.php";
         return Blade::render(
             file_get_contents($base_path . "/$file"),
             [

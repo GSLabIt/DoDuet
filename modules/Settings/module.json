@@ -1,0 +1,24 @@
+{
+    "name": "settings",
+    "alias": "settings-module",
+    "description": "___",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "settings",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Doinc\\Modules\\Settings\\Providers\\SettingsServiceProvider"
+    ],
+    "aliases": {
+        "Settings": "Doinc\\Modules\\Settings\\Facades\\Settings"
+    },
+    "files": [],
+    "requires": [],
+    "minimumCoreVersion": "^9.0",
+    "title": "Settings module",
+    "version": "1.0.0",
+    "author": "Emanuele (ebalo) Balsamo"
+}

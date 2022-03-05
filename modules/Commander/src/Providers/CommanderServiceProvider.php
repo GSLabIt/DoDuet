@@ -13,6 +13,7 @@ use Doinc\Modules\Commander\Console\ModuleController;
 use Doinc\Modules\Commander\Console\ModuleEvent;
 use Doinc\Modules\Commander\Console\ModuleGenerator;
 use Doinc\Modules\Commander\Console\ModuleInstall;
+use Doinc\Modules\Commander\Console\CommanderSelfInstall;
 use Illuminate\Support\ServiceProvider;
 
 class CommanderServiceProvider extends ServiceProvider
@@ -33,6 +34,7 @@ class CommanderServiceProvider extends ServiceProvider
         ModuleCommand::class,
         ModuleController::class,
         ModuleEvent::class,
+        CommanderSelfInstall::class,
     ];
 
     /**
