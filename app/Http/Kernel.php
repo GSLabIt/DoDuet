@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\BannedMiddleware;
 use App\Http\Middleware\EnsureFunctionalityIsEnabled;
 use App\Http\Middleware\EnsureHasPlatformAccess;
+use App\Http\Middleware\SafeException;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -40,6 +41,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            SafeException::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
         ],
 
