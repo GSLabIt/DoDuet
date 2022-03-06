@@ -63,10 +63,10 @@ Route::rclass(RouteClass::PUBLIC)->group(__DIR__ . "/web/public/index.php");
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Basic
-    Route::get('/dashboard', [CommonController::class, "dashboard"])->name('dashboard');
+    Route::get('/dashboard', [CommonController::class, "dashboard"])->name('authenticated.dashboard');
 
     // Challenge
-    Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('challenge-index');
+    Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('authenticated.challenge-index');
 });
 
 Route::prefix("nft")->group(function() {

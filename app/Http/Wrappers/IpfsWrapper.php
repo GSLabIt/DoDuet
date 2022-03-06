@@ -62,7 +62,7 @@ class IpfsWrapper implements Wrapper
             // decode and return the file content
             return sodium()->encryption()->symmetric()->decrypt($content, $ipfs->encryption_key);
         } catch (Exception $e) {
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.INVALID_LINK.message"),
                 config("error-codes.INVALID_LINK.code")
             );

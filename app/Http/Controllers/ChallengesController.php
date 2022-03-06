@@ -502,7 +502,7 @@ class ChallengesController extends Controller
         $user = auth()->user();
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("created_at")->first();
-        $required_columns = ["id", "name", "description"];
+        $required_columns = ["id", "name", "duration", "creator_id", "cover_id"];
 
         // if the setting is already set
         if (settings($user)->has("challenge_nine_random_tracks")) {
@@ -567,7 +567,7 @@ class ChallengesController extends Controller
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("created_at")->first();
 
-        $required_columns = ["id", "name", "description"];
+        $required_columns = ["id", "name", "duration", "creator_id", "cover_id"];
         // check if settings exists for malicious requests (normally getNineRandomTracks should already have set something before)
         if (settings($user)->has("challenge_nine_random_tracks")) {
             $settings_content = settings($user)->get("challenge_nine_random_tracks");

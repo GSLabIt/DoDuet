@@ -16,6 +16,10 @@ class CommonController extends Controller
     }
 
     public function dashboard(Request $request) {
-        return Inertia::render('Dashboard');
+        return inertia('Dashboard');
+    }
+
+    public function challengeIndex(Request $request) {
+        return inertia('Challenge/Index');
     }
 }
