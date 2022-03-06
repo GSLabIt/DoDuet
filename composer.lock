@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4be36414fdf931197cbd6b329e1a2897",
+    "content-hash": "ac223c6ea3da9136caa4594783ef8efe",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7203,6 +7203,104 @@
                 }
             ],
             "time": "2022-01-24T18:59:03+00:00"
+        },
+        {
+            "name": "wapmorgan/unified-archive",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wapmorgan/UnifiedArchive.git",
+                "reference": "233e78b4ab026a8d2dc1ff022b897dec6710be10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wapmorgan/UnifiedArchive/zipball/233e78b4ab026a8d2dc1ff022b897dec6710be10",
+                "reference": "233e78b4ab026a8d2dc1ff022b897dec6710be10",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": ">=5.5.0"
+            },
+            "replace": {
+                "wapmorgan/cam": "1.0.2"
+            },
+            "require-dev": {
+                "docopt/docopt": "~1.0",
+                "phpunit/phpunit": "~4.8|~9.5.2"
+            },
+            "suggest": {
+                "alchemy/zippy": "ZIP, TAR, GZIP, BZIP2 support (with combinations) via console programs",
+                "bin-ncompress": "TAR.Z support via console program",
+                "docopt/docopt": "Requirement for cam (Console Archive Manager)",
+                "ext-bz2": "BZ2 and TAR.BZ2 (BZIP2) support",
+                "ext-phar": "TAR support",
+                "ext-rar": "RAR support",
+                "ext-xz": "XZ and TAR.XZ (LZMA) support",
+                "ext-zip": "ZIP support",
+                "ext-zlib": "GZ and TAR.GZ (GZIP) support",
+                "gemorroj/archive7z": "7ZIP (and a lot of formats) support via console program",
+                "pear/archive_tar": "another TAR support",
+                "phpclasses/php-iso-file": "ISO support",
+                "wapmorgan/cab-archive": "CAB support"
+            },
+            "bin": [
+                "bin/cam"
+            ],
+            "type": "library",
+            "extra": {
+                "phar-builder": {
+                    "compression": "BZip2",
+                    "name": "cam.phar",
+                    "output-dir": "./",
+                    "entry-point": "bin/cam",
+                    "include": [
+                        "bin",
+                        "src",
+                        "vendor"
+                    ],
+                    "events": {
+                        "command.package.start": "git describe --tags > bin/version.txt",
+                        "command.package.end": "chmod +x cam.phar && rm bin/version.txt"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "wapmorgan\\UnifiedArchive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "wapmorgan",
+                    "email": "wapmorgan@gmail.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "UnifiedArchive - an archive manager with a unified way of working with all popular archive formats (zip/7z/rar/gz/bz2/xz/cab/tar/tar.gz/tar.bz2/tar.x/tar.Z/...) for PHP with ability for listing, reading, extracting and creation + built-in console archive manager.",
+            "keywords": [
+                "7z",
+                "archive",
+                "bzip2",
+                "cab",
+                "compression",
+                "gzip",
+                "iso",
+                "lzma2",
+                "ncompress",
+                "rar",
+                "tar",
+                "zip"
+            ],
+            "support": {
+                "issues": "https://github.com/wapmorgan/UnifiedArchive/issues",
+                "source": "https://github.com/wapmorgan/UnifiedArchive/tree/1.1.4"
+            },
+            "time": "2021-12-21T19:23:19+00:00"
         },
         {
             "name": "webmozart/assert",

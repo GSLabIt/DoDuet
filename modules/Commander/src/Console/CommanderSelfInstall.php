@@ -57,7 +57,7 @@ class CommanderSelfInstall extends Command
             \Doinc\Modules\Commander\Console\ModuleProvider::class,
             \Doinc\Modules\Commander\Console\ModuleInstall::class,
             Commands\ListCommand::class,
-            // TODO: empower composer psr4 module removal
+            // TODO: empower composer psr-4 module removal
             Commands\ModuleDeleteCommand::class,
             \Doinc\Modules\Commander\Console\ModuleFactory::class,
             \Doinc\Modules\Commander\Console\ModulePolicy::class,
