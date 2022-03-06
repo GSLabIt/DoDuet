@@ -62,7 +62,7 @@ class SettingsController extends Controller
             ]);
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
         );
@@ -86,7 +86,7 @@ class SettingsController extends Controller
             ]);
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.SETTING_NOT_FOUND.message"),
             config("error-codes.SETTING_NOT_FOUND.code")
         );

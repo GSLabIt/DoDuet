@@ -73,7 +73,7 @@ class LyricsController extends Controller
             return $lyric;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.LYRIC_NOT_FOUND.message"),
             config("error-codes.LYRIC_NOT_FOUND.code")
         );
@@ -111,7 +111,7 @@ class LyricsController extends Controller
             return $lyric;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.LYRIC_NOT_FOUND.message"),
             config("error-codes.LYRIC_NOT_FOUND.code")
         );

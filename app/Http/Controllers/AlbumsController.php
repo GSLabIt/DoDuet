@@ -38,7 +38,7 @@ class AlbumsController extends Controller
         $cover = $user->ownedCovers()->where("id", $args["cover"])->first();
 
         if(is_null($cover) && !is_null($args["cover"])){ // A cover id was given but the cover was not owned or not found
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
@@ -84,7 +84,7 @@ class AlbumsController extends Controller
         $cover = $user->ownedCovers()->where("id", $args["cover"])->first();
 
         if(is_null($cover) && !is_null($args["cover"])){ // A cover id was given but the cover was not owned or not found
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
@@ -100,7 +100,7 @@ class AlbumsController extends Controller
             return $album;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.ALBUM_NOT_FOUND.message"),
             config("error-codes.ALBUM_NOT_FOUND.code")
         );
@@ -137,7 +137,7 @@ class AlbumsController extends Controller
             return $album;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.ALBUM_NOT_FOUND.message"),
             config("error-codes.ALBUM_NOT_FOUND.code")
         );

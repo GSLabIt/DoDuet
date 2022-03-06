@@ -99,7 +99,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
@@ -137,7 +137,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );

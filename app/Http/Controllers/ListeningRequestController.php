@@ -86,14 +86,14 @@ class ListeningRequestController extends Controller
                 });
             }
 
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.ALREADY_LISTENING.message"),
                 config("error-codes.ALREADY_LISTENING.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -166,14 +166,14 @@ class ListeningRequestController extends Controller
                 });
             }
 
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.ALREADY_LISTENING.message"),
                 config("error-codes.ALREADY_LISTENING.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );

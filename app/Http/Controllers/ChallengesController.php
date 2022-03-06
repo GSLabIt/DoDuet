@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Exceptions\SafeException;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -55,7 +56,7 @@ class ChallengesController extends Controller
         }
 
         // handle challenge not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.CHALLENGE_NOT_FOUND.message"),
             config("error-codes.CHALLENGE_NOT_FOUND.code")
         );
@@ -143,7 +144,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new Exception(
+                throw new SafeException(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -166,7 +167,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -196,7 +197,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new Exception(
+                throw new SafeException(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -219,7 +220,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -269,7 +270,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new Exception(
+                throw new SafeException(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -289,7 +290,7 @@ class ChallengesController extends Controller
 
             // handle user not found error
             if (is_null($user)) {
-                throw new Exception(
+                throw new SafeException(
                     config("error-codes.USER_NOT_FOUND.message"),
                     config("error-codes.USER_NOT_FOUND.code")
                 );
@@ -310,7 +311,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -342,7 +343,7 @@ class ChallengesController extends Controller
 
             // handle challenge not found error
             if (is_null($challenge)) {
-                throw new Exception(
+                throw new SafeException(
                     config("error-codes.CHALLENGE_NOT_FOUND.message"),
                     config("error-codes.CHALLENGE_NOT_FOUND.code")
                 );
@@ -362,7 +363,7 @@ class ChallengesController extends Controller
 
             // handle user not found error
             if (is_null($user)) {
-                throw new Exception(
+                throw new SafeException(
                     config("error-codes.USER_NOT_FOUND.message"),
                     config("error-codes.USER_NOT_FOUND.code")
                 );
@@ -383,7 +384,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -414,7 +415,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -445,7 +446,7 @@ class ChallengesController extends Controller
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -573,7 +574,7 @@ class ChallengesController extends Controller
             $settings_content = settings($user)->get("challenge_nine_random_tracks");
             if ($settings_content["challenge_id"] == $current_challenge->id) {
                 // if the challenge is the same and the user has not finished listening to at least 4 tracks, throw an error
-                if ($settings_content["listened"] < 4) throw new Exception(
+                if ($settings_content["listened"] < 4) throw new SafeException(
                     config("error-codes.NOT_ENOUGH_LISTENED.message"),
                     config("error-codes.NOT_ENOUGH_LISTENED.code")
                 );
