@@ -1218,35 +1218,3 @@ namespace Doinc\Modules\Referral\Models{
 	class IdeHelperReferred {}
 }
 
-namespace Doinc\Modules\Settings\Models{
-/**
- * Doinc\Modules\Settings\Models\Settings
- *
- * @property string $id
- * @property string $name
- * @property string $type
- * @property string|null $allowed_values
- * @property int $has_default_value
- * @property string|null $default_value
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\User $owner
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings query()
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereAllowedValues($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDefaultValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereHasDefaultValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereUpdatedAt($value)
- */
-	class IdeHelperSettings {}
-}
-

@@ -3,9 +3,9 @@
 namespace Doinc\Modules\Commander\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Spatie\Regex\Regex;
 use Nwidart\Modules\Commands;
+use wapmorgan\UnifiedArchive\UnifiedArchive;
 
 class CommanderSelfInstall extends Command
 {
@@ -38,56 +38,56 @@ class CommanderSelfInstall extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws \wapmorgan\UnifiedArchive\Exceptions\ArchiveExtractionException
      */
     public function handle(): int
     {
         $this->info("Overwriting default module configuration ...");
         $commands = [
-            \Doinc\Modules\Commander\Console\ModuleCommand::class,
-            \Doinc\Modules\Commander\Console\ModuleController::class,
             Commands\DisableCommand::class,
             Commands\DumpCommand::class,
             Commands\EnableCommand::class,
-            \Doinc\Modules\Commander\Console\ModuleEvent::class,
-            \Doinc\Modules\Commander\Console\ModuleJob::class,
-            \Doinc\Modules\Commander\Console\ModuleListener::class,
-            \Doinc\Modules\Commander\Console\ModuleMail::class,
-            \Doinc\Modules\Commander\Console\ModuleMiddleware::class,
-            \Doinc\Modules\Commander\Console\ModuleNotification::class,
-            \Doinc\Modules\Commander\Console\ModuleProvider::class,
-            \Doinc\Modules\Commander\Console\ModuleInstall::class,
             Commands\ListCommand::class,
-            // TODO: empower composer psr-4 module removal
-            Commands\ModuleDeleteCommand::class,
-            \Doinc\Modules\Commander\Console\ModuleFactory::class,
-            \Doinc\Modules\Commander\Console\ModulePolicy::class,
-            \Doinc\Modules\Commander\Console\ModuleRule::class,
             Commands\MigrateCommand::class,
             Commands\MigrateRefreshCommand::class,
             Commands\MigrateResetCommand::class,
             Commands\MigrateRollbackCommand::class,
             Commands\MigrateStatusCommand::class,
-            \Doinc\Modules\Commander\Console\ModuleMigration::class,
-            \Doinc\Modules\Commander\Console\ModuleModel::class,
-            \Doinc\Modules\Commander\Console\ModulePublishConfig::class,
             Commands\PublishMigrationCommand::class,
             Commands\PublishTranslationCommand::class,
             Commands\SeedCommand::class,
-            \Doinc\Modules\Commander\Console\ModuleSeeder::class,
             Commands\SetupCommand::class,
             Commands\UnUseCommand::class,
             Commands\UpdateCommand::class,
             Commands\UseCommand::class,
-            \Doinc\Modules\Commander\Console\ModuleTest::class,
+            ModuleCommand::class,
+            ModuleController::class,
+            ModuleDelete::class,
+            ModuleEvent::class,
+            ModuleFactory::class,
+            ModuleInstall::class,
+            ModuleJob::class,
+            ModuleListener::class,
+            ModuleMail::class,
+            ModuleMiddleware::class,
+            ModuleMigration::class,
+            ModuleModel::class,
+            ModuleNotification::class,
+            ModulePolicy::class,
+            ModuleProvider::class,
+            ModulePublishConfig::class,
+            ModuleRule::class,
+            ModuleSeeder::class,
+            ModuleTest::class,
         ];
 
         $rex = "/'commands' => \[\n(.+\n)+\s+],/";
         $config = config_path("modules.php");
-        $replacement = "'command' => [\n        " .
+        $replacement = "'commands' => [\n        " .
             implode(
                 "\n        ",
                 array_map(
-                    fn(string $v) => $v . "::class,",
+                    fn(string $v) => "\\\\" . $v . "::class,",
                     $commands
                 )
             ) .
@@ -97,7 +97,31 @@ class CommanderSelfInstall extends Command
         $content = Regex::replace($rex, $replacement, $content)->result();
         file_put_contents($config, $content);
 
-        $this->info("Overwrite completed, commander installed");
+        $this->info("Overwrite completed, commander installed!");
+        $this->info("Unpacking and loading stubs ...");
+
+        $stubs_path = module_path("commander", "stubs.zip");
+        $output_path = resource_path("stubs/modules/");
+        if(!file_exists($stubs_path)) {
+            $this->error("Stubs archive not found");
+            return 1;
+        }
+
+        if(!UnifiedArchive::canOpen($stubs_path)) {
+            $this->error("Stubs archive cannot be open");
+            return 1;
+        }
+
+        $answer = true;
+        if(file_exists($output_path)) {
+            $answer = $this->confirm("Stubs folder already exists, overwrite it?");
+        }
+
+        if($answer) {
+            UnifiedArchive::open($stubs_path)->extractFiles(resource_path());
+        }
+
+        $this->info("Stubs loaded!");
 
         return 0;
     }

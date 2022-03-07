@@ -1,7 +1,7 @@
 {
-    "name": "do-inc/commander",
-    "description": "___",
-    "version": "1.0.0",
+    "name": "do-inc/commander-module",
+    "description": "Commander module to overwrite & extend default laravel module commands",
+    "version": "1.0.3",
     "type": "laravel-module",
     "keywords": [
         "do-inc",
@@ -57,8 +57,8 @@
         "spatie/laravel-activitylog": "^4.4",
         "spatie/regex": "^3.1",
         "wapmorgan/unified-archive": "^1.1",
-        "ext-bz2": "^8.1",
-        "ext-zip": "^8.1"
+        "ext-bz2": "*",
+        "ext-zip": "*"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",

@@ -203,7 +203,7 @@ class Referral
         // owned by the current user
         // referral not found
         if (is_null($referred)) {
-            throw new \App\Exceptions\SafeException(
+            throw new Exception(
                 config("referral.error_codes.REFERRED_USER_NOT_FOUND.message"),
                 config("referral.error_codes.REFERRED_USER_NOT_FOUND.code")
             );
@@ -211,7 +211,7 @@ class Referral
 
         // referral prize already redeemed
         if ($referred->is_redeemed) {
-            throw new \App\Exceptions\SafeException(
+            throw new Exception(
                 config("referral.error_codes.REFERRED_USER_ALREADY_REDEEMED.message"),
                 config("referral.error_codes.REFERRED_USER_ALREADY_REDEEMED.code")
             );

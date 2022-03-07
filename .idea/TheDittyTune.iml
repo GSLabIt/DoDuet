@@ -205,6 +205,12 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/orchestra/testbench" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpmyadmin/sql-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/wapmorgan/unified-archive" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/pear-core-minimal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/pear_exception" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/archive_tar" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/console_getopt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gemorroj/archive7z" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/docopt/docopt" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

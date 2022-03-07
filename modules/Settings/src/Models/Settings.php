@@ -18,7 +18,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 
 /**
- * @mixin IdeHelperSettings
+ * @mixin  IdeHelperSettings
  */
 class Settings extends Model
 {
