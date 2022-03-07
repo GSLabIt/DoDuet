@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eebd01792f0256a53b1965aaee1ff9f0",
+    "content-hash": "17e52901555aee89b9d3cd703cf259c8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -376,6 +376,81 @@
                 "issues": "https://github.com/Do-inc/laravel-commander-module/issues"
             },
             "time": "2022-03-07T05:09:32+00:00"
+        },
+        {
+            "name": "do-inc/crypter-module",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:Do-inc/laravel-crypter-module.git",
+                "reference": "ec449144d7d8ccdf6f1ecadcda23ee49734aec10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Do-inc/laravel-crypter-module/zipball/ec449144d7d8ccdf6f1ecadcda23ee49734aec10",
+                "reference": "ec449144d7d8ccdf6f1ecadcda23ee49734aec10",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sodium": "*",
+                "guzzlehttp/guzzle": "^7.2",
+                "illuminate/contracts": "^9.0",
+                "inertiajs/inertia-laravel": "^0.5.4",
+                "nwidart/laravel-modules": "^9.0",
+                "php": "^8.1",
+                "spatie/laravel-activitylog": "^4.4"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^6.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^7.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "laravel-module",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Doinc\\Modules\\Crypter\\Providers\\CrypterServiceProvider"
+                    ],
+                    "aliases": {
+                        "Crypter": "Doinc\\Modules\\Crypter\\Facades\\Crypter"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doinc\\Modules\\Crypter\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Doinc\\Modules\\Crypter\\Tests\\": "tests/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Emanuele (ebalo) Balsamo",
+                    "email": "emanuele.balsamo@do-inc.co"
+                }
+            ],
+            "description": "Sodium cryptographic wrapper, casts and models for integration of queryable encrypted values",
+            "keywords": [
+                "crypter",
+                "do-inc",
+                "laravel",
+                "module"
+            ],
+            "support": {
+                "source": "https://github.com/Do-inc/laravel-crypter-module/tree/v1.0.0",
+                "issues": "https://github.com/Do-inc/laravel-crypter-module/issues"
+            },
+            "time": "2022-03-07T09:58:13+00:00"
         },
         {
             "name": "do-inc/laravel-persona-kyc",
@@ -10164,16 +10239,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.14",
+            "version": "9.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "9f4d60b6afe5546421462b76cd4e633ebc364ab4"
+                "reference": "2e9da11878c4202f97915c1cb4bb1ca318a63f5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/9f4d60b6afe5546421462b76cd4e633ebc364ab4",
-                "reference": "9f4d60b6afe5546421462b76cd4e633ebc364ab4",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2e9da11878c4202f97915c1cb4bb1ca318a63f5f",
+                "reference": "2e9da11878c4202f97915c1cb4bb1ca318a63f5f",
                 "shasum": ""
             },
             "require": {
@@ -10229,7 +10304,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.14"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.15"
             },
             "funding": [
                 {
@@ -10237,7 +10312,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-28T12:38:02+00:00"
+            "time": "2022-03-07T09:28:20+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -12337,9 +12412,9 @@
     "platform": {
         "php": "^8.1",
         "ext-bz2": "*",
-        "ext-gmp": "^8.1",
-        "ext-openssl": "^8.1",
-        "ext-sodium": "^8.1",
+        "ext-gmp": "*",
+        "ext-openssl": "*",
+        "ext-sodium": "*",
         "ext-zip": "*"
     },
     "platform-dev": [],

@@ -58,8 +58,8 @@ class SodiumCryptoWrapper implements Wrapper
         try {
             return random_int($min, $max);
         } catch (Exception $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             // use openssl as random int fails only if the randomness source cannot be trusted
             $bytes = openssl_random_pseudo_bytes(PHP_INT_SIZE);

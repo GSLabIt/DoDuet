@@ -1,52 +1,47 @@
 <?php
 
-namespace App\Http\Wrappers;
+namespace Doinc\Modules\Crypter;
 
 use App\Http\Wrappers\Enums\SodiumContexts;
 use App\Http\Wrappers\Enums\SodiumKeyLength;
 use App\Http\Wrappers\Interfaces\Wrapper;
+use Doinc\Modules\Crypter\Exceptions\InsecureRandomSourceInCryptographicallyCriticalImplementation;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use SodiumException;
 
-class SodiumKeyDerivationWrapper implements Wrapper
+class SodiumKeyDerivation
 {
     /**
      * Initialize the class instance
      *
-     * @param $initializer
-     * @return SodiumKeyDerivationWrapper
+     * @return SodiumKeyDerivation
      */
     #[Pure]
-    public static function init($initializer): SodiumKeyDerivationWrapper
+    public static function init(): SodiumKeyDerivation
     {
         return (new static);
     }
 
     /**
      * Generate a cryptographically secure salt or fallback to openssl pseudo random generator.
-     * This method cannot fail.
      *
      * @param int $length
      * @return string
+     * @throws InsecureRandomSourceInCryptographicallyCriticalImplementation
      */
     public function generateSalt(int $length): string
     {
         try {
             // Fails if no appropriate source of randomness is found
             return bin2hex(random_bytes($length));
-        }
-        catch (Exception $exception) {
-            logger()->error($exception->getMessage());
-            logger()->error($exception->getTraceAsString());
-
+        } catch (Exception) {
             // fallback to openssl pseudo random bytes generation if an error occurs
             $bytes = openssl_random_pseudo_bytes($length, $is_strong);
 
-            if(!$is_strong) {
-                logger()
-                    ->error("ALERT: Insecure pseudorandom bytes generated and used in cryptographically critical methods");
+            if (!$is_strong) {
+                throw new InsecureRandomSourceInCryptographicallyCriticalImplementation();
             }
 
             return bin2hex($bytes);
@@ -58,6 +53,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * NOTE: The nonce should be stored for decryption
      *
      * @return string
+     * @throws InsecureRandomSourceInCryptographicallyCriticalImplementation
      */
     public function generateSymmetricNonce(): string
     {
@@ -69,6 +65,7 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * NOTE: The nonce should be stored for decryption
      *
      * @return string
+     * @throws InsecureRandomSourceInCryptographicallyCriticalImplementation
      */
     public function generateAsymmetricNonce(): string
     {
@@ -82,40 +79,30 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * @param string $password
      * @param string $salt
      * @return array
+     * @throws InsecureRandomSourceInCryptographicallyCriticalImplementation
+     * @throws SodiumException
      */
     #[ArrayShape(["salt" => "string", "key" => "string"])]
     public function generateMasterDerivationKey(string $password, string $salt = ""): array
     {
         // Need to keep the salt if we're ever going to be able to check this password
-        if(empty($salt) || strlen(hex2bin($salt)) !== SodiumKeyLength::$PWHASH_SALT_BYTES) {
+        if (empty($salt) || strlen(hex2bin($salt)) !== SodiumKeyLength::$PWHASH_SALT_BYTES) {
             $salt = hex2bin($this->generateSalt(SodiumKeyLength::$PWHASH_SALT_BYTES));
-        }
-        else {
+        } else {
             // transform the hexed salt to a binary string
             $salt = hex2bin($salt);
         }
 
-        $key = null;
-        try {
-            // derive the password creating the master derivation key, this key is never stored anywhere in the
-            // backend
-            $key = sodium_crypto_pwhash(
-                SodiumKeyLength::$KDF_BYTES,
-                $password,
-                $salt,
-                SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-                SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
-                SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
-            );
-        }
-        catch (SodiumException $exception) {
-            logger()->error($exception->getMessage());
-            logger()->error($exception->getTraceAsString());
-
-            // fallback to a non cryptographically implementation of the master derivation but that allows to data decoding
-            // ideally this point should never be reached unless critical errors occurs on the system
-            $key = str_repeat("0", SodiumKeyLength::$KDF_BYTES);
-        }
+        // derive the password creating the master derivation key, this key is never stored anywhere in the
+        // backend
+        $key = sodium_crypto_pwhash(
+            SodiumKeyLength::$KDF_BYTES,
+            $password,
+            $salt,
+            SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+            SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
+            SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
+        );
 
         // Using bin2hex to keep output readable
         // NOTE: The salt should be stored somewhere once the derivation key is generated in order to recover the same
@@ -135,33 +122,29 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * @param string $master
      * @param int $subkey
      * @param int $length
-     * @param string $context
+     * @param SodiumContexts $context
      * @return array
+     * @throws SodiumException
      */
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
-    private function deriveKey(string $master, int $subkey, int $length, SodiumContexts $context = SodiumContexts::DEFAULT): array
+    private function deriveKey(
+        string $master,
+        int $subkey,
+        int $length,
+        SodiumContexts $context = SodiumContexts::DEFAULT
+    ): array
     {
-        try {
-            return [
-                "key" => bin2hex(sodium_crypto_kdf_derive_from_key(
+        return [
+            "key" => bin2hex(
+                sodium_crypto_kdf_derive_from_key(
                     $length,
                     $subkey,
                     $this->computeKeyDerivationContext($context)->value,
-                    hex2bin($master))),
-                "onetime" => false
-            ];
-        }
-        catch (SodiumException $exception) {
-            logger()->error($exception->getMessage());
-            logger()->error($exception->getTraceAsString());
-
-            // a secure one time key is generated in case an error occurs this will render all messages and data not
-            // readable the next time, the user should be notified of this error if it occurs
-            return [
-                "key" => $this->generateSalt($length),
-                "onetime" => true
-            ];
-        }
+                    hex2bin($master)
+                )
+            ),
+            "onetime" => false
+        ];
     }
 
     /**
@@ -181,11 +164,17 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * @param string $master
      * @param int $subkey
      * @return array
+     * @throws SodiumException
      */
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
     public function deriveKeypairSeed(string $master, int $subkey): array
     {
-        return $this->deriveKey($master, $subkey, SodiumKeyLength::$KEYPAIR_SEED_BYTES, SodiumContexts::KEYPAIR);
+        return $this->deriveKey(
+            $master,
+            $subkey,
+            SodiumKeyLength::$KEYPAIR_SEED_BYTES,
+            SodiumContexts::KEYPAIR
+        );
     }
 
     /**
@@ -195,10 +184,17 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * @param string $master
      * @param int $subkey
      * @return array
+     * @throws SodiumException
      */
     #[ArrayShape(["key" => "string", "onetime" => "bool"])]
-    public function deriveSymmetricEncryptionKey(string $master, int $subkey): array {
-        return $this->deriveKey($master, $subkey, SodiumKeyLength::$SYMMETRIC_ENCRYPTION_KEY, SodiumContexts::SYMMETRIC_KEY);
+    public function deriveSymmetricEncryptionKey(string $master, int $subkey): array
+    {
+        return $this->deriveKey(
+            $master,
+            $subkey,
+            SodiumKeyLength::$SYMMETRIC_ENCRYPTION_KEY,
+            SodiumContexts::SYMMETRIC_KEY
+        );
     }
 
     /**
@@ -209,17 +205,15 @@ class SodiumKeyDerivationWrapper implements Wrapper
      * @param string $public_key
      * @param string $secret_key
      * @return string
+     * @throws SodiumException
      */
-    public function packSharedKeypair(string $public_key, string $secret_key): string {
-        try {
-            return bin2hex(sodium_crypto_box_keypair_from_secretkey_and_publickey(
+    public function packSharedKeypair(string $public_key, string $secret_key): string
+    {
+        return bin2hex(
+            sodium_crypto_box_keypair_from_secretkey_and_publickey(
                 hex2bin($secret_key),
-                hex2bin($public_key)));
-        } catch (SodiumException $exception) {
-            logger()->error($exception->getMessage());
-            logger()->error($exception->getTraceAsString());
-
-            return "";
-        }
+                hex2bin($public_key)
+            )
+        );
     }
 }

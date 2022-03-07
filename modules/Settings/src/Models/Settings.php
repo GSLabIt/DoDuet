@@ -8,26 +8,36 @@
 
 namespace Doinc\Modules\Settings\Models;
 
-use App\Models\User;
+use Doinc\Modules\Crypter\Models\Casts\JSONSodiumEncrypted;
+use Doinc\Modules\Crypter\Models\Casts\SodiumEncrypted;
+use Doinc\Modules\Crypter\Models\Traits\Encrypted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Doinc\Modules\Settings\Models\Traits\ActivityLogAll;
 use Doinc\Modules\Settings\Models\Traits\Uuid;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 
 /**
- * @mixin  IdeHelperSettings
+ * @mixin IdeHelperSettings
  */
 class Settings extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll, Encrypted;
 
-    protected $guarded = ["created_at", "updated_at"];
+    protected $guarded = ["created_at", "updated_at", "deleted_at"];
 
-    function owner(): BelongsTo
+    protected $casts = [
+        "has_default_value" => "boolean",
+        "allowed_values" => JSONSodiumEncrypted::class,
+        "default_value" => SodiumEncrypted::class,
+        "name" => SodiumEncrypted::class,
+        "type" => SodiumEncrypted::class,
+    ];
+
+    function userSettings(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(UserSettings::class);
     }
 }

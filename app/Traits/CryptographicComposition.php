@@ -24,7 +24,7 @@ trait CryptographicComposition
     public function encryptMessage(string $message, User $receiver): array {
         // ensure the user has all the required secure fields
         if(!secureUser($this)->has("all")) {
-            logger()->channel(["stack", "slack-doduet-errors"])
+            logger()
                 ->error("User trying to access messaging features while missing secure sending functionalities");
 
             return [
@@ -36,7 +36,7 @@ trait CryptographicComposition
 
         // ensure the receiver has a public key
         if(!secureUser($receiver)->has(secureUser($receiver)->whitelistedItems()["public_key"])) {
-            logger()->channel(["stack", "slack-doduet-errors"])
+            logger()
                 ->error("User trying to send messages to a receiver without messaging functionalities");
 
             return [
@@ -77,7 +77,7 @@ trait CryptographicComposition
     public function decryptMessage(string $message, User $sender): array {
         // ensure the user has all the required secure fields
         if(!secureUser($this)->has("all")) {
-            logger()->channel(["stack", "slack-doduet-errors"])
+            logger()
                 ->error("User trying to access messaging features while missing secure sending functionalities");
 
             return [
@@ -89,7 +89,7 @@ trait CryptographicComposition
 
         // ensure the sender has a public key
         if(!secureUser($sender)->has(secureUser($sender)->whitelistedItems()["public_key"])) {
-            logger()->channel(["stack", "slack-doduet-errors"])
+            logger()
                 ->error("User trying to read messages from a sender without messaging functionalities");
 
             return [

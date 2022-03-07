@@ -1,0 +1,24 @@
+{
+    "name": "crypter",
+    "alias": "crypter-module",
+    "description": "Sodium cryptographic wrapper, casts and models for integration of queryable encrypted values",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "crypter",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Doinc\\Modules\\Crypter\\Providers\\CrypterServiceProvider"
+    ],
+    "aliases": {
+        "Crypter": "Doinc\\Modules\\Crypter\\Facades\\Crypter"
+    },
+    "files": [],
+    "requires": [],
+    "minimumCoreVersion": "^9.0",
+    "title": "Crypter module",
+    "version": "1.0.0",
+    "author": "Emanuele (ebalo) Balsamo"
+}

@@ -14,6 +14,11 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Referral\Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Referral\Tests\Feature\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/tests/Unit" isTestSource="true" packagePrefix="Doinc\Modules\Referral\Tests\Unit\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/database/factories" isTestSource="false" packagePrefix="Doinc\Modules\Crypter\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Crypter\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/src" isTestSource="false" packagePrefix="Doinc\Modules\Crypter\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Crypter\Tests\Feature\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/tests/Unit" isTestSource="true" packagePrefix="Doinc\Modules\Crypter\Tests\Unit\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/database/factories" isTestSource="false" packagePrefix="Doinc\Modules\Settings\Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Settings\Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/src" isTestSource="false" packagePrefix="Doinc\Modules\Settings\" />

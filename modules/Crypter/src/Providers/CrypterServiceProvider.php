@@ -6,22 +6,24 @@
  * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
  */
 
-namespace Doinc\Modules\Settings\Providers;
+namespace Doinc\Modules\Crypter\Providers;
 
-use Doinc\Modules\Settings\Settings;
+use Doinc\Modules\Crypter\Console\GenerateKey;
+use Doinc\Modules\Crypter\Crypter;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\ServiceProvider;
 
-class SettingsServiceProvider extends ServiceProvider
+class CrypterServiceProvider extends ServiceProvider
 {
     /**
      * @var  string $moduleName
      */
-    protected string $moduleName = 'Settings';
+    protected string $moduleName = 'Crypter';
 
     /**
      * @var  string $moduleNameLower
      */
-    protected string $moduleNameLower = 'settings';
+    protected string $moduleNameLower = 'crypter';
 
     /**
      * Boot the application events.
@@ -30,10 +32,31 @@ class SettingsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerTranslations();
         $this->registerConfig();
-        $this->registerViews();
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        Blueprint::macro("encrypted", function(
+            Blueprint $blueprint,
+            string $column_name,
+            bool $has_default = false,
+            string $default = "",
+            bool $is_nullable = false
+        ) {
+            $algo = config("crypter.algorithm");
+            $key = config("crypter.secure_key");
+
+            $col = $blueprint->longText($column_name);
+            $signature = $blueprint->string("{$column_name}_sig");
+
+            if($has_default) {
+                $col->default($default);
+                $signature->default(hash_hmac($algo, $default, $key));
+            }
+
+            // as nullable cannot be represented as signed hash the value is stored as an empty string
+            if($is_nullable) {
+                $col->default("");
+                $signature->default(hash_hmac($algo, "", $key));
+            }
+        });
     }
 
     /**
@@ -43,10 +66,12 @@ class SettingsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(RouteServiceProvider::class);
-        /*$this->app->bind($this->moduleNameLower, function($app) {
-            return new Settings();
-        });*/
+        $this->commands([
+            GenerateKey::class
+        ]);
+        $this->app->bind($this->moduleNameLower, function($app) {
+            return new Crypter();
+        });
     }
 
     /**

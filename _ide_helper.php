@@ -16362,7 +16362,51 @@
      
 }
 
-        namespace Doinc\Modules\Referral\Facades { 
+        namespace Doinc\Modules\Crypter\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Crypter {
+                    /**
+         * Load the key derivation functionalities
+         *
+         * @return \Doinc\Modules\Crypter\SodiumKeyDerivation 
+         * @static 
+         */ 
+        public static function derivation()
+        {
+                        /** @var \Doinc\Modules\Crypter\Crypter $instance */
+                        return $instance->derivation();
+        }
+                    /**
+         * Load the encryption functionalities
+         *
+         * @return \Doinc\Modules\Crypter\SodiumEncryption 
+         * @static 
+         */ 
+        public static function encryption()
+        {
+                        /** @var \Doinc\Modules\Crypter\Crypter $instance */
+                        return $instance->encryption();
+        }
+                    /**
+         * 
+         *
+         * @throws Exception
+         * @static 
+         */ 
+        public static function randomInt($min, $max)
+        {
+                        /** @var \Doinc\Modules\Crypter\Crypter $instance */
+                        return $instance->randomInt($min, $max);
+        }
+         
+    }
+     
+}
+
+    namespace Doinc\Modules\Referral\Facades { 
             /**
      * 
      *
@@ -18463,6 +18507,32 @@
         public static function ray()
         {
                         return \Illuminate\Database\Query\Builder::ray();
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Database\Schema { 
+            /**
+     * 
+     *
+     */ 
+        class Blueprint {
+                    /**
+         * 
+         *
+         * @see \Doinc\Modules\Crypter\Providers\CrypterServiceProvider::boot()
+         * @param \Illuminate\Database\Schema\Blueprint $blueprint
+         * @param string $column_name
+         * @param bool $has_default
+         * @param string $default
+         * @param bool $is_nullable
+         * @static 
+         */ 
+        public static function encrypted($blueprint, $column_name, $has_default = false, $default = '', $is_nullable = false)
+        {
+                        return \Illuminate\Database\Schema\Blueprint::encrypted($blueprint, $column_name, $has_default, $default, $is_nullable);
         }
          
     }
@@ -22082,6 +22152,7 @@ namespace  {
             class URL extends \Illuminate\Support\Facades\URL {}
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
+            class Crypter extends \Doinc\Modules\Crypter\Facades\Crypter {}
             class Referral extends \Doinc\Modules\Referral\Facades\Referral {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Octane extends \Laravel\Octane\Facades\Octane {}

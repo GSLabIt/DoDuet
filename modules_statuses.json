@@ -1,4 +1,6 @@
 {
     "commander": true,
-    "referral": true
+    "referral": true,
+    "crypter": true,
+    "settings": true
 }

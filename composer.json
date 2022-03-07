@@ -10,11 +10,12 @@
     "require": {
         "php": "^8.1",
         "ext-bz2": "*",
-        "ext-gmp": "^8.1",
-        "ext-openssl": "^8.1",
-        "ext-sodium": "^8.1",
+        "ext-gmp": "*",
+        "ext-openssl": "*",
+        "ext-sodium": "*",
         "ext-zip": "*",
         "do-inc/commander-module": "^1.0",
+        "do-inc/crypter-module": "^1.0",
         "do-inc/laravel-persona-kyc": "^0.10.20",
         "do-inc/referral-module": "^1.0",
         "docopt/docopt": "^1.0",
@@ -69,7 +70,10 @@
             "Doinc\\Modules\\Referral\\Database\\Seeders\\": "modules/Referral/database/seeders/",
             "Doinc\\Modules\\Settings\\": "modules/Settings/src/",
             "Doinc\\Modules\\Settings\\Database\\Factories\\": "modules/Settings/database/factories/",
-            "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/"
+            "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/",
+            "Doinc\\Modules\\Crypter\\": "modules/Crypter/src/",
+            "Doinc\\Modules\\Crypter\\Database\\Factories\\": "modules/Crypter/database/factories/",
+            "Doinc\\Modules\\Crypter\\Database\\Seeders\\": "modules/Crypter/database/seeders/"
         },
         "files": [
             "app/Helpers/index.php"
@@ -81,7 +85,9 @@
             "Doinc\\Modules\\Referral\\Tests\\Feature\\": "modules/Referral/tests/Feature/",
             "Doinc\\Modules\\Referral\\Tests\\Unit\\": "modules/Referral/tests/Unit/",
             "Doinc\\Modules\\Settings\\Tests\\Feature\\": "modules/Settings/tests/Feature/",
-            "Doinc\\Modules\\Settings\\Tests\\Unit\\": "modules/Settings/tests/Unit/"
+            "Doinc\\Modules\\Settings\\Tests\\Unit\\": "modules/Settings/tests/Unit/",
+            "Doinc\\Modules\\Crypter\\Tests\\Feature\\": "modules/Crypter/tests/Feature/",
+            "Doinc\\Modules\\Crypter\\Tests\\Unit\\": "modules/Crypter/tests/Unit/"
         }
     },
     "scripts": {
@@ -129,6 +135,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:Do-inc/laravel-commander-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-crypter-module.git"
         }
     ]
 }
