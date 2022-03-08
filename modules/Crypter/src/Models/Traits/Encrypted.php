@@ -34,7 +34,6 @@ trait Encrypted
                 // set the signature attribute according to the plain value and return the encrypted value
                 if (in_array($class, $model->cryptableClasses())) {
                     $value = $model->getAttributes()[$property];
-                    echo $property . " => " . $value . PHP_EOL;
 
                     $model->{"{$property}_sig"} = hash_hmac(
                         config("crypter.algorithm"),

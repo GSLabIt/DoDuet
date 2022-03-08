@@ -30,7 +30,6 @@ class Settings extends Model
 
     protected $casts = [
         "has_default_value" => "boolean",
-        "allowed_values" => JSONSodiumEncrypted::class,
         "default_value" => SodiumEncrypted::class,
         "name" => SodiumEncrypted::class,
         "type" => SodiumEncrypted::class,

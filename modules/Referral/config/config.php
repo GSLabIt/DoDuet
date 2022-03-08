@@ -69,11 +69,11 @@ return [
     "error_codes" => [
         "REFERRED_USER_ALREADY_REDEEMED" => [
             "message" => "Referral prize already redeemed",
-            "code" => 10000,
+            "code" => 1000,
         ],
         "REFERRED_USER_NOT_FOUND" => [
             "message" => "Unable to find the requested referral",
-            "code" => 10001,
+            "code" => 1001,
         ],
     ],
 ];

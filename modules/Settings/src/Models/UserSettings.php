@@ -8,9 +8,12 @@
 
 namespace Doinc\Modules\Settings\Models;
 
+use App\Models\User;
 use App\Traits\ActivityLogAll;
 
 use App\Traits\Uuid;
+use Doinc\Modules\Crypter\Models\Casts\SodiumEncrypted;
+use Doinc\Modules\Crypter\Models\Traits\Encrypted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,14 +26,12 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class UserSettings extends Model
 {
-    use HasFactory, Uuid, LogsActivity, ActivityLogAll;
-
-
+    use HasFactory, Uuid, LogsActivity, ActivityLogAll, Encrypted;
 
     protected $guarded = ["created_at", "updated_at", "deleted_at"];
 
     protected $casts = [
-        "setting" => "encrypted"
+        "setting_value" => SodiumEncrypted::class
     ];
 
     function owner(): BelongsTo
@@ -41,10 +42,5 @@ class UserSettings extends Model
     function setting(): BelongsTo
     {
         return $this->belongsTo(Settings::class);
-    }
-
-    function socials(): BelongsToMany
-    {
-        return $this->belongsToMany(Socials::class,"settings_socials","settings_id","socials_id");
     }
 }

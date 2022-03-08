@@ -46,7 +46,7 @@ class GenerateKey extends Command
     public function handle()
     {
         $this->info("Generating encryption key ...");
-        $rex = "/^APP_SYMMETRIC_KEY.+$/";
+        $rex = '/^APP_SYMMETRIC_KEY.+$/m';
         $env = base_path(".env");
         $env_content = file_get_contents($env);
         if(Regex::match($rex, $env_content)->hasMatch()) {
@@ -54,15 +54,15 @@ class GenerateKey extends Command
                 $rex,
                 "APP_SYMMETRIC_KEY=" . Crypter::encryption()->symmetric()->key(),
                 $env_content
-            );
+            )->result();
         }
         else {
-            $rex = "/^(APP_KEY.+)$/";
+            $rex = '/^(APP_KEY.+)$/m';
             $env_content = Regex::replace(
                 $rex,
-                "$1\nAPP_SYMMETRIC_KEY=" . Crypter::encryption()->symmetric()->key(),
+                "\$1\nAPP_SYMMETRIC_KEY=" . Crypter::encryption()->symmetric()->key(),
                 $env_content
-            );
+            )->result();
         }
         file_put_contents($env, $env_content);
         $this->info("Key generated and written into .env file");

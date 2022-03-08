@@ -30,9 +30,7 @@ class SettingsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerTranslations();
         $this->registerConfig();
-        $this->registerViews();
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
     }
 
@@ -43,10 +41,9 @@ class SettingsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(RouteServiceProvider::class);
-        /*$this->app->bind($this->moduleNameLower, function($app) {
+        $this->app->bind($this->moduleNameLower, function($app) {
             return new Settings();
-        });*/
+        });
     }
 
     /**

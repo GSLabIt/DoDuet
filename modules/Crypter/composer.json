@@ -1,7 +1,7 @@
 {
     "name": "do-inc/crypter-module",
     "description": "Sodium cryptographic wrapper, casts and models for integration of queryable encrypted values",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "type": "laravel-module",
     "keywords": [
         "do-inc",

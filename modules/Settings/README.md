@@ -1,6 +1,7 @@
 # Settings module
 
-This module is responsible for ___.
+This module is responsible for the definition and modification of multiple settings using highly customizable and
+strongly typed DTOs.
 
 ## Installation
 
@@ -12,7 +13,7 @@ In order to start the installation of this module, require this in your `compose
         // ...
         {
             "type": "vcs",
-            "url": "git@github.com:Do-inc/laravel-module-settings.git"
+            "url": "git@github.com:Do-inc/laravel-settings-module.git"
         }
     ],
     "require": {
@@ -40,39 +41,24 @@ composer require joshbrw/laravel-module-installer
 
 Finally install the module running:
 ```bash
-php artisan module:install do-inc/settings-module
+php artisan module:install do-inc/settings-module ^1.0
 ```
 
 Eventually consider publishing configuration files and migrations:
 ```bash
 php artisan module:publish-config
-php artisan module:publish-migration
 ```
 
 ## Setup
 ### Mandatory steps
-* Apply the `___` trait to your `User` model
+* Apply the `HasSettings` trait to your `User` model
 
 ### Optional steps
-* Listen to the `___` event
-* Call `___` somewhere you want to ___.
+* Register one or more setting in your seeder calling the `Settings` facade
+* Extend the available DTOs creating a class that inherit the `Setting` base DTO, all the parsing process will be done
+  automatically. For extended DTOs usage check [Spatie's DTO](https://github.com/spatie/data-transfer-object). Note that
+  the extended version of DTOs is used so that each DTO can also be used as a cast, further explaination 
+  [here](https://github.com/jessarcher/laravel-castable-data-transfer-object).
 
-## Routes
-All routes gets prefixed by `/settings`
 
-| Method | Name                                            | Callback                           | Route                   |
-|--------|-------------------------------------------------|------------------------------------|-------------------------|
-| `Get`  | `authenticated.settings.render.index`         | `ReferralController@index`         | `/`                     |
-| `Get`  | `authenticated.settings.get.sample`           | `ReferralController@sample`        | `/sample`               |
-|        |                                                 |                                    |                         |
-| `Post` | `public.settings.post.sample`                 | `ReferralController@sample`        | `/sample`               |
-| `Post` | `authenticated.settings.post.sample`          | `ReferralController@redeemAll`     | `/redeem`               |
-
-## Views
-Views are not compiled but only generated as a placeholder, feel free to edit them as needed.
-
-## Events
-This module fires the following events:
-* `___`: Fired after a successful redemption of one or more prizes, internally fired accessing:
-    * `___`
-* `___`: Fired calling `___`
+This package exposes an easy to use `settings` helper for faster and easier usage

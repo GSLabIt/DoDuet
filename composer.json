@@ -18,6 +18,7 @@
         "do-inc/crypter-module": "^1.0",
         "do-inc/laravel-persona-kyc": "^0.10.20",
         "do-inc/referral-module": "^1.0",
+        "do-inc/settings-module": "^1.0",
         "docopt/docopt": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "gemorroj/archive7z": "^5.3",
@@ -25,6 +26,7 @@
         "hedii/laravel-gelf-logger": "^7.0",
         "illuminate/contracts": "^9.0",
         "inertiajs/inertia-laravel": "^0.5.4",
+        "jessarcher/laravel-castable-data-transfer-object": "^2.1",
         "joshbrw/laravel-module-installer": "^2.0",
         "laravel/framework": "^9.0",
         "laravel/jetstream": "^2.4",
@@ -34,6 +36,7 @@
         "laravel/tinker": "^2.5",
         "nwidart/laravel-modules": "^9.0",
         "pear/archive_tar": "^1.4",
+        "spatie/data-transfer-object": "^3.7",
         "spatie/laravel-activitylog": "^4.4",
         "spatie/laravel-ignition": "^1.0",
         "spatie/laravel-permission": "^5.1",
@@ -71,9 +74,7 @@
             "Doinc\\Modules\\Settings\\": "modules/Settings/src/",
             "Doinc\\Modules\\Settings\\Database\\Factories\\": "modules/Settings/database/factories/",
             "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/",
-            "Doinc\\Modules\\Crypter\\": "modules/Crypter/src/",
-            "Doinc\\Modules\\Crypter\\Database\\Factories\\": "modules/Crypter/database/factories/",
-            "Doinc\\Modules\\Crypter\\Database\\Seeders\\": "modules/Crypter/database/seeders/"
+            "Doinc\\Modules\\Crypter\\": "modules/Crypter/src/"
         },
         "files": [
             "app/Helpers/index.php"
@@ -85,9 +86,7 @@
             "Doinc\\Modules\\Referral\\Tests\\Feature\\": "modules/Referral/tests/Feature/",
             "Doinc\\Modules\\Referral\\Tests\\Unit\\": "modules/Referral/tests/Unit/",
             "Doinc\\Modules\\Settings\\Tests\\Feature\\": "modules/Settings/tests/Feature/",
-            "Doinc\\Modules\\Settings\\Tests\\Unit\\": "modules/Settings/tests/Unit/",
-            "Doinc\\Modules\\Crypter\\Tests\\Feature\\": "modules/Crypter/tests/Feature/",
-            "Doinc\\Modules\\Crypter\\Tests\\Unit\\": "modules/Crypter/tests/Unit/"
+            "Doinc\\Modules\\Crypter\\Tests\\Feature\\": "modules/Crypter/tests/Feature/"
         }
     },
     "scripts": {
@@ -139,6 +138,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:Do-inc/laravel-crypter-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-settings-module.git"
         }
     ]
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\DTOs\SettingNineRandomTracks;
 use App\Exceptions\SafeException;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
@@ -10,6 +11,7 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
+use Doinc\Modules\Settings\Exceptions\SettingNotFound;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -24,7 +26,8 @@ class ChallengesController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getAllTracksInLatestChallenge(Request $request): JsonResponse {
+    public function getAllTracksInLatestChallenge(Request $request): JsonResponse
+    {
         return response()->json([
             "tracks" => Challenges::orderByDesc("created_at")->first()
                 ->tracks()
@@ -41,7 +44,8 @@ class ChallengesController extends Controller
      * @throws ValidationException
      * @throws Exception
      */
-    public function getAllTracksInChallenge(Request $request, string $challenge_id): JsonResponse {
+    public function getAllTracksInChallenge(Request $request, string $challenge_id): JsonResponse
+    {
         Validator::validate($request->route()->parameters(), [
             "challenge_id" => "required|integer|exists:challenges,id",
         ]);
@@ -49,7 +53,7 @@ class ChallengesController extends Controller
         /** @var Challenges $challenge */
         $challenge = Challenges::where("id", $challenge_id)->first();
 
-        if(!is_null($challenge)) {
+        if (!is_null($challenge)) {
             return response()->json([
                 "tracks" => $challenge->tracks()->pluck("id")
             ]);
@@ -68,7 +72,8 @@ class ChallengesController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getAllUserPrizes(Request $request): JsonResponse {
+    public function getAllUserPrizes(Request $request): JsonResponse
+    {
         /** @var User $user */
         $user = auth()->user();
 
@@ -111,7 +116,8 @@ class ChallengesController extends Controller
      * @return JsonResponse
      *
      */
-    public function getNumberOfParticipatingTracks(Request $request): JsonResponse {
+    public function getNumberOfParticipatingTracks(Request $request): JsonResponse
+    {
         return response()->json([
             "participatingTracks" => Challenges::orderByDesc("created_at")->first()
                 ->tracks()
@@ -131,7 +137,8 @@ class ChallengesController extends Controller
      * @throws Exception
      * @throws ValidationException
      */
-    public function getAverageVoteInChallengeOfTrack(Request $request, string $track_id, ?string $challenge_id = null): JsonResponse {
+    public function getAverageVoteInChallengeOfTrack(Request $request, string $track_id, ?string $challenge_id = null): JsonResponse
+    {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
             "challenge_id" => "nullable|integer|exists:challenges,id"
@@ -157,7 +164,7 @@ class ChallengesController extends Controller
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
 
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "vote" => Votes::where([
                     "track_id" => $track->id,
@@ -184,7 +191,8 @@ class ChallengesController extends Controller
      * @throws Exception
      * @throws ValidationException
      */
-    public function getNumberOfListeningInChallenge(Request $request, string $track_id, ?string $challenge_id = null): JsonResponse {
+    public function getNumberOfListeningInChallenge(Request $request, string $track_id, ?string $challenge_id = null): JsonResponse
+    {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
             "challenge_id" => "nullable|integer|exists:challenges,id"
@@ -210,7 +218,7 @@ class ChallengesController extends Controller
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
 
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "listeningRequests" => ListeningRequest::where([
                     "track_id" => $track->id,
@@ -232,7 +240,8 @@ class ChallengesController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getNumberOfParticipatingUsers(Request $request): JsonResponse {
+    public function getNumberOfParticipatingUsers(Request $request): JsonResponse
+    {
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
         return response()->json([
@@ -253,7 +262,8 @@ class ChallengesController extends Controller
      * @throws ValidationException
      * @throws Exception
      */
-    public function getTrackVoteByUserAndChallenge(Request $request, string $track_id): JsonResponse {
+    public function getTrackVoteByUserAndChallenge(Request $request, string $track_id): JsonResponse
+    {
         Validator::validate([
             ...$request->route()->parameters(),
             ...$request->all()
@@ -300,7 +310,7 @@ class ChallengesController extends Controller
             $user = auth()->user();
         }
 
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "vote" => Votes::where([
                     "voter_id" => $user->id,
@@ -326,7 +336,8 @@ class ChallengesController extends Controller
      * @throws Exception
      * @throws ValidationException
      */
-    public function getNumberOfTrackListeningByUserAndChallenge(Request $request, string $track_id): JsonResponse {
+    public function getNumberOfTrackListeningByUserAndChallenge(Request $request, string $track_id): JsonResponse
+    {
         Validator::validate([
             ...$request->route()->parameters(),
             ...$request->all()
@@ -373,7 +384,7 @@ class ChallengesController extends Controller
             $user = auth()->user();
         }
 
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "listeningRequests" => ListeningRequest::where([
                     "voter_id" => $user->id,
@@ -399,7 +410,8 @@ class ChallengesController extends Controller
      * @throws Exception
      * @throws ValidationException
      */
-    public function getTotalAverageTrackVote(Request $request, string $track_id): JsonResponse {
+    public function getTotalAverageTrackVote(Request $request, string $track_id): JsonResponse
+    {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
@@ -407,7 +419,7 @@ class ChallengesController extends Controller
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
 
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "vote" => Votes::where(["track_id" => $track->id])->get("vote")
                     ->avg("vote")
@@ -430,7 +442,8 @@ class ChallengesController extends Controller
      * @throws Exception
      * @throws ValidationException
      */
-    public function getNumberOfTotalListeningByTrack(Request $request, string $track_id): JsonResponse {
+    public function getNumberOfTotalListeningByTrack(Request $request, string $track_id): JsonResponse
+    {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
@@ -438,7 +451,7 @@ class ChallengesController extends Controller
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
 
-        if(!is_null($track)) {
+        if (!is_null($track)) {
             return response()->json([
                 "totalListening" => ListeningRequest::where(["track_id" => $track->id])->get()
                     ->count()
@@ -457,7 +470,8 @@ class ChallengesController extends Controller
      * NOTE: test not passed
      * @return void
      */
-    public static function notifyWinners(): void {
+    public static function notifyWinners(): void
+    {
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
 
@@ -497,8 +511,10 @@ class ChallengesController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws SettingNotFound
      */
-    public function getNineRandomTracks(Request $request): JsonResponse {
+    public function getNineRandomTracks(Request $request): JsonResponse
+    {
         /** @var User $user */
         $user = auth()->user();
         /** @var Challenges $current_challenge */
@@ -508,13 +524,14 @@ class ChallengesController extends Controller
         // if the setting is already set
         if (settings($user)->has("challenge_nine_random_tracks")) {
             //get the setting
+            /** @var SettingNineRandomTracks $settings_content */
             $settings_content = settings($user)->get("challenge_nine_random_tracks");
 
-            if ($settings_content["challenge_id"] == $current_challenge->id) {
+            if ($settings_content->challenge_id == $current_challenge->id) {
                 // if the challenge is the same and the user has not finished listening to all the tracks, select and return them
-                if ($settings_content["listened"] < 9) {
+                if ($settings_content->listened < 9) {
                     return response()->json([
-                        "tracks" => Tracks::whereIn("id", $settings_content["tracks_id"])->get($required_columns)
+                        "tracks" => Tracks::whereIn("id", $settings_content->track_ids)->get($required_columns)
                     ]);
                 }
             }
@@ -536,19 +553,22 @@ class ChallengesController extends Controller
             ->whereNotIn("id", $listened_tracks)
             ->get()
             ->random($random_number)
-            ->map(function (Tracks $item) use($required_columns) { // remove relationships
+            ->map(function (Tracks $item) use ($required_columns) { // remove relationships
                 return $item->only($required_columns);
             });
 
         // get all the ids
-        $nine_random_tracks_ids =  $nine_random_tracks->pluck("id");
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
 
         // update the settings
-        settings($user)->set("challenge_nine_random_tracks", json_encode([
-            "challenge_id" => $current_challenge->id,
-            "tracks_id" => $nine_random_tracks_ids,
-            "listened" => 0
-        ]));
+        settings($user)->set(
+            "challenge_nine_random_tracks",
+            (new SettingNineRandomTracks(
+                challenge_id: $current_challenge->id,
+                tracks_id: $nine_random_tracks_ids,
+                listened: 0
+            ))->toJson()
+        );
 
         return response()->json([
             "tracks" => $nine_random_tracks
@@ -562,7 +582,8 @@ class ChallengesController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function refreshNineRandomTracks(Request $request): JsonResponse {
+    public function refreshNineRandomTracks(Request $request): JsonResponse
+    {
         /** @var User $user */
         $user = auth()->user();
         /** @var Challenges $current_challenge */
@@ -571,10 +592,11 @@ class ChallengesController extends Controller
         $required_columns = ["id", "name", "description"];
         // check if settings exists for malicious requests (normally getNineRandomTracks should already have set something before)
         if (settings($user)->has("challenge_nine_random_tracks")) {
+            /** @var SettingNineRandomTracks $settings_content */
             $settings_content = settings($user)->get("challenge_nine_random_tracks");
-            if ($settings_content["challenge_id"] == $current_challenge->id) {
+            if ($settings_content->challenge_id == $current_challenge->id) {
                 // if the challenge is the same and the user has not finished listening to at least 4 tracks, throw an error
-                if ($settings_content["listened"] < 4) throw new SafeException(
+                if ($settings_content->listened < 4) throw new SafeException(
                     config("error-codes.NOT_ENOUGH_LISTENED.message"),
                     config("error-codes.NOT_ENOUGH_LISTENED.code")
                 );
@@ -597,18 +619,21 @@ class ChallengesController extends Controller
             ->whereNotIn("id", $listened_tracks)
             ->get()
             ->random($random_number)
-            ->map(function (Tracks $item) use($required_columns) { // remove relationships
+            ->map(function (Tracks $item) use ($required_columns) { // remove relationships
                 return $item->only($required_columns);
             });
 
         // get all the ids
-        $nine_random_tracks_ids =  $nine_random_tracks->pluck("id");
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
         // update the settings
-        settings($user)->set("challenge_nine_random_tracks", json_encode([
-            "challenge_id" => $current_challenge->id,
-            "tracks_id" => $nine_random_tracks_ids,
-            "listened" => 0
-        ]));
+        settings($user)->set(
+            "challenge_nine_random_tracks",
+            (new SettingNineRandomTracks(
+                challenge_id: $current_challenge->id,
+                tracks_id: $nine_random_tracks_ids,
+                listened: 0,
+            ))->toJson()
+        );
         return response()->json([
             "tracks" => $nine_random_tracks
         ]);

@@ -12,6 +12,7 @@ use App\Traits\ActivityLogAll;
 use App\Traits\CryptographicComposition;
 use App\Traits\Uuid;
 use Doinc\Modules\Referral\Models\Traits\Referrable;
+use Doinc\Modules\Settings\Models\Traits\HasSettings;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,7 +33,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
-    use ActivityLogAll, CryptographicComposition, Referrable;
+    use ActivityLogAll, CryptographicComposition, Referrable, HasSettings;
 
 
 
@@ -120,11 +121,6 @@ class User extends Authenticatable
      * | Define all the _user settings_ related methods here
      * |
      */
-
-    public function settings(): HasMany
-    {
-        return $this->hasMany(UserSettings::class, "owner_id");
-    }
 
     public function personalInformation(): HasOne
     {
