@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\DTOs\SettingNineRandomTracks;
 use App\Enums\RouteClass;
 use App\Enums\RouteGroup;
 use App\Enums\RouteMethod;
@@ -1370,10 +1371,11 @@ class ChallengesControllerTest extends TestCase
         $this->assertCount(9, $response->json("tracks"));
 
         // check settings content
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
-        $this->assertCount(9, $settings_content["tracks_id"]);
-        $this->assertEquals(0, $settings_content["listened"]);
+        $this->assertEquals($challenge->id, $settings_content->challenge_id);
+        $this->assertCount(9, $settings_content->track_ids);
+        $this->assertEquals(0, $settings_content->listened);
     }
 
     /**
@@ -1446,8 +1448,9 @@ class ChallengesControllerTest extends TestCase
         $this->assertEquals($array1, $array2);
 
         // check settings content not edited
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals(6, $settings_content["listened"]);
+        $this->assertEquals(6, $settings_content->listened);
     }
 
 
@@ -1514,10 +1517,11 @@ class ChallengesControllerTest extends TestCase
 
 
         // check settings content, listened MUST be equal to 0 now
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
-        $this->assertCount(9, $settings_content["tracks_id"]);
-        $this->assertEquals(0, $settings_content["listened"]);
+        $this->assertEquals($challenge->id, $settings_content->challenge_id);
+        $this->assertCount(9, $settings_content->track_ids);
+        $this->assertEquals(0, $settings_content->listened);
     }
 
     /**
@@ -1593,10 +1597,11 @@ class ChallengesControllerTest extends TestCase
         $this->assertCount(6, $response->json("tracks"));
 
         // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 6 now (15 - 9)
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
-        $this->assertCount(6, $settings_content["tracks_id"]);
-        $this->assertEquals(0, $settings_content["listened"]);
+        $this->assertEquals($challenge->id, $settings_content->challenge_id);
+        $this->assertCount(6, $settings_content->track_ids);
+        $this->assertEquals(0, $settings_content->listened);
     }
 
     /**
@@ -1652,10 +1657,11 @@ class ChallengesControllerTest extends TestCase
         $this->assertCount(9, $response->json("tracks"));
 
         // check settings content
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
-        $this->assertCount(9, $settings_content["tracks_id"]);
-        $this->assertEquals(0, $settings_content["listened"]);
+        $this->assertEquals($challenge->id, $settings_content->challenge_id);
+        $this->assertCount(9, $settings_content->track_ids);
+        $this->assertEquals(0, $settings_content->listened);
     }
 
     /**
@@ -1732,10 +1738,11 @@ class ChallengesControllerTest extends TestCase
         $this->assertCount(8, $response->json("tracks"));
 
         // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 8 now (12 - 4)
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
-        $this->assertCount(8, $settings_content["tracks_id"]);
-        $this->assertEquals(0, $settings_content["listened"]);
+        $this->assertEquals($challenge->id, $settings_content->challenge_id);
+        $this->assertCount(8, $settings_content->track_ids);
+        $this->assertEquals(0, $settings_content->listened);
     }
 
     /**
@@ -1869,9 +1876,10 @@ class ChallengesControllerTest extends TestCase
 
 
         // check settings content, listened MUST be equal to 0 now
+        /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $this->assertEquals($challenge->id, $settings_content["challenge_id"]);
-        $this->assertCount(9, $settings_content["tracks_id"]);
-        $this->assertEquals(0, $settings_content["listened"]);
+        $this->assertEquals($challenge->id, $settings_content->challenge_id);
+        $this->assertCount(9, $settings_content->track_ids);
+        $this->assertEquals(0, $settings_content->listened);
     }
 }

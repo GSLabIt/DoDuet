@@ -9,101 +9,129 @@
 namespace Doinc\Modules\Settings;
 
 use App\Models\User;
-use Doinc\Modules\Settings\Enums\SettingsRoutes;
-use Doinc\Modules\Settings\Models\Settings;
-use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use Doinc\Modules\Settings\Exceptions\SettingNotFound;
+use Doinc\Modules\Settings\Models\DTOs\Setting;
+use Doinc\Modules\Settings\Models\Settings as SettingsModel;
+use Doinc\Modules\Settings\Models\UserSettings;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
-class SettingsWrapper
+class Settings
 {
     private User $user;
 
     /**
-     * Initialize the class instance, depending on the argument type this will call initWithUser or initWithRequest
+     * Set the user context of the class instance, depending on the argument type this will call
+     * initWithUser or initWithRequest
      *
-     * @param User|Request $initializer
-     * @return SettingsWrapper|null
+     * NOTE: This method should always be called first
+     *
+     * @param User|Request $context
+     * @return Settings
      */
-    public static function init($initializer): ?SettingsWrapper
+    public function setUserContext(User|Request $context): Settings
     {
         // check if init method was called with an already created user model instance or if it is passed directly
         // from a request
-        if ($initializer instanceof User) {
+        if ($context instanceof User) {
             // init a new instance of the class and finally call the method with the user instance
-            return (new static)->initWithUser($initializer);
-        } elseif ($initializer instanceof Request) {
-            // init a new instance of the class and finally call the method with the request instance
-            return (new static)->initWithRequest($initializer);
+            $this->user = $context;
         }
-        return null;
-    }
+        else {
+            // init a new instance of the class and finally call the method with the request instance
+            $this->user = $context->user();
+        }
 
-    /**
-     * Initialize the wrapper with a user instance
-     *
-     * @param User $user
-     * @return $this
-     */
-    private function initWithUser(User $user): static
-    {
-        $this->user = $user;
         return $this;
     }
 
     /**
-     * Initialize the wrapper with a request instance
+     * Register a new settings if not already existing
      *
-     * @param Request $request
-     * @return $this
+     * @param string $name Unique setting name, this value will be used to check for existence and retrieve it
+     * @param string $class Full class name of the value being registered, the clas *must* implement `SettingBase` in
+     *          order to return a strongly typed class when retrieved and extend `CastableDataTransferObject` in order
+     *          to allow direct parsing from JSON
+     * @param string|null $default_value JSON representation of the default DTO, can usually be generated with the
+     *          `->toJson` method on a DTO instance
+     * @return bool Whether the registration was successful or not
      */
-    private function initWithRequest(Request $request): static
-    {
-        $this->user = $request->user();
-        return $this;
+    public function register(string $name, string $class, ?string $default_value = null): bool {
+        if(is_null(SettingsModel::whereEncryptedIs("name", $name)->first())) {
+            $setting = new SettingsModel();
+            $setting->name = $name;
+            $setting->type = $class;
+            $setting->has_default_value = !is_null($default_value);
+            $setting->default_value = $default_value ?? "{}";
+            return $setting->save();
+        }
+        return false;
     }
 
     /**
-     * Get the value of the setting.
-     * Returns the default setting value if no value is defined
+     * Register a new setting from an initialized instance
      *
-     * @param string $setting_name
-     * @return string|int|bool|array|float|null
+     * @param Setting $setting
+     * @return bool
      */
-    public function get(string $setting_name): string|int|bool|array|null|float
+    public function registerFromInstance(Setting $setting): bool
     {
-        // init the result value to a neutral result
-        $value = null;
+        return $this->register($setting->qualifiedName(), $setting::class, $setting->toJson());
+    }
 
+    /**
+     * Get the value of the setting returning a callable dropping a strongly typed DTO with the setting values.
+     * Returns the default setting value if no value is defined.
+     *
+     * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+     * @return Setting
+     * @throws SettingNotFound
+     */
+    public function get(string $setting_name): Setting
+    {
         // retrieve the setting instance via the provided setting_name
-        $setting = null;
-        Settings::chunk(10, function (Collection $settings) use ($setting_name, &$setting) {
-            if (is_null($setting)) {
-                $setting = $settings->where("name", $setting_name)->first();
-            }
-        });
+        $setting = SettingsModel::whereEncryptedIs("name", $setting_name)->first();
 
         if (!is_null($setting)) {
             // retrieve the setting of the user
             $property = $this->user->settings()->where("settings_id", $setting->id)->first();
 
+            // use the class instance of the setting to drop a callable dropping a strongly typed DTO
             if (!is_null($property)) {
-                $value = $this->parse($property->setting, $setting->type);
-            } elseif (!is_null($setting->default_value)) {
-                $value = $this->parse($setting->default_value, $setting->type);
+                return new $setting->type(json_decode($property->setting_value, true));
+            } elseif ($setting->has_default_value) {
+                return new $setting->type(json_decode($setting->default_value, true));
             }
         }
 
-        return $value;
+        throw new SettingNotFound();
     }
 
     /**
-     * Check if a setting is defined
+     * Update a setting for current user
      *
-     * @param string $setting_name
+     * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+     * @param string $value JSON representation of the DTO, can usually be generated with the `->toJson` method on a
+     *          DTO instance
+     * @return bool
+     * @throws SettingNotFound
+     */
+    public function update(string $setting_name, string $value): bool {
+        // retrieve the setting instance via the provided setting_name
+        $setting = SettingsModel::whereEncryptedIs("name", $setting_name)->first();
+
+        if (!is_null($setting) && $this->has($setting_name)) {
+            /** @var UserSettings $us */
+            $us = $this->user->settings()->where("settings_id", $setting->id)->first();
+            $us->setting_value = $value;
+            return $us->save();
+        }
+        throw new SettingNotFound();
+    }
+
+    /**
+     * Check if a setting is defined for the current user
+     *
+     * @param string $setting_name Unique setting name, used to check for existence and retrieve it
      * @return bool
      */
     public function has(string $setting_name): bool
@@ -112,12 +140,7 @@ class SettingsWrapper
         $answer = false;
 
         // retrieve the setting instance via the provided setting_name
-        $setting = null;
-        Settings::chunk(10, function (Collection $settings) use ($setting_name, &$setting) {
-            if (is_null($setting)) {
-                $setting = $settings->where("name", $setting_name)->first();
-            }
-        });
+        $setting = SettingsModel::whereEncryptedIs("name", $setting_name)->first();
 
         if (!is_null($setting)) {
             // retrieve the setting of the user
@@ -130,126 +153,28 @@ class SettingsWrapper
     }
 
     /**
-     * Create or update a setting
+     * Create a setting for current user
      *
-     * returns true if operation succeed, false otherwise
+     * Returns true if operation succeed, false otherwise
      *
-     * @param string $setting_name
-     * @param string|int|float|bool|array $value
+     * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+     * @param string $value JSON representation of the DTO, can usually be generated with the `->toJson` method on a
+     *          DTO instance
      * @return bool
+     * @throws SettingNotFound
      */
-    public function set(string $setting_name, $value): bool
+    public function set(string $setting_name, string $value): bool
     {
-        // init the result value to a neutral result
-        $executed = false;
-
         // retrieve the setting instance via the provided setting_name
-        $setting = null;
-        Settings::chunk(10, function (Collection $settings) use ($setting_name, &$setting) {
-            if (is_null($setting)) {
-                $setting = $settings->where("name", $setting_name)->first();
-            }
-        });
+        $setting = SettingsModel::whereEncryptedIs("name", $setting_name)->first();
 
-        if (!is_null($setting) && $this->typeCheck($value, $setting->type) && $this->allowedValuesCheck($value, $setting->allowed_values)) {
-            $property = $this->user->settings()->where("settings_id", $setting->id)->first();
-
-            // check whether the value is an array to json or not, in case it should be converted, convert it
-            $value = $setting->type !== "json" || $this->isJson($value) ? $value : json_encode($value);
-
-            // user already has the setting, update it
-            if (!is_null($property)) {
-                $property->update([
-                    "setting" => $value
-                ]);
-            } else {
-                $this->user->settings()->create([
-                    "settings_id" => $setting->id,
-                    "setting" => $value
-                ]);
-            }
-
-            $executed = true;
+        if (!is_null($setting)) {
+            $us = new UserSettings();
+            $us->owner_id = $this->user->id;
+            $us->settings_id = $setting->id;
+            $us->setting_value = $value;
+            return $us->save();
         }
-
-        return $executed;
-    }
-
-    /**
-     * Return the result of the parse of the stored value to its defined type.
-     * Json is decoded into an associative array
-     *
-     * @param string $value
-     * @param string $type
-     * @return string|int|float|bool|array
-     */
-    private function parse(string $value, string $type): string|int|float|bool|array
-    {
-        return match ($type) {
-            "int" => (int)$value,
-            "float" => (float)$value,
-            "bool" => (bool)$value,
-            "json" => json_decode($value, true),
-            default => $value,
-        };
-    }
-
-    /**
-     * Check that the provided value actually matches the one namely defined
-     *
-     * @param string|int|float|bool|array $value
-     * @param string $type
-     * @return bool
-     */
-    private function typeCheck(string|int|float|bool|array $value, string $type): bool
-    {
-        return match ($type) {
-            "int" => is_int($value),
-            "float" => is_float($value),
-            "bool" => is_bool($value),
-            "string" => is_string($value),
-
-            // check if the provided value is a stringified json or a jsonable array
-            "json" => is_array($value) || $this->isJson($value),
-            default => false,
-        };
-    }
-
-    /**
-     * Check if provided value is a stringified json
-     *
-     * @param mixed $value
-     * @return bool
-     */
-    private function isJson(mixed $value): bool
-    {
-        return is_array(json_decode($value, true));
-    }
-
-    /**
-     * Check that the provided value exists in the json representation of allowed values
-     *
-     * @param string|int|float|bool|array $value
-     * @param string|null $allowed_values
-     * @return bool
-     */
-    private function allowedValuesCheck(string|int|float|bool|array $value, string|null $allowed_values): bool
-    {
-        if (is_null($allowed_values) || !$this->isJson($allowed_values)) {
-            return true;
-        }
-
-        // decode the json representation of allowed values, this representation is already typed
-        $allowed_values_packet = json_decode($allowed_values, true);
-
-        // loop through the array of values and check if the provided value is present in the list of allowed ones
-        // if it is not the value is not allowed
-        foreach ($allowed_values_packet as $v) {
-            if ($value === $v) {
-                return true;
-            }
-        }
-
-        return false;
+        throw new SettingNotFound();
     }
 }

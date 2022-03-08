@@ -16529,6 +16529,120 @@
      
 }
 
+    namespace Doinc\Modules\Settings\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Settings {
+                    /**
+         * Set the user context of the class instance, depending on the argument type this will call
+         * initWithUser or initWithRequest
+         * 
+         * NOTE: This method should always be called first
+         *
+         * @param \App\Models\User|\Request $context
+         * @return \Settings 
+         * @static 
+         */ 
+        public static function setUserContext($context)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->setUserContext($context);
+        }
+                    /**
+         * Register a new settings if not already existing
+         *
+         * @param string $name Unique setting name, this value will be used to check for existence and retrieve it
+         * @param string $class Full class name of the value being registered, the clas *must* implement `SettingBase` in
+         *          order to return a strongly typed class when retrieved and extend `CastableDataTransferObject` in order
+         *          to allow direct parsing from JSON
+         * @param string|null $default_value JSON representation of the default DTO, can usually be generated with the
+         *          `->toJson` method on a DTO instance
+         * @return bool Whether the registration was successful or not
+         * @static 
+         */ 
+        public static function register($name, $class, $default_value = null)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->register($name, $class, $default_value);
+        }
+                    /**
+         * Register a new setting from an initialized instance
+         *
+         * @param \Doinc\Modules\Settings\Models\DTOs\Setting $setting
+         * @return bool 
+         * @static 
+         */ 
+        public static function registerFromInstance($setting)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->registerFromInstance($setting);
+        }
+                    /**
+         * Get the value of the setting returning a callable dropping a strongly typed DTO with the setting values.
+         * 
+         * Returns the default setting value if no value is defined.
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @return \Doinc\Modules\Settings\Models\DTOs\Setting 
+         * @throws SettingNotFound
+         * @static 
+         */ 
+        public static function get($setting_name)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->get($setting_name);
+        }
+                    /**
+         * Update a setting for current user
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @param string $value JSON representation of the DTO, can usually be generated with the `->toJson` method on a
+         *          DTO instance
+         * @return bool 
+         * @throws SettingNotFound
+         * @static 
+         */ 
+        public static function update($setting_name, $value)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->update($setting_name, $value);
+        }
+                    /**
+         * Check if a setting is defined for the current user
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @return bool 
+         * @static 
+         */ 
+        public static function has($setting_name)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->has($setting_name);
+        }
+                    /**
+         * Create a setting for current user
+         * 
+         * Returns true if operation succeed, false otherwise
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @param string $value JSON representation of the DTO, can usually be generated with the `->toJson` method on a
+         *          DTO instance
+         * @return bool 
+         * @throws SettingNotFound
+         * @static 
+         */ 
+        public static function set($setting_name, $value)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->set($setting_name, $value);
+        }
+         
+    }
+     
+}
+
     namespace Jenssegers\Agent\Facades { 
             /**
      * 
@@ -22154,6 +22268,7 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Crypter extends \Doinc\Modules\Crypter\Facades\Crypter {}
             class Referral extends \Doinc\Modules\Referral\Facades\Referral {}
+            class Settings extends \Doinc\Modules\Settings\Facades\Settings {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Octane extends \Laravel\Octane\Facades\Octane {}
             class Socialite extends \Laravel\Socialite\Facades\Socialite {}

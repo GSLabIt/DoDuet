@@ -6,14 +6,9 @@
  * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>, 2022
  */
 
-namespace Doinc\Modules\Settings\Tests\Unit;
+namespace Doinc\Modules\Settings\Models\DTOs;
 
-use PHPUnit\Framework\TestCase;
-
-class SettingsTest extends TestCase
+class SettingNullableFloat extends Setting
 {
-    public function test_example()
-    {
-        $this->assertTrue(true);
-    }
+    public ?float $value;
 }

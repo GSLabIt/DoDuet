@@ -19,6 +19,6 @@
     "requires": [],
     "minimumCoreVersion": "^9.0",
     "title": "Crypter module",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "author": "Emanuele (ebalo) Balsamo"
 }

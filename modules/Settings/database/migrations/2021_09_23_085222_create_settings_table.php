@@ -17,7 +17,6 @@ class CreateSettingsTable extends Migration
             $table->uuid("id")->primary();
             $table::encrypted($table, "name");
             $table::encrypted($table, "type");
-            $table::encrypted($table, "allowed_values", true, "[]");
             $table->boolean("has_default_value")->default(false);
             $table::encrypted($table, "default_value", is_nullable: true);
 

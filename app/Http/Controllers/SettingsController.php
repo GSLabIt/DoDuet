@@ -82,7 +82,7 @@ class SettingsController extends Controller
 
         if(settings($user)->has("challenge_nine_random_tracks")) {
             return response()->json([
-                "listened" => settings($user)->get("challenge_nine_random_tracks")["listened"]
+                "listened" => settings($user)->get("challenge_nine_random_tracks")->listened
             ]);
         }
 
