@@ -278,10 +278,9 @@ class TracksController extends Controller
      * @throws Exception
      */
     public function getUserCreatedTracks(Request $request, string $user_id): JsonResponse {
-        /*Validator::validate($request->route()->parameters(), [
-            "user_id" => "required|uuid|exists:common.users,id",
-        ]);*/
-        //TODO UNCOMMENT THIS SAME AS BELOW
+        Validator::validate($request->route()->parameters(), [
+            "user_id" => "required|uuid|exists:users,id",
+        ]);
 
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
@@ -307,10 +306,9 @@ class TracksController extends Controller
      * @throws Exception
      */
     public function getUserOwnedTracks(Request $request, string $user_id): JsonResponse {
-        /*Validator::validate($request->route()->parameters(), [
-            "user_id" => "required|uuid|exists:common.users,id",
-        ]);*/
-        // TODO UNCOMMENT THIS SAME AS UPPER
+        Validator::validate($request->route()->parameters(), [
+            "user_id" => "required|uuid|exists:users,id",
+        ]);
 
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
