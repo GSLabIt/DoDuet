@@ -6,11 +6,11 @@ use App\Enums\RouteClass;
 use App\Enums\RouteGroup;
 use App\Enums\RouteMethod;
 use App\Enums\RouteName;
-use App\Models\Albums;
-use App\Models\Challenges;
-use App\Models\Covers;
-use App\Models\ListeningRequest;
 use App\Models\Lyrics;
+use App\Models\Challenges;
+use App\Models\Albums;
+use App\Models\ListeningRequest;
+use App\Models\Covers;
 use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
@@ -20,7 +20,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-class TracksControllerTest extends TestCase {
+class TracksControllerTest extends TestCase
+{
     use RefreshDatabase;
 
     private User $user;
@@ -30,7 +31,8 @@ class TracksControllerTest extends TestCase {
      *
      * @return void
      */
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->refreshDatabase();
 
@@ -62,7 +64,8 @@ class TracksControllerTest extends TestCase {
         );
     }
 
-    private function authAsUser() {
+    private function authAsUser()
+    {
         $this->actingAs($this->user);
         session()->put("mnemonic", "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal");
     }
@@ -70,7 +73,8 @@ class TracksControllerTest extends TestCase {
     /** Test Track creation */
 
     /** Test well-formed Track creation */
-    public function test_track_creation() {
+    public function test_track_creation()
+    {
         $this->seed();
         $this->authAsUser();
         $this->post(rroute()
@@ -85,12 +89,13 @@ class TracksControllerTest extends TestCase {
                 "mp3" => UploadedFile::fake()->create("test.mp3", 1),
             ]
         )->assertJsonStructure([
-            "id"
+            "track"
         ]);
     }
 
     /** Test well-formed Track creation with null name */
-    public function test_track_creation_null_name() {
+    public function test_track_creation_null_name()
+    {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The name field is required.");
         $this->seed();
@@ -110,7 +115,8 @@ class TracksControllerTest extends TestCase {
     }
 
     /** Test a well-formed track creation submitting a long name. */
-    public function test_track_creation_long_name() {
+    public function test_track_creation_long_name()
+    {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The name must not be greater than 255 characters.");
         $this->seed();
@@ -118,7 +124,7 @@ class TracksControllerTest extends TestCase {
             $this->user
         );
 
-        $this->post(rroute()
+        $this->withoutExceptionHandling()->post(rroute()
             ->class(RouteClass::AUTHENTICATED)
             ->group(RouteGroup::TRACK)
             ->method(RouteMethod::POST)
@@ -129,15 +135,12 @@ class TracksControllerTest extends TestCase {
                 "duration" => "01:01",
                 "mp3" => UploadedFile::fake()->create("test.mp3", 1),
             ]
-        )->assertJsonStructure([
-            "name" => [
-                0
-            ]
-        ]);
+        );
     }
 
     /** Test a well-formed track creation submitting a null description.  */
-    public function test_track_creation_null_description() {
+    public function test_track_creation_null_description()
+    {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The description field is required.");
         $this->seed();
@@ -160,7 +163,8 @@ class TracksControllerTest extends TestCase {
     }
 
     /** Test a well-formed track creation submitting a null duration.  */
-    public function test_track_creation_null_duration() {
+    public function test_track_creation_null_duration()
+    {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The duration field is required.");
         $this->seed();
@@ -183,7 +187,8 @@ class TracksControllerTest extends TestCase {
     }
 
     /** Test well-formed Track creation with wrong file format */
-    public function test_track_creation_wrong_file_format() {
+    public function test_track_creation_wrong_file_format()
+    {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The mp3 must be a file of type: mp3.");
         $this->seed();
@@ -206,7 +211,8 @@ class TracksControllerTest extends TestCase {
     }
 
     /** Test a well-formed track creation with album. */
-    public function test_track_creation_with_album() {
+    public function test_track_creation_with_album()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
@@ -231,14 +237,15 @@ class TracksControllerTest extends TestCase {
                 "album_id" => $album->id
             ]
         )->assertJsonStructure([
-            "id"
+            "track"
         ]);
 
-        $this->assertEquals($album->id, $response->json("album_id"));
+        $this->assertEquals($album->id, $response->json("track.album_id"));
     }
 
     /** Test a well-formed track creation with unowned album. */
-    public function test_track_creation_with_unowned_album() {
+    public function test_track_creation_with_unowned_album()
+    {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(config("error-codes.ALBUM_NOT_FOUND.message"));
         $this->expectExceptionCode(config("error-codes.ALBUM_NOT_FOUND.code"));
@@ -265,56 +272,9 @@ class TracksControllerTest extends TestCase {
         );
     }
 
-    /** Test a well-formed track creation with bad-formed album UUID. */
-    public function test_track_creation_with_wrong_album_id() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The album id must be a valid UUID.");
-        $this->seed();
-        $this->actingAs(
-            $this->user
-        );
-
-        $this->withoutExceptionHandling()->post(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::POST)
-            ->name(RouteName::TRACK_CREATE),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-                "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "album_id" => "wrong_uuid"
-            ]
-        );
-    }
-
-    /** Test a well-formed track creation with a not existing album. */
-    public function test_track_creation_with_not_existing_album() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The selected album id is invalid.");
-        $this->seed();
-        $this->actingAs(
-            $this->user
-        );
-
-        $this->withoutExceptionHandling()->post(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::POST)
-            ->name(RouteName::TRACK_CREATE),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-                "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "album_id" => "e2053021-8f21-3c00-ae07-cd1ca559116d"
-            ]
-        );
-    }
-
     /** Test a well-formed creation edit with cover. */
-    public function test_track_creation_with_cover() {
+    public function test_track_creation_with_cover()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
@@ -338,14 +298,15 @@ class TracksControllerTest extends TestCase {
                 "cover_id" => $cover->id
             ]
         )->assertJsonStructure([
-            "id"
+            "track"
         ]);
 
-        $this->assertEquals($cover->id, $response->json("cover_id"));
+        $this->assertEquals($cover->id, $response->json("track.cover_id"));
     }
 
     /** Test a well-formed track creation with unowned cover. */
-    public function test_track_creation_with_unowned_cover() {
+    public function test_track_creation_with_unowned_cover()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
@@ -372,56 +333,9 @@ class TracksControllerTest extends TestCase {
         );
     }
 
-    /** Test a well-formed track creation with bad-formed cover UUID. */
-    public function test_track_creation_with_wrong_cover_id() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The cover id must be a valid UUID.");
-        $this->seed();
-        $this->actingAs(
-            $this->user
-        );
-
-        $this->withoutExceptionHandling()->post(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::POST)
-            ->name(RouteName::TRACK_CREATE),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-                "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "cover_id" => "wrong_uuid"
-            ]
-        );
-    }
-
-    /** Test a well-formed track creation with a not existing cover. */
-    public function test_track_creation_with_not_existing_cover() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The selected cover id is invalid.");
-        $this->seed();
-        $this->actingAs(
-            $this->user
-        );
-
-        $this->withoutExceptionHandling()->post(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::POST)
-            ->name(RouteName::TRACK_CREATE),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-                "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "cover_id" => "e2053021-8f21-3c00-ae07-cd1ca559116d"
-            ]
-        );
-    }
-
     /** Test a well-formed track creation with lyric. */
-    public function test_track_creation_with_lyric() {
+    public function test_track_creation_with_lyric()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
@@ -445,20 +359,25 @@ class TracksControllerTest extends TestCase {
                 "lyric_id" => $lyric->id
             ]
         )->assertJsonStructure([
-            "id"
+            "track"
         ]);
 
-        $this->assertEquals($lyric->id, $response->json("lyric_id"));
+        $this->assertEquals($lyric->id, $response->json("track.lyric_id"));
     }
 
     /** Test a well-formed track creation with unowned lyric. */
-    public function test_track_creation_with_unowned_lyric() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The lyric id must be a valid UUID.");
+    public function test_track_creation_with_unowned_lyric()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
         );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.LYRIC_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.LYRIC_NOT_FOUND.code"));
+
+        /** @var Lyrics $lyric */
+        $lyric = Lyrics::factory()->create();
 
         $this->withoutExceptionHandling()->post(rroute()
             ->class(RouteClass::AUTHENTICATED)
@@ -470,55 +389,7 @@ class TracksControllerTest extends TestCase {
                 "description" => "Description",
                 "duration" => "01:01",
                 "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "lyric_id" => "wrong_uuid"
-            ]
-        );
-    }
-
-    /** Test a well-formed track creation with bad-formed lyric UUID. */
-    public function test_track_creation_with_wrong_lyric_id() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The lyric id must be a valid UUID.");
-        $this->seed();
-        $this->actingAs(
-            $this->user
-        );
-
-        $this->withoutExceptionHandling()->post(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::POST)
-            ->name(RouteName::TRACK_CREATE),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-                "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "lyric_id" => "wrong_uuid"
-            ]
-        );
-    }
-
-    /** Test a well-formed track creation with a not existing lyric. */
-    public function test_track_creation_not_existing_lyric() {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("The selected lyric id is invalid.");
-        $this->seed();
-        $this->actingAs(
-            $this->user
-        );
-
-        $this->withoutExceptionHandling()->post(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::POST)
-            ->name(RouteName::TRACK_CREATE),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-                "mp3" => UploadedFile::fake()->create("test.mp3", 1),
-                "lyric_id" => "e2053021-8f21-3c00-ae07-cd1ca559116d"
+                "lyric_id" => $lyric->id
             ]
         );
     }
@@ -526,7 +397,8 @@ class TracksControllerTest extends TestCase {
     /** Test Track edit */
 
     /** Test a well-formed track edit. */
-    public function test_track_edit() {
+    public function test_track_edit()
+    {
         $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
@@ -548,38 +420,13 @@ class TracksControllerTest extends TestCase {
                 "duration" => "01:01",
             ]
         )->assertJsonStructure([
-            "id"
+            "track"
         ]);
     }
 
-    /** Test a well-formed track edit submitting a bad-formed uuid. */
-    public function test_track_edit_wrong_uuid() {
-        $this->seed();
-        $this->authAsUser();
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(config("error-codes.TRACK_NOT_FOUND.message"));
-        $this->expectExceptionCode(config("error-codes.TRACK_NOT_FOUND.code"));
-
-        $this->put(rroute()
-            ->class(RouteClass::AUTHENTICATED)
-            ->group(RouteGroup::TRACK)
-            ->method(RouteMethod::PUT)
-            ->name(RouteName::TRACK_UPDATE)
-            ->route([
-                "track_id" => "wrong_uuid"
-            ]),
-            [
-                "name" => "Name",
-                "description" => "Description",
-                "duration" => "01:01",
-            ]
-        )->assertJsonStructure([
-            "id"
-        ]);
-    }
-
-    /** Test a not existing track edit. */
-    public function test_not_existing_track_edit() {
+    /** Test an unowned track edit. */
+    public function test_unowned_track_edit()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
@@ -589,6 +436,8 @@ class TracksControllerTest extends TestCase {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(config("error-codes.TRACK_NOT_FOUND.message"));
         $this->expectExceptionCode(config("error-codes.TRACK_NOT_FOUND.code"));
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
 
         $this->put(rroute()
             ->class(RouteClass::AUTHENTICATED)
@@ -596,7 +445,7 @@ class TracksControllerTest extends TestCase {
             ->method(RouteMethod::PUT)
             ->name(RouteName::TRACK_UPDATE)
             ->route([
-                "track_id" => "e2053021-8f21-3c00-ae07-cd1ca559116d"
+                "track_id" => $track->id
             ]),
             [
                 "name" => "Name",
@@ -608,8 +457,308 @@ class TracksControllerTest extends TestCase {
         ]);
     }
 
-    /** Test an unowned track edit. */
-    public function test_unowned_track_edit() {
+    /** Test a well-formed track edit submitting a null name. */
+    public function test_track_edit_null_name()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+        $this->seed();
+        $this->authAsUser();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("The name field is required.");
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => null,
+                "description" => "Description",
+                "duration" => "01:01",
+            ]
+        );
+    }
+
+    /** Test a well-formed track edit submitting a long name. */
+    public function test_track_edit_long_name()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+        $this->seed();
+        $this->authAsUser();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("The name must not be greater than 255 characters.");
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur feugiat leo purus, ac facilisis sem porttitor ullamcorper. Phasellus vel augue id orci feugiat sollicitudin at at enim. Donec at augue suscipit, interdum purus pellentesque, ornare laoreet.",
+                "description" => "Description",
+                "duration" => "01:01",
+            ]
+        );
+    }
+
+    /** Test a well-formed track edit submitting a null description.  */
+    public function test_track_edit_null_description()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+        $this->seed();
+        $this->authAsUser();
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("The description field is required.");
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => null,
+                "duration" => "01:01",
+            ]
+        );
+    }
+
+    /** Test a well-formed track edit with album. */
+    public function test_track_edit_with_album()
+    {
+        $this->seed();
+        $this->authAsUser();
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+        /** @var Albums $album */
+        $album = Albums::factory()->create();
+        $album->update([
+            "owner_id" => $this->user->id
+        ]);
+        $this->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => "Description",
+                "duration" => "01:01",
+                "album_id" => $album->id
+            ]
+        )->assertJsonStructure([
+            "track"
+        ]);
+    }
+
+    /** Test a well-formed track edit with unowned album. */
+    public function test_track_edit_with_unowned_album()
+    {
+        $this->seed();
+        $this->authAsUser();
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+        /** @var Albums $album */
+        $album = Albums::factory()->create();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.ALBUM_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.ALBUM_NOT_FOUND.code"));
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => "Description",
+                "duration" => "01:01",
+                "album_id" => $album->id
+            ]
+        );
+    }
+
+    /** Test a well-formed track edit with cover. */
+    public function test_track_edit_with_cover()
+    {
+        $this->seed();
+        $this->authAsUser();
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+        /** @var Covers $cover */
+        $cover = Covers::factory()->create();
+        $cover->update([
+            "owner_id" => $this->user->id
+        ]);
+        $this->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => "Description",
+                "duration" => "01:01",
+                "cover_id" => $cover->id
+            ]
+        )->assertJsonStructure([
+            "track"
+        ]);
+    }
+
+    /** Test a well-formed track edit with unowned cover. */
+    public function test_track_edit_with_unowned_cover()
+    {
+        $this->seed();
+        $this->authAsUser();
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+        /** @var Covers $cover */
+        $cover = Covers::factory()->create();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.COVER_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.COVER_NOT_FOUND.code"));
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => "Description",
+                "duration" => "01:01",
+                "cover_id" => $cover->id
+            ]
+        );
+    }
+
+    /** Test a well-formed track edit with lyric. */
+    public function test_track_edit_with_lyric()
+    {
+        $this->seed();
+        $this->authAsUser();
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+        /** @var Lyrics $lyric */
+        $lyric = Lyrics::factory()->create();
+        $lyric->update([
+            "owner_id" => $this->user->id
+        ]);
+        $this->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => "Description",
+                "duration" => "01:01",
+                "lyric_id" => $lyric->id
+            ]
+        )->assertJsonStructure([
+            "track"
+        ]);
+    }
+
+    /** Test a well-formed track edit with unowned lyric. */
+    public function test_track_edit_with_unowned_lyric()
+    {
+        $this->seed();
+        $this->authAsUser();
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+        /** @var Lyrics $lyric */
+        $lyric = Lyrics::factory()->create();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.LYRIC_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.LYRIC_NOT_FOUND.code"));
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_UPDATE)
+            ->route([
+                "track_id" => $track->id
+            ]),
+            [
+                "name" => "Name",
+                "description" => "Description",
+                "duration" => "01:01",
+                "lyric_id" => $lyric->id
+            ]
+        );
+    }
+
+    /** Test get total votes */
+
+    /** Test a well-formed request to "getTotalVotes" */
+    public function test_get_total_votes()
+    {
         $this->seed();
         $this->actingAs(
             $this->user
@@ -617,34 +766,664 @@ class TracksControllerTest extends TestCase {
 
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
-        $response = $this->graphQL(/** @lang GraphQL */ "
-            mutation test {
-                updateTrack(input: {
-                   id: \"$track->id\"
-                   album: null
-                   cover: null
-                   lyric: null
-                   name: \"Name\"
-                   description: \"Description\"
-                }), {
-                    id
-                }
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        // create a dummy vote not bound to the requested track
+        Votes::factory()->create()->update([
+            "challenge_id" => $challenge->id
+        ]);
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::TRACK)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::TRACK_VOTES)
+                ->route([
+                    "track_id" => $track->id
+                ])
+            );
+            $this->assertEquals($i, $response->json("votesCount"));
+            Votes::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track->id,
+                "challenge_id" => $challenge->id,
+                "vote" => 1
+            ]);
+        }
+
+    }
+
+
+
+    /** Test get users tracks */
+
+    /** Test a well-formed request to "getUserCreatedTracks" */
+    public function test_get_users_created_tracks()
+    {
+        $this->seed();
+
+        // create a dummy track, just to get sure it's not counted
+        Tracks::factory()->create();
+
+        $this->actingAs(
+            $this->user
+        );
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->withoutExceptionHandling()->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::TRACK)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::TRACK_CREATED)
+                ->route([
+                    "user_id" => $this->user->id
+                ])
+            );
+            $count = 0;
+            foreach ($response->json("tracks") as $val) {
+                $count++;
             }
-        ")->assertJsonStructure([
-            "errors" => [
-                0 => [
-                    "extensions" => [
-                        "message",
-                        "code",
-                        "category"
-                    ]
-                ]
-            ]
+            $this->assertEquals($i, $count);
+            Tracks::factory()->create()->update([
+                "creator_id" => $this->user->id
+            ]);
+        }
+    }
+
+    /** Test a well-formed request to "getUserOwnedTracks" */
+    public function test_get_users_owned_tracks()
+    {
+        $this->seed();
+
+        // create a dummy track, just to get sure it's not counted
+        Tracks::factory()->create();
+
+        $this->actingAs(
+            $this->user
+        );
+
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->withoutExceptionHandling()->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::TRACK)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::TRACK_OWNED)
+                ->route([
+                    "user_id" => $this->user->id
+                ])
+            );
+            $count = 0;
+            foreach ($response->json("tracks") as $val) {
+                $count++;
+            }
+            $this->assertEquals($i, $count);
+            Tracks::factory()->create()->update([
+                "owner_id" => $this->user->id
+            ]);
+        }
+    }
+
+    /** Test get users listenings */
+
+    /** Test a well-formed request to "getTotalListenings" */
+    public function test_get_total_listenings()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        // create a not selected track bound listening request
+        $Listening_request = ListeningRequest::factory()->create();
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->withoutExceptionHandling()->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::TRACK)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::TRACK_LISTENINGS)
+                ->route([
+                    "track_id" => $track
+                ])
+            );
+            $this->assertEquals($i, $response->json("listeningsCount"));
+            ListeningRequest::create([
+                "challenge_id" => $Listening_request->challenge_id,
+                "track_id" => $track->id,
+                "voter_id" => $this->user->id
+            ]);
+        }
+    }
+
+    /** Test get average vote */
+
+    /** Test a well-formed request to "getAverageVote" */
+    public function test_get_average_vote()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        // create a vote not bound to the requested track to get sure it doesn't get counted
+        Votes::factory()->create();
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->withoutExceptionHandling()->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::TRACK)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::TRACK_AVERAGE_VOTE)
+                ->route([
+                    "track_id" => $track->id
+                ])
+            );
+            $this->assertEquals(Votes::where("track_id", $track->id)->average("vote"), $response->json("votesAverage"));
+            Votes::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track->id,
+                "challenge_id" => $challenge->id,
+                "vote" => rand(0, 5)
+            ]);
+        }
+    }
+
+    /** Test get most voted tracks */
+
+    /** Test a well-formed request to "getMostVotedTracks" */
+    public function test_get_most_voted_tracks()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        // create a random vote to a random track
+        /** @var Votes $vote */
+        $vote = Votes::factory()->create();
+        $challenge_id = $vote->challenge_id;
+
+        /** @var Tracks $track1 */
+        $track1 = Tracks::factory()->create();
+        for ($i = 0; $i <= 4; $i++)
+            Votes::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track1->id,
+                "challenge_id" => $challenge_id,
+                "vote" => rand(0, 5)
+            ]);
+
+        /** @var Tracks $track2 */
+        $track2 = Tracks::factory()->create();
+        for ($i = 0; $i <= 3; $i++)
+            Votes::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track2->id,
+                "challenge_id" => $challenge_id,
+                "vote" => rand(0, 5)
+            ]);
+
+        /** @var Tracks $track3 */
+        $track3 = Tracks::factory()->create();
+        for ($i = 0; $i <= 5; $i++)
+            Votes::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track3->id,
+                "challenge_id" => $challenge_id,
+                "vote" => rand(0, 5)
+            ]);
+
+        /** @var Tracks $track4 */
+        $track4 = Tracks::factory()->create();
+        for ($i = 0; $i <= 2; $i++)
+            Votes::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track4->id,
+                "challenge_id" => $challenge_id,
+                "vote" => rand(0, 5)
+            ]);
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::TRACK_MOST_VOTED)
+        );
+        $this->assertEquals($track3->id, $response->json("tracks.0.id"));
+        $this->assertEquals($track1->id, $response->json("tracks.1.id"));
+        $this->assertEquals($track2->id, $response->json("tracks.2.id"));
+
+    }
+
+    /** Test get most listened tracks */
+
+    /** Test a well-formed request to "getMostListenedTracks" */
+    public function test_get_most_listened_tracks()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var ListeningRequest $listening */
+        $listening = ListeningRequest::factory()->create();
+        $challenge_id = $listening->challenge_id;
+        /** @var Tracks $track1 */
+        $track1 = Tracks::factory()->create();
+        for ($i = 0; $i <= 4; $i++)
+            ListeningRequest::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track1->id,
+                "challenge_id" => $challenge_id
+            ]);
+
+        /** @var Tracks $track2 */
+        $track2 = Tracks::factory()->create();
+        for ($i = 0; $i <= 3; $i++)
+            ListeningRequest::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track2->id,
+                "challenge_id" => $challenge_id
+            ]);
+
+        /** @var Tracks $track3 */
+        $track3 = Tracks::factory()->create();
+        for ($i = 0; $i <= 5; $i++)
+            ListeningRequest::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track3->id,
+                "challenge_id" => $challenge_id
+            ]);
+
+        /** @var Tracks $track4 */
+        $track4 = Tracks::factory()->create();
+        for ($i = 0; $i <= 2; $i++)
+            ListeningRequest::create([
+                "voter_id" => $this->user->id,
+                "track_id" => $track4->id,
+                "challenge_id" => $challenge_id
+            ]);
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::TRACK_MOST_LISTENED)
+        );
+
+        $this->assertEquals($track3->id, $response->json("tracks.0.id"));
+        $this->assertEquals($track1->id, $response->json("tracks.1.id"));
+        $this->assertEquals($track2->id, $response->json("tracks.2.id"));
+    }
+
+    /** Test get not in challenge tracks */
+
+    /** Test a well-formed request to "getNotInChallengeTracks" */
+    public function test_get_not_in_challenge_tracks()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        Votes::factory()->create(); // create a vote, that creates a challenge and a track
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::TRACK_NOT_IN_CHALLENGE)
+        );
+
+        $this->assertEquals($track->id, $response->json("tracks.0.id"));
+
+    }
+
+
+    /** Test get track link */
+
+    /** Test a well-formed request to "getTrackLink" */
+    public function test_get_track_link()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::TRACK_LINK)
+            ->route([
+                "track_id" => $track->id
+            ])
+        )->assertJsonStructure([
+            "link"
+        ]);
+    }
+
+    /** Test link track to album */
+
+    /** Test a well-formed request to "linkToAlbum" */
+    public function test_link_to_album()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
         ]);
 
-        $this->assertEquals(config("error-codes.TRACK_NOT_FOUND.code"), $response->json("errors.0.extensions.code"));
-        $this->assertEquals(config("error-codes.TRACK_NOT_FOUND.message"), $response->json("errors.0.extensions.message"));
-        $this->assertEquals("track", $response->json("errors.0.extensions.category"));
+        /** @var Albums $album */
+        $album = Albums::factory()->create();
+        $album->update([
+            "owner_id" => $this->user->id
+        ]);
+        $response = $this->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_ALBUM)
+            ->route([
+                "track_id" => $track->id,
+                "album_id" => $album->id
+            ])
+        );
+
+        $this->assertEquals($track->id, $response->json("track_id"));
+        $this->assertEquals($album->id, Tracks::where("id", $track->id)->first()->album_id);
+    }
+
+    /** Test a well-formed request to "linkToAlbum" with unowned track id */
+    public function test_link_to_album_unowned_track()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        /** @var Albums $album */
+        $album = Albums::factory()->create();
+        $album->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.TRACK_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.TRACK_NOT_FOUND.code"));
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_ALBUM)
+            ->route([
+                "track_id" => $track->id,
+                "album_id" => $album->id
+            ])
+        );
+
+    }
+
+    /** Test a well-formed request to "linkToAlbum" with unowned album id */
+    public function test_link_to_album_unowned_album()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        /** @var Albums $album */
+        $album = Albums::factory()->create();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.ALBUM_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.ALBUM_NOT_FOUND.code"));
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_ALBUM)
+            ->route([
+                "track_id" => $track->id,
+                "album_id" => $album->id
+            ])
+        );
+    }
+
+    /** Test link track to cover */
+
+    /** Test a well-formed request to "linkToCover" */
+    public function test_link_to_cover()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        /** @var Covers $cover */
+        $cover = Covers::factory()->create();
+        $cover->update([
+            "owner_id" => $this->user->id
+        ]);
+        $response = $this->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_COVER)
+            ->route([
+                "track_id" => $track->id,
+                "cover_id" => $cover->id
+            ])
+        );
+
+        $this->assertEquals($track->id, $response->json("track_id"));
+        $this->assertEquals($cover->id, Tracks::where("id", $track->id)->first()->cover_id);
+    }
+
+    /** Test a well-formed request to "linkToCover" with unowned track id */
+    public function test_link_to_cover_unowned_track()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        /** @var Covers $cover */
+        $cover = Covers::factory()->create();
+        $cover->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.TRACK_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.TRACK_NOT_FOUND.code"));
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_COVER)
+            ->route([
+                "track_id" => $track->id,
+                "cover_id" => $cover->id
+            ])
+        );
+
+    }
+
+    /** Test a well-formed request to "linkToCover" with unowned cover id */
+    public function test_link_to_cover_unowned_cover()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        /** @var Covers $cover */
+        $cover = Covers::factory()->create();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.COVER_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.COVER_NOT_FOUND.code"));
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_COVER)
+            ->route([
+                "track_id" => $track->id,
+                "cover_id" => $cover->id
+            ])
+        );
+    }
+
+    /** Test link track to lyric */
+
+    /** Test a well-formed request to "linkToLyric" */
+    public function test_link_to_lyric()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        /** @var Lyrics $lyric */
+        $lyric = Lyrics::factory()->create();
+        $lyric->update([
+            "owner_id" => $this->user->id
+        ]);
+        $response = $this->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_LYRIC)
+            ->route([
+                "track_id" => $track->id,
+                "lyric_id" => $lyric->id
+            ])
+        );
+
+        $this->assertEquals($track->id, $response->json("track_id"));
+        $this->assertEquals($lyric->id, Tracks::where("id", $track->id)->first()->lyric_id);
+    }
+
+    /** Test a well-formed request to "linkToLyric" with unowned track id */
+    public function test_link_to_lyric_unowned_track()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        /** @var Lyrics $lyric */
+        $lyric = Lyrics::factory()->create();
+        $lyric->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.TRACK_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.TRACK_NOT_FOUND.code"));
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_LYRIC)
+            ->route([
+                "track_id" => $track->id,
+                "lyric_id" => $lyric->id
+            ])
+        );
+
+    }
+
+    /** Test a well-formed request to "linkToLyric" with unowned lyric id */
+    public function test_link_to_lyric_unowned_lyric()
+    {
+        $this->seed();
+        $this->actingAs(
+            $this->user
+        );
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+        $track->update([
+            "owner_id" => $this->user->id
+        ]);
+
+        /** @var Lyrics $lyric */
+        $lyric = Lyrics::factory()->create();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(config("error-codes.LYRIC_NOT_FOUND.message"));
+        $this->expectExceptionCode(config("error-codes.LYRIC_NOT_FOUND.code"));
+
+        $this->withoutExceptionHandling()->put(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::TRACK)
+            ->method(RouteMethod::PUT)
+            ->name(RouteName::TRACK_LINK_TO_LYRIC)
+            ->route([
+                "track_id" => $track->id,
+                "lyric_id" => $lyric->id
+            ])
+        );
     }
 
 }

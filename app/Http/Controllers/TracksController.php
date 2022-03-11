@@ -17,8 +17,8 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -29,11 +29,11 @@ class TracksController extends Controller
     /**
      * This function creates the track and stores the uploaded mp3 file
      * @param Request $request
-     * @return Tracks|null
+     * @return JsonResponse|null
      * @throws ValidationException
      * @throws Exception
      */
-    public function createTrack(Request $request) {
+    public function createTrack(Request $request): ?JsonResponse {
         Validator::validate($request->all(), [
             "name" => "required|string|max:255",
             "description" => "required|string",
@@ -115,16 +115,18 @@ class TracksController extends Controller
             // Upload the just encrypted file to ipfs
             ipfs()->upload($mp3, $track->ipfs);
 
-            // TODO: UNCOMMENT THIS (?)
-            /*$track->update([
+            /* TODO: UNCOMMENT THIS
+            $track->update([
                 "nft_id" => $nft_id,
-            ]);*/
+            ]);
+            */
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a
             // composed track
-            return $track->fresh();
+            return response()->json([
+                "track" => $track->fresh()
+            ]);
         }
-
         // handle test errors
         if(!is_null($request->input("cover_id")) && is_null($cover)){
             throw new Exception(
@@ -153,11 +155,11 @@ class TracksController extends Controller
      * This function updates the track (NOT mp3,nft_id,duration)
      * @param Request $request
      * @param string $track_id
-     * @return Tracks|null
+     * @return JsonResponse|null
      * @throws ValidationException
      * @throws Exception
      */
-    public function updateTrack(Request $request, string $track_id): ?Tracks {
+    public function updateTrack(Request $request, string $track_id): ?JsonResponse {
         Validator::validate($request->all(), [
             "name" => "required|string|min:1|max:255",
             "description" => "required|string", // NOTE: do we need more validation for this field?
@@ -202,7 +204,9 @@ class TracksController extends Controller
                 "lyric_id" => $lyric?->id,
                 "album_id" => $album?->id
             ]);
-            return $track;
+            return response()->json([
+                "track" => $track
+            ]);
         }
 
         // handle test errors
@@ -241,11 +245,11 @@ class TracksController extends Controller
      * This function gets the total number of votes of the track
      * @param Request $request
      * @param string $track_id
-     * @return int
+     * @return JsonResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function getTotalVotes(Request $request, string $track_id): int {
+    public function getTotalVotes(Request $request, string $track_id): JsonResponse {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
@@ -253,7 +257,9 @@ class TracksController extends Controller
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
         if(!is_null($track)) {
-            return $track->votes()->count();
+            return response()->json([
+                "votesCount" => $track->votes()->count()
+            ]);
         }
 
         // handle track not found error
@@ -267,19 +273,22 @@ class TracksController extends Controller
      * This function gets all the tracks created by the user
      * @param Request $request
      * @param string $user_id
-     * @return Collection
+     * @return JsonResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function getUserCreatedTracks(Request $request, string $user_id): Collection {
-        Validator::validate($request->route()->parameters(), [
+    public function getUserCreatedTracks(Request $request, string $user_id): JsonResponse {
+        /*Validator::validate($request->route()->parameters(), [
             "user_id" => "required|uuid|exists:common.users,id",
-        ]);
+        ]);*/
+        //TODO UNCOMMENT THIS SAME AS BELOW
 
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
-            return $user->createdTracks;
+            return response()->json([
+                "tracks" => $user->createdTracks
+            ]);
         }
 
         // handle track not found error
@@ -293,18 +302,22 @@ class TracksController extends Controller
      * This function gets all the tracks owned by the user
      * @param Request $request
      * @param string $user_id
-     * @return Collection
+     * @return JsonResponse
      * @throws ValidationException
+     * @throws Exception
      */
-    public function getUserOwnedTracks(Request $request, string $user_id): Collection {
-        Validator::validate($request->route()->parameters(), [
+    public function getUserOwnedTracks(Request $request, string $user_id): JsonResponse {
+        /*Validator::validate($request->route()->parameters(), [
             "user_id" => "required|uuid|exists:common.users,id",
-        ]);
+        ]);*/
+        // TODO UNCOMMENT THIS SAME AS UPPER
 
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
-            return $user->ownedTracks;
+            return response()->json([
+                "tracks" => $user->ownedTracks
+            ]);
         }
 
         // handle track not found error
@@ -318,11 +331,11 @@ class TracksController extends Controller
      * This function gets the number of listening of a track
      * @param Request $request
      * @param string $track_id
-     * @return int
+     * @return JsonResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function getTotalListenings(Request $request, string $track_id): int {
+    public function getTotalListenings(Request $request, string $track_id): JsonResponse {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
@@ -331,7 +344,9 @@ class TracksController extends Controller
         $track = Tracks::where("id", $track_id)->first();
 
         if(!is_null($track)) {
-            return ListeningRequest::where("track_id", $track->id)->count();
+            return response()->json([
+                "listeningsCount" => ListeningRequest::where("track_id", $track->id)->count()
+            ]);
         }
 
         // handle track not found error
@@ -346,11 +361,11 @@ class TracksController extends Controller
      * This function gets the average vote of a track
      * @param Request $request
      * @param string $track_id
-     * @return float|int|null
+     * @return JsonResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function getAverageVote(Request $request, string $track_id): float|int|null {
+    public function getAverageVote(Request $request, string $track_id): JsonResponse {
 
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
@@ -360,7 +375,9 @@ class TracksController extends Controller
         $track = Tracks::where("id", $track_id)->first();
 
         if(!is_null($track)) {
-            return Votes::where("track_id", $track_id)->get("vote")->avg("vote");
+            return response()->json([
+                "votesAverage" => Votes::where("track_id", $track_id)->average("vote")
+            ]);
         }
 
         // handle track not found error
@@ -372,42 +389,49 @@ class TracksController extends Controller
 
     /**
      * This function return the 3 most voted tracks
-     * @return Collection
+     * @return JsonResponse
      */
-    public function getMostVotedTracks(): Collection {
-        return Tracks::withCount('votes')->orderByDesc('votes_count')->limit(3)->get();
+    public function getMostVotedTracks(): JsonResponse {
+        return response()->json([
+            "tracks" => Tracks::withCount('votes')->orderByDesc('votes_count')->limit(3)->get()
+        ]);
     }
 
     /**
      * This function return the 3 most listened tracks
-     * @return Collection
+     * @return JsonResponse
      */
-    public function getMostListenedTracks(): Collection {
-        return Tracks::withCount('listeningRequests')->orderByDesc('listening_requests_count')->limit(3)->get();
+    public function getMostListenedTracks(): JsonResponse {
+        return response()->json([
+            "tracks" => Tracks::withCount('listeningRequests')
+                ->orderByDesc('listening_requests_count')->limit(3)->get()
+        ]);
     }
 
     /**
      * This function returns the tracks not in the current challenge ( based on the number of votes )
-     * @return Collection
+     * @return JsonResponse
      */
-    public function getNotInChallengeTracks(): Collection {
+    public function getNotInChallengeTracks(): JsonResponse {
         // get current challenge
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
 
         // Get not voted tracks ( means not in challenge )
-        return Tracks::all()->filter(fn(Tracks $track) => $challenge->votes()->where("track_id", $track->id)->count() === 0);
+        return response()->json([
+            "tracks" => Tracks::all()->filter(fn(Tracks $track) => $challenge->votes()->where("track_id", $track->id)->count() === 0)->values()
+        ]);
     }
 
     /**
      * This function creates and returns the link for the track
      * @param Request $request
      * @param string $track_id
-     * @return string
+     * @return JsonResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function getTrackLink(Request $request, string $track_id): string {
+    public function getTrackLink(Request $request, string $track_id): JsonResponse {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
@@ -417,14 +441,16 @@ class TracksController extends Controller
 
         // check if track exists
         if(!is_null($track)) {
-            return rroute()
+            return response()->json([
+                "link" => rroute()
                 ->class(RouteClass::AUTHENTICATED)
                 ->group(RouteGroup::TRACK)
                 ->method(RouteMethod::GET)
                 ->name(RouteName::TRACK_GET)
                 ->route([
                     "track_id" => $track_id
-                ]);
+                ])
+            ]);
         }
 
         // handle track not found error
@@ -439,11 +465,11 @@ class TracksController extends Controller
      * @param Request $request
      * @param string $track_id
      * @param string $album_id
-     * @return string|null
+     * @return JsonResponse|null
      * @throws ValidationException
      * @throws Exception
      */
-    public function linkToAlbum(Request $request, string $track_id, string $album_id): ?string {
+    public function linkToAlbum(Request $request, string $track_id, string $album_id): ?JsonResponse {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
             "album_id" => "required|uuid|exists:albums,id",
@@ -462,7 +488,9 @@ class TracksController extends Controller
             $track->update([
                 "album_id" => $album?->id
             ]);
-            return $track->id;
+            return response()->json([
+                "track_id" => $track->id
+            ]);
         }
 
 
@@ -488,10 +516,11 @@ class TracksController extends Controller
      * @param Request $request
      * @param string $track_id
      * @param string $cover_id
-     * @return string|null
+     * @return JsonResponse|null
      * @throws ValidationException
+     * @throws Exception
      */
-    public function linkToCover(Request $request, string $track_id, string $cover_id): ?string {
+    public function linkToCover(Request $request, string $track_id, string $cover_id): ?JsonResponse {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
             "cover_id" => "required|uuid|exists:covers,id",
@@ -510,7 +539,9 @@ class TracksController extends Controller
             $track->update([
                 "cover_id" => $cover?->id
             ]);
-            return $track->id;
+            return response()->json([
+                "track_id" => $track->id
+            ]);
         }
 
 
@@ -536,11 +567,11 @@ class TracksController extends Controller
      * @param Request $request
      * @param string $track_id
      * @param string $lyric_id
-     * @return string|null
+     * @return JsonResponse|null
      * @throws ValidationException
      * @throws Exception
      */
-    public function linkToLyric(Request $request, string $track_id, string $lyric_id): ?string {
+    public function linkToLyric(Request $request, string $track_id, string $lyric_id): ?JsonResponse {
         Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
             "lyric_id" => "required|uuid|exists:lyrics,id",
@@ -559,7 +590,10 @@ class TracksController extends Controller
             $track->update([
                 "lyric_id" => $lyric?->id
             ]);
-            return $track->id;
+
+            return response()->json([
+                "track_id" => $track->id
+            ]);
         }
 
 
