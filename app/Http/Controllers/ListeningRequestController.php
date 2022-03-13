@@ -7,6 +7,7 @@ use App\Models\ListeningRequest;
 use App\Models\Tracks;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -17,15 +18,14 @@ class ListeningRequestController extends Controller
     /**
      * This function streams the track requested in a specific challenge
      *
+     * @param Request $request
      * @param string $track_id
      * @return StreamedResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function listenToTrackInChallenge(string $track_id): StreamedResponse {
-        Validator::validate([
-            'track_id' => $track_id
-        ], [
+    public function listenToTrackInChallenge(Request $request, string $track_id): StreamedResponse {
+        Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
 
@@ -86,14 +86,14 @@ class ListeningRequestController extends Controller
                 });
             }
 
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.ALREADY_LISTENING.message"),
                 config("error-codes.ALREADY_LISTENING.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -102,15 +102,14 @@ class ListeningRequestController extends Controller
     /**
      * This function streams the track requested
      *
+     * @param Request $request
      * @param string $track_id
      * @return StreamedResponse
      * @throws ValidationException
      * @throws Exception
      */
-    public function listenToTrack(string $track_id): StreamedResponse {
-        Validator::validate([
-            'track_id' => $track_id
-        ], [
+    public function listenToTrack(Request $request, string $track_id): StreamedResponse {
+        Validator::validate($request->route()->parameters(), [
             "track_id" => "required|uuid|exists:tracks,id",
         ]);
 
@@ -167,14 +166,14 @@ class ListeningRequestController extends Controller
                 });
             }
 
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.ALREADY_LISTENING.message"),
                 config("error-codes.ALREADY_LISTENING.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );

@@ -38,14 +38,14 @@ class SodiumKeyDerivationWrapper implements Wrapper
             return bin2hex(random_bytes($length));
         }
         catch (Exception $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             // fallback to openssl pseudo random bytes generation if an error occurs
             $bytes = openssl_random_pseudo_bytes($length, $is_strong);
 
             if(!$is_strong) {
-                logger()->channel(["stack", "slack-doduet-errors"])
+                logger()
                     ->error("ALERT: Insecure pseudorandom bytes generated and used in cryptographically critical methods");
             }
 
@@ -109,8 +109,8 @@ class SodiumKeyDerivationWrapper implements Wrapper
             );
         }
         catch (SodiumException $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             // fallback to a non cryptographically implementation of the master derivation but that allows to data decoding
             // ideally this point should never be reached unless critical errors occurs on the system
@@ -152,8 +152,8 @@ class SodiumKeyDerivationWrapper implements Wrapper
             ];
         }
         catch (SodiumException $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             // a secure one time key is generated in case an error occurs this will render all messages and data not
             // readable the next time, the user should be notified of this error if it occurs
@@ -216,8 +216,8 @@ class SodiumKeyDerivationWrapper implements Wrapper
                 hex2bin($secret_key),
                 hex2bin($public_key)));
         } catch (SodiumException $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             return "";
         }

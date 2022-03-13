@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
-
-use App\Http\Controllers\ListeningRequestController;
+use App\Enums\RouteClass;
+use App\Enums\RouteGroup;
+use App\Enums\RouteMethod;
+use App\Enums\RouteName;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -14,12 +16,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 
 class ListeningRequestControllerTest extends TestCase
 {
-    use MakesGraphQLRequests, ClearsSchemaCache, RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * Set up function.
@@ -29,7 +29,6 @@ class ListeningRequestControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
 
         $this->refreshDatabase();
     }
@@ -48,7 +47,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_in_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -60,14 +58,18 @@ class ListeningRequestControllerTest extends TestCase
         /** @var Challenges $challenge */
         $challenge = Challenges::factory()->create();
 
-        Cache::put("track:nft1", Storage::get("colossus.mp3"));
+        Cache::put("track:nft1", Storage::get("colossus.mp3")); // NOTE: I am using this file, may have to add it to storage/app to try
 
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create(["nft_id" => "nft1"]);
 
-        $response = $this->get(route("listen_to_track_in_challenge", [
-            "track_id" => $track->id
-        ]))->assertStatus(200);
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK_IN_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        )->assertStatus(200);
     }
 
 
@@ -79,7 +81,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_in_challenge_with_track_not_in_challenge()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
         $this->startSession();
 
         /**@var User $user */
@@ -99,9 +100,13 @@ class ListeningRequestControllerTest extends TestCase
             config("error-codes.TRACK_NOT_FOUND.code")
         ));
 
-        $response = $this->get(route('listen_to_track_in_challenge', [
-            "track_id" => $track->id
-        ]));
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK_IN_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        );
     }
 
     /**
@@ -112,7 +117,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_in_challenge_while_already_listening()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -134,9 +138,13 @@ class ListeningRequestControllerTest extends TestCase
             config("error-codes.ALREADY_LISTENING.code")
         ));
 
-        $response = $this->get(route('listen_to_track_in_challenge', [
-            "track_id" => $track->id
-        ]));
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK_IN_CHALLENGE)
+            ->route(["track_id" => $track->id])
+        );
     }
 
     /**
@@ -147,7 +155,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_request_listen_to_track_in_challenge_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -157,9 +164,13 @@ class ListeningRequestControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->expectException(ValidationException::class);
 
-        $response = $this->get(route('listen_to_track_in_challenge', [
-            "track_id" => "wrong-id"
-        ]));
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK_IN_CHALLENGE)
+            ->route(["track_id" => "wrong-id"])
+        );
     }
 
     /**
@@ -176,7 +187,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -190,9 +200,13 @@ class ListeningRequestControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create(["nft_id" => "nft1"]);
 
-        $response = $this->get(route("listen_to_track", [
-            "track_id" => $track->id
-        ]))->assertStatus(200);
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK)
+            ->route(["track_id" => $track->id])
+        )->assertStatus(200);
     }
 
     /**
@@ -203,7 +217,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_while_already_listening()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -222,9 +235,13 @@ class ListeningRequestControllerTest extends TestCase
             config("error-codes.ALREADY_LISTENING.code")
         ));
 
-        $response = $this->get(route('listen_to_track', [
-            "track_id" => $track->id
-        ]));
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK)
+            ->route(["track_id" => $track->id])
+        );
     }
 
     /**
@@ -235,7 +252,6 @@ class ListeningRequestControllerTest extends TestCase
     public function test_listen_to_track_with_wrong_track_id()
     {
         $this->seed();
-        $this->bootClearsSchemaCache();
 
         /**@var User $user */
         $this->actingAs(
@@ -245,8 +261,12 @@ class ListeningRequestControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->expectException(ValidationException::class);
 
-        $response = $this->get(route('listen_to_track', [
-            "track_id" => "wrong-id"
-        ]));
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::LISTENING_REQUEST)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::LISTENING_REQUEST_TO_TRACK)
+            ->route(["track_id" => "wrong-id"])
+        );
     }
 }

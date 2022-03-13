@@ -14,11 +14,12 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Referral\Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Referral\Tests\Feature\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Referral/tests/Unit" isTestSource="true" packagePrefix="Doinc\Modules\Referral\Tests\Unit\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/src" isTestSource="false" packagePrefix="Doinc\Modules\Crypter\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Crypter/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Crypter\Tests\Feature\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/database/factories" isTestSource="false" packagePrefix="Doinc\Modules\Settings\Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/database/seeders" isTestSource="false" packagePrefix="Doinc\Modules\Settings\Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/src" isTestSource="false" packagePrefix="Doinc\Modules\Settings\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Settings/tests/Feature" isTestSource="true" packagePrefix="Doinc\Modules\Settings\Tests\Feature\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Settings/tests/Unit" isTestSource="true" packagePrefix="Doinc\Modules\Settings\Tests\Unit\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fruitcake/laravel-cors" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
@@ -203,6 +204,17 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/pimple/pimple" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/orchestra/testbench-core" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/orchestra/testbench" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpmyadmin/sql-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/wapmorgan/unified-archive" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/pear-core-minimal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/pear_exception" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/archive_tar" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pear/console_getopt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gemorroj/archive7z" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/docopt/docopt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/data-transfer-object" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/thecodingmachine/safe" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jessarcher/laravel-castable-data-transfer-object" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

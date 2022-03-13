@@ -2,7 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Settings;
+use App\DTOs\SettingNineRandomTracks;
+use Doinc\Modules\Settings\Facades\Settings;
+use Doinc\Modules\Settings\Models\DTOs\SettingBool;
+use Doinc\Modules\Settings\Models\DTOs\SettingInt;
+use Doinc\Modules\Settings\Models\DTOs\SettingString;
 use Illuminate\Database\Seeder;
 
 class AvailableSettingsSeeder extends Seeder
@@ -25,34 +29,38 @@ class AvailableSettingsSeeder extends Seeder
         $settings = [
              [
                 "name" => "master_key_salt",
-                "type" => "string",
+                "type" => SettingString::class,
                 "has_default_value" => false,
             ],
             [
                 "name" => "master_derivation_key",
-                "type" => "int",
+                "type" => SettingInt::class,
                 "has_default_value" => false,
             ],
             [
                 "name" => "public_key",
-                "type" => "string",
+                "type" => SettingString::class,
                 "has_default_value" => false,
             ],
             [
                 "name" => "has_messages",
-                "type" => "bool",
+                "type" => SettingBool::class,
                 "has_default_value" => true,
                 "default_value" => true
             ],
             [
                 "name" => "challenge_nine_random_tracks",
-                "type" => "json",
+                "type" => SettingNineRandomTracks::class,
                 "has_default_value" => false,
             ],
         ];
 
         foreach ($settings as $setting) {
-            Settings::firstOrCreate($setting, $setting);
+            Settings::register(
+                $setting["name"],
+                $setting["type"],
+                $setting["has_default_value"] ? $setting["default_value"] : null
+            );
         }
     }
 }

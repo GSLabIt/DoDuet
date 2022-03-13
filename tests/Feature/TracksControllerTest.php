@@ -384,6 +384,7 @@ class TracksControllerTest extends TestCase
             ->group(RouteGroup::TRACK)
             ->method(RouteMethod::POST)
             ->name(RouteName::TRACK_CREATE),
+
             [
                 "name" => "Name",
                 "description" => "Description",
@@ -401,6 +402,7 @@ class TracksControllerTest extends TestCase
     {
         $this->seed();
         $this->authAsUser();
+      
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
         $track->update([
@@ -793,8 +795,6 @@ class TracksControllerTest extends TestCase
         }
 
     }
-
-
 
     /** Test get users tracks */
 

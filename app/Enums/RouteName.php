@@ -42,4 +42,12 @@ enum RouteName: string
     case TRACK_LINK_TO_COVER = "track_link_to_cover";
     case TRACK_LINK_TO_LYRIC = "track_link_to_lyric";
     case TRACK_GET = "track_get";
+
+    case LISTENING_REQUEST_TO_TRACK_IN_CHALLENGE = "listening_request_to_track_in_challenge";
+    case LISTENING_REQUEST_TO_TRACK= "listening_request_to_track";
+
+    case SETTINGS_SERVER_PUBLIC_KEY = "settings_server_public_key";
+    case SETTINGS_USER_PUBLIC_KEY = "settings_user_public_key";
+    case SETTINGS_USER_SECRET_KEY = "settings_user_secret_key";
+    case SETTINGS_LISTENED_CHALLENGE_RANDOM_TRACKS = "settings_listened_challenge_random_tracks";
 }

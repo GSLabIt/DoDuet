@@ -40,6 +40,10 @@ return [
         "message" => "Unable to find the request challenge",
         "code" => 1007,
     ],
+    "SETTING_NOT_FOUND" => [
+        "message" => "Unable to find the request setting",
+        "code" => 1008,
+    ],
 
 
     "ALREADY_LISTENING" => [

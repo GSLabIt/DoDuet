@@ -9,16 +9,24 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "ext-gmp": "^8.1",
-        "ext-openssl": "^8.1",
-        "ext-sodium": "^8.1",
+        "ext-bz2": "*",
+        "ext-gmp": "*",
+        "ext-openssl": "*",
+        "ext-sodium": "*",
+        "ext-zip": "*",
+        "do-inc/commander-module": "^1.0",
+        "do-inc/crypter-module": "^1.0",
         "do-inc/laravel-persona-kyc": "^0.10.20",
         "do-inc/referral-module": "^1.0",
+        "do-inc/settings-module": "^1.0",
+        "docopt/docopt": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
+        "gemorroj/archive7z": "^5.3",
         "guzzlehttp/guzzle": "^7.2",
         "hedii/laravel-gelf-logger": "^7.0",
         "illuminate/contracts": "^9.0",
         "inertiajs/inertia-laravel": "^0.5.4",
+        "jessarcher/laravel-castable-data-transfer-object": "^2.1",
         "joshbrw/laravel-module-installer": "^2.0",
         "laravel/framework": "^9.0",
         "laravel/jetstream": "^2.4",
@@ -27,11 +35,14 @@
         "laravel/socialite": "^5.2",
         "laravel/tinker": "^2.5",
         "nwidart/laravel-modules": "^9.0",
+        "pear/archive_tar": "^1.4",
+        "spatie/data-transfer-object": "^3.7",
         "spatie/laravel-activitylog": "^4.4",
         "spatie/laravel-ignition": "^1.0",
         "spatie/laravel-permission": "^5.1",
-        "spatie/regex": "^3.1.1",
-        "tightenco/ziggy": "^1.0"
+        "spatie/regex": "^3.1",
+        "tightenco/ziggy": "^1.0",
+        "wapmorgan/unified-archive": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.10",
@@ -62,7 +73,8 @@
             "Doinc\\Modules\\Referral\\Database\\Seeders\\": "modules/Referral/database/seeders/",
             "Doinc\\Modules\\Settings\\": "modules/Settings/src/",
             "Doinc\\Modules\\Settings\\Database\\Factories\\": "modules/Settings/database/factories/",
-            "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/"
+            "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/",
+            "Doinc\\Modules\\Crypter\\": "modules/Crypter/src/"
         },
         "files": [
             "app/Helpers/index.php"
@@ -74,7 +86,7 @@
             "Doinc\\Modules\\Referral\\Tests\\Feature\\": "modules/Referral/tests/Feature/",
             "Doinc\\Modules\\Referral\\Tests\\Unit\\": "modules/Referral/tests/Unit/",
             "Doinc\\Modules\\Settings\\Tests\\Feature\\": "modules/Settings/tests/Feature/",
-            "Doinc\\Modules\\Settings\\Tests\\Unit\\": "modules/Settings/tests/Unit/"
+            "Doinc\\Modules\\Crypter\\Tests\\Feature\\": "modules/Crypter/tests/Feature/"
         }
     },
     "scripts": {
@@ -118,6 +130,18 @@
         {
             "type": "vcs",
             "url": "git@github.com:Do-inc/laravel-module-referral.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-commander-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-crypter-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-settings-module.git"
         }
     ]
 }
