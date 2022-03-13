@@ -1,7 +1,7 @@
 {
     "name": "do-inc/settings-module",
-    "description": "___",
-    "version": "1.0.0",
+    "description": "Module to create and manage strongly typed settings with the usage of DTOs",
+    "version": "1.0.1",
     "type": "laravel-module",
     "keywords": [
         "do-inc",
@@ -28,7 +28,10 @@
     "autoload": {
         "psr-4": {
             "Doinc\\Modules\\Settings\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -51,8 +54,11 @@
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/contracts": "^9.0",
         "inertiajs/inertia-laravel": "^0.5.4",
+        "jessarcher/laravel-castable-data-transfer-object": "^2.1",
         "nwidart/laravel-modules": "^9.0",
-        "spatie/laravel-activitylog": "^4.4"
+        "spatie/data-transfer-object": "^3.7",
+        "spatie/laravel-activitylog": "^4.4",
+        "do-inc/crypter-module": "^1.0"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",
@@ -65,5 +71,11 @@
         "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^9.5",
         "spatie/laravel-ray": "^1.26"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-crypter-module.git"
+        }
+    ]
 }

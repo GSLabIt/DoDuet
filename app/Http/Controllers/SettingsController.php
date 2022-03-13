@@ -62,7 +62,7 @@ class SettingsController extends Controller
             ]);
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
         );
@@ -82,11 +82,11 @@ class SettingsController extends Controller
 
         if(settings($user)->has("challenge_nine_random_tracks")) {
             return response()->json([
-                "listened" => settings($user)->get("challenge_nine_random_tracks")["listened"]
+                "listened" => settings($user)->get("challenge_nine_random_tracks")->listened
             ]);
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.SETTING_NOT_FOUND.message"),
             config("error-codes.SETTING_NOT_FOUND.code")
         );

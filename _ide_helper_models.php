@@ -678,10 +678,12 @@ namespace App\Models{
  *
  * @property string $id
  * @property mixed $name
+ * @property string $name_sig
  * @property mixed $type
- * @property array|null $allowed_values
+ * @property string $type_sig
  * @property bool $has_default_value
- * @property mixed|null $default_value
+ * @property mixed $default_value
+ * @property string $default_value_sig
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
@@ -693,14 +695,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereAllowedValues($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDefaultValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDefaultValueSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereHasDefaultValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereNameSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereTypeSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Settings whereUpdatedAt($value)
  */
 	class IdeHelperSettings {}
@@ -1007,7 +1011,7 @@ namespace App\Models{
  * @property-read int|null $second_places_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Messages[] $sentMessages
  * @property-read int|null $sent_messages_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserSettings[] $settings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Modules\Settings\Models\UserSettings[] $settings
  * @property-read int|null $settings_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
@@ -1077,12 +1081,14 @@ namespace App\Models{
  * @property string $id
  * @property string $owner_id
  * @property string $settings_id
- * @property \App\Models\Settings|null $setting
+ * @property string $setting_value
+ * @property string $setting_value_sig
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Settings|null $setting
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Socials[] $socials
  * @property-read int|null $socials_count
  * @method static \Database\Factories\UserSettingsFactory factory(...$parameters)
@@ -1092,7 +1098,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSetting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingValueSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereSettingsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings whereUpdatedAt($value)
  */
@@ -1223,30 +1230,66 @@ namespace Doinc\Modules\Settings\Models{
  * Doinc\Modules\Settings\Models\Settings
  *
  * @property string $id
- * @property string $name
- * @property string $type
- * @property string|null $allowed_values
- * @property int $has_default_value
- * @property string|null $default_value
+ * @property mixed|null $name
+ * @property string $name_sig
+ * @property mixed|null $type
+ * @property string $type_sig
+ * @property bool $has_default_value
+ * @property mixed|null $default_value
+ * @property string $default_value_sig
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read \App\Models\User $owner
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Modules\Settings\Models\UserSettings[] $userSettings
+ * @property-read int|null $user_settings_count
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings query()
- * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereAllowedValues($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDefaultValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDefaultValueSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereEncryptedIs(string $column_name, string $value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereHasDefaultValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereNameSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereTypeSig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereUpdatedAt($value)
  */
 	class IdeHelperSettings {}
+}
+
+namespace Doinc\Modules\Settings\Models{
+/**
+ * Doinc\Modules\Settings\Models\UserSettings
+ *
+ * @property string $id
+ * @property string $owner_id
+ * @property string $settings_id
+ * @property mixed|null $setting_value
+ * @property string $setting_value_sig
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \App\Models\User $owner
+ * @property-read \Doinc\Modules\Settings\Models\Settings|null $setting
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereEncryptedIs(string $column_name, string $value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereSettingValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereSettingValueSig($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereSettingsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereUpdatedAt($value)
+ */
+	class IdeHelperUserSettings {}
 }
 

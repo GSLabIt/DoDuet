@@ -6,7 +6,7 @@ use Illuminate\Validation\ValidationException;
 
 use App\Models\User;
 use App\Models\Covers;
-use App\Models\Skynet;
+use App\Models\Ipfs;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
 
@@ -15,7 +15,7 @@ use Illuminate\Http\UploadedFile;
 class CoversController extends Controller
 {
     /**
-     * This function creates the cover and calls the uploadOnSkynet function with the uploaded img file
+     * This function creates the cover
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -34,20 +34,23 @@ class CoversController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        // Retrieve the uploaded image and call the uploadOnSkynet function
         /** @var UploadedFile $img */
         $img = $args["img"];
-        $skynet = $this->uploadOnSkynet($img);
+        $ipfs = Ipfs::create([
+            "cid" => "temp",
+            "encryption_key" => "temp"
+        ]);
+        ipfs()->upload($img,$ipfs);
 
         return $user->createdCovers()->create([
             "name" => $args["name"],
-            "skynet_id" => $skynet->id,
             "owner_id" => $user->id,
+            "ipfs_id" => $ipfs->id
         ]);
     }
 
     /**
-     * This function updates the cover and, if the file is not null, calls the uploadOnSkynet function with the uploaded img
+     * This function updates the cover
      *
      * @param null $root Always null, since this field has no parent.
      * @param array<string, mixed> $args The field arguments passed by the client.
@@ -77,16 +80,19 @@ class CoversController extends Controller
             // checks if the image is re-uploaded or not
             if ($args["img"] != null)
             {
-                // Retrieve the uploaded image and call the uploadOnSkynet function
                 /** @var UploadedFile $img */
                 $img = $args["img"];
-                $skynet = $this->uploadOnSkynet($img);
+                $ipfs = Ipfs::create([
+                    "cid" => "temp",
+                    "encryption_key" => "temp"
+                ]);
+                ipfs()->upload($img,$ipfs);
 
                 //TODO: remove old file?
 
                 $cover->update([
                     "name" => $args["name"],
-                    "skynet_id" => $skynet->id,
+                    "ipfs_id" => $ipfs->id,
                 ]);
             }
             else
@@ -99,7 +105,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
@@ -137,37 +143,10 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
-    }
-
-    /**
-     * This function standardizes the file upload on skynet and stores the file in the skynet folder
-     *
-     * @param $file
-     * @return Skynet
-     */
-    private function uploadOnSkynet($file): Skynet
-    {
-        // Extract the content from the file to start the encryption process
-        $content = $file->get();
-        $key = sodium()->encryption()->symmetric()->key();
-        $nonce = sodium()->derivation()->generateSymmetricNonce();
-        $encrypted_content = sodium()->encryption()->symmetric()->encrypt($content, $key, $nonce);
-
-        // Store the just encrypted file in the skynet folder, the encryption key is used as a unique file
-        // identifier
-        file_put_contents(storage_path("/skynet/$key"), $encrypted_content);
-
-        // The generated file was placed in the skynet folder, the watchdog will take the file and upload it to
-        // skynet then use the file name as a unique identifier to set the skynet link in the appropriate record
-        $skynet = Skynet::create([
-            "link" => "loading",
-            "encryption_key" => $key,
-        ]);
-        return $skynet;
     }
 }
 

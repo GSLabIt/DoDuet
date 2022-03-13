@@ -62,7 +62,7 @@ class VotesController extends Controller
                     $seconds += pow(60, $key) * $value;
                 }
                 if ($seconds > 86400) {
-                    throw new Exception(
+                    throw new \App\Exceptions\SafeException(
                         config("error-codes.TIME_ERROR.message"),
                         config("error-codes.TIME_ERROR.code")
                     );
@@ -79,24 +79,24 @@ class VotesController extends Controller
                         // if no exception is thrown, return true
                         return response()->json(["success" => true]);
                     } catch (Throwable $e) {
-                        throw new Exception($e);
+                        throw new \App\Exceptions\SafeException($e);
                     }
                 }
                 // handle vote when not in allowed time
-                throw new Exception(
+                throw new \App\Exceptions\SafeException(
                     config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.message"),
                     config("error-codes.VOTE_PERMISSION_NOT_ALLOWED.code")
                 );
             }
             // handle track not found listened to
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.TRACK_NOT_LISTENED.message"),
                 config("error-codes.TRACK_NOT_LISTENED.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -147,12 +147,12 @@ class VotesController extends Controller
                     ])->first()
                 ]);
             } catch (Throwable $e) {
-                throw new Exception($e);
+                throw new \App\Exceptions\SafeException($e);
             }
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );

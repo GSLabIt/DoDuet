@@ -1,7 +1,7 @@
 {
     "name": "settings",
     "alias": "settings-module",
-    "description": "___",
+    "description": "Module to create and manage strongly typed settings with the usage of DTOs",
     "keywords": [
         "do-inc",
         "laravel",
@@ -15,10 +15,14 @@
     "aliases": {
         "Settings": "Doinc\\Modules\\Settings\\Facades\\Settings"
     },
-    "files": [],
-    "requires": [],
+    "files": [
+        "src/helpers.php"
+    ],
+    "requires": [
+        "do-inc/crypter-module"
+    ],
     "minimumCoreVersion": "^9.0",
     "title": "Settings module",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Emanuele (ebalo) Balsamo"
 }

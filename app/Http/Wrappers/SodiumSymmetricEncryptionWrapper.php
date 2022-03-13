@@ -50,8 +50,8 @@ class SodiumSymmetricEncryptionWrapper implements Wrapper, CryptographicWrapper
                 hex2bin($encryption_key))) . ":$nonce";
         }
         catch (SodiumException $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             return "";
         }
@@ -76,8 +76,8 @@ class SodiumSymmetricEncryptionWrapper implements Wrapper, CryptographicWrapper
             return is_bool($decoded) ? "" : $decoded;
         }
         catch (SodiumException $exception) {
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getMessage());
-            logger()->channel(["stack", "slack-doduet-errors"])->error($exception->getTraceAsString());
+            logger()->error($exception->getMessage());
+            logger()->error($exception->getTraceAsString());
 
             return "";
         }

@@ -956,15 +956,8 @@
                         return $instance->when($concrete);
         }
                     /**
-         * Returns true if the container can return an entry for the given identifier.
          * 
-         * Returns false otherwise.
-         * 
-         * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
-         * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
          *
-         * @return bool 
-         * @param string $id Identifier of the entry to look for.
          * @return bool 
          * @static 
          */ 
@@ -1290,13 +1283,9 @@
                         return $instance->makeWith($abstract, $parameters);
         }
                     /**
-         * Finds an entry of the container by its identifier and returns it.
+         * 
          *
          * @return mixed 
-         * @param string $id Identifier of the entry to look for.
-         * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
-         * @throws ContainerExceptionInterface Error while retrieving the entry.
-         * @return mixed Entry.
          * @static 
          */ 
         public static function get($id)
@@ -3527,15 +3516,9 @@
                         return $instance->many($keys);
         }
                     /**
-         * Obtains multiple cache items by their unique keys.
+         * 
          *
          * @return \Illuminate\Cache\iterable 
-         * @param \Psr\SimpleCache\iterable<string> $keys A list of keys that can be obtained in a single operation.
-         * @param mixed $default Default value to return for keys that do not exist.
-         * @return \Psr\SimpleCache\iterable<string, mixed> A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
-         * @throws \Psr\SimpleCache\InvalidArgumentException
-         *   MUST be thrown if $keys is neither an array nor a Traversable,
-         *   or if any of the $keys are not a legal value.
          * @static 
          */ 
         public static function getMultiple($keys, $default = null)
@@ -3571,17 +3554,9 @@
                         return $instance->put($key, $value, $ttl);
         }
                     /**
-         * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
+         * 
          *
          * @return bool 
-         * @param string $key The key of the item to store.
-         * @param mixed $value The value of the item to store, must be serializable.
-         * @param null|int|\DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
-         *                                      the driver supports TTL then the library may set a default value
-         *                                      for it or let the driver take care of that.
-         * @return bool True on success and false on failure.
-         * @throws \Psr\SimpleCache\InvalidArgumentException
-         *   MUST be thrown if the $key string is not a legal value.
          * @static 
          */ 
         public static function set($key, $value, $ttl = null)
@@ -3603,17 +3578,9 @@
                         return $instance->putMany($values, $ttl);
         }
                     /**
-         * Persists a set of key => value pairs in the cache, with an optional TTL.
+         * 
          *
          * @return bool 
-         * @param \Psr\SimpleCache\iterable $values A list of key => value pairs for a multiple-set operation.
-         * @param null|int|\DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
-         *                                       the driver supports TTL then the library may set a default value
-         *                                       for it or let the driver take care of that.
-         * @return bool True on success and false on failure.
-         * @throws \Psr\SimpleCache\InvalidArgumentException
-         *   MUST be thrown if $values is neither an array nor a Traversable,
-         *   or if any of the $values are not a legal value.
          * @static 
          */ 
         public static function setMultiple($values, $ttl = null)
@@ -3727,13 +3694,9 @@
                         return $instance->forget($key);
         }
                     /**
-         * Delete an item from the cache by its unique key.
+         * 
          *
          * @return bool 
-         * @param string $key The unique cache key of the item to delete.
-         * @return bool True if the item was successfully removed. False if there was an error.
-         * @throws \Psr\SimpleCache\InvalidArgumentException
-         *   MUST be thrown if the $key string is not a legal value.
          * @static 
          */ 
         public static function delete($key)
@@ -3742,14 +3705,9 @@
                         return $instance->delete($key);
         }
                     /**
-         * Deletes multiple cache items in a single operation.
+         * 
          *
          * @return bool 
-         * @param \Psr\SimpleCache\iterable<string> $keys A list of string-based keys to be deleted.
-         * @return bool True if the items were successfully removed. False if there was an error.
-         * @throws \Psr\SimpleCache\InvalidArgumentException
-         *   MUST be thrown if $keys is neither an array nor a Traversable,
-         *   or if any of the $keys are not a legal value.
          * @static 
          */ 
         public static function deleteMultiple($keys)
@@ -3758,10 +3716,9 @@
                         return $instance->deleteMultiple($keys);
         }
                     /**
-         * Wipes clean the entire cache's keys.
+         * 
          *
          * @return bool 
-         * @return bool True on success and false on failure.
          * @static 
          */ 
         public static function clear()
@@ -16405,7 +16362,51 @@
      
 }
 
-        namespace Doinc\Modules\Referral\Facades { 
+        namespace Doinc\Modules\Crypter\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Crypter {
+                    /**
+         * Load the key derivation functionalities
+         *
+         * @return \Doinc\Modules\Crypter\SodiumKeyDerivation 
+         * @static 
+         */ 
+        public static function derivation()
+        {
+                        /** @var \Doinc\Modules\Crypter\Crypter $instance */
+                        return $instance->derivation();
+        }
+                    /**
+         * Load the encryption functionalities
+         *
+         * @return \Doinc\Modules\Crypter\SodiumEncryption 
+         * @static 
+         */ 
+        public static function encryption()
+        {
+                        /** @var \Doinc\Modules\Crypter\Crypter $instance */
+                        return $instance->encryption();
+        }
+                    /**
+         * 
+         *
+         * @throws Exception
+         * @static 
+         */ 
+        public static function randomInt($min, $max)
+        {
+                        /** @var \Doinc\Modules\Crypter\Crypter $instance */
+                        return $instance->randomInt($min, $max);
+        }
+         
+    }
+     
+}
+
+    namespace Doinc\Modules\Referral\Facades { 
             /**
      * 
      *
@@ -16522,6 +16523,120 @@
         {
                         /** @var \Doinc\Modules\Referral\Referral $instance */
                         return $instance->referralIndexFromPrize($prize);
+        }
+         
+    }
+     
+}
+
+    namespace Doinc\Modules\Settings\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Settings {
+                    /**
+         * Set the user context of the class instance, depending on the argument type this will call
+         * initWithUser or initWithRequest
+         * 
+         * NOTE: This method should always be called first
+         *
+         * @param \App\Models\User|\Request $context
+         * @return \Settings 
+         * @static 
+         */ 
+        public static function setUserContext($context)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->setUserContext($context);
+        }
+                    /**
+         * Register a new settings if not already existing
+         *
+         * @param string $name Unique setting name, this value will be used to check for existence and retrieve it
+         * @param string $class Full class name of the value being registered, the clas *must* implement `SettingBase` in
+         *          order to return a strongly typed class when retrieved and extend `CastableDataTransferObject` in order
+         *          to allow direct parsing from JSON
+         * @param string|null $default_value JSON representation of the default DTO, can usually be generated with the
+         *          `->toJson` method on a DTO instance
+         * @return bool Whether the registration was successful or not
+         * @static 
+         */ 
+        public static function register($name, $class, $default_value = null)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->register($name, $class, $default_value);
+        }
+                    /**
+         * Register a new setting from an initialized instance
+         *
+         * @param \Doinc\Modules\Settings\Models\DTOs\Setting $setting
+         * @return bool 
+         * @static 
+         */ 
+        public static function registerFromInstance($setting)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->registerFromInstance($setting);
+        }
+                    /**
+         * Get the value of the setting returning a callable dropping a strongly typed DTO with the setting values.
+         * 
+         * Returns the default setting value if no value is defined.
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @return \Doinc\Modules\Settings\Models\DTOs\Setting 
+         * @throws SettingNotFound
+         * @static 
+         */ 
+        public static function get($setting_name)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->get($setting_name);
+        }
+                    /**
+         * Update a setting for current user
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @param string $value JSON representation of the DTO, can usually be generated with the `->toJson` method on a
+         *          DTO instance
+         * @return bool 
+         * @throws SettingNotFound
+         * @static 
+         */ 
+        public static function update($setting_name, $value)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->update($setting_name, $value);
+        }
+                    /**
+         * Check if a setting is defined for the current user
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @return bool 
+         * @static 
+         */ 
+        public static function has($setting_name)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->has($setting_name);
+        }
+                    /**
+         * Create a setting for current user
+         * 
+         * Returns true if operation succeed, false otherwise
+         *
+         * @param string $setting_name Unique setting name, used to check for existence and retrieve it
+         * @param string $value JSON representation of the DTO, can usually be generated with the `->toJson` method on a
+         *          DTO instance
+         * @return bool 
+         * @throws SettingNotFound
+         * @static 
+         */ 
+        public static function set($setting_name, $value)
+        {
+                        /** @var \Doinc\Modules\Settings\Settings $instance */
+                        return $instance->set($setting_name, $value);
         }
          
     }
@@ -18506,6 +18621,32 @@
         public static function ray()
         {
                         return \Illuminate\Database\Query\Builder::ray();
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Database\Schema { 
+            /**
+     * 
+     *
+     */ 
+        class Blueprint {
+                    /**
+         * 
+         *
+         * @see \Doinc\Modules\Crypter\Providers\CrypterServiceProvider::boot()
+         * @param \Illuminate\Database\Schema\Blueprint $blueprint
+         * @param string $column_name
+         * @param bool $has_default
+         * @param string $default
+         * @param bool $is_nullable
+         * @static 
+         */ 
+        public static function encrypted($blueprint, $column_name, $has_default = false, $default = '', $is_nullable = false)
+        {
+                        return \Illuminate\Database\Schema\Blueprint::encrypted($blueprint, $column_name, $has_default, $default, $is_nullable);
         }
          
     }
@@ -22125,7 +22266,9 @@ namespace  {
             class URL extends \Illuminate\Support\Facades\URL {}
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
+            class Crypter extends \Doinc\Modules\Crypter\Facades\Crypter {}
             class Referral extends \Doinc\Modules\Referral\Facades\Referral {}
+            class Settings extends \Doinc\Modules\Settings\Facades\Settings {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Octane extends \Laravel\Octane\Facades\Octane {}
             class Socialite extends \Laravel\Socialite\Facades\Socialite {}

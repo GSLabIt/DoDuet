@@ -2,19 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Http\Wrappers\IpfsWrapper;
 use App\Models\Ipfs;
 use App\Models\Tracks;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
-use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Tests\TestCase;
 
 class IpfsWrapperTest extends TestCase
 {
-    use RefreshDatabase,ClearsSchemaCache, RefreshDatabase;
+    use RefreshDatabase;
     /**
      * Set up function.
      *
@@ -42,7 +40,6 @@ class IpfsWrapperTest extends TestCase
         Http::asForm()->withHeaders([
             "Authorization" => "Bearer ".env("NFT_STORAGE_API_KEY")
         ])->get(env("NFT_STORAGE_CHECK_LINK").$ipfs->cid);
-
         $this->assertTrue($original_file->get() === ipfs()->download($ipfs));
     }
 

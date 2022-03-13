@@ -54,18 +54,18 @@ class ListeningRequestController extends Controller
                 $nft = "track:{$track->nft_id}";
                 //check the cache
                 if (Cache::has($nft)) {
-                    $skynet_mp3 = Cache::get($nft);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = Cache::get($nft);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 } else {
-                    $skynet_mp3 = skynet()->download($track->skynet);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = ipfs()->download($track->ipfs);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 }
 
                 $user_public_key = secureUser($user)->get(secureUser($user)->whitelistedItems()["public_key"]);
 
                 // encrypt mp3 that will be streamed
                 $stream_mp3 = sodium()->encryption()->asymmetric()->encrypt(
-                    $skynet_mp3,
+                    $ipfs_mp3,
                     sodium()->derivation()->packSharedKeypair(
                         $user_public_key,
                         env("SERVER_SECRET_KEY")
@@ -86,14 +86,14 @@ class ListeningRequestController extends Controller
                 });
             }
 
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.ALREADY_LISTENING.message"),
                 config("error-codes.ALREADY_LISTENING.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -135,18 +135,18 @@ class ListeningRequestController extends Controller
                 $nft = "track:{$track->nft_id}";
                 //check the cache
                 if (Cache::has($nft)) {
-                    $skynet_mp3 = Cache::get($nft);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = Cache::get($nft);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 } else {
-                    $skynet_mp3 = skynet()->download($track->skynet);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = ipfs()->download($track->ipfs);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 }
 
                 $user_public_key = secureUser($user)->get(secureUser($user)->whitelistedItems()["public_key"]);
 
                 // encrypt mp3 that will be streamed
                 $stream_mp3 = sodium()->encryption()->asymmetric()->encrypt(
-                    $skynet_mp3,
+                    $ipfs_mp3,
                     sodium()->derivation()->packSharedKeypair(
                         $user_public_key,
                         env("SERVER_SECRET_KEY")
@@ -166,14 +166,14 @@ class ListeningRequestController extends Controller
                 });
             }
 
-            throw new Exception(
+            throw new \App\Exceptions\SafeException(
                 config("error-codes.ALREADY_LISTENING.message"),
                 config("error-codes.ALREADY_LISTENING.code")
             );
         }
 
         // handle track not found error
-        throw new Exception(
+        throw new \App\Exceptions\SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
