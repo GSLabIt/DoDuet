@@ -2,11 +2,9 @@
 
 namespace Doinc\Modules\Crypter\Tests\Feature;
 
-use App\Http\Wrappers\Enums\SodiumKeyLength;
+use Doinc\Modules\Crypter\Enums\SodiumKeyLength;
 use Doinc\Modules\Crypter\Exceptions\InsecureRandomSourceInCryptographicallyCriticalImplementation;
 use Doinc\Modules\Crypter\Facades\Crypter;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use SodiumException;
 use Tests\TestCase;
 
@@ -20,7 +18,10 @@ class CrypterTest extends TestCase
     public function test_sequential_random_differs()
     {
         for($i = 0; $i < 10; $i++) {
-            $this->assertNotEquals(Crypter::randomInt(1, 1e10), Crypter::randomInt(1, 1e10));
+            $this->assertNotEquals(
+                Crypter::randomInt(1, (int)1e10),
+                Crypter::randomInt(1, (int)1e10)
+            );
         }
     }
 

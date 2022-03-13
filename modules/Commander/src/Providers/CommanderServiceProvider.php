@@ -12,6 +12,7 @@ use Doinc\Modules\Commander\Console\ModuleCommand;
 use Doinc\Modules\Commander\Console\ModuleController;
 use Doinc\Modules\Commander\Console\ModuleDelete;
 use Doinc\Modules\Commander\Console\ModuleEvent;
+use Doinc\Modules\Commander\Console\ModuleException;
 use Doinc\Modules\Commander\Console\ModuleFactory;
 use Doinc\Modules\Commander\Console\ModuleGenerator;
 use Doinc\Modules\Commander\Console\ModuleInstall;
@@ -27,6 +28,7 @@ use Doinc\Modules\Commander\Console\ModulePolicy;
 use Doinc\Modules\Commander\Console\ModuleProvider;
 use Doinc\Modules\Commander\Console\ModulePublishConfig;
 use Doinc\Modules\Commander\Console\ModuleRule;
+use Doinc\Modules\Commander\Console\ModuleSafeException;
 use Doinc\Modules\Commander\Console\ModuleSeeder;
 use Doinc\Modules\Commander\Console\ModuleTest;
 use Illuminate\Support\ServiceProvider;
@@ -65,6 +67,8 @@ class CommanderServiceProvider extends ServiceProvider
         ModuleTest::class,
         ModuleGenerator::class,
         CommanderSelfInstall::class,
+        ModuleException::class,
+        ModuleSafeException::class,
     ];
 
     /**
@@ -74,10 +78,6 @@ class CommanderServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->registerTranslations();
-        // $this->registerConfig();
-        // $this->registerViews();
-        // $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
     }
 
     /**
@@ -91,55 +91,6 @@ class CommanderServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register config.
-     *
-     * @return  void
-     */
-    protected function registerConfig()
-    {
-        $this->publishes([
-            __DIR__ . '/../../config/config.php' => config_path($this->moduleNameLower . '.php'),
-        ], $this->moduleNameLower . '-config');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/config.php', $this->moduleNameLower
-        );
-    }
-
-    /**
-     * Register views.
-     *
-     * @return  void
-     */
-    public function registerViews()
-    {
-        $viewPath = resource_path('views/modules/' . $this->moduleNameLower);
-
-        $sourcePath = __DIR__ . '/../../resources/views';
-
-        $this->publishes([
-            $sourcePath => $viewPath
-        ], ['views', $this->moduleNameLower . '-module-views']);
-
-        $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
-    }
-
-    /**
-     * Register translations.
-     *
-     * @return  void
-     */
-    public function registerTranslations()
-    {
-        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
-
-        if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
-        } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', $this->moduleNameLower);
-        }
-    }
-
-    /**
      * Get the services provided by the provider.
      *
      * @return  array
@@ -147,16 +98,5 @@ class CommanderServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return $this->commands;
-    }
-
-    private function getPublishableViewPaths(): array
-    {
-        $paths = [];
-        foreach (config('view.paths') as $path) {
-            if (is_dir($path . '/modules/' . $this->moduleNameLower)) {
-                $paths[] = $path . '/modules/' . $this->moduleNameLower;
-            }
-        }
-        return $paths;
     }
 }

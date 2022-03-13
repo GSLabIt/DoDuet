@@ -18,6 +18,10 @@ trait Uuid
     protected static function boot()
     {
         parent::boot();
+
+        if (!config("settings.uuid")) {
+            return;
+        }
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
@@ -30,9 +34,12 @@ trait Uuid
      *
      * @return  bool
      */
-    public function getIncrementing()
+    public function getIncrementing(): bool
     {
-        return false;
+        if (config("settings.uuid")) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -40,8 +47,11 @@ trait Uuid
      *
      * @return  string
      */
-    public function getKeyType()
+    public function getKeyType(): string
     {
-        return 'string';
+        if (config("settings.uuid")) {
+            return "string";
+        }
+        return "int";
     }
 }

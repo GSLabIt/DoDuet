@@ -512,6 +512,7 @@ class ChallengesController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws SettingNotFound
+     * @throws SafeException
      */
     public function getNineRandomTracks(Request $request): JsonResponse
     {
@@ -519,7 +520,7 @@ class ChallengesController extends Controller
         $user = auth()->user();
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("created_at")->first();
-        $required_columns = ["id", "name", "duration", "creator_id", "cover_id"];
+        $required_columns = ["id", "name", "duration", "cover_id"];
 
         // if the setting is already set
         if (settings($user)->has("challenge_nine_random_tracks")) {
@@ -531,7 +532,12 @@ class ChallengesController extends Controller
                 // if the challenge is the same and the user has not finished listening to all the tracks, select and return them
                 if ($settings_content->listened < 9) {
                     return response()->json([
-                        "tracks" => Tracks::whereIn("id", $settings_content->track_ids)->get($required_columns)
+                        "tracks" => Tracks::whereIn("id", $settings_content->track_ids)
+                            ->select([...$required_columns, "creator_id"])
+                            ->get()
+                            ->map(function (Tracks $item) use ($required_columns) {
+                                return [...$item->only($required_columns), "creator" => $item->creator->name];
+                            })
                     ]);
                 }
             }
@@ -546,15 +552,21 @@ class ChallengesController extends Controller
             ->select($required_columns)
             ->whereNotIn("id", $listened_tracks)
             ->count();
+        if ($available_tracks === 0) {
+            throw new SafeException(
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.message"),
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.code")
+            );
+        }
         $random_number = $available_tracks < 9 ? $available_tracks : 9;
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
-            ->select($required_columns)
+            ->select([...$required_columns, "creator_id"])
             ->whereNotIn("id", $listened_tracks)
             ->get()
             ->random($random_number)
             ->map(function (Tracks $item) use ($required_columns) { // remove relationships
-                return $item->only($required_columns);
+                return [...$item->only($required_columns), "creator" => $item->creator->name];
             });
 
         // get all the ids
@@ -565,7 +577,7 @@ class ChallengesController extends Controller
             "challenge_nine_random_tracks",
             (new SettingNineRandomTracks(
                 challenge_id: $current_challenge->id,
-                tracks_id: $nine_random_tracks_ids,
+                track_ids: $nine_random_tracks_ids->toArray(),
                 listened: 0
             ))->toJson()
         );
@@ -589,17 +601,19 @@ class ChallengesController extends Controller
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("created_at")->first();
 
-        $required_columns = ["id", "name", "duration", "creator_id", "cover_id"];
+        $required_columns = ["id", "name", "duration", "cover_id"];
         // check if settings exists for malicious requests (normally getNineRandomTracks should already have set something before)
         if (settings($user)->has("challenge_nine_random_tracks")) {
             /** @var SettingNineRandomTracks $settings_content */
             $settings_content = settings($user)->get("challenge_nine_random_tracks");
             if ($settings_content->challenge_id == $current_challenge->id) {
                 // if the challenge is the same and the user has not finished listening to at least 4 tracks, throw an error
-                if ($settings_content->listened < 4) throw new SafeException(
-                    config("error-codes.NOT_ENOUGH_LISTENED.message"),
-                    config("error-codes.NOT_ENOUGH_LISTENED.code")
-                );
+                if ($settings_content->listened < 4) {
+                    throw new SafeException(
+                        config("error-codes.NOT_ENOUGH_LISTENED.message"),
+                        config("error-codes.NOT_ENOUGH_LISTENED.code")
+                    );
+                }
             }
         }
 
@@ -612,15 +626,21 @@ class ChallengesController extends Controller
             ->select($required_columns)
             ->whereNotIn("id", $listened_tracks)
             ->count();
+        if ($available_tracks === 0) {
+            throw new SafeException(
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.message"),
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.code")
+            );
+        }
         $random_number = $available_tracks < 9 ? $available_tracks : 9;
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
-            ->select($required_columns)
+            ->select([...$required_columns, "creator_id"])
             ->whereNotIn("id", $listened_tracks)
             ->get()
             ->random($random_number)
             ->map(function (Tracks $item) use ($required_columns) { // remove relationships
-                return $item->only($required_columns);
+                return [...$item->only($required_columns), "creator" => $item->creator->name];
             });
 
         // get all the ids
@@ -630,10 +650,11 @@ class ChallengesController extends Controller
             "challenge_nine_random_tracks",
             (new SettingNineRandomTracks(
                 challenge_id: $current_challenge->id,
-                tracks_id: $nine_random_tracks_ids,
+                track_ids: $nine_random_tracks_ids,
                 listened: 0,
             ))->toJson()
         );
+
         return response()->json([
             "tracks" => $nine_random_tracks
         ]);

@@ -8,14 +8,12 @@
 
 namespace Doinc\Modules\Crypter\Models\Casts;
 
-use Doinc\Modules\Crypter\Exceptions\InsecureRandomSourceInCryptographicallyCriticalImplementation;
 use Doinc\Modules\Crypter\Exceptions\UnmatchingEncryptedData;
 use Doinc\Modules\Crypter\Facades\Crypter;
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use SodiumException;
 
-class JSONSodiumEncrypted extends SodiumEncrypted
+class JSONSodiumEncrypted
 {
     /**
      * Transform the attribute from the underlying model values.
@@ -31,8 +29,21 @@ class JSONSodiumEncrypted extends SodiumEncrypted
     public function get($model, string $key, $value, array $attributes): array
     {
         // decode then deserialize json
-        $decrypted = parent::get($model, $key, $value, $attributes);
-        return json_decode($decrypted, true);
+        $encryption_key = config("crypter.secure_key");
+
+        // verify that the signature attribute matches the value otherwise throw an exception
+        $decrypted = Crypter::encryption()->symmetric()->decrypt($value, $encryption_key);
+
+        if (
+            hash_hmac(
+                config("crypter.algorithm"),
+                $decrypted,
+                $encryption_key
+            ) === $model->getAttribute("{$key}_sig")
+        ) {
+            return json_decode($decrypted, true);
+        }
+        throw new UnmatchingEncryptedData();
     }
 
     /**
@@ -42,12 +53,11 @@ class JSONSodiumEncrypted extends SodiumEncrypted
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return mixed
+     * @return string
      */
     public function set($model, string $key, $value, array $attributes): string
     {
         // serialize to json, then encode
-        $value = json_encode($value);
-        return parent::set($model, $key, $value, $attributes);
+        return json_encode($value);
     }
 }

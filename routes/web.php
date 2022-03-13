@@ -67,6 +67,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // Challenge
     Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('authenticated.challenge-index');
+
+    // Tracks
+    Route::get('/tracks', [CommonController::class, "tracksIndex"])->name('authenticated.tracks-index');
 });
 
 Route::prefix("nft")->group(function() {

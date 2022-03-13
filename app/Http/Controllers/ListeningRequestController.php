@@ -65,7 +65,7 @@ class ListeningRequestController extends Controller
 
                 // encrypt mp3 that will be streamed
                 $stream_mp3 = sodium()->encryption()->asymmetric()->encrypt(
-                    $ipfs_mp3,
+                    base64_encode($ipfs_mp3), // encode to base64 to facilitate frontend
                     sodium()->derivation()->packSharedKeypair(
                         $user_public_key,
                         env("SERVER_SECRET_KEY")
@@ -146,7 +146,7 @@ class ListeningRequestController extends Controller
 
                 // encrypt mp3 that will be streamed
                 $stream_mp3 = sodium()->encryption()->asymmetric()->encrypt(
-                    $ipfs_mp3,
+                    base64_encode($ipfs_mp3),  // encode to base64 to facilitate frontend
                     sodium()->derivation()->packSharedKeypair(
                         $user_public_key,
                         env("SERVER_SECRET_KEY")

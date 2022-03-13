@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 9.3.1.
+ * Generated for Laravel 9.4.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -956,8 +956,15 @@
                         return $instance->when($concrete);
         }
                     /**
+         * Returns true if the container can return an entry for the given identifier.
          * 
+         * Returns false otherwise.
+         * 
+         * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
+         * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
          *
+         * @return bool 
+         * @param string $id Identifier of the entry to look for.
          * @return bool 
          * @static 
          */ 
@@ -1283,9 +1290,13 @@
                         return $instance->makeWith($abstract, $parameters);
         }
                     /**
-         * 
+         * Finds an entry of the container by its identifier and returns it.
          *
          * @return mixed 
+         * @param string $id Identifier of the entry to look for.
+         * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
+         * @throws ContainerExceptionInterface Error while retrieving the entry.
+         * @return mixed Entry.
          * @static 
          */ 
         public static function get($id)
@@ -3516,9 +3527,15 @@
                         return $instance->many($keys);
         }
                     /**
-         * 
+         * Obtains multiple cache items by their unique keys.
          *
          * @return \Illuminate\Cache\iterable 
+         * @param \Psr\SimpleCache\iterable<string> $keys A list of keys that can be obtained in a single operation.
+         * @param mixed $default Default value to return for keys that do not exist.
+         * @return \Psr\SimpleCache\iterable<string, mixed> A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+         * @throws \Psr\SimpleCache\InvalidArgumentException
+         *   MUST be thrown if $keys is neither an array nor a Traversable,
+         *   or if any of the $keys are not a legal value.
          * @static 
          */ 
         public static function getMultiple($keys, $default = null)
@@ -3554,9 +3571,17 @@
                         return $instance->put($key, $value, $ttl);
         }
                     /**
-         * 
+         * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
          *
          * @return bool 
+         * @param string $key The key of the item to store.
+         * @param mixed $value The value of the item to store, must be serializable.
+         * @param null|int|\DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
+         *                                      the driver supports TTL then the library may set a default value
+         *                                      for it or let the driver take care of that.
+         * @return bool True on success and false on failure.
+         * @throws \Psr\SimpleCache\InvalidArgumentException
+         *   MUST be thrown if the $key string is not a legal value.
          * @static 
          */ 
         public static function set($key, $value, $ttl = null)
@@ -3578,9 +3603,17 @@
                         return $instance->putMany($values, $ttl);
         }
                     /**
-         * 
+         * Persists a set of key => value pairs in the cache, with an optional TTL.
          *
          * @return bool 
+         * @param \Psr\SimpleCache\iterable $values A list of key => value pairs for a multiple-set operation.
+         * @param null|int|\DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
+         *                                       the driver supports TTL then the library may set a default value
+         *                                       for it or let the driver take care of that.
+         * @return bool True on success and false on failure.
+         * @throws \Psr\SimpleCache\InvalidArgumentException
+         *   MUST be thrown if $values is neither an array nor a Traversable,
+         *   or if any of the $values are not a legal value.
          * @static 
          */ 
         public static function setMultiple($values, $ttl = null)
@@ -3694,9 +3727,13 @@
                         return $instance->forget($key);
         }
                     /**
-         * 
+         * Delete an item from the cache by its unique key.
          *
          * @return bool 
+         * @param string $key The unique cache key of the item to delete.
+         * @return bool True if the item was successfully removed. False if there was an error.
+         * @throws \Psr\SimpleCache\InvalidArgumentException
+         *   MUST be thrown if the $key string is not a legal value.
          * @static 
          */ 
         public static function delete($key)
@@ -3705,9 +3742,14 @@
                         return $instance->delete($key);
         }
                     /**
-         * 
+         * Deletes multiple cache items in a single operation.
          *
          * @return bool 
+         * @param \Psr\SimpleCache\iterable<string> $keys A list of string-based keys to be deleted.
+         * @return bool True if the items were successfully removed. False if there was an error.
+         * @throws \Psr\SimpleCache\InvalidArgumentException
+         *   MUST be thrown if $keys is neither an array nor a Traversable,
+         *   or if any of the $keys are not a legal value.
          * @static 
          */ 
         public static function deleteMultiple($keys)
@@ -3716,9 +3758,10 @@
                         return $instance->deleteMultiple($keys);
         }
                     /**
-         * 
+         * Wipes clean the entire cache's keys.
          *
          * @return bool 
+         * @return bool True on success and false on failure.
          * @static 
          */ 
         public static function clear()
@@ -4499,23 +4542,23 @@
      * @method static \Illuminate\Support\Carbon createFromTimestampMs($timestamp, $tz = null)
      * @method static \Illuminate\Support\Carbon createFromTimestampUTC($timestamp)
      * @method static \Illuminate\Support\Carbon createMidnightDate($year = null, $month = null, $day = null, $tz = null)
-     * @method static \Illuminate\Support\Carbon disableHumanDiffOption($humanDiffOption)
-     * @method static \Illuminate\Support\Carbon enableHumanDiffOption($humanDiffOption)
+     * @method static void disableHumanDiffOption($humanDiffOption)
+     * @method static void enableHumanDiffOption($humanDiffOption)
      * @method static \Illuminate\Support\Carbon fromSerialized($value)
-     * @method static \Illuminate\Support\Carbon getLastErrors()
-     * @method static \Illuminate\Support\Carbon getTestNow()
+     * @method static array getLastErrors()
+     * @method static \Illuminate\Support\Carbon|null getTestNow()
      * @method static \Illuminate\Support\Carbon instance($date)
-     * @method static \Illuminate\Support\Carbon isMutable()
+     * @method static bool isMutable()
      * @method static \Illuminate\Support\Carbon maxValue()
      * @method static \Illuminate\Support\Carbon minValue()
      * @method static \Illuminate\Support\Carbon now($tz = null)
      * @method static \Illuminate\Support\Carbon parse($time = null, $tz = null)
-     * @method static \Illuminate\Support\Carbon setHumanDiffOptions($humanDiffOptions)
+     * @method static void setHumanDiffOptions($humanDiffOptions)
      * @method static void setTestNow($testNow = null)
-     * @method static \Illuminate\Support\Carbon setUtf8($utf8)
+     * @method static void setUtf8($utf8)
      * @method static \Illuminate\Support\Carbon today($tz = null)
      * @method static \Illuminate\Support\Carbon tomorrow($tz = null)
-     * @method static \Illuminate\Support\Carbon useStrictMode($strictModeEnabled = true)
+     * @method static void useStrictMode($strictModeEnabled = true)
      * @method static \Illuminate\Support\Carbon yesterday($tz = null)
      * @method static \Illuminate\Support\Carbon|false createFromFormat($format, $time, $tz = null)
      * @method static \Illuminate\Support\Carbon|false createSafe($year = null, $month = null, $day = null, $hour = null, $minute = null, $second = null, $tz = null)
@@ -18219,10 +18262,10 @@
          *
          * @static 
          */ 
-        public static function report($throwable, $callback = null)
+        public static function report($throwable, $callback = null, $report = null)
         {
                         /** @var \Spatie\FlareClient\Flare $instance */
-                        return $instance->report($throwable, $callback);
+                        return $instance->report($throwable, $callback, $report);
         }
                     /**
          * 
@@ -18819,30 +18862,34 @@ namespace  {
             }
              
                 /**
-             * Add a "where not" clause to the query.
+             * Add a basic "where not" clause to the query.
              *
-             * @param \Closure $callback
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
              * @param string $boolean
              * @return \Illuminate\Database\Eloquent\Builder|static 
              * @static 
              */ 
-            public static function whereNot($callback, $boolean = 'and')
+            public static function whereNot($column, $operator = null, $value = null, $boolean = 'and')
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
-                                return $instance->whereNot($callback, $boolean);
+                                return $instance->whereNot($column, $operator, $value, $boolean);
             }
              
                 /**
              * Add an "or where not" clause to the query.
              *
-             * @param \Closure $callback
+             * @param \Closure|array|string|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
              * @return \Illuminate\Database\Eloquent\Builder|static 
              * @static 
              */ 
-            public static function orWhereNot($callback)
+            public static function orWhereNot($column, $operator = null, $value = null)
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
-                                return $instance->orWhereNot($callback);
+                                return $instance->orWhereNot($column, $operator, $value);
             }
              
                 /**
@@ -19051,6 +19098,21 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->value($column);
+            }
+             
+                /**
+             * Get a single column's value from the first result of a query if it's the sole matching record.
+             *
+             * @param string|\Illuminate\Database\Query\Expression $column
+             * @return mixed 
+             * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<\Illuminate\Database\Eloquent\Model>
+             * @throws \Illuminate\Database\MultipleRecordsFoundException
+             * @static 
+             */ 
+            public static function soleValue($column)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->soleValue($column);
             }
              
                 /**

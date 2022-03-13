@@ -36,6 +36,12 @@
                                     Challenge
                                 </jet-nav-link>
                             </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.tracks-index')" :active="route().current('authenticated.tracks-index')">
+                                    Tracks
+                                </jet-nav-link>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

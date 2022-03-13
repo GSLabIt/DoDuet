@@ -14,7 +14,13 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->uuid("id")->primary();
+            if(config("settings.uuid")) {
+                $table->uuid("id")->primary();
+            }
+            else {
+                $table->id();
+            }
+
             $table::encrypted($table, "name");
             $table::encrypted($table, "type");
             $table->boolean("has_default_value")->default(false);

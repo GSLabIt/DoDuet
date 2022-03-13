@@ -15,11 +15,11 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div v-for="item of nineRandomTracks">
                         {{ item.name }}
-                        {{ item.creator_id }}
+                        {{ item.creator }}
                         {{ item.duration }}
                         {{ item.cover_id }}
-                        <button @click="listen(item.id)">ASCOLTA</button>
-                        <input type="range" min="0" max="10" id="vota" value="axiom" name="vota"/><label for="vota">VOTA</label>
+                        <button @click="listen(item.id, item.duration)">ASCOLTA</button>
+                        <input type="range" min="0" max="10" id="vota" value="axiom" name="vota" disabled/><label for="vota">VOTA</label>
                     </div>
                 </div>
             </div>
@@ -31,6 +31,8 @@
 import {defineComponent} from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import Toaster from "../../Composition/toaster";
+// TODO: track put track, list, track in election
+const sodium = require("libsodium-wrappers")
 
 export default defineComponent({
     components: {
@@ -40,12 +42,17 @@ export default defineComponent({
         nineRandomTracks: null,
         serverPublicKey: "",
         userSecretKey: "",
-        listening: null
     }),
     mounted () {
         axios
             .get(route("authenticated.challenge.get.challenge_nine_random_tracks"))
             .then(response => (this.nineRandomTracks = response.data.tracks))
+        axios
+            .get(route("authenticated.settings.get.settings_server_public_key"))
+            .then(response => (this.serverPublicKey = response.data.key))
+        axios
+            .get(route("authenticated.settings.get.settings_user_secret_key"))
+            .then(response => (this.userSecretKey = response.data.key))
     },
     methods: {
         async refreshTracks() {
@@ -55,21 +62,53 @@ export default defineComponent({
                 responseType: "json"
             })
                 .then(response => (this.nineRandomTracks = response.data.tracks))
-                .catch(error => (new Toaster({message: error.response.data.message})));// TODO: with new middleware also return code
+                .catch(error => (new Toaster({
+                    message: error.response.data.message,
+                    code: error.response.data.code
+                })));
         },
-        async listen(id) {
-            axios({
-                method: "get",
-                url: route("authenticated.listening_request.get.listening_request_to_track_in_challenge", "wrong-id"),
-                responseType: "stream"
-            })
-                .then(function (response) {
-                    /*let sodium = require('sodium-native');
-                    sodium.crypto_box_open_easy(response.data.pipe )*/
-                    console.log(response.data)
-                    this.listening = response.data
+        durationToMilliseconds(duration) {
+            let timeArr = duration.split(':'),
+                seconds = 0, multiplier = 1000;
+
+            while (timeArr.length > 0) {
+                seconds += multiplier * parseInt(timeArr.pop(), 10);
+                multiplier *= 60;
+            }
+
+            return seconds;
+        },
+        async requestVotePermission(id) {
+            axios
+                .post(route("authenticated.vote.post.vote_request_permission", id))
+                .then(response => {
+                    console.log(response.data);
                 })
-                .catch(error => (new Toaster({message: error.response.data.message})));// TODO: with new middleware also return code
+                .catch(error => (new Toaster({
+                    message: error.response.data.message,
+                    code: error.response.data.code
+                })));
+        },
+        async listen(id, duration) {
+            axios
+                .get(route("authenticated.listening_request.get.listening_request_to_track_in_challenge", id))
+                .then(response => {
+                    let [encrypted, nonce] = response.data.split(":");
+                    let message = sodium.crypto_box_open_easy(
+                        sodium.from_hex(encrypted),
+                        sodium.from_hex(nonce),
+                        sodium.from_hex(this.serverPublicKey),
+                        sodium.from_hex(this.userSecretKey),
+                    );
+                    // play the audio from the decoded message
+                    new Audio('data:audio/ogg;base64,' + sodium.to_string(message)).play();
+                    // request vote permission 10 seconds after the track has finished playing
+                    setTimeout(() => this.requestVotePermission(id), this.durationToMilliseconds(duration) + 10000)
+                })
+                .catch(error => (new Toaster({
+                    message: error.response.data.message,
+                    code: error.response.data.code
+                })));
         }
     }
 })

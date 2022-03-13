@@ -2,12 +2,10 @@
 
 namespace Doinc\Modules\Crypter;
 
-use App\Http\Wrappers\Interfaces\CryptographicWrapper;
-use App\Http\Wrappers\Interfaces\Wrapper;
 use JetBrains\PhpStorm\Pure;
 use SodiumException;
 
-class SodiumSymmetricEncryption
+final class SodiumSymmetricEncryption
 {
     /**
      * Initialize the class instance
@@ -17,7 +15,7 @@ class SodiumSymmetricEncryption
     #[Pure]
     public static function init(): SodiumSymmetricEncryption
     {
-        return (new static);
+        return (new SodiumSymmetricEncryption);
     }
 
     /**

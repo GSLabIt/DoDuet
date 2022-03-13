@@ -22,4 +22,8 @@ class CommonController extends Controller
     public function challengeIndex(Request $request) {
         return inertia('Challenge/Index');
     }
+
+    public function tracksIndex(Request $request) {
+        return inertia('Tracks/Index');
+    }
 }
