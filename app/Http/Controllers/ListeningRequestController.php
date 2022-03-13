@@ -54,18 +54,18 @@ class ListeningRequestController extends Controller
                 $nft = "track:{$track->nft_id}";
                 //check the cache
                 if (Cache::has($nft)) {
-                    $skynet_mp3 = Cache::get($nft);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = Cache::get($nft);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 } else {
-                    $skynet_mp3 = skynet()->download($track->skynet);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = ipfs()->download($track->ipfs);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 }
 
                 $user_public_key = secureUser($user)->get(secureUser($user)->whitelistedItems()["public_key"]);
 
                 // encrypt mp3 that will be streamed
                 $stream_mp3 = sodium()->encryption()->asymmetric()->encrypt(
-                    $skynet_mp3,
+                    $ipfs_mp3,
                     sodium()->derivation()->packSharedKeypair(
                         $user_public_key,
                         env("SERVER_SECRET_KEY")
@@ -135,18 +135,18 @@ class ListeningRequestController extends Controller
                 $nft = "track:{$track->nft_id}";
                 //check the cache
                 if (Cache::has($nft)) {
-                    $skynet_mp3 = Cache::get($nft);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = Cache::get($nft);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 } else {
-                    $skynet_mp3 = skynet()->download($track->skynet);
-                    Cache::put($nft, $skynet_mp3, now()->addHours(6));
+                    $ipfs_mp3 = ipfs()->download($track->ipfs);
+                    Cache::put($nft, $ipfs_mp3, now()->addHours(6));
                 }
 
                 $user_public_key = secureUser($user)->get(secureUser($user)->whitelistedItems()["public_key"]);
 
                 // encrypt mp3 that will be streamed
                 $stream_mp3 = sodium()->encryption()->asymmetric()->encrypt(
-                    $skynet_mp3,
+                    $ipfs_mp3,
                     sodium()->derivation()->packSharedKeypair(
                         $user_public_key,
                         env("SERVER_SECRET_KEY")
