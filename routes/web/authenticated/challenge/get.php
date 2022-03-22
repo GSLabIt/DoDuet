@@ -13,6 +13,8 @@ Route::rname(RouteName::CHALLENGE_NINE_RANDOM_TRACKS)
     ->get("/tracks/random", [ChallengesController::class, "getNineRandomTracks"]);
 Route::rname(RouteName::CHALLENGE_LATEST_TRACKS)
     ->get("/tracks", [ChallengesController::class, "getAllTracksInLatestChallenge"]);
+Route::rname(RouteName::CHALLENGE_OWNED_TRACKS)
+    ->get("/tracks/owned", [ChallengesController::class, "getOwnedTracksInChallenge"]);
 Route::rname(RouteName::CHALLENGE_TRACKS)
     ->get("/{challenge_id}/tracks", [ChallengesController::class, "getAllTracksInChallenge"]);
 Route::rname(RouteName::CHALLENGE_TRACK_VOTE_BY_USER_AND_CHALLENGE)

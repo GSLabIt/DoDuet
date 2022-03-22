@@ -14,6 +14,7 @@ use App\Notifications\ChallengeWinNotification;
 use Doinc\Modules\Settings\Exceptions\SettingNotFound;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -463,6 +464,27 @@ class ChallengesController extends Controller
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
+    }
+
+    /**
+     * This function returns the id of the tracks owned by the user participating in the current challenge
+     * NOTE: test missing
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function getOwnedTracksInChallenge(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::orderByDesc("created_at")->first();
+
+        return response()->json([
+            "tracks" => $challenge->tracks->where("owner_id", $user->id)->pluck("id")
+        ]);
     }
 
     /**

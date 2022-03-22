@@ -14,6 +14,7 @@ enum RouteName: string
     case VOTE_VOTE = "vote_vote";
 
     case CHALLENGE_LATEST_TRACKS = "challenge_latest_tracks";
+    case CHALLENGE_OWNED_TRACKS = "challenge_owned_tracks";
     case CHALLENGE_TRACKS = "challenge_tracks";
     case CHALLENGE_NINE_RANDOM_TRACKS = "challenge_nine_random_tracks";
     case CHALLENGE_REFRESH_NINE_RANDOM_TRACKS = "challenge_refresh_nine_random_tracks";

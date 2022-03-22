@@ -26,4 +26,8 @@ class CommonController extends Controller
     public function tracksIndex(Request $request) {
         return inertia('Tracks/Index');
     }
+
+    public function trackUpload(Request $request) {
+        return inertia('Tracks/Upload');
+    }
 }
