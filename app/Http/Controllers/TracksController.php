@@ -115,11 +115,9 @@ class TracksController extends Controller
             // Upload the just encrypted file to ipfs
             ipfs()->upload($mp3, $track->ipfs);
 
-            /* TODO: UNCOMMENT THIS
             $track->update([
                 "nft_id" => $nft_id,
             ]);
-            */
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a
             // composed track
@@ -282,11 +280,16 @@ class TracksController extends Controller
             "user_id" => "required|uuid|exists:users,id",
         ]);
 
+
+        $required_columns = ["id", "name", "duration", "cover_id"];
+
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
             return response()->json([
-                "tracks" => $user->createdTracks
+                "tracks" => $user->createdTracks->map(function (Tracks $item) use ($required_columns) { // remove relationships
+                    return [...$item->only($required_columns), "creator" => $item->creator->name];
+                })
             ]);
         }
 

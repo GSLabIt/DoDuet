@@ -13,13 +13,14 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <div v-for="item of nineRandomTracks">
+                    <div v-for="(item, index) of nineRandomTracks">
                         {{ item.name }}
                         {{ item.creator }}
                         {{ item.duration }}
                         {{ item.cover_id }}
-                        <button @click="listen(item.id, item.duration)">ASCOLTA</button>
-                        <input type="range" min="0" max="10" id="vota" value="axiom" name="vota" disabled/><label for="vota">VOTA</label>
+                        <button @click="listen(item.id, item.duration, index)">ASCOLTA</button>
+                        <input type="range" min="0" max="10" id="vota" v-model.number=this.votes[index] name="vota" :disabled="!this.votable[index]"/>
+                        <label for="vota" @click="vote(item.id, index)">VOTA</label>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,7 @@
 import {defineComponent} from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import Toaster from "../../Composition/toaster";
-// TODO: track put track, list, track in election
+
 const sodium = require("libsodium-wrappers")
 
 export default defineComponent({
@@ -42,11 +43,33 @@ export default defineComponent({
         nineRandomTracks: null,
         serverPublicKey: "",
         userSecretKey: "",
+        votable: [],
+        votes: []
     }),
     mounted () {
         axios
             .get(route("authenticated.challenge.get.challenge_nine_random_tracks"))
-            .then(response => (this.nineRandomTracks = response.data.tracks))
+            .then(response => {
+                this.votable = new Array(response.data.tracks.length).fill(false);
+                this.votes = new Array(response.data.tracks.length).fill(5);
+                this.nineRandomTracks = response.data.tracks
+                response.data.tracks.forEach(
+                    (track, index) => {
+                        axios
+                            .get(route("authenticated.challenge.get.challenge_track_listening_number_by_user_and_challenge", track.id))
+                            .then(response => {
+                                    this.votable[index] = response.data.listeningRequests > 0
+                                    if (response.data.listeningRequests > 0) {
+                                        axios
+                                            .get(route("authenticated.challenge.get.challenge_track_vote_by_user_and_challenge", track.id))
+                                            .then(response => this.votes[index] = response.data.vote || 5)
+                                            .catch(error => console.log(error));
+                                    }
+                                }
+                            );
+                    }
+                );
+            })
         axios
             .get(route("authenticated.settings.get.settings_server_public_key"))
             .then(response => (this.serverPublicKey = response.data.key))
@@ -78,10 +101,11 @@ export default defineComponent({
 
             return seconds;
         },
-        async requestVotePermission(id) {
+        async requestVotePermission(id, index) {
             axios
                 .post(route("authenticated.vote.post.vote_request_permission", id))
                 .then(response => {
+                    this.votable[index] = true;
                     console.log(response.data);
                 })
                 .catch(error => (new Toaster({
@@ -89,11 +113,12 @@ export default defineComponent({
                     code: error.response.data.code
                 })));
         },
-        async listen(id, duration) {
+        async listen(id, duration, index) {
             axios
                 .get(route("authenticated.listening_request.get.listening_request_to_track_in_challenge", id))
                 .then(response => {
                     let [encrypted, nonce] = response.data.split(":");
+                    // decrypt the message
                     let message = sodium.crypto_box_open_easy(
                         sodium.from_hex(encrypted),
                         sodium.from_hex(nonce),
@@ -103,7 +128,21 @@ export default defineComponent({
                     // play the audio from the decoded message
                     new Audio('data:audio/ogg;base64,' + sodium.to_string(message)).play();
                     // request vote permission 10 seconds after the track has finished playing
-                    setTimeout(() => this.requestVotePermission(id), this.durationToMilliseconds(duration) + 10000)
+                    setTimeout(
+                        () => this.requestVotePermission(id, index),
+                        this.durationToMilliseconds(duration) + 10000
+                    );
+                })
+                .catch(error => (new Toaster({
+                    message: error.response.data.message,
+                    code: error.response.data.code
+                })));
+        },
+        async vote(id, index) {
+            axios
+                .post(route("authenticated.vote.post.vote_vote", [id, this.votes[index]]))
+                .then(response => {
+                    console.log(response.data);
                 })
                 .catch(error => (new Toaster({
                     message: error.response.data.message,
@@ -112,5 +151,4 @@ export default defineComponent({
         }
     }
 })
-// sodium native https://github.com/sodium-friends/sodium-native to decrypt listening_request stream
 </script>
