@@ -38,7 +38,7 @@ class TracksController extends Controller
         Validator::validate($request->all(), [
             "name" => "required|string|max:255",
             "description" => "required|string",
-            "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/", // TODO: correct this, track may also be 1h +
+            "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/", // TODO: correct this, track may also be 1h  01:59:59
             "mp3" => "required|file|mimes:mp3|max:1048576", // 100 MB, computed in kb not bytes
             "cover_id" => "nullable|uuid|exists:covers,id",
             "lyric_id" => "nullable|uuid|exists:lyrics,id",

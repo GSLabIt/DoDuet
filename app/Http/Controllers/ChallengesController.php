@@ -472,7 +472,6 @@ class ChallengesController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws Exception
      */
     public function getOwnedTracksInChallenge(Request $request): JsonResponse
     {
@@ -485,6 +484,44 @@ class ChallengesController extends Controller
         return response()->json([
             "tracks" => $challenge->tracks->where("owner_id", $user->id)->pluck("id")
         ]);
+    }
+
+    /**
+     * This function allows the track to participate in the challenge, if it's not already participating
+     * NOTE: test missing
+     *
+     * @param Request $request
+     * @param string $track_id
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Exception
+     */
+    public function participateInCurrentChallenge(Request $request, string $track_id): JsonResponse
+    {
+        Validator::validate($request->route()->parameters(), [
+            "track_id" => "required|uuid|exists:tracks,id",
+        ]);
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::orderByDesc("created_at")->first();
+
+        /** @var Tracks $track */
+        $track = Tracks::where("id", $track_id)->first();
+
+        if (!is_null($track)) {
+            return response()->json([
+                "success" => blockchain($user)->election()->participateInElection($track->nft_id)
+            ]);
+        }
+
+        // handle track not found error
+        throw new SafeException(
+            config("error-codes.TRACK_NOT_FOUND.message"),
+            config("error-codes.TRACK_NOT_FOUND.code")
+        );
     }
 
     /**

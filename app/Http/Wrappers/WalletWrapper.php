@@ -125,7 +125,7 @@ class WalletWrapper implements Wrapper
         }
 
         if (!session()->has("mnemonic")) {
-            $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"]);
+            $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"])["key"];
 
             // store the mnemonic phrase in the user's session in order to improve performances, it is stored in
             // plain text.

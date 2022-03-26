@@ -15,7 +15,7 @@
                         {{ track.duration }}
                         {{ track.nft_id }}
                         <button @click="update(track.id)">MODIFICA</button>
-                        <button @click="participateToCurrentChallenge(track.id)" :disabled="this.inChallenge[index]">PARTECIPA CHALLENGE</button>
+                        <button @click="participateToCurrentChallenge(track.id, index)" :disabled="this.inChallenge[index]">PARTECIPA CHALLENGE</button>
                     </div>
                 </div>
             </div>
@@ -59,10 +59,11 @@ export default defineComponent({
             })
     },
     methods: {
-        async participateToCurrentChallenge (id) {
+        async participateToCurrentChallenge (id, index) {
             axios
-                .post(route("authenticated.challenge.post.challenge_participate", id))            // TODO:
+                .post(route("authenticated.challenge.post.challenge_track_participate_in_current", id)) // TODO:
                 .then(response => {
+                    this.inChallenge[index] = response.data.success;
                     console.log(response.data);
                 })
                 .catch(error => (new Toaster({

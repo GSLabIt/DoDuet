@@ -20196,14 +20196,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
   },
   methods: {
-    participateToCurrentChallenge: function participateToCurrentChallenge(id) {
+    participateToCurrentChallenge: function participateToCurrentChallenge(id, index) {
+      var _this2 = this;
+
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                axios.post(route("authenticated.challenge.post.challenge_participate", id)) // TODO:
+                axios.post(route("authenticated.challenge.post.challenge_track_participate_in_current", id)) // TODO:
                 .then(function (response) {
+                  _this2.inChallenge[index] = response.data.success;
                   console.log(response.data);
                 })["catch"](function (error) {
                   return new _Composition_toaster__WEBPACK_IMPORTED_MODULE_3__["default"]({
@@ -26645,7 +26648,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* PROPS */
         , _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
           onClick: function onClick($event) {
-            return _ctx.participateToCurrentChallenge(track.id);
+            return _ctx.participateToCurrentChallenge(track.id, index);
           },
           disabled: _this.inChallenge[index]
         }, "PARTECIPA CHALLENGE", 8
