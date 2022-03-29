@@ -14,29 +14,64 @@
                         {{ track.description }}
                         {{ track.duration }}
                         {{ track.nft_id }}
-                        <button @click="update(track.id)">MODIFICA</button>
+                        <button @click="update(index)">MODIFICA</button>
                         <button @click="participateToCurrentChallenge(track.id, index)" :disabled="this.inChallenge[index]">PARTECIPA CHALLENGE</button>
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-if="modalShow">
+            <form @submit.prevent="submit">
+                <label for="name">Name:</label>
+                <input id="name" v-model="form.name"/>
+                <div v-if="errors.name">{{ errors.name }}</div>
+                <label for="description">Description:</label>
+                <textarea id="description" v-model="form.description"></textarea>
+                <div v-if="errors.description">{{ errors.description }}</div>
+                <label for="cover">Cover:</label>
+                <select id="cover" type="select" v-model="form.cover_id"></select>
+                <div v-if="errors.cover_id">{{ errors.cover_id }}</div>
+                <label for="lyric">Lyric:</label>
+                <select id="lyric" type="select" v-model="form.lyric_id"></select>
+                <div v-if="errors.lyric_id">{{ errors.lyric_id }}</div>
+                <label for="album">Album:</label>
+                <select id="album" type="select" v-model="form.album_id"></select>
+                <div v-if="errors.album_id">{{ errors.album_id }}</div>
+                <button type="submit">Submit</button>
+            </form>
         </div>
     </app-layout>
 </template>
 
 <script>
 import {defineComponent} from 'vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue';
 import Toaster from "../../Composition/toaster";
+import {useForm} from "@inertiajs/inertia-vue3";
 // TODO: list track (id, name, description, nft_id, duration) + modal update + track in election, another page for upload
 
 export default defineComponent({
     components: {
         AppLayout,
     },
-    data: () => ({
-        ownedTracks: null,
-        inChallenge: []
-    }),
+    props: {
+        errors: Object,
+    },
+    data() {
+        return {
+            ownedTracks: null,
+            form: useForm({
+                name: null,
+                description: null,
+                cover_id: null,
+                album_id: null,
+                lyric_id: null,
+            }),
+            modalShow: false,
+            modalIndex: null,
+            inChallenge: []
+        }
+    },
     mounted() {
         axios
             .get(route("authenticated.track.get.track_owned", this.$attrs["user"].id))
@@ -61,10 +96,34 @@ export default defineComponent({
     methods: {
         async participateToCurrentChallenge (id, index) {
             axios
-                .post(route("authenticated.challenge.post.challenge_track_participate_in_current", id)) // TODO:
+                .post(route("authenticated.challenge.post.challenge_track_participate_in_current", id))
                 .then(response => {
                     this.inChallenge[index] = response.data.success;
                     console.log(response.data);
+                })
+                .catch(error => (new Toaster({
+                    message: error.response.data.message,
+                    code: error.response.data.code
+                })));
+        },
+        update (index) {
+            let track = this.ownedTracks[index];
+            this.form = useForm({
+                name: track.name,
+                description: track.description,
+                cover_id: track.cover_id,
+                album_id: track.album_id,
+                lyric_id: track.lyric_id,
+            });
+            this.modalIndex = index;
+            this.modalShow = true;
+        },
+        submit(id) {
+            axios
+                .put(route("authenticated.track.put.track_update", this.ownedTracks[this.modalIndex].id), this.form)
+                .then(response => {
+                    this.ownedTracks[this.modalIndex] = response.data.track;
+                    this.modalShow = false;
                 })
                 .catch(error => (new Toaster({
                     message: error.response.data.message,

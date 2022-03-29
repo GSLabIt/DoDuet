@@ -19081,18 +19081,6 @@ var sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libso
         }, _callee);
       }))();
     },
-    durationToMilliseconds: function durationToMilliseconds(duration) {
-      var timeArr = duration.split(':'),
-          seconds = 0,
-          multiplier = 1000;
-
-      while (timeArr.length > 0) {
-        seconds += multiplier * parseInt(timeArr.pop(), 10);
-        multiplier *= 60;
-      }
-
-      return seconds;
-    },
     requestVotePermission: function requestVotePermission(id, index) {
       var _this3 = this;
 
@@ -19119,7 +19107,7 @@ var sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libso
         }, _callee2);
       }))();
     },
-    listen: function listen(id, duration, index) {
+    listen: function listen(id, index) {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -19136,11 +19124,12 @@ var sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libso
 
                   var message = sodium.crypto_box_open_easy(sodium.from_hex(encrypted), sodium.from_hex(nonce), sodium.from_hex(_this4.serverPublicKey), sodium.from_hex(_this4.userSecretKey)); // play the audio from the decoded message
 
-                  new Audio('data:audio/ogg;base64,' + sodium.to_string(message)).play(); // request vote permission 10 seconds after the track has finished playing
+                  var audio = new Audio('data:audio/ogg;base64,' + sodium.to_string(message));
+                  audio.play(); // on audio end request vote permission
 
-                  setTimeout(function () {
+                  audio.onended = function () {
                     return _this4.requestVotePermission(id, index);
-                  }, _this4.durationToMilliseconds(duration) + 10000);
+                  };
                 })["catch"](function (error) {
                   return new _Composition_toaster__WEBPACK_IMPORTED_MODULE_3__["default"]({
                     message: error.response.data.message,
@@ -20158,11 +20147,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
 /* harmony import */ var _Composition_toaster__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Composition/toaster */ "./resources/js/Composition/toaster.ts");
+/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -20172,9 +20163,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {
     AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
+  props: {
+    errors: Object
+  },
   data: function data() {
     return {
       ownedTracks: null,
+      form: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_4__.useForm)({
+        name: null,
+        description: null,
+        cover_id: null,
+        album_id: null,
+        lyric_id: null
+      }),
+      modalShow: false,
+      modalIndex: null,
       inChallenge: []
     };
   },
@@ -20204,8 +20207,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                axios.post(route("authenticated.challenge.post.challenge_track_participate_in_current", id)) // TODO:
-                .then(function (response) {
+                axios.post(route("authenticated.challenge.post.challenge_track_participate_in_current", id)).then(function (response) {
                   _this2.inChallenge[index] = response.data.success;
                   console.log(response.data);
                 })["catch"](function (error) {
@@ -20222,6 +20224,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee);
       }))();
+    },
+    update: function update(index) {
+      var track = this.ownedTracks[index];
+      this.form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_4__.useForm)({
+        name: track.name,
+        description: track.description,
+        cover_id: track.cover_id,
+        album_id: track.album_id,
+        lyric_id: track.lyric_id
+      });
+      this.modalIndex = index;
+      this.modalShow = true;
+    },
+    submit: function submit(id) {
+      var _this3 = this;
+
+      axios.put(route("authenticated.track.put.track_update", this.ownedTracks[this.modalIndex].id), this.form).then(function (response) {
+        _this3.ownedTracks[_this3.modalIndex] = response.data.track;
+        _this3.modalShow = false;
+      })["catch"](function (error) {
+        return new _Composition_toaster__WEBPACK_IMPORTED_MODULE_3__["default"]({
+          message: error.response.data.message,
+          code: error.response.data.code
+        });
+      });
     }
   }
 }));
@@ -24392,7 +24419,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
           onClick: function onClick($event) {
-            return _ctx.listen(item.id, item.duration, index);
+            return _ctx.listen(item.id, index);
           }
         }, "ASCOLTA", 8
         /* PROPS */
@@ -26625,6 +26652,66 @@ var _hoisted_4 = {
 };
 var _hoisted_5 = ["onClick"];
 var _hoisted_6 = ["onClick", "disabled"];
+var _hoisted_7 = {
+  key: 0
+};
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "name"
+}, "Name:", -1
+/* HOISTED */
+);
+
+var _hoisted_9 = {
+  key: 0
+};
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "description"
+}, "Description:", -1
+/* HOISTED */
+);
+
+var _hoisted_11 = {
+  key: 1
+};
+
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "cover"
+}, "Cover:", -1
+/* HOISTED */
+);
+
+var _hoisted_13 = {
+  key: 2
+};
+
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "lyric"
+}, "Lyric:", -1
+/* HOISTED */
+);
+
+var _hoisted_15 = {
+  key: 3
+};
+
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "album"
+}, "Album:", -1
+/* HOISTED */
+);
+
+var _hoisted_17 = {
+  key: 4
+};
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  type: "submit"
+}, "Submit", -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
 
@@ -26642,7 +26729,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
           onClick: function onClick($event) {
-            return _ctx.update(track.id);
+            return _ctx.update(index);
           }
         }, "MODIFICA", 8
         /* PROPS */
@@ -26656,7 +26743,61 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         , _hoisted_6)]);
       }), 256
       /* UNKEYED_FRAGMENT */
-      ))])])])];
+      ))])])]), _ctx.modalShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+        onSubmit: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+          return _ctx.submit && _ctx.submit.apply(_ctx, arguments);
+        }, ["prevent"]))
+      }, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        id: "name",
+        "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+          return _ctx.form.name = $event;
+        })
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.form.name]]), _ctx.errors.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.errors.name), 1
+      /* TEXT */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+        id: "description",
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.form.description = $event;
+        })
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.form.description]]), _ctx.errors.description ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.errors.description), 1
+      /* TEXT */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+        id: "cover",
+        type: "select",
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+          return _ctx.form.cover_id = $event;
+        })
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.form.cover_id]]), _ctx.errors.cover_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.errors.cover_id), 1
+      /* TEXT */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+        id: "lyric",
+        type: "select",
+        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+          return _ctx.form.lyric_id = $event;
+        })
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.form.lyric_id]]), _ctx.errors.lyric_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.errors.lyric_id), 1
+      /* TEXT */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+        id: "album",
+        type: "select",
+        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+          return _ctx.form.album_id = $event;
+        })
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.form.album_id]]), _ctx.errors.album_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.errors.album_id), 1
+      /* TEXT */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_18], 32
+      /* HYDRATE_EVENTS */
+      )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1
     /* STABLE */
