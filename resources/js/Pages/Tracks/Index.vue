@@ -24,19 +24,14 @@
             <form @submit.prevent="submit">
                 <label for="name">Name:</label>
                 <input id="name" v-model="form.name"/>
-                <div v-if="errors.name">{{ errors.name }}</div>
                 <label for="description">Description:</label>
                 <textarea id="description" v-model="form.description"></textarea>
-                <div v-if="errors.description">{{ errors.description }}</div>
                 <label for="cover">Cover:</label>
                 <select id="cover" type="select" v-model="form.cover_id"></select>
-                <div v-if="errors.cover_id">{{ errors.cover_id }}</div>
                 <label for="lyric">Lyric:</label>
                 <select id="lyric" type="select" v-model="form.lyric_id"></select>
-                <div v-if="errors.lyric_id">{{ errors.lyric_id }}</div>
                 <label for="album">Album:</label>
                 <select id="album" type="select" v-model="form.album_id"></select>
-                <div v-if="errors.album_id">{{ errors.album_id }}</div>
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -53,9 +48,6 @@ import {useForm} from "@inertiajs/inertia-vue3";
 export default defineComponent({
     components: {
         AppLayout,
-    },
-    props: {
-        errors: Object,
     },
     data() {
         return {
@@ -99,7 +91,6 @@ export default defineComponent({
                 .post(route("authenticated.challenge.post.challenge_track_participate_in_current", id))
                 .then(response => {
                     this.inChallenge[index] = response.data.success;
-                    console.log(response.data);
                 })
                 .catch(error => (new Toaster({
                     message: error.response.data.message,

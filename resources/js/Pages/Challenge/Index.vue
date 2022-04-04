@@ -84,7 +84,19 @@ export default defineComponent({
                 url: route("authenticated.challenge.post.challenge_refresh_nine_random_tracks"),
                 responseType: "json"
             })
-                .then(response => (this.nineRandomTracks = response.data.tracks))
+                .then(response => {
+                    this.nineRandomTracks = response.data.tracks
+                    response.data.tracks.forEach(
+                        (track, index) => {
+                            axios
+                                .get(route("authenticated.challenge.get.challenge_track_listening_number_by_user_and_challenge", track.id))
+                                .then(response => {
+                                        this.votable[index] = response.data.listeningRequests > 0
+                                    }
+                                );
+                        }
+                    );
+                })
                 .catch(error => (new Toaster({
                     message: error.response.data.message,
                     code: error.response.data.code

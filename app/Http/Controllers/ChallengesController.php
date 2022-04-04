@@ -512,9 +512,12 @@ class ChallengesController extends Controller
         $track = Tracks::where("id", $track_id)->first();
 
         if (!is_null($track)) {
-            return response()->json([
-                "success" => blockchain($user)->election()->participateInElection($track->nft_id)
-            ]);
+            if (blockchain($user)->election()->participateInElection($track->nft_id)) {
+                $challenge->tracks()->attach($track->id);
+                return response()->json([
+                    "success" => true
+                ]);
+            }
         }
 
         // handle track not found error
@@ -603,13 +606,17 @@ class ChallengesController extends Controller
         }
 
         // ROTATING tracks because they are all already listened/the challenge has changed/this is the first time
-        // get the track id of the tracks already listened in this challenge
-        $listened_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id");
-
+        // select the excluded tracks
+        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id"); // listened tracks
+        $ownedTracks = $user->ownedTracks;
+        if (!is_null($ownedTracks)) {
+            $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
+        }
+        
         // check the number of tracks available
         $available_tracks = $current_challenge->tracks()
             ->select($required_columns)
-            ->whereNotIn("id", $listened_tracks)
+            ->whereNotIn("id", $excluded_tracks)
             ->count();
         if ($available_tracks === 0) {
             throw new SafeException(
@@ -621,7 +628,7 @@ class ChallengesController extends Controller
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
             ->select([...$required_columns, "creator_id"])
-            ->whereNotIn("id", $listened_tracks)
+            ->whereNotIn("id", $excluded_tracks)
             ->get()
             ->random($random_number)
             ->map(function (Tracks $item) use ($required_columns) { // remove relationships
@@ -629,14 +636,14 @@ class ChallengesController extends Controller
             });
 
         // get all the ids
-        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id")->toArray();
 
         // update the settings
         settings($user)->set(
             "challenge_nine_random_tracks",
             (new SettingNineRandomTracks(
                 challenge_id: $current_challenge->id,
-                track_ids: $nine_random_tracks_ids->toArray(),
+                track_ids: $nine_random_tracks_ids,
                 listened: 0
             ))->toJson()
         );
@@ -677,13 +684,17 @@ class ChallengesController extends Controller
         }
 
         // ROTATING tracks because at least 4 of them are already listened/the challenge has changed/this is the first time
-        // get the track id of the tracks already listened in this challenge
-        $listened_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id");
+        // select the excluded tracks
+        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id"); // listened tracks
+        $ownedTracks = $user->ownedTracks;
+        if (!is_null($ownedTracks)) {
+            $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
+        }
 
         // check the number of tracks available
         $available_tracks = $current_challenge->tracks()
             ->select($required_columns)
-            ->whereNotIn("id", $listened_tracks)
+            ->whereNotIn("id", $excluded_tracks)
             ->count();
         if ($available_tracks === 0) {
             throw new SafeException(
@@ -695,7 +706,7 @@ class ChallengesController extends Controller
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
             ->select([...$required_columns, "creator_id"])
-            ->whereNotIn("id", $listened_tracks)
+            ->whereNotIn("id", $excluded_tracks)
             ->get()
             ->random($random_number)
             ->map(function (Tracks $item) use ($required_columns) { // remove relationships
@@ -703,7 +714,7 @@ class ChallengesController extends Controller
             });
 
         // get all the ids
-        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id")->toArray();
         // update the settings
         settings($user)->set(
             "challenge_nine_random_tracks",
