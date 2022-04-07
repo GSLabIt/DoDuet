@@ -165,7 +165,6 @@ class Settings
      */
     public function set(string $setting_name, string $value): bool
     {
-        logger($setting_name);
         // retrieve the setting instance via the provided setting_name
         $setting = SettingsModel::whereEncryptedIs("name", $setting_name)->first();
 
