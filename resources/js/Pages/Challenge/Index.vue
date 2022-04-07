@@ -86,16 +86,7 @@ export default defineComponent({
             })
                 .then(response => {
                     this.nineRandomTracks = response.data.tracks
-                    response.data.tracks.forEach(
-                        (track, index) => {
-                            axios
-                                .get(route("authenticated.challenge.get.challenge_track_listening_number_by_user_and_challenge", track.id))
-                                .then(response => {
-                                        this.votable[index] = response.data.listeningRequests > 0
-                                    }
-                                );
-                        }
-                    );
+                    this.votable = new Array(response.data.tracks.length).fill(false);
                 })
                 .catch(error => (new Toaster({
                     message: error.response.data.message,

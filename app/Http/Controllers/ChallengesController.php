@@ -612,7 +612,7 @@ class ChallengesController extends Controller
         if (!is_null($ownedTracks)) {
             $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
         }
-        
+
         // check the number of tracks available
         $available_tracks = $current_challenge->tracks()
             ->select($required_columns)

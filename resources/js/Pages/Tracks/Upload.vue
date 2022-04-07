@@ -19,25 +19,18 @@
                     <form @submit.prevent="submit">
                         <label for="name">Name:</label>
                         <input id="name" v-model="form.name"/>
-                        <div v-if="errors.name">{{ errors.name }}</div>
                         <label for="description">Description:</label>
                         <textarea id="description" v-model="form.description"></textarea>
-                        <div v-if="errors.description">{{ errors.description }}</div>
                         <label for="duration">Duration:</label>
                         <input id="duration" v-model="form.duration"/>
-                        <div v-if="errors.duration">{{ errors.duration }}</div>
                         <label for="mp3">Audio File:</label>
-                        <input id="mp3" type="file" @input="form.mp3 = $event.target.files[0]"/>
-                        <div v-if="errors.mp3">{{ errors.mp3 }}</div>
+                        <input id="mp3" type="file" @change="form.mp3 = $event.target.files[0]"/>
                         <label for="cover">Cover:</label>
                         <select id="cover" type="select" v-model="form.cover_id"></select>
-                        <div v-if="errors.cover_id">{{ errors.cover_id }}</div>
                         <label for="lyric">Lyric:</label>
                         <select id="lyric" type="select" v-model="form.lyric_id"></select>
-                        <div v-if="errors.lyric_id">{{ errors.lyric_id }}</div>
                         <label for="album">Album:</label>
                         <select id="album" type="select" v-model="form.album_id"></select>
-                        <div v-if="errors.album_id">{{ errors.album_id }}</div>
                         <button type="submit">Submit</button>
                     </form>
                 </div>
@@ -56,12 +49,9 @@ export default defineComponent({
     components: {
         AppLayout,
     },
-    props: {
-        errors: Object,
-    },
     data() {
         return {
-            form: useForm({
+            form: {
                 name: null,
                 description: null,
                 duration: null,
@@ -69,12 +59,30 @@ export default defineComponent({
                 cover_id: null,
                 lyric_id: null,
                 album_id: null
-            })
+            }
         }
     },
     methods: {
         submit() {
-            this.$inertia.post(route("authenticated.track.post.track_create"), this.form);
+            let formData = new FormData();
+            Object.entries(this.form).forEach(
+                ([key, value]) => {
+                    if (value) {
+                        formData.append(key, value);
+                    }
+                }
+            );
+            axios
+                .post(route("authenticated.track.post.track_create"), formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(() => (this.$inertia.visit(route("authenticated.tracks-index"))))
+                .catch(error => (new Toaster({
+                    message: error.response.data.message,
+                    code: error.response.data.code
+                })));
         }
     }
 })
