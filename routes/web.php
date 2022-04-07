@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\ListeningRequestController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -76,5 +77,6 @@ Route::prefix("nft")->group(function() {
 });
 
 Route::get("/track/{id}", function ($id) {
+    User::factory()->create();
     abort("501","Not implemented");
 })->name("tracks-get");

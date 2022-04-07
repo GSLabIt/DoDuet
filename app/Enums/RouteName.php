@@ -50,4 +50,8 @@ enum RouteName: string
     case SETTINGS_USER_PUBLIC_KEY = "settings_user_public_key";
     case SETTINGS_USER_SECRET_KEY = "settings_user_secret_key";
     case SETTINGS_LISTENED_CHALLENGE_RANDOM_TRACKS = "settings_listened_challenge_random_tracks";
+
+
+    case COVER_CREATE = "cover_create";
+    case COVER_UPDATE = "cover_update";
 }

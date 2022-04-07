@@ -2,31 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\SafeException;
 use Illuminate\Validation\ValidationException;
-
 use App\Models\User;
 use App\Models\Covers;
 use App\Models\Ipfs;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
-
-
+use Request;
+use Validator;
 
 class CoversController extends Controller
 {
+
     /**
-     * This function creates the cover
-     *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Covers
      * @throws ValidationException
      */
-    public function createCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
+    public function createCover(Request $request): Covers
     {
-        $this->validate($args, [
+        Validator::validate($request->all(), [
             "name" => "required|string|max:65535",
             "img" => "required|file|mimes:jpg,jpeg,png,webp|max:107374182400",
         ]);
@@ -35,35 +28,27 @@ class CoversController extends Controller
         $user = auth()->user();
 
         /** @var UploadedFile $img */
-        $img = $args["img"];
+        $img = $request->input("img");
         $ipfs = Ipfs::create([
             "cid" => "temp",
             "encryption_key" => "temp"
         ]);
         ipfs()->upload($img,$ipfs);
 
-        return $user->createdCovers()->create([
-            "name" => $args["name"],
+        return Covers::create([
+            "name" => $request->input("name"),
             "owner_id" => $user->id,
             "ipfs_id" => $ipfs->id
-        ]);
+        ])->withoutRelations();
     }
 
     /**
-     * This function updates the cover
-     *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Covers
      * @throws ValidationException
-     * @throws Exception
+     * @throws SafeException
      */
-    public function updateCover($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
+    public function updateCover(Request $request, $cover_id): Covers
     {
-        $this->validate($args, [
-            "id" => "required|uuid|exists:covers,id",
+        Validator::validate($request->all(), [
             "name" => "required|string|max:65535",
             "img" => "nullable|file|mimes:jpg,jpeg,png,webp|max:107374182400", //img may also be the same, and thus the input would be null as not re-uploaded
         ]);
@@ -73,15 +58,15 @@ class CoversController extends Controller
 
         // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */
-        $cover = $user->createdCovers()->where("id", $args["id"])->first();
+        $cover = $user->createdCovers()->where("id", $cover_id)->first();
 
         if (!is_null($cover)) {
 
             // checks if the image is re-uploaded or not
-            if ($args["img"] != null)
+            if (!empty($request->file("img")))
             {
                 /** @var UploadedFile $img */
-                $img = $args["img"];
+                $img = $request->file("img");
                 $ipfs = Ipfs::create([
                     "cid" => "temp",
                     "encryption_key" => "temp"
@@ -91,49 +76,38 @@ class CoversController extends Controller
                 //TODO: remove old file?
 
                 $cover->update([
-                    "name" => $args["name"],
+                    "name" => $request->input("name"),
                     "ipfs_id" => $ipfs->id,
                 ]);
             }
             else
             {
                 $cover->update([
-                    "name" => $args["name"],
+                    "name" => $request->input("name"),
                 ]);
             }
 
-            return $cover;
+            return $cover->withoutRelations();
         }
 
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
     }
 
     /**
-     * This function creates the nft
-     *
-     * @param null $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param GraphQLContext $context Shared between all fields.
-     * @param ResolveInfo $resolveInfo Metadata for advanced query resolution.
-     * @return Covers
-     * @throws ValidationException
-     * @throws Exception
+     * @throws SafeException
      */
-    public function createCoverNft($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Covers
+    public function createCoverNft($cover_id): Covers
     {
-        $this->validate($args, [
-            "id" => "required|uuid|exists:covers,id",
-        ]);
 
         /** @var User $user */
         $user = auth()->user();
 
         // selects the cover created by the user that called the update function which has an id specified in the args
         /** @var Covers $cover */
-        $cover = $user->createdCovers()->where("id", $args["id"])->first();
+        $cover = $user->createdCovers()->where("id", $cover_id)->first();
 
         if (!is_null($cover)) {
             $cover->update([
@@ -143,7 +117,7 @@ class CoversController extends Controller
             return $cover;
         }
 
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.COVER_NOT_FOUND.message"),
             config("error-codes.COVER_NOT_FOUND.code")
         );
