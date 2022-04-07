@@ -512,12 +512,17 @@ class ChallengesController extends Controller
         $track = Tracks::where("id", $track_id)->first();
 
         if (!is_null($track)) {
-            if (blockchain($user)->election()->participateInElection($track->nft_id)) {
+            if ($challenge->tracks()->where("id", $track_id)->count() === 0) {
                 $challenge->tracks()->attach($track->id);
                 return response()->json([
                     "success" => true
                 ]);
             }
+
+            throw new SafeException(
+                config("error-codes.BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE.message"),
+                config("error-codes.BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE.code")
+            );
         }
 
         // handle track not found error
@@ -530,42 +535,77 @@ class ChallengesController extends Controller
     /**
      * This function notifies the winners of the current challenge
      * NOTE: test not passed
-     * @return void
+     * @return array
      */
-    public static function notifyWinners(): void
+    public static function notifyWinners(): array
     {
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
 
         // get the leaderboard (all the tracks in the elections ranked)
-        $leaderboard = blockchain(User::first())->election()->leaderboard();
+        $leaderboard = $challenge->tracks()
+            ->with(Votes::class)
+            ->where("votes.challenge_id", $challenge->id)->get();
 
+        $winner_array = [];
         $leaderboard_count = $leaderboard->count();
         //notify the winners based on the number of tracks participating
         if ($leaderboard_count > 0) {
+            $track = Tracks::where(["nft_id" => $leaderboard[0]["nft_id"]])->first();
+            $prize = $challenge->total_prize * $challenge->first_prize_rate;
             $challenge->firstPlace->notify(new ChallengeWinNotification(
                 $challenge->id,
-                Tracks::where(["nft_id" => $leaderboard[0]["nft_id"]])->first()->id,
+                $track->id,
                 "first",
-                $challenge->total_prize * $challenge->first_prize_rate
+                $prize
             ));
+            $winner_array[] = [
+                "id" => $track->owner_id,
+                "prize" => $prize
+            ];
         }
         if ($leaderboard_count > 1) {
+            $track = Tracks::where(["nft_id" => $leaderboard[1]["nft_id"]])->first();
+            $prize = $challenge->total_prize * $challenge->second_prize_rate;
             $challenge->secondPlace->notify(new ChallengeWinNotification(
                 $challenge->id,
-                Tracks::where(["nft_id" => $leaderboard[1]["nft_id"]])->first()->id,
+                $track->id,
                 "second",
-                $challenge->total_prize * $challenge->second_prize_rate
+                $prize
             ));
+            $winner_array[] = [
+                "id" => $track->owner_id,
+                "prize" => $prize
+            ];
         }
         if ($leaderboard_count > 2) {
+            $track = Tracks::where(["nft_id" => $leaderboard[2]["nft_id"]])->first();
+            $prize = $challenge->total_prize * $challenge->third_prize_rate;
             $challenge->thirdPlace->notify(new ChallengeWinNotification(
                 $challenge->id,
-                Tracks::where(["nft_id" => $leaderboard[2]["nft_id"]])->first()->id,
+                $track->id,
                 "third",
-                $challenge->total_prize * $challenge->third_prize_rate
+                $prize
             ));
+            $winner_array[] = [
+                "id" => $track->owner_id,
+                "prize" => $prize
+            ];
         }
+
+        return $winner_array;
+    }
+
+
+    /**
+     * This function allows the track to participate in the challenge, if it's not already participating
+     * NOTE: test missing
+     *
+     * @return void
+     */
+    public function setUpChallenge(): void
+    {
+        // TODO: primi 3 leaderboard come vincitori, creare nuova challenge ed dispatch evento (LARAVEL)
     }
 
     /**
