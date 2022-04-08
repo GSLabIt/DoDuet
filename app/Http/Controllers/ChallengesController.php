@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\DTOs\SettingNineRandomTracks;
+use App\Events\EndedCurrentChallenge;
 use App\Exceptions\SafeException;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
@@ -13,6 +14,7 @@ use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
 use Doinc\Modules\Settings\Exceptions\SettingNotFound;
 use Exception;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -535,60 +537,52 @@ class ChallengesController extends Controller
     /**
      * This function notifies the winners of the current challenge
      * NOTE: test not passed
+     * @param Challenges $challenge
      * @return array
      */
-    public static function notifyWinners(): array
+    public static function notifyWinners(Challenges $challenge): array
     {
-        /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
-
-        // get the leaderboard (all the tracks in the elections ranked)
-        $leaderboard = $challenge->tracks()
-            ->with(Votes::class)
-            ->where("votes.challenge_id", $challenge->id)->get();
-
         $winner_array = [];
-        $leaderboard_count = $leaderboard->count();
+        $first_place_user = $challenge->firstPlace;
+        $second_place_user = $challenge->secondPlace;
+        $third_place_user = $challenge->thirdPlace;
         //notify the winners based on the number of tracks participating
-        if ($leaderboard_count > 0) {
-            $track = Tracks::where(["nft_id" => $leaderboard[0]["nft_id"]])->first();
+        if (!is_null($first_place_user)) {
             $prize = $challenge->total_prize * $challenge->first_prize_rate;
-            $challenge->firstPlace->notify(new ChallengeWinNotification(
+            $first_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $track->id,
+                $challenge->first_place_id, // this is the track_id
                 "first",
                 $prize
             ));
             $winner_array[] = [
-                "id" => $track->owner_id,
+                "id" => $first_place_user->id,
                 "prize" => $prize
             ];
         }
-        if ($leaderboard_count > 1) {
-            $track = Tracks::where(["nft_id" => $leaderboard[1]["nft_id"]])->first();
+        if (!is_null($second_place_user)) {
             $prize = $challenge->total_prize * $challenge->second_prize_rate;
-            $challenge->secondPlace->notify(new ChallengeWinNotification(
+            $second_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $track->id,
+                $challenge->second_place_id, // this is the track_id
                 "second",
                 $prize
             ));
             $winner_array[] = [
-                "id" => $track->owner_id,
+                "id" => $second_place_user->id,
                 "prize" => $prize
             ];
         }
-        if ($leaderboard_count > 2) {
-            $track = Tracks::where(["nft_id" => $leaderboard[2]["nft_id"]])->first();
+        if (!is_null($third_place_user)) {
             $prize = $challenge->total_prize * $challenge->third_prize_rate;
-            $challenge->thirdPlace->notify(new ChallengeWinNotification(
+            $third_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $track->id,
+                $challenge->third_place_id, // this is the track_id
                 "third",
                 $prize
             ));
             $winner_array[] = [
-                "id" => $track->owner_id,
+                "id" => $third_place_user->id,
                 "prize" => $prize
             ];
         }
@@ -598,7 +592,7 @@ class ChallengesController extends Controller
 
 
     /**
-     * This function allows the track to participate in the challenge, if it's not already participating
+     * This function will set the leaderboard, create a new challenge and dispatch the event every week
      * NOTE: test missing
      *
      * @return void
@@ -606,6 +600,43 @@ class ChallengesController extends Controller
     public function setUpChallenge(): void
     {
         // TODO: primi 3 leaderboard come vincitori, creare nuova challenge ed dispatch evento (LARAVEL)
+        /** @var Challenges $challenge */
+        $challenge = Challenges::orderByDesc("created_at")->first();
+
+        // get the leaderboard (all the tracks in the elections ranked)
+        $unsorted_leaderboard = collect();
+        $challenge->tracks()
+            ->with('votes', function (HasMany $query) use($challenge) {
+                // track_id is required, else laravel will not recognize the relationship
+                $query->where('challenge_id', $challenge->id)->select(["track_id", "vote"]);
+            })
+            ->select("id")
+            ->get()
+            ->map(function ($track) use ($unsorted_leaderboard){
+                // the leaderboard is decided by the track that has got the highest sum of votes, if more
+                // are equals, then by average vote
+                $votes = $track->votes()->pluck("vote");
+                $unsorted_leaderboard->put($track->id,[
+                    "total" => $votes->sum(),
+                    "average" => $votes->average()
+                ]);
+            });
+        // sort the leaderboard
+        $leaderboard = $unsorted_leaderboard->sortDesc();
+        $leaderboard_keys = $leaderboard->keys();
+
+        // update the challenge with the new winners
+        $challenge->update([
+            "first_place_id" => $leaderboard_keys[0],
+            "second_place_id" => $leaderboard_keys[1],
+            "third_place_id" => $leaderboard_keys[2],
+        ]);
+
+        // create a new challenge
+        Challenges::create();
+
+        // dispatch the event, that will then dispatch notifyWinners
+        EndedCurrentChallenge::dispatch($challenge);
     }
 
     /**
