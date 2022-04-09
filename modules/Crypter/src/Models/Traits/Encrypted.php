@@ -12,7 +12,6 @@ use Doinc\Modules\Crypter\Facades\Crypter;
 use Doinc\Modules\Crypter\Models\Casts\JSONSodiumEncrypted;
 use Doinc\Modules\Crypter\Models\Casts\SodiumEncrypted;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Throwable;
 
 trait Encrypted
@@ -55,7 +54,6 @@ trait Encrypted
             return false;
         }
 
-        $this->id = $this->id ?? Str::uuid();
         return parent::save($options);
     }
 

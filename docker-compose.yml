@@ -1,0 +1,34 @@
+version: "3.3"
+
+services:
+    mariadb:
+        image: mariadb:latest
+        environment:
+            MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+            MARIADB_DATABASE: ${DB_DATABASE}
+            MARIADB_USER: ${DB_USERNAME}
+            MARIADB_PASSWORD: ${DB_PASSWORD}
+            MARIADB_AUTO_UPGRADE: "yes"
+        ports:
+            - "3306:3306"
+
+    app:
+        build:
+            args:
+                user: ethera
+                uid: 1000
+            context: .
+        image: do-inc/ethera
+        working_dir: /var/www/ethera
+        depends_on:
+            - mariadb
+
+    nginx:
+        image: nginx:stable-alpine
+        ports:
+            - "8000:80"
+        volumes:
+            - ./docker/nginx/ethera_landlord.prod.conf:/etc/nginx/conf.d/ethera_landlord.conf
+        depends_on:
+            - app
+

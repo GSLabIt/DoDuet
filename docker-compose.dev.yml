@@ -1,0 +1,43 @@
+version: "3.3"
+
+volumes:
+  db_data:
+  node_dependencies:
+  php_dependencies:
+
+services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: "yes"
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql --user=${DB_USERNAME} --password=${DB_PASSWORD} --execute \"SHOW DATABASE;\"" ]
+      interval: 10s
+      timeout: 2s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: do-inc/ethera-dev
+    working_dir: /var/www/ethera
+    container_name: "ethera-dev"
+    depends_on:
+      - mariadb
+    volumes:
+      - .:/var/www/ethera
+      - node_dependencies:/var/www/ethera/node_modules
+      - php_dependencies:/var/www/ethera/vendor
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+
