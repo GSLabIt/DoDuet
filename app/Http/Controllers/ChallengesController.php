@@ -470,7 +470,6 @@ class ChallengesController extends Controller
 
     /**
      * This function returns the id of the tracks owned by the user participating in the current challenge
-     * NOTE: test missing
      *
      * @param Request $request
      * @return JsonResponse
@@ -490,7 +489,6 @@ class ChallengesController extends Controller
 
     /**
      * This function allows the track to participate in the challenge, if it's not already participating
-     * NOTE: test missing
      *
      * @param Request $request
      * @param string $track_id
@@ -597,9 +595,8 @@ class ChallengesController extends Controller
      *
      * @return void
      */
-    public function setUpChallenge(): void
+    public static function setUpChallenge(): void
     {
-        // TODO: primi 3 leaderboard come vincitori, creare nuova challenge ed dispatch evento (LARAVEL)
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
 
@@ -626,14 +623,20 @@ class ChallengesController extends Controller
         $leaderboard_keys = $leaderboard->keys();
 
         // update the challenge with the new winners
+        logger($leaderboard_keys[0]);
+        $challenge->firstPlace()->associate(Tracks::whereId($leaderboard_keys[0])->first()->owner);/*
+        $challenge->secondPlace()->associate(User::whereId($leaderboard_keys[1])->first());
+        $challenge->thirdPlace()->associate(User::whereId($leaderboard_keys[2])->first());*/
+        $challenge->save();
+
         $challenge->update([
-            "first_place_id" => $leaderboard_keys[0],
+            "first_place_id" => $leaderboard_keys[0],/*
             "second_place_id" => $leaderboard_keys[1],
-            "third_place_id" => $leaderboard_keys[2],
+            "third_place_id" => $leaderboard_keys[2],*/
         ]);
 
         // create a new challenge
-        Challenges::create();
+        Challenges::factory()->create();
 
         // dispatch the event, that will then dispatch notifyWinners
         EndedCurrentChallenge::dispatch($challenge);
