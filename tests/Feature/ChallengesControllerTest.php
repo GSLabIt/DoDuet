@@ -1551,30 +1551,29 @@ class ChallengesControllerTest extends TestCase
 
         $votes_number = 5;
         for ($i = 0; $i < $votes_number; $i++) {
-            Votes::factory()->for($track2, "track")->for($challenge_older, "challenge")->create();
+            Votes::factory()->for($track2, "track")->for($challenge_older, "challenge")->create(["vote" => 10]);
         }
         $votes_number = 3;
         for ($i = 0; $i < $votes_number; $i++) {
-            Votes::factory()->for($track3, "track")->for($challenge_older, "challenge")->create();
+            Votes::factory()->for($track3, "track")->for($challenge_older, "challenge")->create(["vote" => 8]);
         }
         $votes_number = 2;
         for ($i = 0; $i < $votes_number; $i++) {
-            Votes::factory()->for($track1, "track")->for($challenge_older, "challenge")->create();
+            Votes::factory()->for($track1, "track")->for($challenge_older, "challenge")->create(["vote" => 6]);
         }
 
         $this->expectsEvents(EndedCurrentChallenge::class);
-        logger($challenge_older);
-        logger($track2->id);
 
         ChallengesController::setUpChallenge();
-        logger($challenge_older);
+
+        $challenge_older = Challenges::whereId($challenge_older->id)->first(); // get the updated challenge_older
 
         $challenge = Challenges::orderByDesc("created_at")->first();
 
         $this->assertNotEquals($challenge, $challenge_older);
-        $this->assertEquals($track2->id, $challenge_older->first_place_id);
-        $this->assertEquals($track3->id, $challenge_older->second_place_id);
-        $this->assertEquals($track1->id, $challenge_older->third_place_id);
+        $this->assertEquals($track2->owner_id, $challenge_older->first_place_id);
+        $this->assertEquals($track3->owner_id, $challenge_older->second_place_id);
+        $this->assertEquals($track1->owner_id, $challenge_older->third_place_id);
     }
 
 
