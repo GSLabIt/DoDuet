@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -1562,13 +1563,17 @@ class ChallengesControllerTest extends TestCase
             Votes::factory()->for($track1, "track")->for($challenge_older, "challenge")->create(["vote" => 6]);
         }
 
-        $this->expectsEvents(EndedCurrentChallenge::class);
+        Event::fake();
 
         ChallengesController::setUpChallenge();
 
+        Event::assertDispatched(function (EndedCurrentChallenge $event) use ($challenge_older, $track2) {
+            return $event->challenge->id === $challenge_older->id and $event->track_ids[0] === $track2->id;
+        });
+
         $challenge_older = Challenges::whereId($challenge_older->id)->first(); // get the updated challenge_older
 
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
 
         $this->assertNotEquals($challenge, $challenge_older);
         $this->assertEquals($track2->owner_id, $challenge_older->first_place_id);

@@ -538,39 +538,20 @@ class ChallengesController extends Controller
      * @param Challenges $challenge
      * @return array
      */
-    public static function notifyWinners(Challenges $challenge): array
+    public static function notifyWinners(Challenges $challenge, array $track_ids): array
     {
-        // get the leaderboard (all the tracks in the elections ranked)
-        $unsorted_leaderboard = collect();
-        $challenge->tracks()
-            ->with('votes', function (HasMany $query) use($challenge) {
-                // track_id is required, else laravel will not recognize the relationship
-                $query->where('challenge_id', $challenge->id)->select(["track_id", "vote"]);
-            })
-            ->select("id")
-            ->get()
-            ->map(function ($track) use ($unsorted_leaderboard){
-                // the leaderboard is decided by the track that has got the highest sum of votes, if more
-                // are equals, then by average vote
-                $votes = $track->votes()->pluck("vote");
-                $unsorted_leaderboard->put($track->id,[
-                    "total" => $votes->sum(),
-                    "average" => $votes->average(),
-                ]);
-            });
-        // sort the leaderboard
-        $leaderboard = $unsorted_leaderboard->sortDesc();
-        $leaderboard_keys = $leaderboard->keys();
-
-        // TODO: ask Emanuele whether I should modify the database or keep the leaderboard twice
+        // NOTE: remember to pass the track_ids array to this function
 
         $winner_array = [];
+        $first_place_user = $challenge->firstPlace;
+        $second_place_user = $challenge->secondPlace;
+        $third_place_user = $challenge->thirdPlace;
         //notify the winners based on the number of tracks participating
-        if ($leaderboard_keys->count() > 0) {
+        if (!is_null($first_place_user)) {
             $prize = $challenge->total_prize * $challenge->first_prize_rate;
-            $challenge->firstPlace->notify(new ChallengeWinNotification(
+            $first_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $leaderboard[$leaderboard_keys[0]], // this is the track_id
+                $track_ids[0], // this is the track_id
                 "first",
                 $prize
             ));
@@ -579,11 +560,11 @@ class ChallengesController extends Controller
                 "prize" => $prize
             ];
         }
-        if (!is_null($leaderboard_keys->count() > 1)) {
+        if (!is_null($second_place_user)) {
             $prize = $challenge->total_prize * $challenge->second_prize_rate;
-            $challenge->secondPlace->notify(new ChallengeWinNotification(
+            $second_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $leaderboard[$leaderboard_keys[1]], // this is the track_id
+                $track_ids[1], // this is the track_id
                 "second",
                 $prize
             ));
@@ -592,11 +573,11 @@ class ChallengesController extends Controller
                 "prize" => $prize
             ];
         }
-        if (!is_null($leaderboard_keys->count() > 2)) {
+        if (!is_null($third_place_user)) {
             $prize = $challenge->total_prize * $challenge->third_prize_rate;
-            $challenge->thirdPlace->notify(new ChallengeWinNotification(
+            $third_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $leaderboard[$leaderboard_keys[2]], // this is the track_id
+                $track_ids[2], // this is the track_id
                 "third",
                 $prize
             ));
@@ -612,7 +593,6 @@ class ChallengesController extends Controller
 
     /**
      * This function will set the leaderboard, create a new challenge and dispatch the event every week
-     * NOTE: test missing
      *
      * @return void
      */
@@ -654,8 +634,10 @@ class ChallengesController extends Controller
         // create a new challenge
         Challenges::factory()->create();
 
+        $track_ids = $leaderboard_keys->slice(0,3)->toArray();
+
         // dispatch the event, that will then dispatch notifyWinners
-        EndedCurrentChallenge::dispatch($challenge);
+        EndedCurrentChallenge::dispatch($challenge, $track_ids);
     }
 
     /**
