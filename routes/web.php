@@ -77,6 +77,5 @@ Route::prefix("nft")->group(function() {
 });
 
 Route::get("/track/{id}", function ($id) {
-    User::factory()->create();
     abort("501","Not implemented");
 })->name("tracks-get");

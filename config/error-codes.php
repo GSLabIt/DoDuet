@@ -137,4 +137,12 @@ return [
         "code" => 1115,
     ],
 
+    "NFT_STORAGE_CANT_UPLOAD_FILE" => [
+        "message" => "The file can't be uploaded",
+        "code" => 1200
+    ],
+    "NFT_STORAGE_CANT_DELETE_FILE" => [
+        "message" => "The file can't be deleted",
+        "code" => 1201
+    ]
 ];

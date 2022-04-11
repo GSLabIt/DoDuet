@@ -165,9 +165,12 @@ class Settings
      */
     public function set(string $setting_name, string $value): bool
     {
+        logger($setting_name);
+        logger([$value]);
         // retrieve the setting instance via the provided setting_name
         $setting = SettingsModel::whereEncryptedIs("name", $setting_name)->first();
 
+        logger([$setting]);
         if (!is_null($setting)) {
             $us = new UserSettings();
             $us->owner_id = $this->user->id;

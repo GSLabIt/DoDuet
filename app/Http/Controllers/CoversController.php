@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\SafeException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\Covers;
 use App\Models\Ipfs;
 use Illuminate\Http\UploadedFile;
-use Request;
 use Validator;
 
 class CoversController extends Controller
@@ -17,7 +18,7 @@ class CoversController extends Controller
     /**
      * @throws ValidationException
      */
-    public function createCover(Request $request): Covers
+    public function createCover(Request $request): JsonResponse
     {
         Validator::validate($request->all(), [
             "name" => "required|string|max:65535",
@@ -28,25 +29,28 @@ class CoversController extends Controller
         $user = auth()->user();
 
         /** @var UploadedFile $img */
-        $img = $request->input("img");
+        $img = $request->file("img");
         $ipfs = Ipfs::create([
             "cid" => "temp",
             "encryption_key" => "temp"
         ]);
         ipfs()->upload($img,$ipfs);
 
-        return Covers::create([
-            "name" => $request->input("name"),
-            "owner_id" => $user->id,
-            "ipfs_id" => $ipfs->id
-        ])->withoutRelations();
+        return response()->json([
+            "cover" => Covers::create([
+                "name" => $request->input("name"),
+                "owner_id" => $user->id,
+                "creator_id" => $user->id,
+                "ipfs_id" => $ipfs->id
+            ])->withoutRelations()
+        ]);
     }
 
     /**
      * @throws ValidationException
      * @throws SafeException
      */
-    public function updateCover(Request $request, $cover_id): Covers
+    public function updateCover(Request $request, $cover_id): JsonResponse
     {
         Validator::validate($request->all(), [
             "name" => "required|string|max:65535",
@@ -67,27 +71,18 @@ class CoversController extends Controller
             {
                 /** @var UploadedFile $img */
                 $img = $request->file("img");
-                $ipfs = Ipfs::create([
-                    "cid" => "temp",
-                    "encryption_key" => "temp"
-                ]);
-                ipfs()->upload($img,$ipfs);
 
-                //TODO: remove old file?
+                ipfs()->delete($cover->ipfs);
+                ipfs()->upload($img,$cover->ipfs);
 
-                $cover->update([
-                    "name" => $request->input("name"),
-                    "ipfs_id" => $ipfs->id,
-                ]);
             }
-            else
-            {
-                $cover->update([
-                    "name" => $request->input("name"),
-                ]);
-            }
+            $cover->update([
+                "name" => $request->input("name"),
+            ]);
 
-            return $cover->withoutRelations();
+            return response()->json([
+                "cover" => $cover->withoutRelations()
+            ]);
         }
 
         throw new SafeException(
