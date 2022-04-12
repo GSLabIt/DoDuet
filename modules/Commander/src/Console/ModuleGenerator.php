@@ -9,7 +9,7 @@
 namespace Doinc\Modules\Commander\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -38,7 +38,7 @@ class ModuleGenerator extends Command
     private string $module_name;
     private string $raw_module_name;
     private string $studly_module_name;
-    private FilesystemAdapter $filesystem;
+    private Filesystem $filesystem;
 
     /**
      * Create a new command instance.
@@ -55,7 +55,7 @@ class ModuleGenerator extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         // define some common var
         $this->raw_module_name = $this->argument("module-name");
@@ -71,6 +71,7 @@ class ModuleGenerator extends Command
         });
 
         $this->info('Module creation completed!');
+        return 0;
     }
 
     protected function generate(ProgressBar $bar)
@@ -145,13 +146,13 @@ class ModuleGenerator extends Command
             $full_module_path = "{$this->studly_module_name}/$file";
 
             $compiled_filename = Blade::render(
-                // each stub must end in .blade.php to allow its compilation, remove it when generating the real filename
+            // each stub must end in .blade.php to allow its compilation, remove it when generating the real filename
                 Str::replaceLast(".blade.php", "", $full_module_path),
                 $compilation_data,
                 true
             );
             $bar->setMessage("Generating $compiled_filename");
-            usleep(1e4);
+            usleep(10000);
 
             // create the folder if not exists
             $module_dir = dirname($full_module_path);
@@ -182,9 +183,9 @@ class ModuleGenerator extends Command
             "{$replacement_mbase}Database\\\\\\\\Seeders\\\\\\\\\": {$replacement_fbase}database/seeders/\"" .
             "$1";
         $composer_content = $this->replacer(
-            '/"autoload": {\n\s+"psr-4": {\n\s+(.+\n)+\s+},\n\s+"files": \[/',
+            '/"autoload": {\n\s+"psr-4": {\n\s+(.+\n)+\s+}(?>,\n\s+"files": \[|\n\s+},\n\s+"autoload-dev")/',
             $composer_content,
-            '/(\n\s+},\n\s+"files": \[)/',
+            '/(\n\s+}(?>,\n\s+"files": \[|\n\s+},\n\s+"autoload-dev"))/',
             $replacement,
             $this->studly_module_name
         );

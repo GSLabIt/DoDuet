@@ -1,0 +1,14 @@
+<?php
+
+namespace Doinc\Modules\Crypter\Enums;
+
+class SodiumKeyLength
+{
+    public static int $KEYPAIR_SEED_BYTES = SODIUM_CRYPTO_KX_SEEDBYTES;
+    public static int $DERIVATION_CONTEXT_BYTES = SODIUM_CRYPTO_KDF_CONTEXTBYTES;
+    public static int $KDF_BYTES = SODIUM_CRYPTO_KDF_KEYBYTES;
+    public static int $PWHASH_SALT_BYTES = SODIUM_CRYPTO_PWHASH_SALTBYTES;
+    public static int $ASYMMETRIC_ENCRYPTION_NONCE = SODIUM_CRYPTO_BOX_NONCEBYTES;
+    public static int $SYMMETRIC_ENCRYPTION_NONCE = SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES;
+    public static int $SYMMETRIC_ENCRYPTION_KEY = 32;
+}

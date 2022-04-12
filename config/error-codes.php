@@ -70,6 +70,10 @@ return [
         "message" => "User has not listened to at least 4 tracks",
         "code" => 1055,
     ],
+    "NOT_ENOUGH_TRACK_IN_CHALLENGE" => [
+        "message" => "There are no more track in challenge",
+        "code" => 1056,
+    ],
 
 
     "BEATS_CHAIN_REQUIRED_SUDO" => [

@@ -12,7 +12,7 @@
         <jet-banner />
 
         <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+            <nav class="text-gray-200 bg-gray-800 border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -28,6 +28,24 @@
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <jet-nav-link :href="route('authenticated.dashboard')" :active="route().current('authenticated.dashboard')">
                                     Dashboard
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.challenge-index')" :active="route().current('authenticated.challenge-index')">
+                                    Challenge
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.tracks-index')" :active="route().current('authenticated.tracks-index')">
+                                    Tracks
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.track-upload')" :active="route().current('authenticated.track-upload')">
+                                    Track Upload
                                 </jet-nav-link>
                             </div>
                         </div>

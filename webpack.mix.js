@@ -27,11 +27,25 @@ mix.ts('resources/js/app.js', 'public/js').vue()
         require('tailwindcss'),
     ])
     .webpackConfig(require('./webpack.config'))
-    .extract(["vue"])
+    .extract([
+        "vue",
+        "boxicons",
+        "cleave.js","luxon",
+        "tippy.js",
+        "toastify-js",
+        "@inertiajs/inertia",
+        "@inertiajs/inertia-vue3",
+        "@inertiajs/progress",
+        "axios",
+        "lodash",
+    ])
     .mergeManifest();
 
 if (mix.inProduction()) {
     mix.version();
+}
+else {
+    mix.browserSync('localhost:8000');
 }
 
 mix.disableNotifications();

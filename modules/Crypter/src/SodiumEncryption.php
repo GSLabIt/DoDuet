@@ -2,10 +2,9 @@
 
 namespace Doinc\Modules\Crypter;
 
-use App\Http\Wrappers\Interfaces\Wrapper;
 use JetBrains\PhpStorm\Pure;
 
-class SodiumEncryption
+final class SodiumEncryption
 {
     private SodiumSymmetricEncryption $symmetric_encryption_wrapper;
     private SodiumAsymmetricEncryption $asymmetric_encryption_wrapper;
@@ -18,14 +17,14 @@ class SodiumEncryption
     #[Pure]
     public static function init(): SodiumEncryption
     {
-        return (new static);
+        return (new SodiumEncryption);
     }
 
     #[Pure]
     public function __construct()
     {
-        $this->symmetric_encryption_wrapper = SodiumSymmetricEncryption::init(null);
-        $this->asymmetric_encryption_wrapper = SodiumAsymmetricEncryption::init(null);
+        $this->symmetric_encryption_wrapper = SodiumSymmetricEncryption::init();
+        $this->asymmetric_encryption_wrapper = SodiumAsymmetricEncryption::init();
     }
 
     /**

@@ -58,7 +58,7 @@ class ModuleInstall extends InstallCommand
         $installer->setConsole($this);
 
         if ($timeout = $this->option('timeout')) {
-            $installer->setTimeout($timeout);
+            $installer->setTimeout((int) $timeout);
         }
 
         if ($path = $this->option('path')) {
@@ -69,7 +69,7 @@ class ModuleInstall extends InstallCommand
 
         if (!$this->option('no-update')) {
             $this->call('module:update', [
-                'module' => $installer->getModuleName(),
+                'module' => Str::kebab($installer->getModuleName()),
             ]);
         }
 
@@ -89,9 +89,9 @@ class ModuleInstall extends InstallCommand
             "{$replacement_mbase}Database\\\\\\\\Seeders\\\\\\\\\": {$replacement_fbase}database/seeders/\"" .
             "$1";
         $composer_content = $this->replacer(
-            '/"autoload": {\n\s+"psr-4": {\n\s+(.+\n)+\s+},\n\s+"files": \[/',
+            '/"autoload": {\n\s+"psr-4": {\n\s+(.+\n)+\s+}(?>,\n\s+"files": \[|\n\s+},\n\s+"autoload-dev")/',
             $composer_content,
-            '/(\n\s+},\n\s+"files": \[)/',
+            '/(\n\s+}(?>,\n\s+"files": \[|\n\s+},\n\s+"autoload-dev"))/',
             $replacement,
             $installer->getModuleName()
         );

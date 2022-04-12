@@ -2,16 +2,15 @@
 
 namespace Doinc\Modules\Crypter;
 
-use App\Http\Wrappers\Enums\SodiumContexts;
-use App\Http\Wrappers\Enums\SodiumKeyLength;
-use App\Http\Wrappers\Interfaces\Wrapper;
+use Doinc\Modules\Crypter\Enums\SodiumContexts;
+use Doinc\Modules\Crypter\Enums\SodiumKeyLength;
 use Doinc\Modules\Crypter\Exceptions\InsecureRandomSourceInCryptographicallyCriticalImplementation;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use SodiumException;
 
-class SodiumKeyDerivation
+final class SodiumKeyDerivation
 {
     /**
      * Initialize the class instance
@@ -21,7 +20,7 @@ class SodiumKeyDerivation
     #[Pure]
     public static function init(): SodiumKeyDerivation
     {
-        return (new static);
+        return (new SodiumKeyDerivation);
     }
 
     /**
@@ -131,7 +130,7 @@ class SodiumKeyDerivation
         string $master,
         int $subkey,
         int $length,
-        SodiumContexts $context = SodiumContexts::DEFAULT
+        SodiumContexts $context = SodiumContexts::BASE
     ): array
     {
         return [
@@ -153,7 +152,7 @@ class SodiumKeyDerivation
      * @param SodiumContexts $context
      * @return SodiumContexts
      */
-    private function computeKeyDerivationContext(SodiumContexts $context = SodiumContexts::DEFAULT): SodiumContexts
+    private function computeKeyDerivationContext(SodiumContexts $context = SodiumContexts::BASE): SodiumContexts
     {
         return $context;
     }

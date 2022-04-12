@@ -1404,7 +1404,7 @@ class ChallengesControllerTest extends TestCase
         }
 
         // get nine random tracks
-        $required_columns = ["id", "name", "description"];
+        $required_columns =  ["id", "name", "duration", "creator_id", "cover_id"];
         $nine_random_tracks = $tracks
             ->random(9)
             ->sortBy("created_at")
@@ -1431,7 +1431,9 @@ class ChallengesControllerTest extends TestCase
                     "*" => [
                         "id",
                         "name",
-                        "description"
+                        "duration",
+                        "creator_id",
+                        "cover_id"
                     ]
                 ]
             ]);
@@ -1550,7 +1552,7 @@ class ChallengesControllerTest extends TestCase
         }
 
         // get nine random tracks
-        $required_columns = ["id", "name", "description"];
+        $required_columns =  ["id", "name", "duration", "creator_id", "cover_id"];
         $nine_random_tracks = $tracks
             ->random(9)
             ->sortBy("created_at")
@@ -1588,7 +1590,9 @@ class ChallengesControllerTest extends TestCase
                     "*" => [
                         "id",
                         "name",
-                        "description"
+                        "duration",
+                        "creator_id",
+                        "cover_id"
                     ]
                 ]
             ]);
@@ -1690,7 +1694,7 @@ class ChallengesControllerTest extends TestCase
         }
 
         // get four random tracks
-        $required_columns = ["id", "name", "description"];
+        $required_columns = ["id", "name", "duration", "creator_id", "cover_id"];
         $nine_random_tracks = $tracks
             ->random(9)
             ->sortBy("created_at")
@@ -1729,7 +1733,9 @@ class ChallengesControllerTest extends TestCase
                     "*" => [
                         "id",
                         "name",
-                        "description"
+                        "duration",
+                        "creator_id",
+                        "cover_id"
                     ]
                 ]
             ]);
@@ -1771,7 +1777,7 @@ class ChallengesControllerTest extends TestCase
         }
 
         // get four random tracks
-        $required_columns = ["id", "name", "description"];
+        $required_columns = ["id", "name", "duration", "creator_id", "cover_id"];
         $nine_random_tracks = $tracks
             ->random(9)
             ->sortBy("created_at")
@@ -1839,7 +1845,7 @@ class ChallengesControllerTest extends TestCase
         }
 
         // get nine random tracks
-        $required_columns = ["id", "name", "description"];
+        $required_columns =  ["id", "name", "duration", "creator_id", "cover_id"];
         $nine_random_tracks = $tracks
             ->random(9)
             ->sortBy("created_at")
@@ -1866,7 +1872,9 @@ class ChallengesControllerTest extends TestCase
                     "*" => [
                         "id",
                         "name",
-                        "description"
+                        "duration",
+                        "creator_id",
+                        "cover_id"
                     ]
                 ]
             ]);

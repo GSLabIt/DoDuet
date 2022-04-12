@@ -14,12 +14,20 @@ class CreateUserSettingsTable extends Migration
     public function up()
     {
         Schema::create('user_settings', function (Blueprint $table) {
-            $table->uuid("id")->primary();
-            $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
-            $table->foreignUuid("settings_id")->references("id")->on("settings")->cascadeOnDelete();
-            $table::encrypted($table, "setting_value");
+            if(config("settings.uuid")) {
+                $table->uuid("id")->primary();
+                $table->foreignUuid("owner_id")->references("id")->on("users")->cascadeOnDelete();
+                $table->foreignUuid("settings_id")->references("id")->on("settings")->cascadeOnDelete();
+            }
+            else {
+                $table->id();
+                $table->foreignId("owner_id")->references("id")->on("users")->cascadeOnDelete();
+                $table->foreignId("settings_id")->references("id")->on("settings")->cascadeOnDelete();
+            }
 
+            $table::encrypted($table, "setting_value");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

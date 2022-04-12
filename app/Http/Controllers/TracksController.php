@@ -21,6 +21,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Throwable;
@@ -38,7 +39,7 @@ class TracksController extends Controller
         Validator::validate($request->all(), [
             "name" => "required|string|max:255",
             "description" => "required|string",
-            "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/",
+            "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/", // TODO: correct this, track may also be 1h  01:59:59
             "mp3" => "required|file|mimes:mp3|max:1048576", // 100 MB, computed in kb not bytes
             "cover_id" => "nullable|uuid|exists:covers,id",
             "lyric_id" => "nullable|uuid|exists:lyrics,id",
@@ -116,11 +117,9 @@ class TracksController extends Controller
             // Upload the just encrypted file to ipfs
             ipfs()->upload($mp3, $track->ipfs);
 
-            /* TODO: UNCOMMENT THIS
             $track->update([
                 "nft_id" => $nft_id,
             ]);
-            */
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a
             // composed track
@@ -283,11 +282,15 @@ class TracksController extends Controller
             "user_id" => "required|uuid|exists:users,id",
         ]);
 
+        $required_columns = ["id", "name", "duration", "cover_id"];
+
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
             return response()->json([
-                "tracks" => $user->createdTracks
+                "tracks" => $user->createdTracks->map(function (Tracks $item) use ($required_columns) { // remove relationships
+                    return [...$item->only($required_columns), "creator" => $item->creator->name];
+                })
             ]);
         }
 
@@ -311,11 +314,18 @@ class TracksController extends Controller
             "user_id" => "required|uuid|exists:users,id",
         ]);
 
+        $required_columns = ["id", "name", "description", "duration", "nft_id"];
+
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
             return response()->json([
-                "tracks" => $user->ownedTracks
+                "tracks" => $user->ownedTracks->map(
+                    function (Tracks $item) use($required_columns) {
+                        $arr = $item->only($required_columns);
+                        return [...$arr, "description" => Str::substr($arr["description"], 0, 97)]; // TODO: add "..." if the string is truncated
+                    }
+                )
             ]);
         }
 
@@ -411,7 +421,7 @@ class TracksController extends Controller
      * This function returns the tracks not in the current challenge ( based on the number of votes )
      * @return JsonResponse
      */
-    public function getNotInChallengeTracks(): JsonResponse {
+    public function getNotInChallengeTracks(): JsonResponse { // TODO: correct method, check ChallengesController@getAllTracksInLatestChallenge
         // get current challenge
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();

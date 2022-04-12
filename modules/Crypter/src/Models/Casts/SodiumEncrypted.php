@@ -8,7 +8,6 @@
 
 namespace Doinc\Modules\Crypter\Models\Casts;
 
-use Doinc\Modules\Crypter\Exceptions\InsecureRandomSourceInCryptographicallyCriticalImplementation;
 use Doinc\Modules\Crypter\Exceptions\UnmatchingEncryptedData;
 use Doinc\Modules\Crypter\Facades\Crypter;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -28,7 +27,7 @@ class SodiumEncrypted implements CastsAttributes
      * @throws SodiumException
      * @throws UnmatchingEncryptedData
      */
-    public function get($model, string $key, $value, array $attributes): mixed
+    public function get($model, string $key, $value, array $attributes): string
     {
         $encryption_key = config("crypter.secure_key");
 
@@ -54,7 +53,7 @@ class SodiumEncrypted implements CastsAttributes
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return mixed
+     * @return string
      */
     public function set($model, string $key, $value, array $attributes): string
     {
