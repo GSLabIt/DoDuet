@@ -7,6 +7,8 @@ use App\Enums\RouteClass;
 use App\Enums\RouteGroup;
 use App\Enums\RouteMethod;
 use App\Enums\RouteName;
+use App\Events\EndedCurrentChallenge;
+use App\Exceptions\SafeException;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Http\Wrappers\GMPHelper;
@@ -18,6 +20,7 @@ use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -1193,6 +1196,203 @@ class ChallengesControllerTest extends TestCase
         );
     }
 
+
+    /**
+     *
+     *  Testing getOwnedTracksInChallenge
+     *
+     */
+
+    /**
+     * Test the function getOwnedTracksInChallenge.
+     *
+     * @return void
+     */
+    public function test_get_owned_tracks_in_challenge()
+    {
+        $this->seed();
+
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $tracks = collect();
+        $tracks_number_challenge = 2;
+        for ($i = 0; $i < $tracks_number_challenge; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create(["owner_id" => $user->id])); // tracks owned by the user
+        }
+
+        for ($i = 0; $i < $tracks_number_challenge; $i++) {
+            $tracks->push(Tracks::factory()->hasAttached($challenge)->create()); // tracks not owned by the user
+        }
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_OWNED_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks"
+            ]);
+
+        $this->assertCount(2, $response->json("tracks"));
+        $this->assertTrue(collect($response->json("tracks"))->contains($tracks[0]->id));
+        $this->assertTrue(collect($response->json("tracks"))->contains($tracks[1]->id));
+        $this->assertNotTrue(collect($response->json("tracks"))->contains($tracks[2]->id));
+    }
+
+    /**
+     * Test the function getOwnedTracksInChallenge with no tracks.
+     *
+     * @return void
+     */
+    public function test_get_owned_tracks_in_challenge_with_no_tracks()
+    {
+        $this->seed();
+
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        $response = $this->get(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::GET)
+            ->name(RouteName::CHALLENGE_OWNED_TRACKS)
+        )
+            ->assertJsonStructure([
+                "tracks"
+            ]);
+
+        $this->assertEquals(array(), $response->json("tracks")); // the standard response is an empty array
+    }
+
+
+    /**
+     *
+     *  Testing participateInCurrentChallenge
+     *
+     */
+
+    /**
+     * Test the function participateInCurrentChallenge.
+     *
+     * @return void
+     */
+    public function test_participate_in_current_challenge()
+    {
+        $this->seed();
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->create();
+
+        $response = $this->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_TRACK_PARTICIPATE_IN_CURRENT)
+            ->route([
+                "track_id" => $track->id,
+            ])
+        )
+            ->assertJsonStructure([
+                "success"
+            ]);
+
+        $this->assertTrue($response->json("success"));
+    }
+
+    /**
+     * Test the function participateInCurrentChallenge with track already participating.
+     *
+     * @return void
+     */
+    public function test_get_owned_tracks_in_challenge_with_already_participating_track()
+    {
+        $this->seed();
+
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->hasAttached($challenge)->create();
+
+        $this->expectExceptionObject(new Exception(
+            config("error-codes.BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE.message"),
+            config("error-codes.BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE.code")
+        ));
+
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_TRACK_PARTICIPATE_IN_CURRENT)
+            ->route([
+                "track_id" => $track->id,
+            ])
+        );
+    }
+
+    /**
+     * Test the function participateInCurrentChallenge with wrong track id.
+     *
+     * @return void
+     */
+    public function test_get_owned_tracks_in_challenge_with_wrong_track_id()
+    {
+        $this->seed();
+
+
+        /**@var User $user */
+        $this->actingAs(
+            $user = User::factory()->create()
+        );
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::factory()->create();
+
+        /** @var Tracks $track */
+        $track = Tracks::factory()->hasAttached($challenge)->create();
+
+        $this->expectException(ValidationException::class);
+
+        $response = $this->withoutExceptionHandling()->post(rroute()
+            ->class(RouteClass::AUTHENTICATED)
+            ->group(RouteGroup::CHALLENGE)
+            ->method(RouteMethod::POST)
+            ->name(RouteName::CHALLENGE_TRACK_PARTICIPATE_IN_CURRENT)
+            ->route([
+                "track_id" => "wrong-id",
+            ])
+        );
+    }
+
+
     /**
      *
      *  Testing notifyWinners
@@ -1257,6 +1457,66 @@ class ChallengesControllerTest extends TestCase
             ChallengeWinNotification::class
         );
     }
+
+
+    /**
+     *
+     *  Testing setUpChallenge
+     *
+     */
+
+    /**
+     * Test the function setUpChallenge.
+     * @return void
+     * @throws Exception
+     */
+    public function test_set_up_challenge()
+    {
+        $this->seed();
+
+        /** @var Challenges $challenge_older */
+        $challenge_older = Challenges::factory()->create();
+
+        /** @var Tracks $track1 */
+        $track1 = Tracks::factory()->hasAttached($challenge_older)->create();
+        /** @var Tracks $track1 */
+        $track2 = Tracks::factory()->hasAttached($challenge_older)->create();
+        /** @var Tracks $track1 */
+        $track3 = Tracks::factory()->hasAttached($challenge_older)->create();
+        /** @var Tracks $track1 */
+        $track4 = Tracks::factory()->hasAttached($challenge_older)->create();
+
+        $votes_number = 5;
+        for ($i = 0; $i < $votes_number; $i++) {
+            Votes::factory()->for($track2, "track")->for($challenge_older, "challenge")->create(["vote" => 10]);
+        }
+        $votes_number = 3;
+        for ($i = 0; $i < $votes_number; $i++) {
+            Votes::factory()->for($track3, "track")->for($challenge_older, "challenge")->create(["vote" => 8]);
+        }
+        $votes_number = 2;
+        for ($i = 0; $i < $votes_number; $i++) {
+            Votes::factory()->for($track1, "track")->for($challenge_older, "challenge")->create(["vote" => 6]);
+        }
+
+        Event::fake();
+
+        ChallengesController::setUpChallenge();
+
+        Event::assertDispatched(function (EndedCurrentChallenge $event) use ($challenge_older, $track2) {
+            return $event->challenge->id === $challenge_older->id and $event->track_ids[0] === $track2->id;
+        });
+
+        $challenge_older = Challenges::whereId($challenge_older->id)->first(); // get the updated challenge_older
+
+        $challenge = Challenges::orderByDesc("id")->first();
+
+        $this->assertNotEquals($challenge, $challenge_older);
+        $this->assertEquals($track2->owner_id, $challenge_older->first_place_id);
+        $this->assertEquals($track3->owner_id, $challenge_older->second_place_id);
+        $this->assertEquals($track1->owner_id, $challenge_older->third_place_id);
+    }
+
 
     /**
      *

@@ -472,7 +472,6 @@ class ChallengesController extends Controller
 
     /**
      * This function returns the id of the tracks owned by the user participating in the current challenge
-     * NOTE: test missing
      *
      * @param Request $request
      * @return JsonResponse
@@ -492,7 +491,6 @@ class ChallengesController extends Controller
 
     /**
      * This function allows the track to participate in the challenge, if it's not already participating
-     * NOTE: test missing
      *
      * @param Request $request
      * @param string $track_id
@@ -558,8 +556,10 @@ class ChallengesController extends Controller
      * @param Challenges $challenge
      * @return array
      */
-    public static function notifyWinners(Challenges $challenge): array
+    public static function notifyWinners(Challenges $challenge, array $track_ids): array
     {
+        // NOTE: remember to pass the track_ids array to this function
+
         $winner_array = [];
         $first_place_user = $challenge->firstPlace;
         $second_place_user = $challenge->secondPlace;
@@ -569,12 +569,12 @@ class ChallengesController extends Controller
             $prize = $challenge->total_prize * $challenge->first_prize_rate;
             $first_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $challenge->first_place_id, // this is the track_id
+                $track_ids[0], // this is the track_id
                 "first",
                 $prize
             ));
             $winner_array[] = [
-                "id" => $first_place_user->id,
+                "id" => $challenge->first_place_id, // this is the user id
                 "prize" => $prize
             ];
         }
@@ -582,12 +582,12 @@ class ChallengesController extends Controller
             $prize = $challenge->total_prize * $challenge->second_prize_rate;
             $second_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $challenge->second_place_id, // this is the track_id
+                $track_ids[1], // this is the track_id
                 "second",
                 $prize
             ));
             $winner_array[] = [
-                "id" => $second_place_user->id,
+                "id" => $challenge->second_place_id,
                 "prize" => $prize
             ];
         }
@@ -595,12 +595,12 @@ class ChallengesController extends Controller
             $prize = $challenge->total_prize * $challenge->third_prize_rate;
             $third_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
-                $challenge->third_place_id, // this is the track_id
+                $track_ids[2], // this is the track_id
                 "third",
                 $prize
             ));
             $winner_array[] = [
-                "id" => $third_place_user->id,
+                "id" => $challenge->third_place_id,
                 "prize" => $prize
             ];
         }
@@ -611,13 +611,11 @@ class ChallengesController extends Controller
 
     /**
      * This function will set the leaderboard, create a new challenge and dispatch the event every week
-     * NOTE: test missing
      *
      * @return void
      */
-    public function setUpChallenge(): void
+    public static function setUpChallenge(): void
     {
-        // TODO: primi 3 leaderboard come vincitori, creare nuova challenge ed dispatch evento (LARAVEL)
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
 
@@ -628,7 +626,7 @@ class ChallengesController extends Controller
                 // track_id is required, else laravel will not recognize the relationship
                 $query->where('challenge_id', $challenge->id)->select(["track_id", "vote"]);
             })
-            ->select("id")
+            ->select("id", "owner_id")
             ->get()
             ->map(function ($track) use ($unsorted_leaderboard){
                 // the leaderboard is decided by the track that has got the highest sum of votes, if more
@@ -636,7 +634,8 @@ class ChallengesController extends Controller
                 $votes = $track->votes()->pluck("vote");
                 $unsorted_leaderboard->put($track->id,[
                     "total" => $votes->sum(),
-                    "average" => $votes->average()
+                    "average" => $votes->average(),
+                    "owner_id" => $track->owner_id
                 ]);
             });
         // sort the leaderboard
@@ -645,16 +644,18 @@ class ChallengesController extends Controller
 
         // update the challenge with the new winners
         $challenge->update([
-            "first_place_id" => $leaderboard_keys[0],
-            "second_place_id" => $leaderboard_keys[1],
-            "third_place_id" => $leaderboard_keys[2],
+            "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+            "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+            "third_place_id" => $leaderboard[$leaderboard_keys[2]]["owner_id"],
         ]);
 
         // create a new challenge
-        Challenges::create();
+        Challenges::factory()->create();
+
+        $track_ids = $leaderboard_keys->slice(0,3)->toArray();
 
         // dispatch the event, that will then dispatch notifyWinners
-        EndedCurrentChallenge::dispatch($challenge);
+        EndedCurrentChallenge::dispatch($challenge, $track_ids);
     }
 
     /**

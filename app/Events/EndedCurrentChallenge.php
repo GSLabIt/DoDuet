@@ -2,11 +2,8 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
+use App\Models\Challenges;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -15,22 +12,29 @@ class EndedCurrentChallenge
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
+     * The challenge instance.
      *
-     * @return void
+     * @var Challenges
      */
-    public function __construct()
-    {
-        //
-    }
+    public Challenges $challenge;
 
     /**
-     * Get the channels the event should broadcast on.
+     * The track ids array instance, required for the notifyWinners instance.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @var array
      */
-    public function broadcastOn()
+    public array $track_ids;
+
+    /**
+     * Create a new event instance.
+     *
+     * @param Challenges $challenge
+     * @param array $track_ids
+     * @return void
+     */
+    public function __construct(Challenges $challenge, array $track_ids)
     {
-        return new PrivateChannel('challenge-channel');
+        $this->challenge = $challenge;
+        $this->track_ids = $track_ids;
     }
 }
