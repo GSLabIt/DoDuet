@@ -6,10 +6,9 @@ use App\Enums\RouteClass;
 use App\Enums\RouteGroup;
 use App\Enums\RouteMethod;
 use App\Enums\RouteName;
-use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Models\Albums;
-use App\Models\Covers;
 use App\Models\Challenges;
+use App\Models\Covers;
 use App\Models\Ipfs;
 use App\Models\ListeningRequest;
 use App\Models\Lyrics;
@@ -18,11 +17,11 @@ use App\Models\User;
 use App\Models\Votes;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Request;
 use Throwable;
 
 class TracksController extends Controller
@@ -97,10 +96,8 @@ class TracksController extends Controller
             // try to mint the NFT, in case it succeeds the integer nft id is returned and the flux may continue straight
             // away, if an exception occurs it must be propagated and the temporary records must be removed.
             try {
-                $nft_id = blockchain($user)->nft()->mint(
-                    route("nft-track_display", ["id" => $track->id]),
-                    BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
-                );
+                payTransactionFee($user);
+                $user->pay($track);
             }
             catch (Throwable $exception) {
                 // remove the temporary records
@@ -117,7 +114,7 @@ class TracksController extends Controller
             ipfs()->upload($mp3, $track->ipfs);
 
             $track->update([
-                "nft_id" => $nft_id,
+                "nft_id" => "undefined",
             ]);
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a

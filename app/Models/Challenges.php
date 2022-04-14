@@ -9,7 +9,11 @@
 namespace App\Models;
 
 use App\Traits\ActivityLogAll;
-
+use Doinc\Wallet\Interfaces\Customer;
+use Doinc\Wallet\Interfaces\Discountable;
+use Doinc\Wallet\Interfaces\Product;
+use Doinc\Wallet\Traits\HasDiscount;
+use Doinc\Wallet\Traits\HasWallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,9 +25,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @mixin IdeHelperChallenges
  */
-class Challenges extends Model
+class Challenges extends Model implements Product, Discountable
 {
-    use HasFactory, LogsActivity, ActivityLogAll;
+    use HasFactory, LogsActivity, ActivityLogAll, HasWallet, HasDiscount;
 
     protected $guarded = ["updated_at", "created_at"];
 
@@ -55,5 +59,44 @@ class Challenges extends Model
     public function tracks(): BelongsToMany
     {
         return $this->belongsToMany(Tracks::class);
+    }
+
+    public function canBuy(Customer $customer, int $quantity = 1, bool $force = false): bool
+    {
+        return true;
+    }
+
+    /**
+     * Defines how much the product costs
+     * This value by default is not stored in any field of the record
+     *
+     * @param Customer $customer Product buyer, useful to personalize the price per user
+     * @return string
+     */
+    public function getCostAttribute(Customer $customer): string
+    {
+        return "1000";
+    }
+
+    /**
+     * Metadata attributes assigned to the product, this can be used to identify one or more products while
+     * examining transactions & transfers
+     *
+     * @return array
+     */
+    public function getMetadataAttribute(): array
+    {
+        return [];
+    }
+
+    /**
+     * Defines the percentage of discount to be applied once a product gets paid
+     *
+     * @param Customer $customer Product buyer, useful to personalize the discount per user
+     * @return int|string
+     */
+    public function getDiscountPercentageAttribute(Customer $customer): int|string
+    {
+        return 10;
     }
 }

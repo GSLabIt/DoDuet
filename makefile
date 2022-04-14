@@ -21,7 +21,7 @@ dev-up:
 
 .PHONY: dev-build
 dev-build:
-	$(env_vars) docker-compose --log-level DEBUG --verbose -f docker-compose.dev.yml build
+	$(env_vars) docker-compose -f docker-compose.dev.yml build
 
 .PHONY: dev-migrate
 dev-migrate:

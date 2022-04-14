@@ -1,9 +1,8 @@
-
 # initial step, build node artifacts
 FROM node:lts-alpine3.15 AS node
 
 FROM php:8.1-fpm-alpine3.15
-WORKDIR /var/www/ethera
+WORKDIR /var/www/doduet
 
 RUN addgroup ebalo
 RUN echo -e "password\npassword\n" | adduser -s /bin/sh -S -u 1000 ebalo www-data

@@ -13,5 +13,10 @@ module.exports = {
             '@': path.resolve('resources/js'),
             '~': path.resolve('modules')
         },
+        fallback: {
+            "crypto": require.resolve("crypto-browserify"),
+            "path": require.resolve("path-browserify"),
+            "stream": require.resolve("stream-browserify"),
+        }
     },
 };

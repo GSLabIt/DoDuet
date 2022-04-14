@@ -17,6 +17,7 @@
         "do-inc/commander-module": "^1.0",
         "do-inc/crypter-module": "^1.0",
         "do-inc/laravel-persona-kyc": "^0.10.20",
+        "do-inc/laravel-wallet": "^1.0",
         "do-inc/referral-module": "^1.0",
         "do-inc/settings-module": "^1.0",
         "docopt/docopt": "^1.0",
@@ -99,7 +100,7 @@
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta",
             "@php artisan ide-helper:eloquent",
-            "@php artisan ide-helper:models -M -W -D app -D modules"
+            "@php artisan ide-helper:models -M -r -W -D app -D modules"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

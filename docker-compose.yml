@@ -14,11 +14,8 @@ services:
 
     app:
         build:
-            args:
-                user: ethera
-                uid: 1000
             context: .
-        image: do-inc/ethera
+        image: do-inc/doduet
         working_dir: /var/www/ethera
         depends_on:
             - mariadb

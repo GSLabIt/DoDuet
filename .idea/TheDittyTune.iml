@@ -215,6 +215,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/data-transfer-object" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/thecodingmachine/safe" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/jessarcher/laravel-castable-data-transfer-object" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/do-inc/laravel-wallet" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
