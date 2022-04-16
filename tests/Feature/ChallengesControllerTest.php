@@ -1407,7 +1407,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_notification_sent_to_the_winners()
     {
-        //NOTE: test not passed
         $this->seed();
 
         Notification::fake();
