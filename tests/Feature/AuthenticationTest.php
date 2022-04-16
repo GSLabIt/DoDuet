@@ -20,6 +20,8 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen()
     {
+        $this->refreshDatabase();
+        $this->seed();
         $user = User::factory()->create();
 
         $response = $this->post('/login', [

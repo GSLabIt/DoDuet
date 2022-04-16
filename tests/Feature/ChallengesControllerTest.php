@@ -19,12 +19,12 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
-use Exception;
 
 class ChallengesControllerTest extends TestCase
 {
@@ -52,26 +52,6 @@ class ChallengesControllerTest extends TestCase
 
         $this->actingAs($this->user);
         secureUser($this->user)->set("password", "password");
-        // get the symmetric encryption key of the current user, this key is used to encrypt all
-        // user's personal data
-        $symmetric_key = secureUser($this->user)->get(secureUser($this->user)->whitelistedItems()["symmetric_key"])["key"];
-        session()->put("mnemonic", "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal");
-        $this->user->wallet()->create([
-                "chain" => "beats",
-                "private_key" => sodium()->encryption()->symmetric()->encrypt(
-                    "0xf54dd85831b26ca012ed028fdbedbc73677e4ea60998ceb6111b0c6eebc40c06",
-                    $symmetric_key,
-                    sodium()->derivation()->generateSymmetricNonce()
-                ),
-                "public_key" => "0xec184bd9da1744ee9d3831b053c502cf41d2a0f641ec8bf7ac57cdc20bf6c51f",
-                "seed" => sodium()->encryption()->symmetric()->encrypt(
-                    "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal",
-                    $symmetric_key,
-                    sodium()->derivation()->generateSymmetricNonce()
-                ),
-                "address" => "6nDAFcQv9qgrG3PVtWxGTvFPvRdZjhr2NieScthS1guVp7Qg",
-            ]
-        );
 
         /**@var User $alice */
         $alice = User::factory()->create();
@@ -79,27 +59,6 @@ class ChallengesControllerTest extends TestCase
 
         $this->actingAs($this->alice);
         secureUser($this->alice)->set("password", "password");
-        // get the symmetric encryption key of the current user, this key is used to encrypt all
-        // user's personal data
-        $symmetric_key = secureUser($this->alice)->get(secureUser($this->alice)->whitelistedItems()["symmetric_key"])["key"];
-        session()->put("mnemonic", "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice");
-        $this->alice->wallet()->create([
-                "chain" => "beats",
-                "private_key" => sodium()->encryption()->symmetric()->encrypt(
-                    "0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a",
-                    $symmetric_key,
-                    sodium()->derivation()->generateSymmetricNonce()
-                ),
-                "public_key" => "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d",
-                "seed" => sodium()->encryption()->symmetric()->encrypt(
-                    "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice",
-                    $symmetric_key,
-                    sodium()->derivation()->generateSymmetricNonce()
-                ),
-                "address" => "6mfqoTMHrMeVMyKwjqomUjVomPMJ4AjdCm1VReFtk7Be8wqr",
-            ]
-        );
-
 
         /**@var User $bob */
         $bob = User::factory()->create();
@@ -107,44 +66,21 @@ class ChallengesControllerTest extends TestCase
 
         $this->actingAs($this->bob);
         secureUser($this->bob)->set("password", "password");
-        // get the symmetric encryption key of the current user, this key is used to encrypt all
-        // user's personal data
-        $symmetric_key = secureUser($this->bob)->get(secureUser($this->bob)->whitelistedItems()["symmetric_key"])["key"];
-        session()->put("mnemonic", "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Bob");
-        $this->bob->wallet()->create([
-                "chain" => "beats",
-                "private_key" => sodium()->encryption()->symmetric()->encrypt(
-                    "0x398f0c28f98885e046333d4a41c19cee4c37368a9832c6502f6cfd182e2aef89",
-                    $symmetric_key,
-                    sodium()->derivation()->generateSymmetricNonce()
-                ),
-                "public_key" => "0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48",
-                "seed" => sodium()->encryption()->symmetric()->encrypt(
-                    "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Bob",
-                    $symmetric_key,
-                    sodium()->derivation()->generateSymmetricNonce()
-                ),
-                "address" => "6k6gXPB9idebCxqSJuqpjPaqfYLQbdLHhvsANH8Dg8GQN3tT",
-            ]
-        );
     }
 
     private function authAsAlice()
     {
         $this->actingAs($this->alice);
-        session()->put("mnemonic", "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice");
     }
 
     private function authAsBob()
     {
         $this->actingAs($this->bob);
-        session()->put("mnemonic", "bottom drive obey lake curtain smoke basket hold race lonely fit walk//Bob");
     }
 
     private function authAsUser()
     {
         $this->actingAs($this->user);
-        session()->put("mnemonic", "sauce blame resist south pelican area devote scissors silk treat observe nice aim fiction video nuclear apple lava powder swing trumpet vague hen illegal");
     }
 
     /**

@@ -28,15 +28,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    image: do-inc/ethera-dev
-    working_dir: /var/www/ethera
-    container_name: "ethera-dev"
+    image: do-inc/doduet-dev
+    working_dir: /var/www/doduet
+    container_name: "doduet-dev"
     depends_on:
       - mariadb
     volumes:
-      - .:/var/www/ethera
-      - node_dependencies:/var/www/ethera/node_modules
-      - php_dependencies:/var/www/ethera/vendor
+      - .:/var/www/doduet
+      - node_dependencies:/var/www/doduet/node_modules
+      - php_dependencies:/var/www/doduet/vendor
     ports:
       - "8000:8000"
       - "3000:3000"

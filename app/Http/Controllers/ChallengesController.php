@@ -12,14 +12,16 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
+use Bavix\Wallet\Internal\Service\MathService;
 use Doinc\Modules\Settings\Exceptions\SettingNotFound;
+use Doinc\Wallet\BigMath;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ChallengesController extends Controller
 {
@@ -513,6 +515,22 @@ class ChallengesController extends Controller
 
         if (!is_null($track)) {
             if ($challenge->tracks()->where("id", $track_id)->count() === 0) {
+                try {
+                    payTransactionFee($user);
+                    payChallengeParticipationFee($user);
+                    payTransactionFee($user);
+                    $transaction = $user->pay($challenge);
+                    $amount = BigMath::sub($transaction->amount, $transaction->discount);
+
+                    $challenge->total_prize = BigMath::add($challenge->total_prize, $amount);
+                }
+                catch (Throwable $exception) {
+                    // usage of the throwable interface instead of the specific error type mark the following statement
+                    // as possibly wrong but as the only exception may occur is the blockchain related one, stay chill,
+                    // no other strange exception will occur
+                    throw new \App\Exceptions\SafeException($exception);
+                }
+
                 $challenge->tracks()->attach($track->id);
                 return response()->json([
                     "success" => true

@@ -193,6 +193,7 @@
       <path value="$PROJECT_DIR$/vendor/spatie/data-transfer-object" />
       <path value="$PROJECT_DIR$/vendor/thecodingmachine/safe" />
       <path value="$PROJECT_DIR$/vendor/jessarcher/laravel-castable-data-transfer-object" />
+      <path value="$PROJECT_DIR$/vendor/do-inc/laravel-wallet" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

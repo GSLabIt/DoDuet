@@ -31,7 +31,6 @@ class LoginUser
         if ($user &&
             Hash::check($request->password, $user->password)) {
             secureUser($user)->set("password", $request->password);
-            wallet($user)->generate();
             return $user;
         }
 

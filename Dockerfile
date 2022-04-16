@@ -10,7 +10,7 @@ RUN npm run prod
 
 FROM php:8.1-fpm-alpine3.15
 
-WORKDIR /var/www/ethera
+WORKDIR /var/www/doduet
 
 # add the php extension installer and install extensions
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
