@@ -534,7 +534,7 @@ class ChallengesController extends Controller
 
     /**
      * This function notifies the winners of the current challenge
-     * NOTE: test not passed
+     *
      * @param Challenges $challenge
      * @return array
      */
@@ -548,6 +548,7 @@ class ChallengesController extends Controller
         $third_place_user = $challenge->thirdPlace;
         //notify the winners based on the number of tracks participating
         if (!is_null($first_place_user)) {
+            logger("NOTIFICA 1");
             $prize = $challenge->total_prize * $challenge->first_prize_rate;
             $first_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
@@ -623,16 +624,37 @@ class ChallengesController extends Controller
         // sort the leaderboard
         $leaderboard = $unsorted_leaderboard->sortDesc();
         $leaderboard_keys = $leaderboard->keys();
+        $leaderboard_length = count($leaderboard_keys);
 
         // update the challenge with the new winners
-        $challenge->update([
-            "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
-            "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
-            "third_place_id" => $leaderboard[$leaderboard_keys[2]]["owner_id"],
-        ]);
+        if ($leaderboard_length === 1) {
+            $challenge->update([
+                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+            ]);
+        } elseif ($leaderboard_length === 2) {
+            $challenge->update([
+                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+            ]);
+        } elseif ($leaderboard_length > 2) {
+            $challenge->update([
+                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+                "third_place_id" => $leaderboard[$leaderboard_keys[2]]["owner_id"],
+            ]);
+        }
+
 
         // create a new challenge
-        Challenges::factory()->create();
+        Challenges::create([
+            "total_prize" => 0,
+            "first_prize_rate" => 35.,
+            "second_prize_rate" => 20.,
+            "third_prize_rate" => 10.,
+            "treasury_rate" => 0.,
+            "burning_rate" => 20.,
+            "fee_rate" => 15.,
+        ]);
 
         $track_ids = $leaderboard_keys->slice(0,3)->toArray();
 
@@ -654,7 +676,7 @@ class ChallengesController extends Controller
         $user = auth()->user();
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("created_at")->first();
-        $required_columns = ["id", "name", "duration", "cover_id"];
+        $required_columns = ["id", "name", "description", "duration", "cover_id"];
 
         // if the setting is already set
         if (settings($user)->has("challenge_nine_random_tracks")) {
@@ -679,8 +701,8 @@ class ChallengesController extends Controller
 
         // ROTATING tracks because they are all already listened/the challenge has changed/this is the first time
         // select the excluded tracks
-        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id"); // listened tracks
-        $ownedTracks = $user->ownedTracks;
+        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->pluck("track_id"); // listened tracks
+        $ownedTracks = $current_challenge->tracks()->where(["owner_id" => $user->id])->pluck("id");
         if (!is_null($ownedTracks)) {
             $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
         }
@@ -739,7 +761,7 @@ class ChallengesController extends Controller
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("created_at")->first();
 
-        $required_columns = ["id", "name", "duration", "cover_id"];
+        $required_columns = ["id", "name", "description", "duration", "cover_id"];
         // check if settings exists for malicious requests (normally getNineRandomTracks should already have set something before)
         if (settings($user)->has("challenge_nine_random_tracks")) {
             /** @var SettingNineRandomTracks $settings_content */
@@ -757,8 +779,8 @@ class ChallengesController extends Controller
 
         // ROTATING tracks because at least 4 of them are already listened/the challenge has changed/this is the first time
         // select the excluded tracks
-        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id"); // listened tracks
-        $ownedTracks = $user->ownedTracks;
+        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->pluck("track_id"); // listened tracks
+        $ownedTracks = $current_challenge->tracks()->where(["owner_id" => $user->id])->pluck("id");
         if (!is_null($ownedTracks)) {
             $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
         }

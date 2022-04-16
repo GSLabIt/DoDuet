@@ -51,7 +51,7 @@ class CreateNewUser implements CreatesNewUsers
         wallet($user)->generate();
 
         // refill the wallet with an airdrop
-        blockchain($user)->airdrop()->immediatelyReleaseAirdrop(0, $user->wallet->address);
+        //blockchain($user)->airdrop()->immediatelyReleaseAirdrop(0, $user->wallet->address);
 
         UserSegmentsController::assignToSegment($user);
 

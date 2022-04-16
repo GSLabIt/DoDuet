@@ -12,6 +12,7 @@ use App\Exceptions\SafeException;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Wrappers\Enums\BeatsChainNFT;
 use App\Http\Wrappers\GMPHelper;
+use App\Listeners\SendChallengeWinnersNotifications;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -1465,7 +1466,7 @@ class ChallengesControllerTest extends TestCase
 
     /**
      * Test the function notifyWinners.
-     * NOTE: test not passed
+     *
      * @return void
      */
     public function test_notification_sent_to_the_winners()
@@ -1480,44 +1481,36 @@ class ChallengesControllerTest extends TestCase
         /** @var Challenges $challenge */
         $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
 
-        $this->authAsAlice();
-
         /**@var Tracks $track_a */
-        $track_a = Tracks::factory()->hasAttached($challenge)->for($this->alice, "owner")->create();
-        $mint = blockchain($this->alice)->nft()->mint("https://adsad.asd", BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT);
-        blockchain($this->alice)->election()->participateInElection($mint);
-
-        blockchain($this->alice)->wallet()->transfer($this->bob->wallet->address, GMPHelper::init("1000000000"));
-
-        $this->authAsBob();
-
+        $track_a = Tracks::factory()->hasAttached($challenge)->create();
         /**@var Tracks $track_b */
-        $track_b = Tracks::factory()->hasAttached($challenge)->for($this->bob, "owner")->create();
-        $mint1 = blockchain($this->bob)->nft()->mint("https://adsada.asd", BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT);
-        blockchain($this->bob)->election()->participateInElection($mint1);
-
-        blockchain($this->bob)->election()->vote($this->alice->wallet->address, $mint, 10);
-
-        $this->authAsAlice();
-        blockchain($this->alice)->election()->vote($this->bob->wallet->address, $mint1, 2);
+        $track_b = Tracks::factory()->hasAttached($challenge)->create();
 
         /** @var Votes $vote_a */
-        $vote_a = Votes::factory()->for($track_b, "track")->for($challenge, "challenge")->create(["voter_id" => $this->alice, "vote" => 2]);
+        $vote_a = Votes::factory()->for($track_b, "track")->for($challenge, "challenge")->create(["vote" => 2]);
         /** @var Votes $vote_b */
-        $vote_b = Votes::factory()->for($track_a, "track")->for($challenge, "challenge")->create(["voter_id" => $this->bob, "vote" => 10]);
+        $vote_b = Votes::factory()->for($track_a, "track")->for($challenge, "challenge")->create(["vote" => 10]);
+
+        // set up the challenge for the event
+        $challenge->update([
+            "first_place_id" => $track_a->owner_id,
+            "second_place_id" => $track_b->owner_id,
+            "third_place_id" => null
+        ]);
 
         // Assert that no notifications were sent...
         Notification::assertNothingSent();
 
-        ChallengesController::notifyWinners();
+        // dispatch the event, the listener SendChallengeWinnersNotifications will call the function notifyWinners
+        EndedCurrentChallenge::dispatch($challenge, [$track_a->id, $track_b->id]);
 
         Notification::assertSentTo(
-            $this->alice,
+            $track_a->owner,
             ChallengeWinNotification::class
         );
 
         Notification::assertSentTo(
-            $this->bob,
+            $track_b->owner,
             ChallengeWinNotification::class
         );
     }
@@ -1677,7 +1670,7 @@ class ChallengesControllerTest extends TestCase
         // set up the setting so that it is not the first time
         settings($user)->set("challenge_nine_random_tracks", json_encode([
             "challenge_id" => $challenge->id,
-            "tracks_id" => $nine_random_tracks_ids,
+            "track_ids" => $nine_random_tracks_ids,
             "listened" => 6
         ]));
 
@@ -1693,7 +1686,7 @@ class ChallengesControllerTest extends TestCase
                         "id",
                         "name",
                         "duration",
-                        "creator_id",
+                        "creator",
                         "cover_id"
                     ]
                 ]
@@ -1755,7 +1748,7 @@ class ChallengesControllerTest extends TestCase
         // set up the setting so that it is not the first time
         settings($user)->set("challenge_nine_random_tracks", json_encode([
             "challenge_id" => $challenge->id - 1,
-            "tracks_id" => $nine_random_tracks_ids,
+            "track_ids" => $nine_random_tracks_ids,
             "listened" => 6
         ]));
 
@@ -1836,7 +1829,7 @@ class ChallengesControllerTest extends TestCase
         // set up the setting so that it is not the first time
         settings($user)->set("challenge_nine_random_tracks", json_encode([
             "challenge_id" => $challenge->id,
-            "tracks_id" => $nine_random_tracks_ids,
+            "track_ids" => $nine_random_tracks_ids,
             "listened" => 9
         ]));
 
@@ -1852,7 +1845,7 @@ class ChallengesControllerTest extends TestCase
                         "id",
                         "name",
                         "duration",
-                        "creator_id",
+                        "creator",
                         "cover_id"
                     ]
                 ]
@@ -1861,9 +1854,11 @@ class ChallengesControllerTest extends TestCase
         // check that the function returned 6 elements
         $this->assertCount(6, $response->json("tracks"));
 
-        // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 6 now (15 - 9)
+        // check settings content, listened MUST be equal to 0 and available tracks MUST be 6 now (15 - 9)
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $settings_content = settings($user)->get("challenge_nine_random_tracks"); // avoid cache
+
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(6, $settings_content->track_ids);
         $this->assertEquals(0, $settings_content->listened);
@@ -1979,7 +1974,7 @@ class ChallengesControllerTest extends TestCase
         // set up the setting so that it is not the first time
         settings($user)->set("challenge_nine_random_tracks", json_encode([
             "challenge_id" => $challenge->id,
-            "tracks_id" => $nine_random_tracks_ids,
+            "track_ids" => $nine_random_tracks_ids,
             "listened" => 4
         ]));
 
@@ -1995,7 +1990,7 @@ class ChallengesControllerTest extends TestCase
                         "id",
                         "name",
                         "duration",
-                        "creator_id",
+                        "creator",
                         "cover_id"
                     ]
                 ]
@@ -2007,6 +2002,8 @@ class ChallengesControllerTest extends TestCase
         // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 8 now (12 - 4)
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $settings_content = settings($user)->get("challenge_nine_random_tracks"); // avoid cache
+
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(8, $settings_content->track_ids);
         $this->assertEquals(0, $settings_content->listened);
@@ -2062,7 +2059,7 @@ class ChallengesControllerTest extends TestCase
         // set up the setting so that it is not the first time
         settings($user)->set("challenge_nine_random_tracks", json_encode([
             "challenge_id" => $challenge->id,
-            "tracks_id" => $nine_random_tracks_ids,
+            "track_ids" => $nine_random_tracks_ids,
             "listened" => 3
         ]));
 
@@ -2118,7 +2115,7 @@ class ChallengesControllerTest extends TestCase
         // set up the setting so that it is not the first time
         settings($user)->set("challenge_nine_random_tracks", json_encode([
             "challenge_id" => $challenge->id - 1,
-            "tracks_id" => $nine_random_tracks_ids,
+            "track_ids" => $nine_random_tracks_ids,
             "listened" => 6
         ]));
 
@@ -2134,7 +2131,7 @@ class ChallengesControllerTest extends TestCase
                         "id",
                         "name",
                         "duration",
-                        "creator_id",
+                        "creator",
                         "cover_id"
                     ]
                 ]
@@ -2147,6 +2144,8 @@ class ChallengesControllerTest extends TestCase
         // check settings content, listened MUST be equal to 0 now
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
+        $settings_content = settings($user)->get("challenge_nine_random_tracks"); // avoid cache
+
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(9, $settings_content->track_ids);
         $this->assertEquals(0, $settings_content->listened);

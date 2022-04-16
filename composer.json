@@ -36,6 +36,7 @@
         "laravel/tinker": "^2.5",
         "nwidart/laravel-modules": "^9.0",
         "pear/archive_tar": "^1.4",
+        "pusher/pusher-php-server": "^7.0",
         "spatie/data-transfer-object": "^3.7",
         "spatie/laravel-activitylog": "^4.4",
         "spatie/laravel-ignition": "^1.0",
