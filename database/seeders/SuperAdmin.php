@@ -22,7 +22,9 @@ class SuperAdmin extends Seeder
             'password' => Hash::make(env("SUPER_ADMIN_PSW")),
         ]);
         secureUser($user)->set("password", env("SUPER_ADMIN_PSW"));
-        $user->depositFloat(5000);
+
+        $user->wallet()->create();
+        $user->wallet->deposit(5000);
 
         UserSegmentsController::assignToSegment($user);
         $user->assignRole("super-admin");

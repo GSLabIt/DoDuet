@@ -80,6 +80,8 @@ namespace App\Models{
  * @property-read int|null $activities_count
  * @property-read \App\Models\User|null $firstPlace
  * @property-read string $cost
+ * @property-read int|string $discount_percentage
+ * @property-read int $discount_precision
  * @property-read array $metadata
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
  * @property-read int|null $listening_requests_count

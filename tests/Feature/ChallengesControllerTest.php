@@ -96,7 +96,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_all_tracks_in_latest_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -139,7 +138,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_all_tracks_in_specified_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -181,7 +179,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_all_tracks_in_specified_challenge_with_wrong_or_invalid_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -214,7 +211,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_all_prizes_won_by_the_user()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -268,7 +264,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_participating_tracks()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -310,7 +305,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_average_vote_in_challenge_of_track_with_no_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -350,7 +344,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_average_vote_in_challenge_of_track_with_specified_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -393,7 +386,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_average_vote_in_challenge_of_track_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -420,7 +412,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_average_vote_in_challenge_of_track_with_wrong_challenge_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -459,7 +450,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_listening_in_challenge_with_no_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -500,7 +490,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_listening_in_challenge_with_specified_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -545,7 +534,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_listening_in_challenge_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -572,7 +560,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_listening_in_challenge_with_wrong_challenge_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -611,7 +598,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_participating_users_in_latest_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -661,7 +647,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_track_vote_by_user_and_challenge_with_no_challenge_and_no_user()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -704,7 +689,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_track_vote_by_user_and_challenge_with_specified_challenge_and_user()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -752,7 +736,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_track_vote_by_user_and_challenge_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -781,7 +764,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_track_vote_by_user_and_challenge_with_wrong_user_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -814,7 +796,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_track_vote_by_user_and_challenge_with_wrong_challenge_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -853,7 +834,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_track_listening_by_user_and_challenge_with_no_challenge_and_no_user()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -900,7 +880,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_track_listening_by_user_and_challenge_with_specified_challenge_and_user()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -951,7 +930,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_track_listening_by_user_and_challenge_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -980,7 +958,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_track_listening_by_user_and_challenge_with_wrong_user_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1013,7 +990,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_track_listening_by_user_and_challenge_with_wrong_challenge_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1052,7 +1028,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_total_average_track_vote_with_specified_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1095,7 +1070,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_total_average_track_vote_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1129,7 +1103,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_total_track_listening_with_specified_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1176,7 +1149,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_number_of_total_track_listening_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1211,7 +1183,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_owned_tracks_in_challenge()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1255,7 +1226,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_owned_tracks_in_challenge_with_no_tracks()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1293,7 +1263,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_participate_in_current_challenge()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1329,7 +1298,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_owned_tracks_in_challenge_with_already_participating_track()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1366,7 +1334,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_owned_tracks_in_challenge_with_wrong_track_id()
     {
-        $this->seed();
 
 
         /**@var User $user */
@@ -1407,7 +1374,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_notification_sent_to_the_winners()
     {
-        $this->seed();
 
         Notification::fake();
 
@@ -1464,7 +1430,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_set_up_challenge()
     {
-        $this->seed();
 
         /** @var Challenges $challenge_older */
         $challenge_older = Challenges::factory()->create();
@@ -1523,7 +1488,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_nine_random_tracks_first_time()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1574,7 +1538,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_nine_random_tracks_nth_time()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1652,7 +1615,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_nine_random_tracks_changed_challenge()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1722,7 +1684,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_get_nine_random_tracks_all_listened()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1812,7 +1773,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_refresh_nine_random_tracks_settings_absent()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1866,7 +1826,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_refresh_nine_random_tracks_four_listened()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -1951,7 +1910,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_refresh_nine_random_tracks_three_listened()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
@@ -2019,7 +1977,6 @@ class ChallengesControllerTest extends TestCase
      */
     public function test_refresh_nine_random_tracks_changed_challenge()
     {
-        $this->seed();
 
         /**@var User $user */
         $this->actingAs(
