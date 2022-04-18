@@ -250,4 +250,66 @@ class CoversControllerTest extends TestCase
             ]
         );
     }
+
+    /** Test a well-formed request to "getUserCreatedCovers" */
+    public function test_get_users_created_covers()
+    {
+        // create a dummy cover, just to get sure it's not counted
+        Covers::factory()->create();
+
+        $this->actingAs(
+            $this->user
+        );
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->withoutExceptionHandling()->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::COVER)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::COVER_CREATED)
+                ->route([
+                    "user_id" => $this->user->id
+                ])
+            );
+            $count = 0;
+            foreach ($response->json("covers") as $val) {
+                $count++;
+            }
+            $this->assertEquals($i, $count);
+            Covers::factory()->create()->update([
+                "creator_id" => $this->user->id
+            ]);
+        }
+    }
+
+    /** Test a well-formed request to "getUserOwnedCovers" */
+    public function test_get_users_owned_covers()
+    {
+
+        // create a dummy cover, just to get sure it's not counted
+        Covers::factory()->create();
+
+        $this->actingAs(
+            $this->user
+        );
+
+        for ($i = 0; $i <= 5; $i++) {
+            $response = $this->withoutExceptionHandling()->get(rroute()
+                ->class(RouteClass::AUTHENTICATED)
+                ->group(RouteGroup::COVER)
+                ->method(RouteMethod::GET)
+                ->name(RouteName::COVER_OWNED)
+                ->route([
+                    "user_id" => $this->user->id
+                ])
+            );
+            $count = 0;
+            foreach ($response->json("covers") as $val) {
+                $count++;
+            }
+            $this->assertEquals($i, $count);
+            Covers::factory()->create()->update([
+                "owner_id" => $this->user->id
+            ]);
+        }
+    }
 }

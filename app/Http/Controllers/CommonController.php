@@ -30,4 +30,13 @@ class CommonController extends Controller
     public function trackUpload(Request $request) {
         return inertia('Tracks/Upload');
     }
+
+    public function coversIndex(Request $request) {
+        return inertia('Covers/Index');
+    }
+
+    public function coverUpload(Request $request) {
+        return inertia('Covers/Upload');
+    }
+
 }

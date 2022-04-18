@@ -56,4 +56,6 @@ enum RouteName: string
 
     case COVER_CREATE = "cover_create";
     case COVER_UPDATE = "cover_update";
+    case COVER_CREATED = "cover_created";
+    case COVER_OWNED = "cover_owned";
 }

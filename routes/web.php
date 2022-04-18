@@ -72,6 +72,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Tracks
     Route::get('/track', [CommonController::class, "tracksIndex"])->name('authenticated.tracks-index');
     Route::get('/track/upload', [CommonController::class, "trackUpload"])->name('authenticated.track-upload');
+
+    // Covers
+    Route::get('/cover', [CommonController::class, "coversIndex"])->name('authenticated.covers-index');
+    Route::get('/cover/upload', [CommonController::class, "coverUpload"])->name('authenticated.cover-upload');
+
 });
 
 Route::prefix("nft")->group(function() {

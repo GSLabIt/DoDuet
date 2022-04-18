@@ -48,6 +48,18 @@
                                     Track Upload
                                 </jet-nav-link>
                             </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.covers-index')" :active="route().current('authenticated.covers-index')">
+                                    Covers
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.cover-upload')" :active="route().current('authenticated.cover-upload')">
+                                    Cover Upload
+                                </jet-nav-link>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

@@ -92,6 +92,74 @@ class CoversController extends Controller
     }
 
     /**
+     * This function gets all the tracks created by the user
+     * @param Request $request
+     * @param string $user_id
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws SafeException
+     */
+    public function getUserCreatedCovers(Request $request, string $user_id): JsonResponse {
+        Validator::validate($request->route()->parameters(), [
+            "user_id" => "required|uuid|exists:users,id",
+        ]);
+
+        $required_columns = ["id", "name"];
+
+        /** @var User $user */
+        $user = User::where("id", $user_id)->first();
+        if(!is_null($user)) {
+            return response()->json([
+                "covers" => $user->createdCovers->map(
+                    function (Covers $item) use($required_columns) {
+                        return $item->only($required_columns);
+                    }
+                )
+            ]);
+        }
+
+        // handle track not found error
+        throw new SafeException(
+            config("error-codes.USER_NOT_FOUND.message"),
+            config("error-codes.USER_NOT_FOUND.code")
+        );
+    }
+
+    /**
+     * This function gets all the tracks owned by the user
+     * @param Request $request
+     * @param string $user_id
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws SafeException
+     */
+    public function getUserOwnedCovers(Request $request, string $user_id): JsonResponse {
+        Validator::validate($request->route()->parameters(), [
+            "user_id" => "required|uuid|exists:users,id",
+        ]);
+
+        $required_columns = ["id", "name"];
+
+        /** @var User $user */
+        $user = User::where("id", $user_id)->first();
+        if(!is_null($user)) {
+            return response()->json([
+                "covers" => $user->ownedCovers->map(
+                    function (Covers $item) use($required_columns) {
+                        return $item->only($required_columns);
+                    }
+                )
+            ]);
+        }
+
+        // handle track not found error
+        throw new SafeException(
+            config("error-codes.USER_NOT_FOUND.message"),
+            config("error-codes.USER_NOT_FOUND.code")
+        );
+    }
+
+    /**
      * @throws SafeException
      */
     public function createCoverNft($cover_id): Covers
