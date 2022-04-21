@@ -47,7 +47,7 @@ class CreateNewUser implements CreatesNewUsers
         secureUser($user)->set("password", $input["password"]);
 
         $user->wallet()->create();
-        $user->wallet->deposit(User::query()->count("id") < 100 ? 3000 : 10);
+        $user->deposit(User::query()->count("id") < 100 ? 3000 : 10);
 
         UserSegmentsController::assignToSegment($user);
 

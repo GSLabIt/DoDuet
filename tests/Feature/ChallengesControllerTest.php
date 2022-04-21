@@ -19,6 +19,7 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
+use Artisan;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -46,12 +47,16 @@ class ChallengesControllerTest extends TestCase
         $this->refreshDatabase();
         $this->seed();
 
+        Artisan::call('cache:clear');
+
         /**@var User $user */
         $user = User::factory()->create();
         $this->user = $user;
 
         $this->actingAs($this->user);
         secureUser($this->user)->set("password", "password");
+        $this->user->wallet()->create();
+        $this->user->deposit(5000);
 
         /**@var User $alice */
         $alice = User::factory()->create();
@@ -59,6 +64,7 @@ class ChallengesControllerTest extends TestCase
 
         $this->actingAs($this->alice);
         secureUser($this->alice)->set("password", "password");
+        $this->alice->wallet()->create();
 
         /**@var User $bob */
         $bob = User::factory()->create();
@@ -66,6 +72,7 @@ class ChallengesControllerTest extends TestCase
 
         $this->actingAs($this->bob);
         secureUser($this->bob)->set("password", "password");
+        $this->bob->wallet()->create();
     }
 
     private function authAsAlice()
@@ -313,9 +320,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
         /** @var Votes $vote */
@@ -458,9 +465,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
 
@@ -498,9 +505,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge_older)->create();
         /** @var Votes $vote */
@@ -655,9 +662,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
         /**@var User $user1 */
@@ -697,9 +704,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge_older)->create();
         /**@var User $user1 */
@@ -842,9 +849,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->create();
         /**@var User $user1 */
@@ -888,9 +895,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge_older)->create();
         /**@var User $user1 */
@@ -1036,9 +1043,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge)->hasAttached($challenge_older)->create();
 
@@ -1111,9 +1118,9 @@ class ChallengesControllerTest extends TestCase
         );
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
         /** @var Tracks $track */
         $track = Tracks::factory()->hasAttached($challenge_older)->hasAttached($challenge)->create();
 
@@ -1261,19 +1268,16 @@ class ChallengesControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_participate_in_current_challenge()
+    public function test_participate_in_current_challenge(): void
     {
 
-        /**@var User $user */
-        $this->actingAs(
-            $user = User::factory()->create()
-        );
+       $this->authAsUser();
 
         /** @var Challenges $challenge */
         $challenge = Challenges::factory()->create();
 
         /** @var Tracks $track */
-        $track = Tracks::factory()->create();
+        $track = Tracks::factory()->create(["owner_id" => $this->user->id, "creator_id" => $this->user->id]);
 
         $response = $this->post(rroute()
             ->class(RouteClass::AUTHENTICATED)
@@ -1378,9 +1382,9 @@ class ChallengesControllerTest extends TestCase
         Notification::fake();
 
         /** @var Challenges $challenge_older */
-        $challenge_older = Challenges::factory()->create();
+        $challenge_older = Challenges::factory()->create(["created_at" => now()->subMinute()]);
         /** @var Challenges $challenge */
-        $challenge = Challenges::factory()->create(["created_at" => now()->addMinute()]);
+        $challenge = Challenges::factory()->create();
 
         /**@var Tracks $track_a */
         $track_a = Tracks::factory()->hasAttached($challenge)->create();
@@ -1672,6 +1676,7 @@ class ChallengesControllerTest extends TestCase
         // check settings content, listened MUST be equal to 0 now
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
+
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(9, $settings_content->track_ids);
         $this->assertEquals(0, $settings_content->listened);
@@ -1753,7 +1758,6 @@ class ChallengesControllerTest extends TestCase
         // check settings content, listened MUST be equal to 0 and available tracks MUST be 6 now (15 - 9)
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $settings_content = settings($user)->get("challenge_nine_random_tracks"); // avoid cache
 
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(6, $settings_content->track_ids);
@@ -1896,7 +1900,6 @@ class ChallengesControllerTest extends TestCase
         // check settings content, listened MUST be equal to 0 and avaible tracks MUST be 8 now (12 - 4)
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $settings_content = settings($user)->get("challenge_nine_random_tracks"); // avoid cache
 
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(8, $settings_content->track_ids);
@@ -1980,7 +1983,7 @@ class ChallengesControllerTest extends TestCase
 
         /**@var User $user */
         $this->actingAs(
-            $user = User::factory()->create()
+            $user = User::factory()->create(["created_at" => now()->addMinute()])
         );
 
         secureUser($user)->set("password", "password");
@@ -2032,11 +2035,9 @@ class ChallengesControllerTest extends TestCase
         // check that the function returned 9 elements
         $this->assertCount(9, $response->json("tracks"));
 
-
         // check settings content, listened MUST be equal to 0 now
         /** @var SettingNineRandomTracks $settings_content */
         $settings_content = settings($user)->get("challenge_nine_random_tracks");
-        $settings_content = settings($user)->get("challenge_nine_random_tracks"); // avoid cache
 
         $this->assertEquals($challenge->id, $settings_content->challenge_id);
         $this->assertCount(9, $settings_content->track_ids);

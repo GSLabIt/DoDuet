@@ -34,7 +34,7 @@ class ChallengesController extends Controller
     public function getAllTracksInLatestChallenge(Request $request): JsonResponse
     {
         return response()->json([
-            "tracks" => Challenges::orderByDesc("created_at")->first()
+            "tracks" => Challenges::orderByDesc("id")->first()
                 ->tracks()
                 ->pluck("id")
         ]);
@@ -124,7 +124,7 @@ class ChallengesController extends Controller
     public function getNumberOfParticipatingTracks(Request $request): JsonResponse
     {
         return response()->json([
-            "participatingTracks" => Challenges::orderByDesc("created_at")->first()
+            "participatingTracks" => Challenges::orderByDesc("id")->first()
                 ->tracks()
                 ->get()
                 ->count()
@@ -163,7 +163,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -217,7 +217,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -248,7 +248,7 @@ class ChallengesController extends Controller
     public function getNumberOfParticipatingUsers(Request $request): JsonResponse
     {
         /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
         return response()->json([
             "participatingUsers" => $challenge->tracks()
                 ->get(['owner_id'])
@@ -292,7 +292,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -366,7 +366,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -482,7 +482,7 @@ class ChallengesController extends Controller
         $user = auth()->user();
 
         /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
 
         return response()->json([
             "tracks" => $challenge->tracks->where("owner_id", $user->id)->pluck("id")
@@ -508,7 +508,7 @@ class ChallengesController extends Controller
         $user = auth()->user();
 
         /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
 
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
@@ -566,7 +566,6 @@ class ChallengesController extends Controller
         $third_place_user = $challenge->thirdPlace;
         //notify the winners based on the number of tracks participating
         if (!is_null($first_place_user)) {
-            logger("NOTIFICA 1");
             $prize = $challenge->total_prize * $challenge->first_prize_rate;
             $first_place_user->notify(new ChallengeWinNotification(
                 $challenge->id,
@@ -618,7 +617,7 @@ class ChallengesController extends Controller
     public static function setUpChallenge(): void
     {
         /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
 
         // get the leaderboard (all the tracks in the elections ranked)
         $unsorted_leaderboard = collect();
@@ -693,7 +692,7 @@ class ChallengesController extends Controller
         /** @var User $user */
         $user = auth()->user();
         /** @var Challenges $current_challenge */
-        $current_challenge = Challenges::orderByDesc("created_at")->first();
+        $current_challenge = Challenges::orderByDesc("id")->first();
         $required_columns = ["id", "name", "description", "duration", "cover_id"];
 
         // if the setting is already set
@@ -750,15 +749,23 @@ class ChallengesController extends Controller
         // get all the ids
         $nine_random_tracks_ids = $nine_random_tracks->pluck("id")->toArray();
 
+        $settings_DTO = (new SettingNineRandomTracks(
+            challenge_id: $current_challenge->id,
+            track_ids: $nine_random_tracks_ids,
+            listened: 0
+        ))->toJson();
         // update the settings
-        settings($user)->set(
-            "challenge_nine_random_tracks",
-            (new SettingNineRandomTracks(
-                challenge_id: $current_challenge->id,
-                track_ids: $nine_random_tracks_ids,
-                listened: 0
-            ))->toJson()
-        );
+        if (settings($user)->has("challenge_nine_random_tracks")) {
+            settings($user)->update(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        } else {
+            settings($user)->set(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        }
 
         return response()->json([
             "tracks" => $nine_random_tracks
@@ -777,7 +784,7 @@ class ChallengesController extends Controller
         /** @var User $user */
         $user = auth()->user();
         /** @var Challenges $current_challenge */
-        $current_challenge = Challenges::orderByDesc("created_at")->first();
+        $current_challenge = Challenges::orderByDesc("id")->first();
 
         $required_columns = ["id", "name", "description", "duration", "cover_id"];
         // check if settings exists for malicious requests (normally getNineRandomTracks should already have set something before)
@@ -814,7 +821,7 @@ class ChallengesController extends Controller
                 config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.code")
             );
         }
-        $random_number = $available_tracks < 9 ? $available_tracks : 9;
+        $random_number = min($available_tracks, 9);
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
             ->select([...$required_columns, "creator_id"])
@@ -827,15 +834,24 @@ class ChallengesController extends Controller
 
         // get all the ids
         $nine_random_tracks_ids = $nine_random_tracks->pluck("id")->toArray();
+
+        $settings_DTO = (new SettingNineRandomTracks(
+            challenge_id: $current_challenge->id,
+            track_ids: $nine_random_tracks_ids,
+            listened: 0
+        ))->toJson();
         // update the settings
-        settings($user)->set(
-            "challenge_nine_random_tracks",
-            (new SettingNineRandomTracks(
-                challenge_id: $current_challenge->id,
-                track_ids: $nine_random_tracks_ids,
-                listened: 0,
-            ))->toJson()
-        );
+        if (settings($user)->has("challenge_nine_random_tracks")) {
+            settings($user)->update(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        } else {
+            settings($user)->set(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        }
 
         return response()->json([
             "tracks" => $nine_random_tracks

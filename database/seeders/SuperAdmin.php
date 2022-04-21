@@ -24,7 +24,7 @@ class SuperAdmin extends Seeder
         secureUser($user)->set("password", env("SUPER_ADMIN_PSW"));
 
         $user->wallet()->create();
-        $user->wallet->deposit(5000);
+        $user->deposit(5000);
 
         UserSegmentsController::assignToSegment($user);
         $user->assignRole("super-admin");

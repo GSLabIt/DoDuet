@@ -85,16 +85,13 @@ namespace App\Models{
  * @property-read array $metadata
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
  * @property-read int|null $listening_requests_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $receivedTransactions
- * @property-read int|null $received_transactions_count
  * @property-read \App\Models\User|null $secondPlace
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $sentTransactions
- * @property-read int|null $sent_transactions_count
  * @property-read \App\Models\User|null $thirdPlace
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tracks[] $tracks
  * @property-read int|null $tracks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\ChallengesFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newQuery()
@@ -176,15 +173,12 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \App\Models\User $owner
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $receivedTransactions
- * @property-read int|null $received_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $sentTransactions
- * @property-read int|null $sent_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \App\Models\Tracks|null $track
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\CoversFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newQuery()
@@ -404,15 +398,12 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \App\Models\User $owner
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $receivedTransactions
- * @property-read int|null $received_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $sentTransactions
- * @property-read int|null $sent_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \App\Models\Tracks|null $track
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\LyricsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newQuery()
@@ -920,16 +911,13 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \App\Models\User $owner
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $receivedTransactions
- * @property-read int|null $received_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $reports
  * @property-read int|null $reports_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $sentTransactions
- * @property-read int|null $sent_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\TracksFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newQuery()
@@ -1011,8 +999,6 @@ namespace App\Models{
  * @property-read int|null $received_messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tips[] $receivedTips
  * @property-read int|null $received_tips_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $receivedTransactions
- * @property-read int|null $received_transactions_count
  * @property-read \Doinc\Modules\Referral\Models\Referral|null $referral
  * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Modules\Referral\Models\Referred[] $referred
  * @property-read int|null $referred_count
@@ -1025,8 +1011,6 @@ namespace App\Models{
  * @property-read int|null $second_places_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Messages[] $sentMessages
  * @property-read int|null $sent_messages_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $sentTransactions
- * @property-read int|null $sent_transactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Modules\Settings\Models\UserSettings[] $settings
  * @property-read int|null $settings_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
@@ -1041,6 +1025,7 @@ namespace App\Models{
  * @property-read int|null $user_segments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
@@ -1107,12 +1092,9 @@ namespace App\Models{
  * @property-read \App\Models\Challenges $challenge
  * @property-read string $cost
  * @property-read array $metadata
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $receivedTransactions
- * @property-read int|null $received_transactions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Wallet\Models\Transaction[] $sentTransactions
- * @property-read int|null $sent_transactions_count
  * @property-read \App\Models\Tracks $track
  * @property-read \App\Models\User $voter
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\VotesFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newQuery()

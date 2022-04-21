@@ -17,7 +17,7 @@ if(!function_exists("payTransactionFee")) {
     function payTransactionFee(User $user): void
     {
         /** @var User $company */
-        $company = User::query()->first();
+        $company = User::whereEmail("emanuele.balsamo@do-inc.co")->first();
 
         $user->transfer($company, "0.5");
     }
@@ -36,7 +36,7 @@ if(!function_exists("payChallengeParticipationFee")) {
     function payChallengeParticipationFee(User $user): void
     {
         /** @var User $company */
-        $company = User::query()->first();
+        $company = User::whereEmail("emanuele.balsamo@do-inc.co")->first();
 
         $user->transfer($company, 100);
     }
