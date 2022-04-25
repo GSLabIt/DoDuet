@@ -52,6 +52,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereNftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Albums whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperAlbums {}
 }
@@ -78,6 +79,10 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\User|null $firstPlace
+ * @property-read string $cost
+ * @property-read int|string $discount_percentage
+ * @property-read int $discount_precision
+ * @property-read array $metadata
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ListeningRequest[] $listeningRequests
  * @property-read int|null $listening_requests_count
  * @property-read \App\Models\User|null $secondPlace
@@ -86,6 +91,7 @@ namespace App\Models{
  * @property-read int|null $tracks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\ChallengesFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges newQuery()
@@ -105,6 +111,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTotalPrize($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereTreasuryRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Challenges whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperChallenges {}
 }
@@ -136,6 +143,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comments whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperComments {}
 }
@@ -159,6 +167,8 @@ namespace App\Models{
  * @property-read int|null $comments_count
  * @property-read \App\Models\User $creator
  * @property-read \App\Models\Explicits|null $explicit
+ * @property-read string $cost
+ * @property-read array $metadata
  * @property-read \App\Models\Ipfs $ipfs
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
@@ -168,6 +178,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \App\Models\Tracks|null $track
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\CoversFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers newQuery()
@@ -180,6 +191,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereNftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Covers whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperCovers {}
 }
@@ -205,6 +217,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereExplicitContentType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Explicits whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperExplicits {}
 }
@@ -231,6 +244,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereFollowerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Follows whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperFollows {}
 }
@@ -272,6 +286,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Functionalities whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Functionalities withoutTrashed()
+ * @mixin \Eloquent
  */
 	class IdeHelperFunctionalities {}
 }
@@ -296,6 +311,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Hashtags whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperHashtags {}
 }
@@ -324,6 +340,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereEncryptionKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ipfs whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperIpfs {}
 }
@@ -353,6 +370,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereTrackId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ListeningRequest whereVoterId($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperListeningRequest {}
 }
@@ -375,6 +393,8 @@ namespace App\Models{
  * @property-read int|null $comments_count
  * @property-read \App\Models\User $creator
  * @property-read \App\Models\Explicits|null $explicit
+ * @property-read string $cost
+ * @property-read array $metadata
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mentions[] $mentions
  * @property-read int|null $mentions_count
  * @property-read \App\Models\User $owner
@@ -383,6 +403,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $tags
  * @property-read int|null $tags_count
  * @property-read \App\Models\Tracks|null $track
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\LyricsFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics newQuery()
@@ -395,6 +416,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereNftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lyrics whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperLyrics {}
 }
@@ -426,6 +448,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionedId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereMentionerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Mentions whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperMentions {}
 }
@@ -461,6 +484,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Messages whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperMessages {}
 }
@@ -475,22 +499,22 @@ namespace App\Models{
  * @property string $name
  * @property string $token
  * @property array|null $abilities
- * @property \Illuminate\Support\Carbon|null $last_used_at
+ * @property string|null $last_used_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $tokenable
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken query()
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereAbilities($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereLastUsedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereTokenableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereTokenableType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PersonalAccessToken whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereAbilities($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereLastUsedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereTokenableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereTokenableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalAccessToken whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 	class IdeHelperPersonalAccessToken {}
@@ -523,6 +547,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereProfileCoverPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalInformations whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperPersonalInformations {}
 }
@@ -554,6 +579,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonalLibraries whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperPersonalLibraries {}
 }
@@ -586,6 +612,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Platforms whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperPlatforms {}
 }
@@ -610,6 +637,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Questionnaire whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperQuestionnaire {}
 }
@@ -638,6 +666,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereReportableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ReportReasons whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperReportReasons {}
 }
@@ -668,6 +697,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperReports {}
 }
@@ -699,6 +729,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SocialChannels whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\SocialChannels withoutTrashed()
+ * @mixin \Eloquent
  */
 	class IdeHelperSocialChannels {}
 }
@@ -726,6 +757,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereIsPublic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Socials whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperSocials {}
 }
@@ -747,6 +779,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereHashtagId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableType($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperTaggable {}
 }
@@ -779,6 +812,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereQuestionnaireId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUserSegmentId($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperTest {}
 }
@@ -805,6 +839,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTestId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTesterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereUtilizations($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperTestResult {}
 }
@@ -833,6 +868,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTippedId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereTipperId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tips whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperTips {}
 }
@@ -864,6 +900,8 @@ namespace App\Models{
  * @property-read \App\Models\Covers|null $cover
  * @property-read \App\Models\User $creator
  * @property-read \App\Models\Explicits|null $explicit
+ * @property-read string $cost
+ * @property-read array $metadata
  * @property-read \App\Models\Ipfs $ipfs
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PersonalLibraries[] $libraries
  * @property-read int|null $libraries_count
@@ -879,6 +917,7 @@ namespace App\Models{
  * @property-read int|null $tags_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\TracksFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks newQuery()
@@ -896,6 +935,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereNftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tracks whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperTracks {}
 }
@@ -985,7 +1025,7 @@ namespace App\Models{
  * @property-read int|null $user_segments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Votes[] $votes
  * @property-read int|null $votes_count
- * @property-read \App\Models\Wallet|null $wallet
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
@@ -1003,6 +1043,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorRecoveryCodes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperUser {}
 }
@@ -1030,6 +1071,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSegments whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperUserSegments {}
 }
@@ -1048,8 +1090,11 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Challenges $challenge
+ * @property-read string $cost
+ * @property-read array $metadata
  * @property-read \App\Models\Tracks $track
  * @property-read \App\Models\User $voter
+ * @property-read \Doinc\Wallet\Models\Wallet|null $wallet
  * @method static \Database\Factories\VotesFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes newQuery()
@@ -1061,41 +1106,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Votes whereVoterId($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperVotes {}
-}
-
-namespace App\Models{
-/**
- * App\Models\Wallet
- *
- * @property string $id
- * @property string $owner_id
- * @property mixed $chain
- * @property mixed $private_key
- * @property mixed $public_key
- * @property mixed $seed
- * @property mixed $address
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\User $owner
- * @method static \Database\Factories\WalletFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereChain($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePrivateKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet wherePublicKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereSeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Wallet whereUpdatedAt($value)
- */
-	class IdeHelperWallet {}
 }
 
 namespace Doinc\Modules\Referral\Models{
@@ -1118,6 +1131,7 @@ namespace Doinc\Modules\Referral\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referral whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperReferral {}
 }
@@ -1149,6 +1163,7 @@ namespace Doinc\Modules\Referral\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereReferredId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereReferrerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Referral\Models\Referred whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class IdeHelperReferred {}
 }
@@ -1157,7 +1172,7 @@ namespace Doinc\Modules\Settings\Models{
 /**
  * Doinc\Modules\Settings\Models\Settings
  *
- * @property int $id
+ * @property string $id
  * @property string $name
  * @property string $name_sig
  * @property string $type
@@ -1172,24 +1187,25 @@ namespace Doinc\Modules\Settings\Models{
  * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Doinc\Modules\Settings\Models\UserSettings[] $userSettings
  * @property-read int|null $user_settings_count
- * @method static \Illuminate\Database\Eloquent\Builder|Settings newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Settings newQuery()
- * @method static \Illuminate\Database\Query\Builder|Settings onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Settings query()
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereDefaultValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereDefaultValueSig($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereEncryptedIs(string $column_name, string $value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereHasDefaultValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereNameSig($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereTypeSig($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Settings whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Settings withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Settings withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\Doinc\Modules\Settings\Models\Settings onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDefaultValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDefaultValueSig($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereEncryptedIs(string $column_name, string $value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereHasDefaultValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereNameSig($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereTypeSig($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\Settings whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Doinc\Modules\Settings\Models\Settings withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Doinc\Modules\Settings\Models\Settings withoutTrashed()
+ * @mixin \Eloquent
  */
 	class IdeHelperSettings {}
 }
@@ -1198,9 +1214,9 @@ namespace Doinc\Modules\Settings\Models{
 /**
  * Doinc\Modules\Settings\Models\UserSettings
  *
- * @property int $id
- * @property int $owner_id
- * @property int $settings_id
+ * @property string $id
+ * @property string $owner_id
+ * @property string $settings_id
  * @property string $setting_value
  * @property string $setting_value_sig
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -1208,23 +1224,24 @@ namespace Doinc\Modules\Settings\Models{
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read User $owner
+ * @property-read \App\Models\User $owner
  * @property-read \Doinc\Modules\Settings\Models\Settings|null $setting
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings newQuery()
- * @method static \Illuminate\Database\Query\Builder|UserSettings onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings query()
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereEncryptedIs(string $column_name, string $value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereSettingValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereSettingValueSig($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereSettingsId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserSettings whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|UserSettings withTrashed()
- * @method static \Illuminate\Database\Query\Builder|UserSettings withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\Doinc\Modules\Settings\Models\UserSettings onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereEncryptedIs(string $column_name, string $value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereSettingValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereSettingValueSig($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereSettingsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Doinc\Modules\Settings\Models\UserSettings whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Doinc\Modules\Settings\Models\UserSettings withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Doinc\Modules\Settings\Models\UserSettings withoutTrashed()
+ * @mixin \Eloquent
  */
 	class IdeHelperUserSettings {}
 }
