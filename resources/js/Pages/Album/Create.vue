@@ -6,10 +6,10 @@
   -->
 
 <template>
-    <app-layout title="Cover creation">
+    <app-layout title="Album creation">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Upload cover
+                Create album
             </h2>
         </template>
 
@@ -19,8 +19,10 @@
                     <form @submit.prevent="submit">
                         <label for="name">Name:</label>
                         <input id="name" v-model="form.name"/>
-                        <label for="img">Audio File:</label>
-                        <input id="img" type="file" @change="form.img = $event.target.files[0]"/>
+                        <label for="description">Description:</label>
+                        <textarea id="description" v-model="form.description"/>
+                        <label for="cover">Cover:</label>
+                        <select id="cover" type="select" v-model="form.cover_id"></select>
                         <button type="submit">Submit</button>
                     </form>
                 </div>
@@ -42,7 +44,8 @@ export default defineComponent({
         return {
             form: {
                 name: null,
-                img: null
+                description: null,
+                cover_id: null
             }
         }
     },
@@ -57,15 +60,15 @@ export default defineComponent({
                 }
             );
             axios
-                .post(route("authenticated.cover.post.cover_create"), formData, {
+                .post(route("authenticated.album.post.album_create"), formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
                 .then(() => {
                     new Toaster({
-                        message: 'Cover creata',
-                        code: 'yeee'
+                        message: 'Album creato',
+                        type: "success"
                     });
                 })
                 .catch(error => (new Toaster({

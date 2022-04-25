@@ -77,6 +77,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/cover', [CommonController::class, "coversIndex"])->name('authenticated.covers-index');
     Route::get('/cover/upload', [CommonController::class, "coverUpload"])->name('authenticated.cover-upload');
 
+    // Albums
+    Route::get('/album', [CommonController::class, "albumsIndex"])->name('authenticated.albums-index');
+    Route::get('/album/create', [CommonController::class, "albumCreate"])->name('authenticated.album-create');
+
+    // Lyrics
+    Route::get('/lyric', [CommonController::class, "lyricsIndex"])->name('authenticated.lyrics-index');
+    Route::get('/lyric/create', [CommonController::class, "lyricCreate"])->name('authenticated.lyric-create');
+
 });
 
 Route::prefix("nft")->group(function() {

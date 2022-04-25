@@ -92,7 +92,7 @@ class CoversController extends Controller
     }
 
     /**
-     * This function gets all the tracks created by the user
+     * This function gets all the covers created by the user
      * @param Request $request
      * @param string $user_id
      * @return JsonResponse
@@ -118,7 +118,7 @@ class CoversController extends Controller
             ]);
         }
 
-        // handle track not found error
+        // handle user not found error
         throw new SafeException(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
@@ -126,7 +126,7 @@ class CoversController extends Controller
     }
 
     /**
-     * This function gets all the tracks owned by the user
+     * This function gets all the covers owned by the user
      * @param Request $request
      * @param string $user_id
      * @return JsonResponse
@@ -152,7 +152,7 @@ class CoversController extends Controller
             ]);
         }
 
-        // handle track not found error
+        // handle user not found error
         throw new SafeException(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")

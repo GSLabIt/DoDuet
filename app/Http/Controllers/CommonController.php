@@ -32,11 +32,27 @@ class CommonController extends Controller
     }
 
     public function coversIndex(Request $request) {
-        return inertia('Covers/Index');
+        return inertia('Cover/Index');
     }
 
     public function coverUpload(Request $request) {
-        return inertia('Covers/Upload');
+        return inertia('Cover/Upload');
+    }
+
+    public function albumsIndex(Request $request) {
+        return inertia('Album/Index');
+    }
+
+    public function albumCreate(Request $request) {
+        return inertia('Album/Create');
+    }
+
+    public function lyricsIndex(Request $request) {
+        return inertia('Lyric/Index');
+    }
+
+    public function lyricCreate(Request $request) {
+        return inertia('Lyric/Create');
     }
 
 }

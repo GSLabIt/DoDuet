@@ -60,7 +60,32 @@
                                     Cover Upload
                                 </jet-nav-link>
                             </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.lyrics-index')" :active="route().current('authenticated.lyrics-index')">
+                                    Lyrics
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.lyric-create')" :active="route().current('authenticated.lyric-create')">
+                                    Lyric Create
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.albums-index')" :active="route().current('authenticated.albums-index')">
+                                    Albums
+                                </jet-nav-link>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('authenticated.album-create')" :active="route().current('authenticated.album-create')">
+                                    Albums Create
+                                </jet-nav-link>
+                            </div>
                         </div>
+
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div class="ml-3 relative">

@@ -58,4 +58,14 @@ enum RouteName: string
     case COVER_UPDATE = "cover_update";
     case COVER_CREATED = "cover_created";
     case COVER_OWNED = "cover_owned";
+
+    case ALBUM_CREATE = "album_create";
+    case ALBUM_UPDATE = "album_update";
+    case ALBUM_CREATED = "album_created";
+    case ALBUM_OWNED = "album_owned";
+
+    case LYRIC_CREATE = "lyric_create";
+    case LYRIC_UPDATE = "lyric_update";
+    case LYRIC_CREATED = "lyric_created";
+    case LYRIC_OWNED = "lyric_owned";
 }
