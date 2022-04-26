@@ -43,7 +43,6 @@ import {defineComponent} from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Toaster from "../../Composition/toaster";
 import {useForm} from "@inertiajs/inertia-vue3";
-// TODO: list track (id, name, description, nft_id, duration) + modal update + track in election, another page for upload
 
 export default defineComponent({
     components: {

@@ -140,11 +140,32 @@ class User extends Authenticatable implements Customer
      * |
      */
 
-
     public function wallet(): MorphOne
     {
         return $this->morphOne(Wallet::class, "holder");
     }
+
+
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Persona section
+     * |--------------------------------------------------------------------------
+     * |
+     * | Define all the _persona_ related methods here
+     * |
+     */
+
+    public function personaInquiry(): HasOne
+    {
+        return $this->hasOne(PersonaInquiry::class);
+    }
+
+    public function personaAccount(): HasOne
+    {
+        return $this->hasOne(PersonaAccount::class);
+    }
+
 
 
     /**

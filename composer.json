@@ -16,7 +16,7 @@
         "ext-zip": "*",
         "do-inc/commander-module": "^1.0",
         "do-inc/crypter-module": "^1.0",
-        "do-inc/laravel-persona-kyc": "^0.10.20",
+        "do-inc/laravel-persona-kyc": "^0.10.21",
         "do-inc/laravel-wallet": "^1.0",
         "do-inc/referral-module": "^1.0",
         "do-inc/settings-module": "^1.0",

@@ -68,9 +68,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Challenge
     Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('authenticated.challenge-index');
 
-    // Tracks
-    Route::get('/track', [CommonController::class, "tracksIndex"])->name('authenticated.tracks-index');
-    Route::get('/track/upload', [CommonController::class, "trackUpload"])->name('authenticated.track-upload');
+    // MUST have kyc
+    Route::middleware(["has_kyc"])->group(function () {
+        // Tracks
+        Route::get('/track', [CommonController::class, "tracksIndex"])->name('authenticated.tracks-index');
+        Route::get('/track/upload', [CommonController::class, "trackUpload"])->name('authenticated.track-upload');
+    });
 });
 
 Route::prefix("nft")->group(function() {

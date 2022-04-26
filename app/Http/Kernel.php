@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\BannedMiddleware;
 use App\Http\Middleware\EnsureFunctionalityIsEnabled;
 use App\Http\Middleware\EnsureHasPlatformAccess;
+use App\Http\Middleware\KycChecker;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
         'banned' => BannedMiddleware::class,
         'functionality.enabled' => EnsureFunctionalityIsEnabled::class,
         'auth.platform' => EnsureHasPlatformAccess::class,
+        'has_kyc' => KycChecker::class,
     ];
 
     /**

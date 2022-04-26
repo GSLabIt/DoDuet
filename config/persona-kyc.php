@@ -27,7 +27,7 @@ return [
     */
     "templates" => [
         "GOVERNMENT_ID" => "itmplv_tGpKFGNG9dsvZS5QSHr9P7Zz",
-        "GOVERNMENT_ID_AND_SELFIE" => "itmplv_tGpKFGNG9dsvZS5QSHr9P7Zz"
+        "GOVERNMENT_ID_AND_SELFIE" => "itmpl_qsPvbUsTWT1fv6wWPSM3pjXB"
     ],
 
     /*
