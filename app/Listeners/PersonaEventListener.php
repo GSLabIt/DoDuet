@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Models\PersonaAccount;
 use App\Models\PersonaInquiry;
 use App\Models\PersonaVerification;
-use App\Models\User;
 use Carbon\Carbon;
 use Doinc\PersonaKyc\Models\Account;
 use Doinc\PersonaKyc\Models\Inquiry;
@@ -63,7 +62,7 @@ class PersonaEventListener
         PersonaAccount::updateOrCreate(
             [ // research and optionally merged for create params
                 "persona_id" => $event->id,
-                "reference_id" => $event->refererence_id,
+                "reference_id" => $event->reference_id,
                 "created_at" => $event->created_at
             ],
             [  // update params

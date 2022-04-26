@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('persona_verifications', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string("persona_id")->unique();
-            $table->string("inquiry_id");
+            $table->string("inquiry_id")->unique();
             $table->text('status');
             $table->timestamp('created_at');
             $table->timestamp('submitted_at')->nullable();
