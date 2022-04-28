@@ -7,3 +7,25 @@
     backdrop-filter: blur(15px);
     filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
 }
+
+/*body{
+    background-color: #FFCAFF;
+}*/
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: lightgray;
+    opacity: 50;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 10px;
+}

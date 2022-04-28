@@ -1,0 +1,542 @@
+/*
+ * Copyright (C) 2022 Do inc. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>
+ */
+
+@font-face {
+	font-family: "Font Awesome 5 Brands";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-brands-400-0e911e.woff2) format("woff2"), url(/assets/webfonts/pro-fa-brands-400-0e911e.ttf) format("truetype");
+	unicode-range: U+e007, U+e052, U+e055, U+e077-e079, U+e07d-e081, U+f092, U+f0d4-f0d5, U+f113, U+f13c, U+f15a, U+f16e, U+f170-f171, U+f17d, U+f180, U+f184, U+f1a5-f1a6, U+f1a9-f1aa, U+f1b5, U+f1bd, U+f1cb-f1cc, U+f1d1-f1d4, U+f1ee, U+f1f2-f1f5, U+f208-f209, U+f20d, U+f211, U+f23e, U+f24b-f24c, U+f25e, U+f260-f261, U+f265, U+f268-f269, U+f26d-f26e, U+f27c, U+f27e, U+f280, U+f282, U+f284, U+f286, U+f293-f294, U+f296, U+f2a5, U+f2b3-f2b4, U+f2d5-f2d8, U+f369-f375, U+f378, U+f37a-f37d, U+f37f-f380, U+f383-f385, U+f388, U+f38b-f38f, U+f391, U+f394-f397, U+f399-f39a, U+f39d-f39e, U+f3a1-f3a4, U+f3a6-f3a8, U+f3aa, U+f3ad-f3b2, U+f3b4-f3b8, U+f3ba-f3bc, U+f415-f417, U+f41c, U+f420-f421, U+f423, U+f426-f427, U+f42c-f42e, U+f430, U+f44d, U+f452, U+f4e6-f4f5, U+f50a-f50e, U+f592, U+f5f1, U+f5f7, U+f5fa, U+f642, U+f6af, U+f6ca, U+f6cc, U+f6dc, U+f77a, U+f785, U+f789, U+f78d, U+f790-f791, U+f797-f799, U+f7b0-f7b1, U+f834-f83a, U+f841, U+f89e, U+f8a6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Brands";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-brands-400-6b2783.woff2) format("woff2"), url(/assets/webfonts/pro-fa-brands-400-6b2783.ttf) format("truetype");
+	unicode-range: U+e013, U+e07b, U+e084, U+f081-f082, U+f08c, U+f099-f09b, U+f0d2-f0d3, U+f13b, U+f167, U+f16b-f16d, U+f179-f17c, U+f17e, U+f18c, U+f19a-f19b, U+f1a0, U+f1b4, U+f1bc, U+f1be, U+f1e8, U+f1ed, U+f1f0-f1f1, U+f20e, U+f210, U+f213-f214, U+f232, U+f23a, U+f26b, U+f270, U+f288, U+f299, U+f2a6, U+f2b0, U+f2c5-f2c6, U+f2e0, U+f368, U+f379, U+f392-f393, U+f39f, U+f3a9, U+f3ab-f3ac, U+f3b9, U+f3c0, U+f3c7, U+f3ca, U+f3e2, U+f3eb-f3ec, U+f3f8, U+f3fe, U+f419, U+f41b, U+f431, U+f4d5, U+f4e4, U+f4f8-f4f9, U+f514, U+f5b5, U+f6c9, U+f731, U+f77b, U+f7af, U+f7e1, U+f83b
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Brands";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-brands-400-46adb8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-brands-400-46adb8.ttf) format("truetype");
+	unicode-range: U+e01a, U+e01e, U+e049, U+e056-e057, U+e07a, U+e07c, U+e082-e083, U+e087-e088, U+f0e1, U+f136, U+f168-f169, U+f173-f174, U+f181, U+f189-f18b, U+f18d, U+f194, U+f198, U+f19e, U+f1a1-f1a4, U+f1a7-f1a8, U+f1b6-f1b7, U+f1ca, U+f1d0, U+f1d5-f1d7, U+f1e7, U+f1e9, U+f202-f203, U+f212, U+f215-f216, U+f231, U+f237, U+f23b-f23d, U+f263-f264, U+f266-f267, U+f26a, U+f27d, U+f281, U+f285, U+f287, U+f289-f28a, U+f297-f298, U+f2a9-f2ae, U+f2b1-f2b2, U+f2b8, U+f2c4, U+f2d9-f2da, U+f2dd-f2de, U+f35c, U+f3bd, U+f3c3-f3c4, U+f3c6, U+f3c8, U+f3cb-f3cc, U+f3d0, U+f3d2-f3dc, U+f3df, U+f3e1, U+f3e3-f3e4, U+f3e6-f3ea, U+f3ee-f3ef, U+f3f3, U+f3f5-f3f7, U+f3f9, U+f402-f405, U+f407-f40d, U+f411-f414, U+f41a, U+f41d-f41f, U+f425, U+f428-f42b, U+f42f, U+f457, U+f459, U+f4e5, U+f4f6-f4f7, U+f50f-f513, U+f59e, U+f5a3, U+f5a8, U+f5b2, U+f5be, U+f5c6, U+f5cc, U+f5cf, U+f60f, U+f612, U+f63f, U+f69d, U+f704, U+f730, U+f75d, U+f7b3, U+f7bb-f7bc, U+f7c6, U+f7d3, U+f7d6, U+f7df-f7e0, U+f7e3, U+f83c-f83d, U+f83f-f840, U+f842, U+f8ca, U+f8d2, U+f8e1, U+f8e8
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-180707.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-180707.ttf) format("truetype");
+	unicode-range: U+e00c-e00f, U+e011-e012, U+e05c-e05f, U+e061-e066, U+f033, U+f03c, U+f0a0, U+f0a4-f0a5, U+f0a7, U+f0fb, U+f21e, U+f252-f25b, U+f2a3, U+f2c1-f2c2, U+f2e4, U+f2ee, U+f300, U+f307, U+f30e, U+f310-f315, U+f3b3, U+f3e0, U+f453-f454, U+f461, U+f479, U+f47b-f47c, U+f47f, U+f4bc-f4c6, U+f4c9, U+f533-f534, U+f58f, U+f591, U+f593, U+f5f9, U+f665, U+f667-f669, U+f66b-f66e, U+f684, U+f6de, U+f6e4-f6e8, U+f6ea-f6eb, U+f6ed-f6f4, U+f74f, U+f751, U+f7a7-f7ae, U+f7f2, U+f806-f809, U+f80b, U+f80d-f811, U+f86a-f86c, U+f86f, U+f8c0-f8c6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-548601.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-548601.ttf) format("truetype");
+	unicode-range: U+e04b-e050, U+e058, U+e073, U+e075, U+e085-e086, U+f00d, U+f026-f028, U+f0d0, U+f157, U+f159, U+f193, U+f221, U+f226, U+f228, U+f235, U+f2d0-f2d1, U+f2e2, U+f2e7, U+f40f, U+f45f-f460, U+f492, U+f495-f497, U+f4bb, U+f4e1, U+f4e3, U+f505-f507, U+f509, U+f5b6, U+f5c5, U+f5cb, U+f5cd-f5ce, U+f5f8, U+f63e, U+f6a6-f6a7, U+f6a9-f6ad, U+f729-f72d, U+f770-f771, U+f774-f777, U+f7a0-f7a1, U+f7e2, U+f831, U+f83e, U+f898-f89b, U+f8ed, U+f8f0-f8f2
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-882569.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-882569.ttf) format("truetype");
+	unicode-range: U+e014-e016, U+e018-e019, U+e067, U+f000, U+f002, U+f00e, U+f010, U+f076, U+f094, U+f0ae, U+f0ca-f0cb, U+f0f4, U+f10b, U+f124, U+f127, U+f195, U+f1cd, U+f222-f224, U+f227, U+f229-f22b, U+f276, U+f279-f27a, U+f30a, U+f30d, U+f31e, U+f337, U+f348, U+f34b, U+f355, U+f3c1-f3c2, U+f3c9, U+f3cd, U+f3cf, U+f3d1, U+f455, U+f4a2-f4ab, U+f4b6, U+f4cb, U+f536-f53d, U+f561, U+f57b, U+f59f-f5a0, U+f5a6-f5a7, U+f5fc, U+f5fe-f601, U+f603-f60e, U+f610-f611, U+f630, U+f650, U+f652, U+f66f-f672, U+f676, U+f678, U+f688-f689, U+f6f6-f6f9, U+f6fb-f6fd, U+f74a, U+f752-f754, U+f78c, U+f7b4-f7b5, U+f7b7, U+f7f4, U+f812, U+f870, U+f872-f874, U+f87a, U+f8af, U+f8c8-f8c9, U+f8cb, U+f8ce-f8d1
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-5bd1b2.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-5bd1b2.ttf) format("truetype");
+	unicode-range: U+e059-e05a, U+f01e, U+f021, U+f036-f039, U+f047-f049, U+f05e, U+f069, U+f07d-f07e, U+f08b, U+f08e, U+f090, U+f0e2, U+f0ec, U+f0fc, U+f100-f105, U+f107, U+f148-f149, U+f15d-f15e, U+f160-f163, U+f175-f178, U+f19c, U+f1fa, U+f236, U+f240-f245, U+f290-f291, U+f2b9, U+f31d, U+f336, U+f33d-f33e, U+f340-f345, U+f34e, U+f361, U+f364, U+f366, U+f376-f377, U+f432-f434, U+f462, U+f464-f465, U+f487, U+f54d, U+f550, U+f557, U+f5d1-f5d4, U+f616, U+f640, U+f644-f646, U+f666, U+f6ae, U+f6b0, U+f6b2-f6b5, U+f732, U+f779, U+f77d-f77e, U+f7e5, U+f7f9, U+f828, U+f843-f844, U+f847, U+f881-f88f, U+f8a0-f8a3, U+f8f4-f8f9
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-ee9a34.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-ee9a34.ttf) format("truetype");
+	unicode-range: U+e025-e02e, U+e06a-e06d, U+e070, U+f022, U+f029, U+f074, U+f079, U+f09e, U+f0c4, U+f10d, U+f122, U+f14d, U+f156, U+f158, U+f197, U+f1de, U+f1e0, U+f20b, U+f24e, U+f277, U+f2dc, U+f2ea, U+f2f1, U+f2f5-f2f6, U+f2f8-f2fb, U+f30b, U+f347, U+f34c, U+f356, U+f362, U+f365, U+f367, U+f3ed, U+f3f1, U+f410, U+f45a-f45b, U+f463, U+f480, U+f486, U+f488-f489, U+f48d, U+f4d4, U+f4d6, U+f4d9, U+f515-f516, U+f546-f547, U+f54a-f54c, U+f54f, U+f553, U+f61a-f620, U+f63d, U+f641, U+f685-f686, U+f68a-f694, U+f6a0, U+f707-f70a, U+f70d, U+f70f-f714, U+f716, U+f75b, U+f75e-f761, U+f7b9, U+f7be-f7c4, U+f7cc, U+f7d9, U+f81a-f822, U+f87e-f880, U+f8d8, U+f8da-f8de, U+f8f3
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-d5bbe9.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-d5bbe9.ttf) format("truetype");
+	unicode-range: U+e017, U+e01f, U+e024, U+e045, U+e060, U+f001, U+f004-f005, U+f007, U+f00c, U+f011-f012, U+f015, U+f017, U+f019, U+f023-f024, U+f02c-f02d, U+f02f-f031, U+f03a, U+f03d-f03e, U+f040-f041, U+f04a-f04e, U+f060-f065, U+f067-f068, U+f06b-f06d, U+f072, U+f075, U+f077, U+f07b, U+f084, U+f091, U+f093, U+f095, U+f09d, U+f0a6, U+f0ac-f0ad, U+f0b0, U+f0c0-f0c2, U+f0c5, U+f0c8-f0c9, U+f0cc, U+f0ce, U+f0d1, U+f0d6-f0d7, U+f0dc, U+f0e0, U+f0e8, U+f0f3, U+f106, U+f108-f109, U+f10e, U+f110-f111, U+f11e, U+f121, U+f128-f12a, U+f132-f133, U+f135, U+f145, U+f14e, U+f15b, U+f186, U+f188, U+f1ab, U+f1ad, U+f1bb, U+f1c0, U+f1c2-f1c3, U+f1d8, U+f1e4, U+f1ea-f1eb, U+f1f8, U+f205, U+f20a, U+f217, U+f21a, U+f21c-f21d, U+f233, U+f238, U+f251, U+f25d, U+f292, U+f29e, U+f2a0, U+f2a7, U+f2bb, U+f2cc, U+f2db, U+f2e1, U+f2ec, U+f2f7, U+f303, U+f316, U+f328, U+f332, U+f335, U+f37e, U+f390, U+f3c5, U+f3ce, U+f3f4, U+f40e, U+f435, U+f481, U+f493, U+f4cc, U+f4d1, U+f4d8, U+f4e2, U+f503, U+f51b, U+f52b, U+f549, U+f54e, U+f555, U+f559, U+f56e-f570, U+f594, U+f5a1, U+f5aa-f5ab, U+f5b7, U+f5db-f5dc, U+f5f6, U+f5fd, U+f621, U+f64a, U+f64f, U+f654, U+f656, U+f673, U+f67d, U+f67f, U+f695, U+f69c, U+f6a8, U+f6e3, U+f6e9, U+f6ff, U+f715, U+f734, U+f755, U+f757, U+f773, U+f781, U+f784, U+f788, U+f7b2, U+f7b6, U+f7bd, U+f7d5, U+f7ee, U+f7ff, U+f804, U+f80a, U+f80c, U+f813, U+f82f, U+f855, U+f858-f859, U+f85c, U+f86d, U+f871, U+f893-f894, U+f8a9, U+f8b2, U+f8d6, U+f8d9, U+f8e7, U+f8ef
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-edb9e6.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-edb9e6.ttf) format("truetype");
+	unicode-range: U+e000-e001, U+e030-e032, U+f042, U+f053-f056, U+f058-f05a, U+f06a, U+f07a, U+f080, U+f0a8-f0ab, U+f0d8-f0da, U+f137-f13a, U+f144, U+f192, U+f1fe, U+f200-f201, U+f218, U+f28b, U+f28d, U+f2bd, U+f2e8, U+f322-f325, U+f32d-f32e, U+f330-f331, U+f358-f35b, U+f439-f448, U+f474-f476, U+f47e, U+f4b9, U+f4c7, U+f51c, U+f560, U+f59d, U+f5de, U+f5e3-f5e7, U+f602, U+f615, U+f643, U+f64d-f64e, U+f6a3, U+f6be, U+f6c1, U+f772, U+f787, U+f78a-f78b, U+f79e-f79f, U+f7ba, U+f7ef-f7f0, U+f85b, U+f8a4, U+f8ab, U+f8ec, U+f8ff
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-972b33.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-972b33.ttf) format("truetype");
+	unicode-range: U+e033-e039, U+e03b-e03d, U+e06f, U+e071, U+f009-f00b, U+f02b, U+f089, U+f098, U+f0db, U+f0dd-f0de, U+f0f1-f0f2, U+f0fa, U+f0fd-f0fe, U+f10a, U+f12b, U+f143, U+f146, U+f14a-f14c, U+f150-f152, U+f154, U+f185, U+f191, U+f199, U+f1e1, U+f2d3, U+f2e5, U+f2e9, U+f2f2-f2f4, U+f2fd, U+f30f, U+f321, U+f329-f32c, U+f339-f33c, U+f350-f353, U+f360, U+f3f0, U+f3f2, U+f3fa, U+f3fc, U+f45c-f45d, U+f48e, U+f49b, U+f49f, U+f4c8, U+f540, U+f551, U+f566, U+f5bb-f5bd, U+f5c0-f5c1, U+f5c3, U+f5d0, U+f617, U+f622-f623, U+f67b, U+f681-f682, U+f696-f69b, U+f717-f71a, U+f71c-f71d, U+f763-f767, U+f79b, U+f7cf-f7d0, U+f7d2, U+f7d4, U+f824-f826, U+f86e, U+f87b, U+f890-f892
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-c69c5d.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-c69c5d.ttf) format("truetype");
+	unicode-range: U+e010, U+e01b, U+e020-e021, U+e02f, U+e03a, U+e042, U+e046, U+e06e, U+e074, U+e076, U+f008, U+f018, U+f01c, U+f025, U+f02a, U+f02e, U+f05b, U+f06e, U+f078, U+f086, U+f09c, U+f0a3, U+f0b1, U+f0c6, U+f0e7, U+f0eb, U+f0f8, U+f11c, U+f126, U+f12c-f12e, U+f130-f131, U+f13d, U+f140, U+f155, U+f164, U+f1ae, U+f1b2, U+f1b8, U+f1c1, U+f1ce, U+f1dc, U+f1e5-f1e6, U+f1ec, U+f1f9, U+f219, U+f21b, U+f22d, U+f234, U+f246, U+f24d, U+f275, U+f295, U+f2b5, U+f2cd, U+f2d2, U+f2fc, U+f302, U+f31a, U+f363, U+f3e5, U+f3fb, U+f44b, U+f47d, U+f48a, U+f48f-f490, U+f494, U+f498, U+f4b7, U+f4ca, U+f4d7, U+f508, U+f51d-f51e, U+f521-f522, U+f530, U+f535, U+f53e, U+f541, U+f543-f545, U+f548, U+f55d, U+f564, U+f56c, U+f577-f578, U+f590, U+f595, U+f5a2, U+f5b0, U+f5ba, U+f5bf, U+f5ca, U+f5ef, U+f5f2, U+f5fb, U+f63b, U+f649, U+f653, U+f65b, U+f664, U+f675, U+f6bf-f6c0, U+f6d5, U+f6f5, U+f6fa, U+f700, U+f70b, U+f70e, U+f71b, U+f72e-f72f, U+f733, U+f747, U+f75c, U+f762, U+f77c, U+f801, U+f814, U+f830, U+f845-f846, U+f850, U+f866, U+f875, U+f897, U+f89f, U+f8b1, U+f8bb, U+f8c7, U+f8d7, U+f8df-f8e0, U+f8ee, U+f8fd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-f2eb46.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-f2eb46.ttf) format("truetype");
+	unicode-range: U+e03e-e041, U+e043-e044, U+e047-e048, U+e04a, U+e072, U+f034-f035, U+f071, U+f08d, U+f0b2, U+f0cd, U+f0e9, U+f0f0, U+f0f9, U+f120, U+f13e, U+f165, U+f1ba, U+f204, U+f225, U+f239, U+f25c, U+f26c, U+f29a, U+f2c7-f2cb, U+f2eb, U+f2ed, U+f30c, U+f338, U+f346, U+f34d, U+f357, U+f35d, U+f3be-f3bf, U+f3ff-f401, U+f406, U+f424, U+f45e, U+f48b-f48c, U+f491, U+f4db-f4e0, U+f4fa-f502, U+f504, U+f519, U+f552, U+f5c9, U+f62e-f62f, U+f631-f63a, U+f63c, U+f69e-f69f, U+f6a1-f6a2, U+f6a4-f6a5, U+f71e-f728, U+f768-f76b, U+f76f, U+f7d7-f7d8, U+f7da-f7de, U+f829-f82e, U+f85d, U+f87d, U+f895-f896, U+f8e2-f8e6, U+f8e9-f8eb
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-f7aaa1.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-f7aaa1.ttf) format("truetype");
+	unicode-range: U+f043, U+f052, U+f070, U+f118-f11a, U+f141-f142, U+f153, U+f1fb, U+f2a2, U+f2a4, U+f2a8, U+f2b6, U+f309, U+f320, U+f349-f34a, U+f354, U+f39b-f39c, U+f422, U+f471-f473, U+f4ba, U+f4da, U+f523-f52a, U+f52c, U+f556, U+f567, U+f569-f56a, U+f579-f57a, U+f57c-f58c, U+f596-f59c, U+f5a4-f5a5, U+f5b3-f5b4, U+f5b8-f5b9, U+f5c2, U+f5c7, U+f5ea, U+f5ec-f5ee, U+f5f0, U+f657-f658, U+f674, U+f6d0-f6d4, U+f6d6-f6db, U+f748-f749, U+f750, U+f792-f796, U+f7a2, U+f7fa-f7fc, U+f85f-f862, U+f8b5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-c635b8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-c635b8.ttf) format("truetype");
+	unicode-range: U+e002-e003, U+e051, U+f057, U+f066, U+f0ed-f0ee, U+f125, U+f1b3, U+f1da, U+f326-f327, U+f381-f382, U+f386-f387, U+f389-f38a, U+f449-f44a, U+f46c-f46f, U+f4ac-f4b5, U+f4b8, U+f51f-f520, U+f542, U+f55a, U+f563, U+f565, U+f568, U+f5e8-f5e9, U+f5eb, U+f651, U+f655, U+f6b1, U+f6c2-f6c8, U+f6cb, U+f6cd-f6cf, U+f737-f746, U+f74e, U+f76c-f76e, U+f78e-f78f, U+f7cd, U+f7f3, U+f7f5-f7f8, U+f8ad-f8ae, U+f8b0, U+f8b3-f8b4, U+f8cc-f8cd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-791c40.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-791c40.ttf) format("truetype");
+	unicode-range: U+e05b, U+f032, U+f073, U+f083, U+f0a1, U+f187, U+f1b9, U+f1e2, U+f1f6, U+f1fd, U+f206-f207, U+f271-f274, U+f2a1, U+f333-f334, U+f436-f438, U+f458, U+f466-f469, U+f46b, U+f499-f49a, U+f49c-f49e, U+f4a0-f4a1, U+f517-f518, U+f51a, U+f558, U+f55b-f55c, U+f55e-f55f, U+f562, U+f5d5-f5da, U+f5dd, U+f5df-f5e2, U+f647-f648, U+f64b-f64c, U+f66a, U+f677, U+f687, U+f6b6-f6bd, U+f735-f736, U+f77f-f780, U+f782-f783, U+f786, U+f7e6-f7ed, U+f7f1, U+f805, U+f823, U+f827, U+f832-f833, U+f848-f849, U+f84c-f84f, U+f851-f854, U+f856-f857, U+f85a, U+f89c-f89d, U+f8a5, U+f8a7-f8a8, U+f8aa, U+f8ac, U+f8fa-f8fc, U+f8fe
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-b276a4.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-b276a4.ttf) format("truetype");
+	unicode-range: U+e01c-e01d, U+e022-e023, U+e068-e069, U+f03b, U+f044, U+f0ea, U+f182-f183, U+f1b0, U+f1dd, U+f1fc, U+f22c, U+f247-f249, U+f29d, U+f2ce, U+f2f0, U+f2fe, U+f301, U+f304-f306, U+f308, U+f3dd-f3de, U+f470, U+f482-f485, U+f4cd-f4d0, U+f4d2-f4d3, U+f53f, U+f554, U+f5a9, U+f5ac-f5af, U+f5b1, U+f5c4, U+f613-f614, U+f618-f619, U+f679-f67a, U+f67c, U+f67e, U+f680, U+f683, U+f6ec, U+f6fe, U+f701-f703, U+f705-f706, U+f70c, U+f756, U+f758-f75a, U+f7b8, U+f7c5, U+f7c7-f7cb, U+f7ce, U+f7d1, U+f815-f819, U+f84a-f84b, U+f85e, U+f876, U+f878-f879, U+f87c, U+f8d3-f8d5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-af6df3.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-af6df3.ttf) format("truetype");
+	unicode-range: U+e004-e006, U+e008-e00b, U+e053-e054, U+f013, U+f050-f051, U+f07c, U+f085, U+f0c3, U+f0c7, U+f0e3-f0e4, U+f11b, U+f134, U+f15c, U+f19d, U+f1ac, U+f1c4-f1c9, U+f1e3, U+f2e3, U+f2e6, U+f317-f319, U+f31c, U+f3a0, U+f3a5, U+f3fd, U+f44c, U+f44e-f451, U+f456, U+f46a, U+f477-f478, U+f47a, U+f52d-f52f, U+f531-f532, U+f56b, U+f56d, U+f571-f576, U+f58d-f58e, U+f5c8, U+f5f3-f5f5, U+f624-f62d, U+f659-f65a, U+f65c-f663, U+f6dd, U+f6df-f6e2, U+f74b-f74d, U+f79a, U+f79c-f79d, U+f7a3-f7a6, U+f7e4, U+f7fd-f7fe, U+f800, U+f802-f803, U+f863-f865, U+f867-f869, U+f877, U+f8b6-f8ba, U+f8bc-f8bf
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-solid-900-0e911e.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-0e911e.ttf) format("truetype");
+	unicode-range: U+f4e6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-180707.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-180707.ttf) format("truetype");
+	unicode-range: U+e00c-e00f, U+e011-e012, U+e05c-e05f, U+e061-e066, U+f033, U+f03c, U+f0a0, U+f0a4-f0a5, U+f0a7, U+f0fb, U+f21e, U+f252-f25b, U+f2a3, U+f2c1-f2c2, U+f2e4, U+f2ee, U+f300, U+f307, U+f30e, U+f310-f315, U+f3b3, U+f3e0, U+f453-f454, U+f461, U+f479, U+f47b-f47c, U+f47f, U+f4bc-f4c6, U+f4c9, U+f533-f534, U+f58f, U+f591, U+f593, U+f5f9, U+f665, U+f667-f669, U+f66b-f66e, U+f684, U+f6de, U+f6e4-f6e8, U+f6ea-f6eb, U+f6ed-f6f4, U+f74f, U+f751, U+f7a7-f7ae, U+f7f2, U+f806-f809, U+f80b, U+f80d-f811, U+f86a-f86c, U+f86f, U+f8c0-f8c6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-548601.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-548601.ttf) format("truetype");
+	unicode-range: U+e04b-e050, U+e058, U+e073, U+e075, U+e085-e086, U+f00d, U+f026-f028, U+f0d0, U+f157, U+f159, U+f193, U+f221, U+f226, U+f228, U+f235, U+f2d0-f2d1, U+f2e2, U+f2e7, U+f40f, U+f45f-f460, U+f492, U+f495-f497, U+f4bb, U+f4e1, U+f4e3, U+f505-f507, U+f509, U+f5b6, U+f5c5, U+f5cb, U+f5cd-f5ce, U+f5f8, U+f63e, U+f6a6-f6a7, U+f6a9-f6ad, U+f729-f72d, U+f770-f771, U+f774-f777, U+f7a0-f7a1, U+f7e2, U+f831, U+f83e, U+f898-f89b, U+f8ed, U+f8f0-f8f2
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-882569.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-882569.ttf) format("truetype");
+	unicode-range: U+e014-e016, U+e018-e019, U+e067, U+f000, U+f002, U+f00e, U+f010, U+f076, U+f094, U+f0ae, U+f0ca-f0cb, U+f0f4, U+f10b, U+f124, U+f127, U+f195, U+f1cd, U+f222-f224, U+f227, U+f229-f22b, U+f276, U+f279-f27a, U+f30a, U+f30d, U+f31e, U+f337, U+f348, U+f34b, U+f355, U+f3c1-f3c2, U+f3c9, U+f3cd, U+f3cf, U+f3d1, U+f455, U+f4a2-f4ab, U+f4b6, U+f4cb, U+f536-f53d, U+f561, U+f57b, U+f59f-f5a0, U+f5a6-f5a7, U+f5fc, U+f5fe-f601, U+f603-f60e, U+f610-f611, U+f630, U+f650, U+f652, U+f66f-f672, U+f676, U+f678, U+f688-f689, U+f6f6-f6f9, U+f6fb-f6fd, U+f74a, U+f752-f754, U+f78c, U+f7b4-f7b5, U+f7b7, U+f7f4, U+f812, U+f870, U+f872-f874, U+f87a, U+f8af, U+f8c8-f8c9, U+f8cb, U+f8ce-f8d1
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-5bd1b2.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-5bd1b2.ttf) format("truetype");
+	unicode-range: U+e059-e05a, U+f01e, U+f021, U+f036-f039, U+f047-f049, U+f05e, U+f069, U+f07d-f07e, U+f08b, U+f08e, U+f090, U+f0e2, U+f0ec, U+f0fc, U+f100-f105, U+f107, U+f148-f149, U+f15d-f15e, U+f160-f163, U+f175-f178, U+f19c, U+f1fa, U+f236, U+f240-f245, U+f290-f291, U+f2b9, U+f31d, U+f336, U+f33d-f33e, U+f340-f345, U+f34e, U+f361, U+f364, U+f366, U+f376-f377, U+f432-f434, U+f462, U+f464-f465, U+f487, U+f54d, U+f550, U+f557, U+f5d1-f5d4, U+f616, U+f640, U+f644-f646, U+f666, U+f6ae, U+f6b0, U+f6b2-f6b5, U+f732, U+f779, U+f77d-f77e, U+f7e5, U+f7f9, U+f828, U+f843-f844, U+f847, U+f881-f88f, U+f8a0-f8a3, U+f8f4-f8f9
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-ee9a34.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-ee9a34.ttf) format("truetype");
+	unicode-range: U+e025-e02e, U+e06a-e06d, U+e070, U+f022, U+f029, U+f074, U+f079, U+f09e, U+f0c4, U+f10d, U+f122, U+f14d, U+f156, U+f158, U+f197, U+f1de, U+f1e0, U+f20b, U+f24e, U+f277, U+f2dc, U+f2ea, U+f2f1, U+f2f5-f2f6, U+f2f8-f2fb, U+f30b, U+f347, U+f34c, U+f356, U+f362, U+f365, U+f367, U+f3ed, U+f3f1, U+f410, U+f45a-f45b, U+f463, U+f480, U+f486, U+f488-f489, U+f48d, U+f4d4, U+f4d6, U+f4d9, U+f515-f516, U+f546-f547, U+f54a-f54c, U+f54f, U+f553, U+f61a-f620, U+f63d, U+f641, U+f685-f686, U+f68a-f694, U+f6a0, U+f707-f70a, U+f70d, U+f70f-f714, U+f716, U+f75b, U+f75e-f761, U+f7b9, U+f7be-f7c4, U+f7cc, U+f7d9, U+f81a-f822, U+f87e-f880, U+f8d8, U+f8da-f8de, U+f8f3
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-d5bbe9.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-d5bbe9.ttf) format("truetype");
+	unicode-range: U+e017, U+e01f, U+e024, U+e045, U+e060, U+f001, U+f004-f005, U+f007, U+f00c, U+f011-f012, U+f015, U+f017, U+f019, U+f023-f024, U+f02c-f02d, U+f02f-f031, U+f03a, U+f03d-f03e, U+f040-f041, U+f04a-f04e, U+f060-f065, U+f067-f068, U+f06b-f06d, U+f072, U+f075, U+f077, U+f07b, U+f084, U+f091, U+f093, U+f095, U+f09d, U+f0a6, U+f0ac-f0ad, U+f0b0, U+f0c0-f0c2, U+f0c5, U+f0c8-f0c9, U+f0cc, U+f0ce, U+f0d1, U+f0d6-f0d7, U+f0dc, U+f0e0, U+f0e8, U+f0f3, U+f106, U+f108-f109, U+f10e, U+f110-f111, U+f11e, U+f121, U+f128-f12a, U+f132-f133, U+f135, U+f145, U+f14e, U+f15b, U+f186, U+f188, U+f1ab, U+f1ad, U+f1bb, U+f1c0, U+f1c2-f1c3, U+f1d8, U+f1e4, U+f1ea-f1eb, U+f1f8, U+f205, U+f20a, U+f217, U+f21a, U+f21c-f21d, U+f233, U+f238, U+f251, U+f25d, U+f292, U+f29e, U+f2a0, U+f2a7, U+f2bb, U+f2cc, U+f2db, U+f2e1, U+f2ec, U+f2f7, U+f303, U+f316, U+f328, U+f332, U+f335, U+f37e, U+f390, U+f3c5, U+f3ce, U+f3f4, U+f40e, U+f435, U+f481, U+f493, U+f4cc, U+f4d1, U+f4d8, U+f4e2, U+f503, U+f51b, U+f52b, U+f549, U+f54e, U+f555, U+f559, U+f56e-f570, U+f594, U+f5a1, U+f5aa-f5ab, U+f5b7, U+f5db-f5dc, U+f5f6, U+f5fd, U+f621, U+f64a, U+f64f, U+f654, U+f656, U+f673, U+f67d, U+f67f, U+f695, U+f69c, U+f6a8, U+f6e3, U+f6e9, U+f6ff, U+f715, U+f734, U+f755, U+f757, U+f773, U+f781, U+f784, U+f788, U+f7b2, U+f7b6, U+f7bd, U+f7d5, U+f7ee, U+f7ff, U+f804, U+f80a, U+f80c, U+f813, U+f82f, U+f855, U+f858-f859, U+f85c, U+f86d, U+f871, U+f893-f894, U+f8a9, U+f8b2, U+f8d6, U+f8d9, U+f8e7, U+f8ef
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-edb9e6.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-edb9e6.ttf) format("truetype");
+	unicode-range: U+e000-e001, U+e030-e032, U+f042, U+f053-f056, U+f058-f05a, U+f06a, U+f07a, U+f080, U+f0a8-f0ab, U+f0d8-f0da, U+f137-f13a, U+f144, U+f192, U+f1fe, U+f200-f201, U+f218, U+f28b, U+f28d, U+f2bd, U+f2e8, U+f322-f325, U+f32d-f32e, U+f330-f331, U+f358-f35b, U+f439-f448, U+f474-f476, U+f47e, U+f4b9, U+f4c7, U+f51c, U+f560, U+f59d, U+f5de, U+f5e3-f5e7, U+f602, U+f615, U+f643, U+f64d-f64e, U+f6a3, U+f6be, U+f6c1, U+f772, U+f787, U+f78a-f78b, U+f79e-f79f, U+f7ba, U+f7ef-f7f0, U+f85b, U+f8a4, U+f8ab, U+f8ec, U+f8ff
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-972b33.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-972b33.ttf) format("truetype");
+	unicode-range: U+e033-e039, U+e03b-e03d, U+e06f, U+e071, U+f009-f00b, U+f02b, U+f089, U+f098, U+f0db, U+f0dd-f0de, U+f0f1-f0f2, U+f0fa, U+f0fd-f0fe, U+f10a, U+f12b, U+f143, U+f146, U+f14a-f14c, U+f150-f152, U+f154, U+f185, U+f191, U+f199, U+f1e1, U+f2d3, U+f2e5, U+f2e9, U+f2f2-f2f4, U+f2fd, U+f30f, U+f321, U+f329-f32c, U+f339-f33c, U+f350-f353, U+f360, U+f3f0, U+f3f2, U+f3fa, U+f3fc, U+f45c-f45d, U+f48e, U+f49b, U+f49f, U+f4c8, U+f540, U+f551, U+f566, U+f5bb-f5bd, U+f5c0-f5c1, U+f5c3, U+f5d0, U+f617, U+f622-f623, U+f67b, U+f681-f682, U+f696-f69b, U+f717-f71a, U+f71c-f71d, U+f763-f767, U+f79b, U+f7cf-f7d0, U+f7d2, U+f7d4, U+f824-f826, U+f86e, U+f87b, U+f890-f892
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-c69c5d.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-c69c5d.ttf) format("truetype");
+	unicode-range: U+e010, U+e01b, U+e020-e021, U+e02f, U+e03a, U+e042, U+e046, U+e06e, U+e074, U+e076, U+f008, U+f018, U+f01c, U+f025, U+f02a, U+f02e, U+f05b, U+f06e, U+f078, U+f086, U+f09c, U+f0a3, U+f0b1, U+f0c6, U+f0e7, U+f0eb, U+f0f8, U+f11c, U+f126, U+f12c-f12e, U+f130-f131, U+f13d, U+f140, U+f155, U+f164, U+f1ae, U+f1b2, U+f1b8, U+f1c1, U+f1ce, U+f1dc, U+f1e5-f1e6, U+f1ec, U+f1f9, U+f219, U+f21b, U+f22d, U+f234, U+f246, U+f24d, U+f275, U+f295, U+f2b5, U+f2cd, U+f2d2, U+f2fc, U+f302, U+f31a, U+f363, U+f3e5, U+f3fb, U+f44b, U+f47d, U+f48a, U+f48f-f490, U+f494, U+f498, U+f4b7, U+f4ca, U+f4d7, U+f508, U+f51d-f51e, U+f521-f522, U+f530, U+f535, U+f53e, U+f541, U+f543-f545, U+f548, U+f55d, U+f564, U+f56c, U+f577-f578, U+f590, U+f595, U+f5a2, U+f5b0, U+f5ba, U+f5bf, U+f5ca, U+f5ef, U+f5f2, U+f5fb, U+f63b, U+f649, U+f653, U+f65b, U+f664, U+f675, U+f6bf-f6c0, U+f6d5, U+f6f5, U+f6fa, U+f700, U+f70b, U+f70e, U+f71b, U+f72e-f72f, U+f733, U+f747, U+f75c, U+f762, U+f77c, U+f801, U+f814, U+f830, U+f845-f846, U+f850, U+f866, U+f875, U+f897, U+f89f, U+f8b1, U+f8bb, U+f8c7, U+f8d7, U+f8df-f8e0, U+f8ee, U+f8fd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-f2eb46.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-f2eb46.ttf) format("truetype");
+	unicode-range: U+e03e-e041, U+e043-e044, U+e047-e048, U+e04a, U+e072, U+f034-f035, U+f071, U+f08d, U+f0b2, U+f0cd, U+f0e9, U+f0f0, U+f0f9, U+f120, U+f13e, U+f165, U+f1ba, U+f204, U+f225, U+f239, U+f25c, U+f26c, U+f29a, U+f2c7-f2cb, U+f2eb, U+f2ed, U+f30c, U+f338, U+f346, U+f34d, U+f357, U+f35d, U+f3be-f3bf, U+f3ff-f401, U+f406, U+f424, U+f45e, U+f48b-f48c, U+f491, U+f4db-f4e0, U+f4fa-f502, U+f504, U+f519, U+f552, U+f5c9, U+f62e-f62f, U+f631-f63a, U+f63c, U+f69e-f69f, U+f6a1-f6a2, U+f6a4-f6a5, U+f71e-f728, U+f768-f76b, U+f76f, U+f7d7-f7d8, U+f7da-f7de, U+f829-f82e, U+f85d, U+f87d, U+f895-f896, U+f8e2-f8e6, U+f8e9-f8eb
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-f7aaa1.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-f7aaa1.ttf) format("truetype");
+	unicode-range: U+f043, U+f052, U+f070, U+f118-f11a, U+f141-f142, U+f153, U+f1fb, U+f2a2, U+f2a4, U+f2a8, U+f2b6, U+f309, U+f320, U+f349-f34a, U+f354, U+f39b-f39c, U+f422, U+f471-f473, U+f4ba, U+f4da, U+f523-f52a, U+f52c, U+f556, U+f567, U+f569-f56a, U+f579-f57a, U+f57c-f58c, U+f596-f59c, U+f5a4-f5a5, U+f5b3-f5b4, U+f5b8-f5b9, U+f5c2, U+f5c7, U+f5ea, U+f5ec-f5ee, U+f5f0, U+f657-f658, U+f674, U+f6d0-f6d4, U+f6d6-f6db, U+f748-f749, U+f750, U+f792-f796, U+f7a2, U+f7fa-f7fc, U+f85f-f862, U+f8b5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-c635b8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-c635b8.ttf) format("truetype");
+	unicode-range: U+e002-e003, U+e051, U+f057, U+f066, U+f0ed-f0ee, U+f125, U+f1b3, U+f1da, U+f326-f327, U+f381-f382, U+f386-f387, U+f389-f38a, U+f449-f44a, U+f46c-f46f, U+f4ac-f4b5, U+f4b8, U+f51f-f520, U+f542, U+f55a, U+f563, U+f565, U+f568, U+f5e8-f5e9, U+f5eb, U+f651, U+f655, U+f6b1, U+f6c2-f6c8, U+f6cb, U+f6cd-f6cf, U+f737-f746, U+f74e, U+f76c-f76e, U+f78e-f78f, U+f7cd, U+f7f3, U+f7f5-f7f8, U+f8ad-f8ae, U+f8b0, U+f8b3-f8b4, U+f8cc-f8cd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-791c40.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-791c40.ttf) format("truetype");
+	unicode-range: U+e05b, U+f032, U+f073, U+f083, U+f0a1, U+f187, U+f1b9, U+f1e2, U+f1f6, U+f1fd, U+f206-f207, U+f271-f274, U+f2a1, U+f333-f334, U+f436-f438, U+f458, U+f466-f469, U+f46b, U+f499-f49a, U+f49c-f49e, U+f4a0-f4a1, U+f517-f518, U+f51a, U+f558, U+f55b-f55c, U+f55e-f55f, U+f562, U+f5d5-f5da, U+f5dd, U+f5df-f5e2, U+f647-f648, U+f64b-f64c, U+f66a, U+f677, U+f687, U+f6b6-f6bd, U+f735-f736, U+f77f-f780, U+f782-f783, U+f786, U+f7e6-f7ed, U+f7f1, U+f805, U+f823, U+f827, U+f832-f833, U+f848-f849, U+f84c-f84f, U+f851-f854, U+f856-f857, U+f85a, U+f89c-f89d, U+f8a5, U+f8a7-f8a8, U+f8aa, U+f8ac, U+f8fa-f8fc, U+f8fe
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-b276a4.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-b276a4.ttf) format("truetype");
+	unicode-range: U+e01c-e01d, U+e022-e023, U+e068-e069, U+f03b, U+f044, U+f0ea, U+f182-f183, U+f1b0, U+f1dd, U+f1fc, U+f22c, U+f247-f249, U+f29d, U+f2ce, U+f2f0, U+f2fe, U+f301, U+f304-f306, U+f308, U+f3dd-f3de, U+f470, U+f482-f485, U+f4cd-f4d0, U+f4d2-f4d3, U+f53f, U+f554, U+f5a9, U+f5ac-f5af, U+f5b1, U+f5c4, U+f613-f614, U+f618-f619, U+f679-f67a, U+f67c, U+f67e, U+f680, U+f683, U+f6ec, U+f6fe, U+f701-f703, U+f705-f706, U+f70c, U+f756, U+f758-f75a, U+f7b8, U+f7c5, U+f7c7-f7cb, U+f7ce, U+f7d1, U+f815-f819, U+f84a-f84b, U+f85e, U+f876, U+f878-f879, U+f87c, U+f8d3-f8d5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-af6df3.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-af6df3.ttf) format("truetype");
+	unicode-range: U+e004-e006, U+e008-e00b, U+e053-e054, U+f013, U+f050-f051, U+f07c, U+f085, U+f0c3, U+f0c7, U+f0e3-f0e4, U+f11b, U+f134, U+f15c, U+f19d, U+f1ac, U+f1c4-f1c9, U+f1e3, U+f2e3, U+f2e6, U+f317-f319, U+f31c, U+f3a0, U+f3a5, U+f3fd, U+f44c, U+f44e-f451, U+f456, U+f46a, U+f477-f478, U+f47a, U+f52d-f52f, U+f531-f532, U+f56b, U+f56d, U+f571-f576, U+f58d-f58e, U+f5c8, U+f5f3-f5f5, U+f624-f62d, U+f659-f65a, U+f65c-f663, U+f6dd, U+f6df-f6e2, U+f74b-f74d, U+f79a, U+f79c-f79d, U+f7a3-f7a6, U+f7e4, U+f7fd-f7fe, U+f800, U+f802-f803, U+f863-f865, U+f867-f869, U+f877, U+f8b6-f8ba, U+f8bc-f8bf
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 400;
+	src: url(/assets/webfonts/pro-fa-regular-400-0e911e.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-0e911e.ttf) format("truetype");
+	unicode-range: U+f4e6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-180707.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-180707.ttf) format("truetype");
+	unicode-range: U+e00c-e00f, U+e011-e012, U+e05c-e05f, U+e061-e066, U+f033, U+f03c, U+f0a0, U+f0a4-f0a5, U+f0a7, U+f0fb, U+f21e, U+f252-f25b, U+f2a3, U+f2c1-f2c2, U+f2e4, U+f2ee, U+f300, U+f307, U+f30e, U+f310-f315, U+f3b3, U+f3e0, U+f453-f454, U+f461, U+f479, U+f47b-f47c, U+f47f, U+f4bc-f4c6, U+f4c9, U+f533-f534, U+f58f, U+f591, U+f593, U+f5f9, U+f665, U+f667-f669, U+f66b-f66e, U+f684, U+f6de, U+f6e4-f6e8, U+f6ea-f6eb, U+f6ed-f6f4, U+f74f, U+f751, U+f7a7-f7ae, U+f7f2, U+f806-f809, U+f80b, U+f80d-f811, U+f86a-f86c, U+f86f, U+f8c0-f8c6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-548601.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-548601.ttf) format("truetype");
+	unicode-range: U+e04b-e050, U+e058, U+e073, U+e075, U+e085-e086, U+f00d, U+f026-f028, U+f0d0, U+f157, U+f159, U+f193, U+f221, U+f226, U+f228, U+f235, U+f2d0-f2d1, U+f2e2, U+f2e7, U+f40f, U+f45f-f460, U+f492, U+f495-f497, U+f4bb, U+f4e1, U+f4e3, U+f505-f507, U+f509, U+f5b6, U+f5c5, U+f5cb, U+f5cd-f5ce, U+f5f8, U+f63e, U+f6a6-f6a7, U+f6a9-f6ad, U+f729-f72d, U+f770-f771, U+f774-f777, U+f7a0-f7a1, U+f7e2, U+f831, U+f83e, U+f898-f89b, U+f8ed, U+f8f0-f8f2
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-882569.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-882569.ttf) format("truetype");
+	unicode-range: U+e014-e016, U+e018-e019, U+e067, U+f000, U+f002, U+f00e, U+f010, U+f076, U+f094, U+f0ae, U+f0ca-f0cb, U+f0f4, U+f10b, U+f124, U+f127, U+f195, U+f1cd, U+f222-f224, U+f227, U+f229-f22b, U+f276, U+f279-f27a, U+f30a, U+f30d, U+f31e, U+f337, U+f348, U+f34b, U+f355, U+f3c1-f3c2, U+f3c9, U+f3cd, U+f3cf, U+f3d1, U+f455, U+f4a2-f4ab, U+f4b6, U+f4cb, U+f536-f53d, U+f561, U+f57b, U+f59f-f5a0, U+f5a6-f5a7, U+f5fc, U+f5fe-f601, U+f603-f60e, U+f610-f611, U+f630, U+f650, U+f652, U+f66f-f672, U+f676, U+f678, U+f688-f689, U+f6f6-f6f9, U+f6fb-f6fd, U+f74a, U+f752-f754, U+f78c, U+f7b4-f7b5, U+f7b7, U+f7f4, U+f812, U+f870, U+f872-f874, U+f87a, U+f8af, U+f8c8-f8c9, U+f8cb, U+f8ce-f8d1
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-5bd1b2.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-5bd1b2.ttf) format("truetype");
+	unicode-range: U+e059-e05a, U+f01e, U+f021, U+f036-f039, U+f047-f049, U+f05e, U+f069, U+f07d-f07e, U+f08b, U+f08e, U+f090, U+f0e2, U+f0ec, U+f0fc, U+f100-f105, U+f107, U+f148-f149, U+f15d-f15e, U+f160-f163, U+f175-f178, U+f19c, U+f1fa, U+f236, U+f240-f245, U+f290-f291, U+f2b9, U+f31d, U+f336, U+f33d-f33e, U+f340-f345, U+f34e, U+f361, U+f364, U+f366, U+f376-f377, U+f432-f434, U+f462, U+f464-f465, U+f487, U+f54d, U+f550, U+f557, U+f5d1-f5d4, U+f616, U+f640, U+f644-f646, U+f666, U+f6ae, U+f6b0, U+f6b2-f6b5, U+f732, U+f779, U+f77d-f77e, U+f7e5, U+f7f9, U+f828, U+f843-f844, U+f847, U+f881-f88f, U+f8a0-f8a3, U+f8f4-f8f9
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-ee9a34.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-ee9a34.ttf) format("truetype");
+	unicode-range: U+e025-e02e, U+e06a-e06d, U+e070, U+f022, U+f029, U+f074, U+f079, U+f09e, U+f0c4, U+f10d, U+f122, U+f14d, U+f156, U+f158, U+f197, U+f1de, U+f1e0, U+f20b, U+f24e, U+f277, U+f2dc, U+f2ea, U+f2f1, U+f2f5-f2f6, U+f2f8-f2fb, U+f30b, U+f347, U+f34c, U+f356, U+f362, U+f365, U+f367, U+f3ed, U+f3f1, U+f410, U+f45a-f45b, U+f463, U+f480, U+f486, U+f488-f489, U+f48d, U+f4d4, U+f4d6, U+f4d9, U+f515-f516, U+f546-f547, U+f54a-f54c, U+f54f, U+f553, U+f61a-f620, U+f63d, U+f641, U+f685-f686, U+f68a-f694, U+f6a0, U+f707-f70a, U+f70d, U+f70f-f714, U+f716, U+f75b, U+f75e-f761, U+f7b9, U+f7be-f7c4, U+f7cc, U+f7d9, U+f81a-f822, U+f87e-f880, U+f8d8, U+f8da-f8de, U+f8f3
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-d5bbe9.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-d5bbe9.ttf) format("truetype");
+	unicode-range: U+e017, U+e01f, U+e024, U+e045, U+e060, U+f001, U+f004-f005, U+f007, U+f00c, U+f011-f012, U+f015, U+f017, U+f019, U+f023-f024, U+f02c-f02d, U+f02f-f031, U+f03a, U+f03d-f03e, U+f040-f041, U+f04a-f04e, U+f060-f065, U+f067-f068, U+f06b-f06d, U+f072, U+f075, U+f077, U+f07b, U+f084, U+f091, U+f093, U+f095, U+f09d, U+f0a6, U+f0ac-f0ad, U+f0b0, U+f0c0-f0c2, U+f0c5, U+f0c8-f0c9, U+f0cc, U+f0ce, U+f0d1, U+f0d6-f0d7, U+f0dc, U+f0e0, U+f0e8, U+f0f3, U+f106, U+f108-f109, U+f10e, U+f110-f111, U+f11e, U+f121, U+f128-f12a, U+f132-f133, U+f135, U+f145, U+f14e, U+f15b, U+f186, U+f188, U+f1ab, U+f1ad, U+f1bb, U+f1c0, U+f1c2-f1c3, U+f1d8, U+f1e4, U+f1ea-f1eb, U+f1f8, U+f205, U+f20a, U+f217, U+f21a, U+f21c-f21d, U+f233, U+f238, U+f251, U+f25d, U+f292, U+f29e, U+f2a0, U+f2a7, U+f2bb, U+f2cc, U+f2db, U+f2e1, U+f2ec, U+f2f7, U+f303, U+f316, U+f328, U+f332, U+f335, U+f37e, U+f390, U+f3c5, U+f3ce, U+f3f4, U+f40e, U+f435, U+f481, U+f493, U+f4cc, U+f4d1, U+f4d8, U+f4e2, U+f503, U+f51b, U+f52b, U+f549, U+f54e, U+f555, U+f559, U+f56e-f570, U+f594, U+f5a1, U+f5aa-f5ab, U+f5b7, U+f5db-f5dc, U+f5f6, U+f5fd, U+f621, U+f64a, U+f64f, U+f654, U+f656, U+f673, U+f67d, U+f67f, U+f695, U+f69c, U+f6a8, U+f6e3, U+f6e9, U+f6ff, U+f715, U+f734, U+f755, U+f757, U+f773, U+f781, U+f784, U+f788, U+f7b2, U+f7b6, U+f7bd, U+f7d5, U+f7ee, U+f7ff, U+f804, U+f80a, U+f80c, U+f813, U+f82f, U+f855, U+f858-f859, U+f85c, U+f86d, U+f871, U+f893-f894, U+f8a9, U+f8b2, U+f8d6, U+f8d9, U+f8e7, U+f8ef
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-edb9e6.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-edb9e6.ttf) format("truetype");
+	unicode-range: U+e000-e001, U+e030-e032, U+f042, U+f053-f056, U+f058-f05a, U+f06a, U+f07a, U+f080, U+f0a8-f0ab, U+f0d8-f0da, U+f137-f13a, U+f144, U+f192, U+f1fe, U+f200-f201, U+f218, U+f28b, U+f28d, U+f2bd, U+f2e8, U+f322-f325, U+f32d-f32e, U+f330-f331, U+f358-f35b, U+f439-f448, U+f474-f476, U+f47e, U+f4b9, U+f4c7, U+f51c, U+f560, U+f59d, U+f5de, U+f5e3-f5e7, U+f602, U+f615, U+f643, U+f64d-f64e, U+f6a3, U+f6be, U+f6c1, U+f772, U+f787, U+f78a-f78b, U+f79e-f79f, U+f7ba, U+f7ef-f7f0, U+f85b, U+f8a4, U+f8ab, U+f8ec, U+f8ff
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-972b33.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-972b33.ttf) format("truetype");
+	unicode-range: U+e033-e039, U+e03b-e03d, U+e06f, U+e071, U+f009-f00b, U+f02b, U+f089, U+f098, U+f0db, U+f0dd-f0de, U+f0f1-f0f2, U+f0fa, U+f0fd-f0fe, U+f10a, U+f12b, U+f143, U+f146, U+f14a-f14c, U+f150-f152, U+f154, U+f185, U+f191, U+f199, U+f1e1, U+f2d3, U+f2e5, U+f2e9, U+f2f2-f2f4, U+f2fd, U+f30f, U+f321, U+f329-f32c, U+f339-f33c, U+f350-f353, U+f360, U+f3f0, U+f3f2, U+f3fa, U+f3fc, U+f45c-f45d, U+f48e, U+f49b, U+f49f, U+f4c8, U+f540, U+f551, U+f566, U+f5bb-f5bd, U+f5c0-f5c1, U+f5c3, U+f5d0, U+f617, U+f622-f623, U+f67b, U+f681-f682, U+f696-f69b, U+f717-f71a, U+f71c-f71d, U+f763-f767, U+f79b, U+f7cf-f7d0, U+f7d2, U+f7d4, U+f824-f826, U+f86e, U+f87b, U+f890-f892
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-c69c5d.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-c69c5d.ttf) format("truetype");
+	unicode-range: U+e010, U+e01b, U+e020-e021, U+e02f, U+e03a, U+e042, U+e046, U+e06e, U+e074, U+e076, U+f008, U+f018, U+f01c, U+f025, U+f02a, U+f02e, U+f05b, U+f06e, U+f078, U+f086, U+f09c, U+f0a3, U+f0b1, U+f0c6, U+f0e7, U+f0eb, U+f0f8, U+f11c, U+f126, U+f12c-f12e, U+f130-f131, U+f13d, U+f140, U+f155, U+f164, U+f1ae, U+f1b2, U+f1b8, U+f1c1, U+f1ce, U+f1dc, U+f1e5-f1e6, U+f1ec, U+f1f9, U+f219, U+f21b, U+f22d, U+f234, U+f246, U+f24d, U+f275, U+f295, U+f2b5, U+f2cd, U+f2d2, U+f2fc, U+f302, U+f31a, U+f363, U+f3e5, U+f3fb, U+f44b, U+f47d, U+f48a, U+f48f-f490, U+f494, U+f498, U+f4b7, U+f4ca, U+f4d7, U+f508, U+f51d-f51e, U+f521-f522, U+f530, U+f535, U+f53e, U+f541, U+f543-f545, U+f548, U+f55d, U+f564, U+f56c, U+f577-f578, U+f590, U+f595, U+f5a2, U+f5b0, U+f5ba, U+f5bf, U+f5ca, U+f5ef, U+f5f2, U+f5fb, U+f63b, U+f649, U+f653, U+f65b, U+f664, U+f675, U+f6bf-f6c0, U+f6d5, U+f6f5, U+f6fa, U+f700, U+f70b, U+f70e, U+f71b, U+f72e-f72f, U+f733, U+f747, U+f75c, U+f762, U+f77c, U+f801, U+f814, U+f830, U+f845-f846, U+f850, U+f866, U+f875, U+f897, U+f89f, U+f8b1, U+f8bb, U+f8c7, U+f8d7, U+f8df-f8e0, U+f8ee, U+f8fd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-f2eb46.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-f2eb46.ttf) format("truetype");
+	unicode-range: U+e03e-e041, U+e043-e044, U+e047-e048, U+e04a, U+e072, U+f034-f035, U+f071, U+f08d, U+f0b2, U+f0cd, U+f0e9, U+f0f0, U+f0f9, U+f120, U+f13e, U+f165, U+f1ba, U+f204, U+f225, U+f239, U+f25c, U+f26c, U+f29a, U+f2c7-f2cb, U+f2eb, U+f2ed, U+f30c, U+f338, U+f346, U+f34d, U+f357, U+f35d, U+f3be-f3bf, U+f3ff-f401, U+f406, U+f424, U+f45e, U+f48b-f48c, U+f491, U+f4db-f4e0, U+f4fa-f502, U+f504, U+f519, U+f552, U+f5c9, U+f62e-f62f, U+f631-f63a, U+f63c, U+f69e-f69f, U+f6a1-f6a2, U+f6a4-f6a5, U+f71e-f728, U+f768-f76b, U+f76f, U+f7d7-f7d8, U+f7da-f7de, U+f829-f82e, U+f85d, U+f87d, U+f895-f896, U+f8e2-f8e6, U+f8e9-f8eb
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-f7aaa1.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-f7aaa1.ttf) format("truetype");
+	unicode-range: U+f043, U+f052, U+f070, U+f118-f11a, U+f141-f142, U+f153, U+f1fb, U+f2a2, U+f2a4, U+f2a8, U+f2b6, U+f309, U+f320, U+f349-f34a, U+f354, U+f39b-f39c, U+f422, U+f471-f473, U+f4ba, U+f4da, U+f523-f52a, U+f52c, U+f556, U+f567, U+f569-f56a, U+f579-f57a, U+f57c-f58c, U+f596-f59c, U+f5a4-f5a5, U+f5b3-f5b4, U+f5b8-f5b9, U+f5c2, U+f5c7, U+f5ea, U+f5ec-f5ee, U+f5f0, U+f657-f658, U+f674, U+f6d0-f6d4, U+f6d6-f6db, U+f748-f749, U+f750, U+f792-f796, U+f7a2, U+f7fa-f7fc, U+f85f-f862, U+f8b5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-c635b8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-c635b8.ttf) format("truetype");
+	unicode-range: U+e002-e003, U+e051, U+f057, U+f066, U+f0ed-f0ee, U+f125, U+f1b3, U+f1da, U+f326-f327, U+f381-f382, U+f386-f387, U+f389-f38a, U+f449-f44a, U+f46c-f46f, U+f4ac-f4b5, U+f4b8, U+f51f-f520, U+f542, U+f55a, U+f563, U+f565, U+f568, U+f5e8-f5e9, U+f5eb, U+f651, U+f655, U+f6b1, U+f6c2-f6c8, U+f6cb, U+f6cd-f6cf, U+f737-f746, U+f74e, U+f76c-f76e, U+f78e-f78f, U+f7cd, U+f7f3, U+f7f5-f7f8, U+f8ad-f8ae, U+f8b0, U+f8b3-f8b4, U+f8cc-f8cd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-791c40.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-791c40.ttf) format("truetype");
+	unicode-range: U+e05b, U+f032, U+f073, U+f083, U+f0a1, U+f187, U+f1b9, U+f1e2, U+f1f6, U+f1fd, U+f206-f207, U+f271-f274, U+f2a1, U+f333-f334, U+f436-f438, U+f458, U+f466-f469, U+f46b, U+f499-f49a, U+f49c-f49e, U+f4a0-f4a1, U+f517-f518, U+f51a, U+f558, U+f55b-f55c, U+f55e-f55f, U+f562, U+f5d5-f5da, U+f5dd, U+f5df-f5e2, U+f647-f648, U+f64b-f64c, U+f66a, U+f677, U+f687, U+f6b6-f6bd, U+f735-f736, U+f77f-f780, U+f782-f783, U+f786, U+f7e6-f7ed, U+f7f1, U+f805, U+f823, U+f827, U+f832-f833, U+f848-f849, U+f84c-f84f, U+f851-f854, U+f856-f857, U+f85a, U+f89c-f89d, U+f8a5, U+f8a7-f8a8, U+f8aa, U+f8ac, U+f8fa-f8fc, U+f8fe
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-b276a4.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-b276a4.ttf) format("truetype");
+	unicode-range: U+e01c-e01d, U+e022-e023, U+e068-e069, U+f03b, U+f044, U+f0ea, U+f182-f183, U+f1b0, U+f1dd, U+f1fc, U+f22c, U+f247-f249, U+f29d, U+f2ce, U+f2f0, U+f2fe, U+f301, U+f304-f306, U+f308, U+f3dd-f3de, U+f470, U+f482-f485, U+f4cd-f4d0, U+f4d2-f4d3, U+f53f, U+f554, U+f5a9, U+f5ac-f5af, U+f5b1, U+f5c4, U+f613-f614, U+f618-f619, U+f679-f67a, U+f67c, U+f67e, U+f680, U+f683, U+f6ec, U+f6fe, U+f701-f703, U+f705-f706, U+f70c, U+f756, U+f758-f75a, U+f7b8, U+f7c5, U+f7c7-f7cb, U+f7ce, U+f7d1, U+f815-f819, U+f84a-f84b, U+f85e, U+f876, U+f878-f879, U+f87c, U+f8d3-f8d5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-af6df3.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-af6df3.ttf) format("truetype");
+	unicode-range: U+e004-e006, U+e008-e00b, U+e053-e054, U+f013, U+f050-f051, U+f07c, U+f085, U+f0c3, U+f0c7, U+f0e3-f0e4, U+f11b, U+f134, U+f15c, U+f19d, U+f1ac, U+f1c4-f1c9, U+f1e3, U+f2e3, U+f2e6, U+f317-f319, U+f31c, U+f3a0, U+f3a5, U+f3fd, U+f44c, U+f44e-f451, U+f456, U+f46a, U+f477-f478, U+f47a, U+f52d-f52f, U+f531-f532, U+f56b, U+f56d, U+f571-f576, U+f58d-f58e, U+f5c8, U+f5f3-f5f5, U+f624-f62d, U+f659-f65a, U+f65c-f663, U+f6dd, U+f6df-f6e2, U+f74b-f74d, U+f79a, U+f79c-f79d, U+f7a3-f7a6, U+f7e4, U+f7fd-f7fe, U+f800, U+f802-f803, U+f863-f865, U+f867-f869, U+f877, U+f8b6-f8ba, U+f8bc-f8bf
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Pro";
+	font-display: block;
+	font-weight: 300;
+	src: url(/assets/webfonts/pro-fa-light-300-0e911e.woff2) format("woff2"), url(/assets/webfonts/pro-fa-light-300-0e911e.ttf) format("truetype");
+	unicode-range: U+f4e6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-180707.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-180707.ttf) format("truetype");
+	unicode-range: U+e00c-e00f, U+e011-e012, U+e05c-e05f, U+e061-e066, U+f033, U+f03c, U+f0a0, U+f0a4-f0a5, U+f0a7, U+f0fb, U+f21e, U+f252-f25b, U+f2a3, U+f2c1-f2c2, U+f2e4, U+f2ee, U+f300, U+f307, U+f30e, U+f310-f315, U+f3b3, U+f3e0, U+f453-f454, U+f461, U+f479, U+f47b-f47c, U+f47f, U+f4bc-f4c6, U+f4c9, U+f533-f534, U+f58f, U+f591, U+f593, U+f5f9, U+f665, U+f667-f669, U+f66b-f66e, U+f684, U+f6de, U+f6e4-f6e8, U+f6ea-f6eb, U+f6ed-f6f4, U+f74f, U+f751, U+f7a7-f7ae, U+f7f2, U+f806-f809, U+f80b, U+f80d-f811, U+f86a-f86c, U+f86f, U+f8c0-f8c6, U+10e00c-10e00f, U+10e011-10e012, U+10e05c-10e05f, U+10e061-10e066, U+10f033, U+10f03c, U+10f0a0, U+10f0a4-10f0a5, U+10f0a7, U+10f0fb, U+10f21e, U+10f252-10f25b, U+10f2a3, U+10f2c1-10f2c2, U+10f2e4, U+10f2ee, U+10f300, U+10f307, U+10f30e, U+10f310-10f315, U+10f3b3, U+10f3e0, U+10f453-10f454, U+10f461, U+10f479, U+10f47b-10f47c, U+10f47f, U+10f4bc-10f4c6, U+10f4c9, U+10f533-10f534, U+10f58f, U+10f591, U+10f593, U+10f5f9, U+10f665, U+10f667-10f669, U+10f66b-10f66e, U+10f684, U+10f6de, U+10f6e4-10f6e8, U+10f6ea-10f6eb, U+10f6ed-10f6f4, U+10f74f, U+10f751, U+10f7a7-10f7ae, U+10f7f2, U+10f806-10f809, U+10f80b, U+10f80d-10f811, U+10f86a-10f86c, U+10f86f, U+10f8c0-10f8c6
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-548601.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-548601.ttf) format("truetype");
+	unicode-range: U+e04b-e050, U+e058, U+e073, U+e075, U+e085-e086, U+f00d, U+f026-f028, U+f0d0, U+f157, U+f159, U+f193, U+f221, U+f226, U+f228, U+f235, U+f2d0-f2d1, U+f2e2, U+f2e7, U+f40f, U+f45f-f460, U+f492, U+f495-f497, U+f4bb, U+f4e1, U+f4e3, U+f505-f507, U+f509, U+f5b6, U+f5c5, U+f5cb, U+f5cd-f5ce, U+f5f8, U+f63e, U+f6a6-f6a7, U+f6a9-f6ad, U+f729-f72d, U+f770-f771, U+f774-f777, U+f7a0-f7a1, U+f7e2, U+f831, U+f83e, U+f898-f89b, U+f8ed, U+f8f0-f8f2, U+10e04b-10e050, U+10e058, U+10e073, U+10e075, U+10e085-10e086, U+10f00d, U+10f026-10f028, U+10f0d0, U+10f157, U+10f159, U+10f193, U+10f221, U+10f226, U+10f228, U+10f235, U+10f2d0-10f2d1, U+10f2e2, U+10f2e7, U+10f40f, U+10f45f-10f460, U+10f492, U+10f495-10f497, U+10f4bb, U+10f4e1, U+10f4e3, U+10f505-10f507, U+10f509, U+10f5b6, U+10f5c5, U+10f5cb, U+10f5cd-10f5ce, U+10f5f8, U+10f63e, U+10f6a6-10f6a7, U+10f6a9-10f6ad, U+10f729-10f72d, U+10f770-10f771, U+10f774-10f777, U+10f7a0-10f7a1, U+10f7e2, U+10f831, U+10f83e, U+10f898-10f89b, U+10f8ed, U+10f8f0-10f8f2
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-882569.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-882569.ttf) format("truetype");
+	unicode-range: U+e014-e016, U+e018-e019, U+e067, U+f000, U+f002, U+f00e, U+f010, U+f076, U+f094, U+f0ae, U+f0ca-f0cb, U+f0f4, U+f10b, U+f124, U+f127, U+f195, U+f1cd, U+f222-f224, U+f227, U+f229-f22b, U+f276, U+f279-f27a, U+f30a, U+f30d, U+f31e, U+f337, U+f348, U+f34b, U+f355, U+f3c1-f3c2, U+f3c9, U+f3cd, U+f3cf, U+f3d1, U+f455, U+f4a2-f4ab, U+f4b6, U+f4cb, U+f536-f53d, U+f561, U+f57b, U+f59f-f5a0, U+f5a6-f5a7, U+f5fc, U+f5fe-f601, U+f603-f60e, U+f610-f611, U+f630, U+f650, U+f652, U+f66f-f672, U+f676, U+f678, U+f688-f689, U+f6f6-f6f9, U+f6fb-f6fd, U+f74a, U+f752-f754, U+f78c, U+f7b4-f7b5, U+f7b7, U+f7f4, U+f812, U+f870, U+f872-f874, U+f87a, U+f8af, U+f8c8-f8c9, U+f8cb, U+f8ce-f8d1, U+10e014-10e016, U+10e018-10e019, U+10e067, U+10f000, U+10f002, U+10f00e, U+10f010, U+10f076, U+10f094, U+10f0ae, U+10f0ca-10f0cb, U+10f0f4, U+10f10b, U+10f124, U+10f127, U+10f195, U+10f1cd, U+10f222-10f224, U+10f227, U+10f229-10f22b, U+10f276, U+10f279-10f27a, U+10f30a, U+10f30d, U+10f31e, U+10f337, U+10f348, U+10f34b, U+10f355, U+10f3c1-10f3c2, U+10f3c9, U+10f3cd, U+10f3cf, U+10f3d1, U+10f455, U+10f4a2-10f4ab, U+10f4b6, U+10f4cb, U+10f536-10f53d, U+10f561, U+10f57b, U+10f59f-10f5a0, U+10f5a6-10f5a7, U+10f5fc, U+10f5fe-10f601, U+10f603-10f60e, U+10f610-10f611, U+10f630, U+10f650, U+10f652, U+10f66f-10f672, U+10f676, U+10f678, U+10f688-10f689, U+10f6f6-10f6f9, U+10f6fb-10f6fd, U+10f74a, U+10f752-10f754, U+10f78c, U+10f7b4-10f7b5, U+10f7b7, U+10f7f4, U+10f812, U+10f870, U+10f872-10f874, U+10f87a, U+10f8af, U+10f8c8-10f8c9, U+10f8cb, U+10f8ce-10f8d1
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-5bd1b2.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-5bd1b2.ttf) format("truetype");
+	unicode-range: U+e059-e05a, U+f01e, U+f021, U+f036-f039, U+f047-f049, U+f05e, U+f069, U+f07d-f07e, U+f08b, U+f08e, U+f090, U+f0e2, U+f0ec, U+f0fc, U+f100-f105, U+f107, U+f148-f149, U+f15d-f15e, U+f160-f163, U+f175-f178, U+f19c, U+f1fa, U+f236, U+f240-f245, U+f290-f291, U+f2b9, U+f31d, U+f336, U+f33d-f33e, U+f340-f345, U+f34e, U+f361, U+f364, U+f366, U+f376-f377, U+f432-f434, U+f462, U+f464-f465, U+f487, U+f54d, U+f550, U+f557, U+f5d1-f5d4, U+f616, U+f640, U+f644-f646, U+f666, U+f6ae, U+f6b0, U+f6b2-f6b5, U+f732, U+f779, U+f77d-f77e, U+f7e5, U+f7f9, U+f828, U+f843-f844, U+f847, U+f881-f88f, U+f8a0-f8a3, U+f8f4-f8f9, U+10e059-10e05a, U+10f01e, U+10f021, U+10f036-10f039, U+10f047-10f049, U+10f05e, U+10f069, U+10f07d-10f07e, U+10f08b, U+10f08e, U+10f090, U+10f0e2, U+10f0ec, U+10f0fc, U+10f100-10f105, U+10f107, U+10f148-10f149, U+10f15d-10f15e, U+10f160-10f163, U+10f175-10f178, U+10f19c, U+10f1fa, U+10f236, U+10f240-10f245, U+10f290-10f291, U+10f2b9, U+10f31d, U+10f336, U+10f33d-10f33e, U+10f340-10f345, U+10f34e, U+10f361, U+10f364, U+10f366, U+10f376-10f377, U+10f432-10f434, U+10f462, U+10f464-10f465, U+10f487, U+10f54d, U+10f550, U+10f557, U+10f5d1-10f5d4, U+10f616, U+10f640, U+10f644-10f646, U+10f666, U+10f6ae, U+10f6b0, U+10f6b2-10f6b5, U+10f732, U+10f779, U+10f77d-10f77e, U+10f7e5, U+10f7f9, U+10f828, U+10f843-10f844, U+10f847, U+10f881-10f88f, U+10f8a0-10f8a3, U+10f8f4-10f8f9
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-ee9a34.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-ee9a34.ttf) format("truetype");
+	unicode-range: U+e025-e02e, U+e06a-e06d, U+e070, U+f022, U+f029, U+f074, U+f079, U+f09e, U+f0c4, U+f10d, U+f122, U+f14d, U+f156, U+f158, U+f197, U+f1de, U+f1e0, U+f20b, U+f24e, U+f277, U+f2dc, U+f2ea, U+f2f1, U+f2f5-f2f6, U+f2f8-f2fb, U+f30b, U+f347, U+f34c, U+f356, U+f362, U+f365, U+f367, U+f3ed, U+f3f1, U+f410, U+f45a-f45b, U+f463, U+f480, U+f486, U+f488-f489, U+f48d, U+f4d4, U+f4d6, U+f4d9, U+f515-f516, U+f546-f547, U+f54a-f54c, U+f54f, U+f553, U+f61a-f620, U+f63d, U+f641, U+f685-f686, U+f68a-f694, U+f6a0, U+f707-f70a, U+f70d, U+f70f-f714, U+f716, U+f75b, U+f75e-f761, U+f7b9, U+f7be-f7c4, U+f7cc, U+f7d9, U+f81a-f822, U+f87e-f880, U+f8d8, U+f8da-f8de, U+f8f3, U+10e025-10e02e, U+10e06a-10e06d, U+10e070, U+10f022, U+10f029, U+10f074, U+10f079, U+10f09e, U+10f0c4, U+10f10d, U+10f122, U+10f14d, U+10f156, U+10f158, U+10f197, U+10f1de, U+10f1e0, U+10f20b, U+10f24e, U+10f277, U+10f2dc, U+10f2ea, U+10f2f1, U+10f2f5-10f2f6, U+10f2f8-10f2fb, U+10f30b, U+10f347, U+10f34c, U+10f356, U+10f362, U+10f365, U+10f367, U+10f3ed, U+10f3f1, U+10f410, U+10f45a-10f45b, U+10f463, U+10f480, U+10f486, U+10f488-10f489, U+10f48d, U+10f4d4, U+10f4d6, U+10f4d9, U+10f515-10f516, U+10f546-10f547, U+10f54a-10f54c, U+10f54f, U+10f553, U+10f61a-10f620, U+10f63d, U+10f641, U+10f685-10f686, U+10f68a-10f694, U+10f6a0, U+10f707-10f70a, U+10f70d, U+10f70f-10f714, U+10f716, U+10f75b, U+10f75e-10f761, U+10f7b9, U+10f7be-10f7c4, U+10f7cc, U+10f7d9, U+10f81a-10f822, U+10f87e-10f880, U+10f8d8, U+10f8da-10f8de, U+10f8f3
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-d5bbe9.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-d5bbe9.ttf) format("truetype");
+	unicode-range: U+e017, U+e01f, U+e024, U+e045, U+e060, U+f001, U+f004-f005, U+f007, U+f00c, U+f011-f012, U+f015, U+f017, U+f019, U+f023-f024, U+f02c-f02d, U+f02f-f031, U+f03a, U+f03d-f03e, U+f040-f041, U+f04a-f04e, U+f060-f065, U+f067-f068, U+f06b-f06d, U+f072, U+f075, U+f077, U+f07b, U+f084, U+f091, U+f093, U+f095, U+f09d, U+f0a6, U+f0ac-f0ad, U+f0b0, U+f0c0-f0c2, U+f0c5, U+f0c8-f0c9, U+f0cc, U+f0ce, U+f0d1, U+f0d6-f0d7, U+f0dc, U+f0e0, U+f0e8, U+f0f3, U+f106, U+f108-f109, U+f10e, U+f110-f111, U+f11e, U+f121, U+f128-f12a, U+f132-f133, U+f135, U+f145, U+f14e, U+f15b, U+f186, U+f188, U+f1ab, U+f1ad, U+f1bb, U+f1c0, U+f1c2-f1c3, U+f1d8, U+f1e4, U+f1ea-f1eb, U+f1f8, U+f205, U+f20a, U+f217, U+f21a, U+f21c-f21d, U+f233, U+f238, U+f251, U+f25d, U+f292, U+f29e, U+f2a0, U+f2a7, U+f2bb, U+f2cc, U+f2db, U+f2e1, U+f2ec, U+f2f7, U+f303, U+f316, U+f328, U+f332, U+f335, U+f37e, U+f390, U+f3c5, U+f3ce, U+f3f4, U+f40e, U+f435, U+f481, U+f493, U+f4cc, U+f4d1, U+f4d8, U+f4e2, U+f503, U+f51b, U+f52b, U+f549, U+f54e, U+f555, U+f559, U+f56e-f570, U+f594, U+f5a1, U+f5aa-f5ab, U+f5b7, U+f5db-f5dc, U+f5f6, U+f5fd, U+f621, U+f64a, U+f64f, U+f654, U+f656, U+f673, U+f67d, U+f67f, U+f695, U+f69c, U+f6a8, U+f6e3, U+f6e9, U+f6ff, U+f715, U+f734, U+f755, U+f757, U+f773, U+f781, U+f784, U+f788, U+f7b2, U+f7b6, U+f7bd, U+f7d5, U+f7ee, U+f7ff, U+f804, U+f80a, U+f80c, U+f813, U+f82f, U+f855, U+f858-f859, U+f85c, U+f86d, U+f871, U+f893-f894, U+f8a9, U+f8b2, U+f8d6, U+f8d9, U+f8e7, U+f8ef, U+10e017, U+10e01f, U+10e024, U+10e045, U+10e060, U+10f001, U+10f004-10f005, U+10f007, U+10f00c, U+10f011-10f012, U+10f015, U+10f017, U+10f019, U+10f023-10f024, U+10f02c-10f02d, U+10f02f-10f031, U+10f03a, U+10f03d-10f03e, U+10f040-10f041, U+10f04a-10f04e, U+10f060-10f065, U+10f067-10f068, U+10f06b-10f06d, U+10f072, U+10f075, U+10f077, U+10f07b, U+10f084, U+10f091, U+10f093, U+10f095, U+10f09d, U+10f0a6, U+10f0ac-10f0ad, U+10f0b0, U+10f0c0-10f0c2, U+10f0c5, U+10f0c8-10f0c9, U+10f0cc, U+10f0ce, U+10f0d1, U+10f0d6-10f0d7, U+10f0dc, U+10f0e0, U+10f0e8, U+10f0f3, U+10f106, U+10f108-10f109, U+10f10e, U+10f110-10f111, U+10f11e, U+10f121, U+10f128-10f12a, U+10f132-10f133, U+10f135, U+10f145, U+10f14e, U+10f15b, U+10f186, U+10f188, U+10f1ab, U+10f1ad, U+10f1bb, U+10f1c0, U+10f1c2-10f1c3, U+10f1d8, U+10f1e4, U+10f1ea-10f1eb, U+10f1f8, U+10f205, U+10f20a, U+10f217, U+10f21a, U+10f21c-10f21d, U+10f233, U+10f238, U+10f251, U+10f25d, U+10f292, U+10f29e, U+10f2a0, U+10f2a7, U+10f2bb, U+10f2cc, U+10f2db, U+10f2e1, U+10f2ec, U+10f2f7, U+10f303, U+10f316, U+10f328, U+10f332, U+10f335, U+10f37e, U+10f390, U+10f3c5, U+10f3ce, U+10f3f4, U+10f40e, U+10f435, U+10f481, U+10f493, U+10f4cc, U+10f4d1, U+10f4d8, U+10f4e2, U+10f503, U+10f51b, U+10f52b, U+10f549, U+10f54e, U+10f555, U+10f559, U+10f56e-10f570, U+10f594, U+10f5a1, U+10f5aa-10f5ab, U+10f5b7, U+10f5db-10f5dc, U+10f5f6, U+10f5fd, U+10f621, U+10f64a, U+10f64f, U+10f654, U+10f656, U+10f673, U+10f67d, U+10f67f, U+10f695, U+10f69c, U+10f6a8, U+10f6e3, U+10f6e9, U+10f6ff, U+10f715, U+10f734, U+10f755, U+10f757, U+10f773, U+10f781, U+10f784, U+10f788, U+10f7b2, U+10f7b6, U+10f7bd, U+10f7d5, U+10f7ee, U+10f7ff, U+10f804, U+10f80a, U+10f80c, U+10f813, U+10f82f, U+10f855, U+10f858-10f859, U+10f85c, U+10f86d, U+10f871, U+10f893-10f894, U+10f8a9, U+10f8b2, U+10f8d6, U+10f8d9, U+10f8e7, U+10f8ef
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-edb9e6.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-edb9e6.ttf) format("truetype");
+	unicode-range: U+e000-e001, U+e030-e032, U+f042, U+f053-f056, U+f058-f05a, U+f06a, U+f07a, U+f080, U+f0a8-f0ab, U+f0d8-f0da, U+f137-f13a, U+f144, U+f192, U+f1fe, U+f200-f201, U+f218, U+f28b, U+f28d, U+f2bd, U+f2e8, U+f322-f325, U+f32d-f32e, U+f330-f331, U+f358-f35b, U+f439-f448, U+f474-f476, U+f47e, U+f4b9, U+f4c7, U+f51c, U+f560, U+f59d, U+f5de, U+f5e3-f5e7, U+f602, U+f615, U+f643, U+f64d-f64e, U+f6a3, U+f6be, U+f6c1, U+f772, U+f787, U+f78a-f78b, U+f79e-f79f, U+f7ba, U+f7ef-f7f0, U+f85b, U+f8a4, U+f8ab, U+f8ec, U+f8ff, U+10e000-10e001, U+10e030-10e032, U+10f042, U+10f053-10f056, U+10f058-10f05a, U+10f06a, U+10f07a, U+10f080, U+10f0a8-10f0ab, U+10f0d8-10f0da, U+10f137-10f13a, U+10f144, U+10f192, U+10f1fe, U+10f200-10f201, U+10f218, U+10f28b, U+10f28d, U+10f2bd, U+10f2e8, U+10f322-10f325, U+10f32d-10f32e, U+10f330-10f331, U+10f358-10f35b, U+10f439-10f448, U+10f474-10f476, U+10f47e, U+10f4b9, U+10f4c7, U+10f51c, U+10f560, U+10f59d, U+10f5de, U+10f5e3-10f5e7, U+10f602, U+10f615, U+10f643, U+10f64d-10f64e, U+10f6a3, U+10f6be, U+10f6c1, U+10f772, U+10f787, U+10f78a-10f78b, U+10f79e-10f79f, U+10f7ba, U+10f7ef-10f7f0, U+10f85b, U+10f8a4, U+10f8ab, U+10f8ec, U+10f8ff
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-972b33.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-972b33.ttf) format("truetype");
+	unicode-range: U+e033-e039, U+e03b-e03d, U+e06f, U+e071, U+f009-f00b, U+f02b, U+f089, U+f098, U+f0db, U+f0dd-f0de, U+f0f1-f0f2, U+f0fa, U+f0fd-f0fe, U+f10a, U+f12b, U+f143, U+f146, U+f14a-f14c, U+f150-f152, U+f154, U+f185, U+f191, U+f199, U+f1e1, U+f2d3, U+f2e5, U+f2e9, U+f2f2-f2f4, U+f2fd, U+f30f, U+f321, U+f329-f32c, U+f339-f33c, U+f350-f353, U+f360, U+f3f0, U+f3f2, U+f3fa, U+f3fc, U+f45c-f45d, U+f48e, U+f49b, U+f49f, U+f4c8, U+f540, U+f551, U+f566, U+f5bb-f5bd, U+f5c0-f5c1, U+f5c3, U+f5d0, U+f617, U+f622-f623, U+f67b, U+f681-f682, U+f696-f69b, U+f717-f71a, U+f71c-f71d, U+f763-f767, U+f79b, U+f7cf-f7d0, U+f7d2, U+f7d4, U+f824-f826, U+f86e, U+f87b, U+f890-f892, U+10e033-10e039, U+10e03b-10e03d, U+10e06f, U+10e071, U+10f009-10f00b, U+10f02b, U+10f089, U+10f098, U+10f0db, U+10f0dd-10f0de, U+10f0f1-10f0f2, U+10f0fa, U+10f0fd-10f0fe, U+10f10a, U+10f12b, U+10f143, U+10f146, U+10f14a-10f14c, U+10f150-10f152, U+10f154, U+10f185, U+10f191, U+10f199, U+10f1e1, U+10f2d3, U+10f2e5, U+10f2e9, U+10f2f2-10f2f4, U+10f2fd, U+10f30f, U+10f321, U+10f329-10f32c, U+10f339-10f33c, U+10f350-10f353, U+10f360, U+10f3f0, U+10f3f2, U+10f3fa, U+10f3fc, U+10f45c-10f45d, U+10f48e, U+10f49b, U+10f49f, U+10f4c8, U+10f540, U+10f551, U+10f566, U+10f5bb-10f5bd, U+10f5c0-10f5c1, U+10f5c3, U+10f5d0, U+10f617, U+10f622-10f623, U+10f67b, U+10f681-10f682, U+10f696-10f69b, U+10f717-10f71a, U+10f71c-10f71d, U+10f763-10f767, U+10f79b, U+10f7cf-10f7d0, U+10f7d2, U+10f7d4, U+10f824-10f826, U+10f86e, U+10f87b, U+10f890-10f892
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-c69c5d.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-c69c5d.ttf) format("truetype");
+	unicode-range: U+e010, U+e01b, U+e020-e021, U+e02f, U+e03a, U+e042, U+e046, U+e06e, U+e074, U+e076, U+f008, U+f018, U+f01c, U+f025, U+f02a, U+f02e, U+f05b, U+f06e, U+f078, U+f086, U+f09c, U+f0a3, U+f0b1, U+f0c6, U+f0e7, U+f0eb, U+f0f8, U+f11c, U+f126, U+f12c-f12e, U+f130-f131, U+f13d, U+f140, U+f155, U+f164, U+f1ae, U+f1b2, U+f1b8, U+f1c1, U+f1ce, U+f1dc, U+f1e5-f1e6, U+f1ec, U+f1f9, U+f219, U+f21b, U+f22d, U+f234, U+f246, U+f24d, U+f275, U+f295, U+f2b5, U+f2cd, U+f2d2, U+f2fc, U+f302, U+f31a, U+f363, U+f3e5, U+f3fb, U+f44b, U+f47d, U+f48a, U+f48f-f490, U+f494, U+f498, U+f4b7, U+f4ca, U+f4d7, U+f508, U+f51d-f51e, U+f521-f522, U+f530, U+f535, U+f53e, U+f541, U+f543-f545, U+f548, U+f55d, U+f564, U+f56c, U+f577-f578, U+f590, U+f595, U+f5a2, U+f5b0, U+f5ba, U+f5bf, U+f5ca, U+f5ef, U+f5f2, U+f5fb, U+f63b, U+f649, U+f653, U+f65b, U+f664, U+f675, U+f6bf-f6c0, U+f6d5, U+f6f5, U+f6fa, U+f700, U+f70b, U+f70e, U+f71b, U+f72e-f72f, U+f733, U+f747, U+f75c, U+f762, U+f77c, U+f801, U+f814, U+f830, U+f845-f846, U+f850, U+f866, U+f875, U+f897, U+f89f, U+f8b1, U+f8bb, U+f8c7, U+f8d7, U+f8df-f8e0, U+f8ee, U+f8fd, U+10e010, U+10e01b, U+10e020-10e021, U+10e02f, U+10e03a, U+10e042, U+10e046, U+10e06e, U+10e074, U+10e076, U+10f008, U+10f018, U+10f01c, U+10f025, U+10f02a, U+10f02e, U+10f05b, U+10f06e, U+10f078, U+10f086, U+10f09c, U+10f0a3, U+10f0b1, U+10f0c6, U+10f0e7, U+10f0eb, U+10f0f8, U+10f11c, U+10f126, U+10f12c-10f12e, U+10f130-10f131, U+10f13d, U+10f140, U+10f155, U+10f164, U+10f1ae, U+10f1b2, U+10f1b8, U+10f1c1, U+10f1ce, U+10f1dc, U+10f1e5-10f1e6, U+10f1ec, U+10f1f9, U+10f219, U+10f21b, U+10f22d, U+10f234, U+10f246, U+10f24d, U+10f275, U+10f295, U+10f2b5, U+10f2cd, U+10f2d2, U+10f2fc, U+10f302, U+10f31a, U+10f363, U+10f3e5, U+10f3fb, U+10f44b, U+10f47d, U+10f48a, U+10f48f-10f490, U+10f494, U+10f498, U+10f4b7, U+10f4ca, U+10f4d7, U+10f508, U+10f51d-10f51e, U+10f521-10f522, U+10f530, U+10f535, U+10f53e, U+10f541, U+10f543-10f545, U+10f548, U+10f55d, U+10f564, U+10f56c, U+10f577-10f578, U+10f590, U+10f595, U+10f5a2, U+10f5b0, U+10f5ba, U+10f5bf, U+10f5ca, U+10f5ef, U+10f5f2, U+10f5fb, U+10f63b, U+10f649, U+10f653, U+10f65b, U+10f664, U+10f675, U+10f6bf-10f6c0, U+10f6d5, U+10f6f5, U+10f6fa, U+10f700, U+10f70b, U+10f70e, U+10f71b, U+10f72e-10f72f, U+10f733, U+10f747, U+10f75c, U+10f762, U+10f77c, U+10f801, U+10f814, U+10f830, U+10f845-10f846, U+10f850, U+10f866, U+10f875, U+10f897, U+10f89f, U+10f8b1, U+10f8bb, U+10f8c7, U+10f8d7, U+10f8df-10f8e0, U+10f8ee, U+10f8fd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-f2eb46.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-f2eb46.ttf) format("truetype");
+	unicode-range: U+e03e-e041, U+e043-e044, U+e047-e048, U+e04a, U+e072, U+f034-f035, U+f071, U+f08d, U+f0b2, U+f0cd, U+f0e9, U+f0f0, U+f0f9, U+f120, U+f13e, U+f165, U+f1ba, U+f204, U+f225, U+f239, U+f25c, U+f26c, U+f29a, U+f2c7-f2cb, U+f2eb, U+f2ed, U+f30c, U+f338, U+f346, U+f34d, U+f357, U+f35d, U+f3be-f3bf, U+f3ff-f401, U+f406, U+f424, U+f45e, U+f48b-f48c, U+f491, U+f4db-f4e0, U+f4fa-f502, U+f504, U+f519, U+f552, U+f5c9, U+f62e-f62f, U+f631-f63a, U+f63c, U+f69e-f69f, U+f6a1-f6a2, U+f6a4-f6a5, U+f71e-f728, U+f768-f76b, U+f76f, U+f7d7-f7d8, U+f7da-f7de, U+f829-f82e, U+f85d, U+f87d, U+f895-f896, U+f8e2-f8e6, U+f8e9-f8eb, U+10e03e-10e041, U+10e043-10e044, U+10e047-10e048, U+10e04a, U+10e072, U+10f034-10f035, U+10f071, U+10f08d, U+10f0b2, U+10f0cd, U+10f0e9, U+10f0f0, U+10f0f9, U+10f120, U+10f13e, U+10f165, U+10f1ba, U+10f204, U+10f225, U+10f239, U+10f25c, U+10f26c, U+10f29a, U+10f2c7-10f2cb, U+10f2eb, U+10f2ed, U+10f30c, U+10f338, U+10f346, U+10f34d, U+10f357, U+10f35d, U+10f3be-10f3bf, U+10f3ff-10f401, U+10f406, U+10f424, U+10f45e, U+10f48b-10f48c, U+10f491, U+10f4db-10f4e0, U+10f4fa-10f502, U+10f504, U+10f519, U+10f552, U+10f5c9, U+10f62e-10f62f, U+10f631-10f63a, U+10f63c, U+10f69e-10f69f, U+10f6a1-10f6a2, U+10f6a4-10f6a5, U+10f71e-10f728, U+10f768-10f76b, U+10f76f, U+10f7d7-10f7d8, U+10f7da-10f7de, U+10f829-10f82e, U+10f85d, U+10f87d, U+10f895-10f896, U+10f8e2-10f8e6, U+10f8e9-10f8eb
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-f7aaa1.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-f7aaa1.ttf) format("truetype");
+	unicode-range: U+f043, U+f052, U+f070, U+f118-f11a, U+f141-f142, U+f153, U+f1fb, U+f2a2, U+f2a4, U+f2a8, U+f2b6, U+f309, U+f320, U+f349-f34a, U+f354, U+f39b-f39c, U+f422, U+f471-f473, U+f4ba, U+f4da, U+f523-f52a, U+f52c, U+f556, U+f567, U+f569-f56a, U+f579-f57a, U+f57c-f58c, U+f596-f59c, U+f5a4-f5a5, U+f5b3-f5b4, U+f5b8-f5b9, U+f5c2, U+f5c7, U+f5ea, U+f5ec-f5ee, U+f5f0, U+f657-f658, U+f674, U+f6d0-f6d4, U+f6d6-f6db, U+f748-f749, U+f750, U+f792-f796, U+f7a2, U+f7fa-f7fc, U+f85f-f862, U+f8b5, U+10f043, U+10f052, U+10f070, U+10f118-10f11a, U+10f141-10f142, U+10f153, U+10f1fb, U+10f2a2, U+10f2a4, U+10f2a8, U+10f2b6, U+10f309, U+10f320, U+10f349-10f34a, U+10f354, U+10f39b-10f39c, U+10f422, U+10f471-10f473, U+10f4ba, U+10f4da, U+10f523-10f52a, U+10f52c, U+10f556, U+10f567, U+10f569-10f56a, U+10f579-10f57a, U+10f57c-10f58c, U+10f596-10f59c, U+10f5a4-10f5a5, U+10f5b3-10f5b4, U+10f5b8-10f5b9, U+10f5c2, U+10f5c7, U+10f5ea, U+10f5ec-10f5ee, U+10f5f0, U+10f657-10f658, U+10f674, U+10f6d0-10f6d4, U+10f6d6-10f6db, U+10f748-10f749, U+10f750, U+10f792-10f796, U+10f7a2, U+10f7fa-10f7fc, U+10f85f-10f862, U+10f8b5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-c635b8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-c635b8.ttf) format("truetype");
+	unicode-range: U+e002-e003, U+e051, U+f057, U+f066, U+f0ed-f0ee, U+f125, U+f1b3, U+f1da, U+f326-f327, U+f381-f382, U+f386-f387, U+f389-f38a, U+f449-f44a, U+f46c-f46f, U+f4ac-f4b5, U+f4b8, U+f51f-f520, U+f542, U+f55a, U+f563, U+f565, U+f568, U+f5e8-f5e9, U+f5eb, U+f651, U+f655, U+f6b1, U+f6c2-f6c8, U+f6cb, U+f6cd-f6cf, U+f737-f746, U+f74e, U+f76c-f76e, U+f78e-f78f, U+f7cd, U+f7f3, U+f7f5-f7f8, U+f8ad-f8ae, U+f8b0, U+f8b3-f8b4, U+f8cc-f8cd, U+10e002-10e003, U+10e051, U+10f057, U+10f066, U+10f0ed-10f0ee, U+10f125, U+10f1b3, U+10f1da, U+10f326-10f327, U+10f381-10f382, U+10f386-10f387, U+10f389-10f38a, U+10f449-10f44a, U+10f46c-10f46f, U+10f4ac-10f4b5, U+10f4b8, U+10f51f-10f520, U+10f542, U+10f55a, U+10f563, U+10f565, U+10f568, U+10f5e8-10f5e9, U+10f5eb, U+10f651, U+10f655, U+10f6b1, U+10f6c2-10f6c8, U+10f6cb, U+10f6cd-10f6cf, U+10f737-10f746, U+10f74e, U+10f76c-10f76e, U+10f78e-10f78f, U+10f7cd, U+10f7f3, U+10f7f5-10f7f8, U+10f8ad-10f8ae, U+10f8b0, U+10f8b3-10f8b4, U+10f8cc-10f8cd
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-791c40.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-791c40.ttf) format("truetype");
+	unicode-range: U+e05b, U+f032, U+f073, U+f083, U+f0a1, U+f187, U+f1b9, U+f1e2, U+f1f6, U+f1fd, U+f206-f207, U+f271-f274, U+f2a1, U+f333-f334, U+f436-f438, U+f458, U+f466-f469, U+f46b, U+f499-f49a, U+f49c-f49e, U+f4a0-f4a1, U+f517-f518, U+f51a, U+f558, U+f55b-f55c, U+f55e-f55f, U+f562, U+f5d5-f5da, U+f5dd, U+f5df-f5e2, U+f647-f648, U+f64b-f64c, U+f66a, U+f677, U+f687, U+f6b6-f6bd, U+f735-f736, U+f77f-f780, U+f782-f783, U+f786, U+f7e6-f7ed, U+f7f1, U+f805, U+f823, U+f827, U+f832-f833, U+f848-f849, U+f84c-f84f, U+f851-f854, U+f856-f857, U+f85a, U+f89c-f89d, U+f8a5, U+f8a7-f8a8, U+f8aa, U+f8ac, U+f8fa-f8fc, U+f8fe, U+10e05b, U+10f032, U+10f073, U+10f083, U+10f0a1, U+10f187, U+10f1b9, U+10f1e2, U+10f1f6, U+10f1fd, U+10f206-10f207, U+10f271-10f274, U+10f2a1, U+10f333-10f334, U+10f436-10f438, U+10f458, U+10f466-10f469, U+10f46b, U+10f499-10f49a, U+10f49c-10f49e, U+10f4a0-10f4a1, U+10f517-10f518, U+10f51a, U+10f558, U+10f55b-10f55c, U+10f55e-10f55f, U+10f562, U+10f5d5-10f5da, U+10f5dd, U+10f5df-10f5e2, U+10f647-10f648, U+10f64b-10f64c, U+10f66a, U+10f677, U+10f687, U+10f6b6-10f6bd, U+10f735-10f736, U+10f77f-10f780, U+10f782-10f783, U+10f786, U+10f7e6-10f7ed, U+10f7f1, U+10f805, U+10f823, U+10f827, U+10f832-10f833, U+10f848-10f849, U+10f84c-10f84f, U+10f851-10f854, U+10f856-10f857, U+10f85a, U+10f89c-10f89d, U+10f8a5, U+10f8a7-10f8a8, U+10f8aa, U+10f8ac, U+10f8fa-10f8fc, U+10f8fe
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-b276a4.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-b276a4.ttf) format("truetype");
+	unicode-range: U+e01c-e01d, U+e022-e023, U+e068-e069, U+f03b, U+f044, U+f0ea, U+f182-f183, U+f1b0, U+f1dd, U+f1fc, U+f22c, U+f247-f249, U+f29d, U+f2ce, U+f2f0, U+f2fe, U+f301, U+f304-f306, U+f308, U+f3dd-f3de, U+f470, U+f482-f485, U+f4cd-f4d0, U+f4d2-f4d3, U+f53f, U+f554, U+f5a9, U+f5ac-f5af, U+f5b1, U+f5c4, U+f613-f614, U+f618-f619, U+f679-f67a, U+f67c, U+f67e, U+f680, U+f683, U+f6ec, U+f6fe, U+f701-f703, U+f705-f706, U+f70c, U+f756, U+f758-f75a, U+f7b8, U+f7c5, U+f7c7-f7cb, U+f7ce, U+f7d1, U+f815-f819, U+f84a-f84b, U+f85e, U+f876, U+f878-f879, U+f87c, U+f8d3-f8d5, U+10e01c-10e01d, U+10e022-10e023, U+10e068-10e069, U+10f03b, U+10f044, U+10f0ea, U+10f182-10f183, U+10f1b0, U+10f1dd, U+10f1fc, U+10f22c, U+10f247-10f249, U+10f29d, U+10f2ce, U+10f2f0, U+10f2fe, U+10f301, U+10f304-10f306, U+10f308, U+10f3dd-10f3de, U+10f470, U+10f482-10f485, U+10f4cd-10f4d0, U+10f4d2-10f4d3, U+10f53f, U+10f554, U+10f5a9, U+10f5ac-10f5af, U+10f5b1, U+10f5c4, U+10f613-10f614, U+10f618-10f619, U+10f679-10f67a, U+10f67c, U+10f67e, U+10f680, U+10f683, U+10f6ec, U+10f6fe, U+10f701-10f703, U+10f705-10f706, U+10f70c, U+10f756, U+10f758-10f75a, U+10f7b8, U+10f7c5, U+10f7c7-10f7cb, U+10f7ce, U+10f7d1, U+10f815-10f819, U+10f84a-10f84b, U+10f85e, U+10f876, U+10f878-10f879, U+10f87c, U+10f8d3-10f8d5
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-af6df3.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-af6df3.ttf) format("truetype");
+	unicode-range: U+e004-e006, U+e008-e00b, U+e053-e054, U+f013, U+f050-f051, U+f07c, U+f085, U+f0c3, U+f0c7, U+f0e3-f0e4, U+f11b, U+f134, U+f15c, U+f19d, U+f1ac, U+f1c4-f1c9, U+f1e3, U+f2e3, U+f2e6, U+f317-f319, U+f31c, U+f3a0, U+f3a5, U+f3fd, U+f44c, U+f44e-f451, U+f456, U+f46a, U+f477-f478, U+f47a, U+f52d-f52f, U+f531-f532, U+f56b, U+f56d, U+f571-f576, U+f58d-f58e, U+f5c8, U+f5f3-f5f5, U+f624-f62d, U+f659-f65a, U+f65c-f663, U+f6dd, U+f6df-f6e2, U+f74b-f74d, U+f79a, U+f79c-f79d, U+f7a3-f7a6, U+f7e4, U+f7fd-f7fe, U+f800, U+f802-f803, U+f863-f865, U+f867-f869, U+f877, U+f8b6-f8ba, U+f8bc-f8bf, U+10e004-10e006, U+10e008-10e00b, U+10e053-10e054, U+10f013, U+10f050-10f051, U+10f07c, U+10f085, U+10f0c3, U+10f0c7, U+10f0e3-10f0e4, U+10f11b, U+10f134, U+10f15c, U+10f19d, U+10f1ac, U+10f1c4-10f1c9, U+10f1e3, U+10f2e3, U+10f2e6, U+10f317-10f319, U+10f31c, U+10f3a0, U+10f3a5, U+10f3fd, U+10f44c, U+10f44e-10f451, U+10f456, U+10f46a, U+10f477-10f478, U+10f47a, U+10f52d-10f52f, U+10f531-10f532, U+10f56b, U+10f56d, U+10f571-10f576, U+10f58d-10f58e, U+10f5c8, U+10f5f3-10f5f5, U+10f624-10f62d, U+10f659-10f65a, U+10f65c-10f663, U+10f6dd, U+10f6df-10f6e2, U+10f74b-10f74d, U+10f79a, U+10f79c-10f79d, U+10f7a3-10f7a6, U+10f7e4, U+10f7fd-10f7fe, U+10f800, U+10f802-10f803, U+10f863-10f865, U+10f867-10f869, U+10f877, U+10f8b6-10f8ba, U+10f8bc-10f8bf
+}
+
+@font-face {
+	font-family: "Font Awesome 5 Duotone";
+	font-display: block;
+	font-weight: 900;
+	src: url(/assets/webfonts/pro-fa-duotone-900-0e911e.woff2) format("woff2"), url(/assets/webfonts/pro-fa-duotone-900-0e911e.ttf) format("truetype");
+	unicode-range: U+f4e6, U+10f4e6
+}

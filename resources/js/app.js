@@ -11,6 +11,11 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 
+import "../assets/pro.css"
+import "../assets/pro-v5-font-face.css"
+import "../assets/pro-v4-shims.css"
+import "../assets/pro-v4-font-face.css"
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 /*

@@ -1,0 +1,244 @@
+/*
+ * Copyright (C) 2022 Do inc. - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Emanuele (ebalo) Balsamo <emanuele.balsamo@do-inc.co>
+ */
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-180707.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-180707.ttf) format("truetype");
+	unicode-range: U+f033, U+f03c, U+f0fb, U+f21e, U+f253-f254, U+f2a3, U+f2c2
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-548601.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-548601.ttf) format("truetype");
+	unicode-range: U+f00d, U+f026-f028, U+f0f5, U+f157, U+f159, U+f193, U+f221, U+f226, U+f228, U+f235, U+f2d1
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-882569.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-882569.ttf) format("truetype");
+	unicode-range: U+f000, U+f002, U+f00e, U+f010, U+f076, U+f0ca-f0cb, U+f0f4, U+f124, U+f127, U+f1cd, U+f222-f224, U+f227, U+f229-f22b, U+f276, U+f279
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-d5bbe9.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-d5bbe9.ttf) format("truetype");
+	unicode-range: U+f001, U+f004-f005, U+f007, U+f00c, U+f011-f012, U+f015, U+f019, U+f023-f024, U+f02c-f02d, U+f02f-f031, U+f03a, U+f03d, U+f040, U+f04a-f04e, U+f060-f064, U+f067-f068, U+f06b-f06d, U+f072, U+f075, U+f077, U+f07b, U+f084, U+f091, U+f093, U+f095, U+f0ad, U+f0b0, U+f0c0-f0c2, U+f0c8-f0c9, U+f0cc, U+f0ce, U+f0d1, U+f0d7, U+f0dc, U+f0e0, U+f0e8, U+f0f3, U+f106, U+f108-f109, U+f10e, U+f110-f111, U+f11e, U+f121, U+f128-f12a, U+f132, U+f135, U+f145, U+f15b, U+f188, U+f1ab, U+f1ad, U+f1bb, U+f1c0, U+f1d8, U+f1e4, U+f1eb, U+f205, U+f217, U+f21a, U+f21c-f21d, U+f233, U+f238, U+f251, U+f283, U+f292, U+f29e, U+f2a0, U+f2a7, U+f2bb, U+f2cc, U+f2db
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-c69c5d.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-c69c5d.ttf) format("truetype");
+	unicode-range: U+f008, U+f018, U+f01c, U+f025, U+f02a, U+f02e, U+f05b, U+f078, U+f086, U+f09c, U+f0a3, U+f0b1, U+f0c6, U+f0e7, U+f112, U+f126, U+f12c-f12e, U+f130-f131, U+f13d, U+f140, U+f155, U+f164, U+f1ae, U+f1b2, U+f1b8, U+f1ce, U+f1dc, U+f1e5-f1e6, U+f1ec, U+f21b, U+f22d, U+f234, U+f246, U+f275, U+f295, U+f2cd
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-972b33.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-972b33.ttf) format("truetype");
+	unicode-range: U+f009-f00b, U+f02b, U+f089, U+f098, U+f0db, U+f0dd-f0de, U+f0f1-f0f2, U+f0fa, U+f0fd-f0fe, U+f12b, U+f143, U+f146, U+f14a-f14b, U+f154, U+f199, U+f1b1, U+f1e1, U+f2d3
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-af6df3.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-af6df3.ttf) format("truetype");
+	unicode-range: U+f013, U+f050-f051, U+f07c, U+f085, U+f0c3, U+f0e3, U+f11b, U+f134, U+f15c, U+f19d, U+f1ac
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-5bd1b2.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-5bd1b2.ttf) format("truetype");
+	unicode-range: U+f01e, U+f021, U+f036-f039, U+f048-f049, U+f05e, U+f069, U+f0e2, U+f0fc, U+f100-f105, U+f107, U+f15d, U+f162, U+f19c, U+f1fa, U+f236, U+f240-f245, U+f290-f291, U+f2b9
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-ee9a34.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-ee9a34.ttf) format("truetype");
+	unicode-range: U+f029, U+f045, U+f074, U+f079, U+f09e, U+f0c4, U+f10d, U+f122, U+f14d, U+f158, U+f197, U+f1de, U+f1e0, U+f20b, U+f24e, U+f277
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-791c40.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-791c40.ttf) format("truetype");
+	unicode-range: U+f032, U+f073, U+f083, U+f0a1, U+f187, U+f1b9, U+f1e2, U+f1f6, U+f1fd, U+f206-f207, U+f2a1
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-f2eb46.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-f2eb46.ttf) format("truetype");
+	unicode-range: U+f034-f035, U+f071, U+f08d, U+f0cd, U+f0e9, U+f0f0, U+f0f9, U+f120, U+f165, U+f1ba, U+f204, U+f225, U+f239, U+f25c, U+f26c, U+f29a, U+f2c7-f2cb
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-b276a4.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-b276a4.ttf) format("truetype");
+	unicode-range: U+f03b, U+f0ea, U+f182-f183, U+f1b0, U+f1dd, U+f1fc, U+f22c, U+f249, U+f29d, U+f2ce
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-edb9e6.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-edb9e6.ttf) format("truetype");
+	unicode-range: U+f042, U+f053-f056, U+f058-f05a, U+f06a, U+f07a, U+f0a8-f0ab, U+f0d8-f0da, U+f137-f13a, U+f144, U+f1fe, U+f200-f201, U+f218, U+f28b, U+f28d, U+f2bd
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-f7aaa1.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-f7aaa1.ttf) format("truetype");
+	unicode-range: U+f043, U+f052, U+f141-f142, U+f153, U+f1fb, U+f2a2, U+f2a4, U+f2a8, U+f2b6
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-solid-900-c635b8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-solid-900-c635b8.ttf) format("truetype");
+	unicode-range: U+f057, U+f0ed-f0ee, U+f125, U+f1b3, U+f1da
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-brands-400-6b2783.woff2) format("woff2"), url(/assets/webfonts/pro-fa-brands-400-6b2783.ttf) format("truetype");
+	unicode-range: U+f081-f082, U+f08c, U+f099, U+f09b, U+f0d2-f0d3, U+f13b, U+f166-f167, U+f16a-f16d, U+f179-f17c, U+f17e, U+f18c, U+f19a-f19b, U+f1a0, U+f1b4, U+f1bc, U+f1be, U+f1e8, U+f1ed, U+f1f0-f1f1, U+f20e, U+f210, U+f213-f214, U+f230, U+f232, U+f23a, U+f26b, U+f270, U+f288, U+f299, U+f29b, U+f2a6, U+f2b0, U+f2c5-f2c6, U+f2e0
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-brands-400-0e911e.woff2) format("woff2"), url(/assets/webfonts/pro-fa-brands-400-0e911e.ttf) format("truetype");
+	unicode-range: U+f092, U+f0d4-f0d5, U+f113, U+f13c, U+f15a, U+f16e, U+f170-f172, U+f17d, U+f180, U+f184, U+f1a5-f1a6, U+f1a9-f1aa, U+f1b5, U+f1bd, U+f1cb-f1cc, U+f1d1-f1d4, U+f1ee, U+f1f2-f1f5, U+f208-f209, U+f20d, U+f211, U+f23e, U+f24b-f24c, U+f25e, U+f260-f261, U+f265, U+f268-f269, U+f26d-f26e, U+f27c, U+f27e, U+f280, U+f282, U+f284, U+f286, U+f293-f294, U+f296, U+f2a5, U+f2b3-f2b4, U+f2d5-f2d8
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-brands-400-46adb8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-brands-400-46adb8.ttf) format("truetype");
+	unicode-range: U+f0e1, U+f136, U+f168-f169, U+f173-f174, U+f181, U+f189-f18b, U+f18d, U+f194, U+f198, U+f19e, U+f1a1-f1a4, U+f1a7-f1a8, U+f1b6-f1b7, U+f1ca, U+f1d0, U+f1d5-f1d7, U+f1e7, U+f1e9, U+f202-f203, U+f212, U+f215-f216, U+f231, U+f237, U+f23b-f23d, U+f263-f264, U+f266-f267, U+f26a, U+f27d, U+f281, U+f285, U+f287, U+f289-f28a, U+f297-f298, U+f2a9-f2ae, U+f2b1-f2b2, U+f2b8, U+f2c4, U+f2d9-f2da, U+f2dd-f2de
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-180707.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-180707.ttf) format("truetype");
+	unicode-range: U+f0a0, U+f0a4-f0a5, U+f0a7, U+f255-f25b, U+f2c1, U+f2c3
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-548601.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-548601.ttf) format("truetype");
+	unicode-range: U+f2d0
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-882569.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-882569.ttf) format("truetype");
+	unicode-range: U+f094, U+f278
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-d5bbe9.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-d5bbe9.ttf) format("truetype");
+	unicode-range: U+f003, U+f006, U+f016-f017, U+f03e, U+f08a, U+f096, U+f09d, U+f0a2, U+f0a6, U+f0c5, U+f0e5, U+f0f7, U+f10c, U+f114, U+f11d, U+f133, U+f14e, U+f186, U+f1c2-f1c3, U+f1d9, U+f1db, U+f1ea, U+f20a, U+f25d, U+f2bc, U+f2c0
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-f2eb46.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-f2eb46.ttf) format("truetype");
+	unicode-range: U+f014, U+f088
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-edb9e6.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-edb9e6.ttf) format("truetype");
+	unicode-range: U+f01a-f01b, U+f01d, U+f05d, U+f18e, U+f190, U+f192, U+f28c, U+f28e, U+f29c, U+f2be
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-ee9a34.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-ee9a34.ttf) format("truetype");
+	unicode-range: U+f022, U+f2d4, U+f2dc
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-b276a4.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-b276a4.ttf) format("truetype");
+	unicode-range: U+f044, U+f247-f248, U+f24a
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-972b33.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-972b33.ttf) format("truetype");
+	unicode-range: U+f046, U+f147, U+f150-f152, U+f185, U+f191, U+f196
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-c635b8.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-c635b8.ttf) format("truetype");
+	unicode-range: U+f05c, U+f27b
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-c69c5d.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-c69c5d.ttf) format("truetype");
+	unicode-range: U+f06e, U+f087, U+f097, U+f0e6, U+f0eb, U+f0f8, U+f11c, U+f1c1, U+f1f9, U+f24d, U+f2b5, U+f2d2
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-f7aaa1.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-f7aaa1.ttf) format("truetype");
+	unicode-range: U+f070, U+f118-f11a, U+f2b7
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-af6df3.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-af6df3.ttf) format("truetype");
+	unicode-range: U+f0c7, U+f0f6, U+f115, U+f1c4-f1c9, U+f1e3
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-791c40.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-791c40.ttf) format("truetype");
+	unicode-range: U+f1f7, U+f271-f274
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-regular-400-5bd1b2.woff2) format("woff2"), url(/assets/webfonts/pro-fa-regular-400-5bd1b2.ttf) format("truetype");
+	unicode-range: U+f2ba
+}
+
+@font-face {
+	font-family: "FontAwesome";
+	font-display: block;
+	src: url(/assets/webfonts/pro-fa-v4compatibility.woff2) format("woff2"), url(/assets/webfonts/pro-fa-v4compatibility.ttf) format("truetype");
+	unicode-range: U+f041, U+f047, U+f065-f066, U+f07d-f07e, U+f080, U+f08b, U+f08e, U+f090, U+f09a, U+f0ac, U+f0ae, U+f0b2, U+f0d0, U+f0d6, U+f0e4, U+f0ec, U+f10a-f10b, U+f123, U+f13e, U+f148-f149, U+f14c, U+f156, U+f15e, U+f160-f161, U+f163, U+f175-f178, U+f195, U+f1f8, U+f219, U+f250, U+f252, U+f27a
+}

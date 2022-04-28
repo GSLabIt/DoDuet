@@ -11,18 +11,16 @@
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <div v-for="(item, index) of nineRandomTracks">
-                        {{ item.name }}
-                        {{ item.creator }}
-                        {{ item.duration }}
-                        {{ item.cover_id }}
-                        <button @click="listen(item.id, index)">ASCOLTA</button>
-                        <input type="range" min="0" max="10" id="vota" v-model.number=this.votes[index] name="vota" :disabled="!this.votable[index]"/>
-                        <label for="vota" @click="vote(item.id, index)">VOTA</label>
-                    </div>
-                </div>
+            <weekly-election-banner class="my-5 max-w-7xl mx-auto sm:px-6 lg:px-8"></weekly-election-banner>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <template v-for="(item, index) of nineRandomTracks">
+                    <song-card :cover_id="item.cover_id" :creator="item.creator" :duration="item.duration"
+                               :name="item.name" :id="item.id"></song-card>
+                    <!--                    <button @click="listen(item.id, index)">ASCOLTA</button>
+                                        <input type="range" min="0" max="10" id="vota" v-model.number=this.votes[index] name="vota"
+                                               :disabled="!this.votable[index]"/>
+                                        <label for="vota" @click="vote(item.id, index)">VOTA</label>-->
+                </template>
             </div>
         </div>
     </app-layout>
@@ -32,21 +30,26 @@
 import {defineComponent} from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import Toaster from "../../Composition/toaster";
+import WeeklyElectionBanner from "@/Components/WeeklyElectionBanner";
+import SongCard from "@/Components/SongCard";
 
 const sodium = require("libsodium-wrappers")
 
 export default defineComponent({
     components: {
+        SongCard,
+        WeeklyElectionBanner,
         AppLayout,
     },
     data: () => ({
+        trackPlaying: false,
         nineRandomTracks: null,
         serverPublicKey: "",
         userSecretKey: "",
         votable: [],
         votes: []
     }),
-    mounted () {
+    mounted() {
         axios
             .get(route("authenticated.challenge.get.challenge_nine_random_tracks"))
             .then(response => {

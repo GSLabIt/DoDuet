@@ -22,6 +22,10 @@ const mix = require('laravel-mix');
 require('laravel-mix-merge-manifest');
 
 mix.ts('resources/js/app.js', 'public/js').vue()
+    .copyDirectory(
+        'resources/assets/webfonts',
+        'public/webfonts'
+    )
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
