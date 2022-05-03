@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Models\PersonaAccount;
 use App\Models\PersonaInquiry;
 use App\Models\PersonaVerification;
+use App\Models\User;
 use Carbon\Carbon;
 use Doinc\PersonaKyc\Models\Account;
 use Doinc\PersonaKyc\Models\Inquiry;
@@ -13,31 +14,22 @@ use Doinc\PersonaKyc\Models\Verification;
 class PersonaEventListener
 {
     // avoid duplicate code
-    private function personaVerificationUpdateOrCreate($event): void
+    private function personaInquiryUpdateOrCreate($inquiry): void
     {
-        PersonaVerification::updateOrCreate(
+        PersonaInquiry::updateOrInsert(
             [ // research and optionally merged for create params
-                "persona_id" => $event->id,
-                "created_at" => Carbon::createFromTimestamp($event->created_at_ts),
+                "persona_id" => $inquiry->id,
+                "reference_id" => $inquiry->reference_id,
             ],
             [ // update params
-                "status" => $event->status,
-                "inquiry_id" => $event->relationships->inquiry->id,
-                "submitted_at" => Carbon::createFromTimestamp($event->submitted_at_ts),
-                "completed_at" => Carbon::createFromTimestamp($event->completed_at_ts),
-                "country_code" => $event->country_code,
-                "entity_confidence_score" => $event->entity_confidence_score,
-                "document_similarity_score" => $event->document_similarity_score,
-                "entity_confidence_reasons" => $event->entity_confidence_reasons,
-                "photo_url" => json_encode([
-                    "front" => $event->front_photo_url,
-                    "back" => $event->back_photo_url,
-                    "left" => $event->left_photo_url,
-                    "center" => $event->center_photo_url,
-                    "right" => $event->right_photo_url,
-                ]),
-                "government_id_class" => $event->id_class,
-                "capture_method" => $event->capture_method,
+                "created_at" => $inquiry->created_at,
+                "status" => $inquiry->status,
+                "started_at" => $inquiry->started_at,
+                "completed_at" => $inquiry->completed_at,
+                "failed_at" => $inquiry->failed_at,
+                "decisioned_at" => $inquiry->decisioned_at,
+                "expired_at" => $inquiry->expired_at,
+                "redacted_at" => $inquiry->redacted_at,
             ]
         );
     }
@@ -45,28 +37,32 @@ class PersonaEventListener
     /**
      * Handle verification passed persona events.
      */
-    public function onVerificationPassedEvent(Verification $event): void
+    public function onInquiryApprovedEvent($event): void
     {
-        $this->personaVerificationUpdateOrCreate($event);
-        PersonaInquiry::where("persona_id", $event->id)->first()->user()
+        /** @var Inquiry $inquiry */
+        $inquiry = $event->inquiry;
+        $this->personaInquiryUpdateOrCreate($inquiry);
+        User::where("id", $inquiry->reference_id)->first()
             ->update([
-                "persona_verified_at" => Carbon::createFromTimestamp($event->completed_at_ts),
+                "persona_verified_at" => $inquiry->completed_at,
             ]);
     }
 
     /**
      * Handle account persona events.
      */
-    public function onAccountEvent(Account $event): void
+    public function onAccountEvent($event): void
     {
-        PersonaAccount::updateOrCreate(
+        /** @var Account $account */
+        $account = $event->account;
+        PersonaAccount::updateOrInsert(
             [ // research and optionally merged for create params
-                "persona_id" => $event->id,
-                "reference_id" => $event->reference_id,
-                "created_at" => $event->created_at
+                "persona_id" => $account->id,
+                "reference_id" => $account->reference_id
             ],
             [  // update params
-                    "updated_at" => $event->updated_at
+                    "created_at" => $account->created_at,
+                    "updated_at" => $account->updated_at
             ]
         );
     }
@@ -74,32 +70,46 @@ class PersonaEventListener
     /**
      * Handle verification persona events.
      */
-    public function onVerificationEvent(Verification $event): void
+    public function onVerificationEvent($event): void
     {
-        $this->personaVerificationUpdateOrCreate($event);
+        /** @var Verification $verification */
+        $verification = $event->verification;
+        PersonaVerification::updateOrInsert(
+            [ // research and optionally merged for create params
+                "persona_id" => $verification->id,
+            ],
+            [ // update params
+                "status" => $verification->status,
+                "inquiry_id" => $verification->relationships->inquiry->id,
+                "created_at" => Carbon::createFromTimestamp($verification->created_at_ts)->toDateTimeString(),
+                "submitted_at" => Carbon::createFromTimestamp($verification->submitted_at_ts)->toDateTimeString(),
+                "completed_at" => Carbon::createFromTimestamp($verification->completed_at_ts)->toDateTimeString(),
+                "country_code" => $verification->country_code,
+                "entity_confidence_score" => $verification->entity_confidence_score,
+                "document_similarity_score" => $verification->document_similarity_score,
+                "entity_confidence_reasons" => json_encode($verification->entity_confidence_reasons),
+                "photo_url" => json_encode([
+                    "front" => $verification->front_photo_url,
+                    "back" => $verification->back_photo_url,
+                    "left" => $verification->left_photo_url,
+                    "center" => $verification->center_photo_url,
+                    "right" => $verification->right_photo_url,
+                ]),
+                "government_id_class" => $verification->id_class,
+                "capture_method" => $verification->capture_method,
+            ]
+        );
     }
 
     /**
      * Handle inquiry persona events.
      */
-    public function onInquiryEvent(Inquiry $event): void
+    public function onInquiryEvent($event): void
     {
-        PersonaInquiry::updateOrCreate(
-            [ // research and optionally merged for create params
-                "id" => $event->id,
-                "reference_id" => $event->reference_id,
-                "created_at" => $event->created_at,
-            ],
-            [ // update params
-                "status" => $event->status,
-                "started_at" => $event->started_at,
-                "completed_at" => $event->completed_at,
-                "failed_at" => $event->failed_at,
-                "decisioned_at" => $event->decisioned_at,
-                "expired_at" => $event->expired_at,
-                "redacted_at" => $event->redacted_at,
-            ]
-        );
+
+        /** @var Inquiry $inquiry */
+        $inquiry = $event->inquiry;
+        $this->personaInquiryUpdateOrCreate($inquiry);
     }
 
     /**
@@ -111,91 +121,91 @@ class PersonaEventListener
     {
         // account events
         $events->listen(
-            'App\Events\AccountArchived',
+            'Doinc\PersonaKyc\Events\AccountArchived',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
         $events->listen( // creation event
-            'App\Events\AccountCreated',
+            'Doinc\PersonaKyc\Events\AccountCreated',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
         $events->listen(
-            'App\Events\AccountRedacted',
+            'Doinc\PersonaKyc\Events\AccountRedacted',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
         $events->listen(
-            'App\Events\AccountRestored',
+            'Doinc\PersonaKyc\Events\AccountRestored',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
         $events->listen(
-            'App\Events\AccountMerged',
+            'Doinc\PersonaKyc\Events\AccountMerged',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
         $events->listen(
-            'App\Events\AccountTagAdded',
+            'Doinc\PersonaKyc\Events\AccountTagAdded',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
         $events->listen(
-            'App\Events\AccountTagRemoved',
+            'Doinc\PersonaKyc\Events\AccountTagRemoved',
             'App\Listeners\PersonaEventListener@onAccountEvent'
         );
 
         // verification events
         $events->listen( // creation event
-            'App\Events\VerificationCreated',
-            'App\Listeners\PersonaEventListener@onVerificationEvent'
-        );
-        $events->listen( // special event account verified
-            'App\Events\VerificationPassed',
-            'App\Listeners\PersonaEventListener@onVerificationPassedEvent'
-        );
-        $events->listen(
-            'App\Events\VerificationFailed',
+            'Doinc\PersonaKyc\Events\VerificationCreated',
             'App\Listeners\PersonaEventListener@onVerificationEvent'
         );
         $events->listen(
-            'App\Events\VerificationRequiresRetry',
+            'Doinc\PersonaKyc\Events\VerificationPassed',
             'App\Listeners\PersonaEventListener@onVerificationEvent'
         );
         $events->listen(
-            'App\Events\VerificationCanceled',
+            'Doinc\PersonaKyc\Events\VerificationFailed',
+            'App\Listeners\PersonaEventListener@onVerificationEvent'
+        );
+        $events->listen(
+            'Doinc\PersonaKyc\Events\VerificationRequiresRetry',
+            'App\Listeners\PersonaEventListener@onVerificationEvent'
+        );
+        $events->listen(
+            'Doinc\PersonaKyc\Events\VerificationCanceled',
             'App\Listeners\PersonaEventListener@onVerificationEvent'
         );
 
         // inquiry events
         $events->listen( // creation event
-            'App\Events\InquiryCreated',
+            'Doinc\PersonaKyc\Events\InquiryCreated',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
         $events->listen(
-            'App\Events\InquiryStarted',
+            'Doinc\PersonaKyc\Events\InquiryStarted',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
         $events->listen(
-            'App\Events\InquiryExpired',
+            'Doinc\PersonaKyc\Events\InquiryExpired',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
         $events->listen(
-            'App\Events\InquiryCompleted',
+            'Doinc\PersonaKyc\Events\InquiryCompleted',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
         $events->listen(
-            'App\Events\InquiryFailed',
+            'Doinc\PersonaKyc\Events\InquiryFailed',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
         $events->listen(
-            'App\Events\InquiryMarkedForReview',
+            'Doinc\PersonaKyc\Events\InquiryMarkedForReview',
+            'App\Listeners\PersonaEventListener@onInquiryEvent'
+        );
+        $events->listen( // special event account verified
+            'Doinc\PersonaKyc\Events\InquiryApproved',
+            'App\Listeners\PersonaEventListener@onInquiryApprovedEvent'
+        );
+        $events->listen(
+            'Doinc\PersonaKyc\Events\InquiryDeclined',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
         $events->listen(
-            'App\Events\InquiryApproved',
-            'App\Listeners\PersonaEventListener@onInquiryEvent'
-        );
-        $events->listen(
-            'App\Events\InquiryDeclined',
-            'App\Listeners\PersonaEventListener@onInquiryEvent'
-        );
-        $events->listen(
-            'App\Events\InquiryTransitioned',
+            'Doinc\PersonaKyc\Events\InquiryTransitioned',
             'App\Listeners\PersonaEventListener@onInquiryEvent'
         );
     }

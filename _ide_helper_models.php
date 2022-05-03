@@ -491,6 +491,106 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PersonaAccount
+ *
+ * @property int $id
+ * @property string $persona_id
+ * @property string $reference_id
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount wherePersonaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaAccount whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperPersonaAccount {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\PersonaInquiry
+ *
+ * @property int $id
+ * @property string $persona_id
+ * @property string $status
+ * @property string $reference_id
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property string|null $started_at
+ * @property string|null $completed_at
+ * @property string|null $failed_at
+ * @property string|null $decisioned_at
+ * @property string|null $expired_at
+ * @property string|null $redacted_at
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\PersonaVerification|null $verification
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereDecisionedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereExpiredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereFailedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry wherePersonaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereRedactedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereStartedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaInquiry whereStatus($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperPersonaInquiry {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\PersonaVerification
+ *
+ * @property int $id
+ * @property string $persona_id
+ * @property string $inquiry_id
+ * @property string $status
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property string|null $submitted_at
+ * @property string|null $completed_at
+ * @property string|null $country_code
+ * @property float|null $entity_confidence_score
+ * @property float|null $document_similarity_score
+ * @property string $entity_confidence_reasons
+ * @property string|null $photo_url
+ * @property string $government_id_class
+ * @property string|null $capture_method
+ * @property-read \App\Models\PersonaInquiry|null $inquiry
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereCaptureMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereCountryCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereDocumentSimilarityScore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereEntityConfidenceReasons($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereEntityConfidenceScore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereGovernmentIdClass($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereInquiryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification wherePersonaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification wherePhotoUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PersonaVerification whereSubmittedAt($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperPersonaVerification {}
+}
+
+namespace App\Models{
+/**
  * App\Models\PersonalAccessToken
  *
  * @property int $id
@@ -995,6 +1095,8 @@ namespace App\Models{
  * @property-read int|null $owned_tracks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
+ * @property-read \App\Models\PersonaAccount|null $personaAccount
+ * @property-read \App\Models\PersonaInquiry|null $personaInquiry
  * @property-read \App\Models\PersonalInformations|null $personalInformation
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Messages[] $receivedMessages
  * @property-read int|null $received_messages_count

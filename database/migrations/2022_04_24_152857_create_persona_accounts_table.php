@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('persona_accounts', function (Blueprint $table) {
-            $table->uuid("id")->primary();
+            $table->id();
             $table->string("persona_id");
             $table->foreignUuid("reference_id")->references("id")->on("users");
             $table->timestamp('created_at');

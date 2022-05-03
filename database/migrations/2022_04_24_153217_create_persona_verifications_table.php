@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('persona_verifications', function (Blueprint $table) {
-            $table->uuid("id")->primary();
+            $table->id();
             $table->string("persona_id")->unique();
             $table->string("inquiry_id")->unique();
             $table->text('status');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('country_code')->nullable();
             $table->float('entity_confidence_score')->nullable();
             $table->float('document_similarity_score')->nullable();
-            $table->string('entity_confidence_reasons');
+            $table->json('entity_confidence_reasons');
 
             $table->json('photo_url')->nullable();
 

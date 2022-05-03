@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @mixin IdeHelperPersonaInquiry
+ */
 class PersonaInquiry extends Model
 {
+
+    protected $fillable = ["persona_id"];
+
     use HasFactory;
 
     function user(): BelongsTo

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('persona_inquiries', function (Blueprint $table) {
-            $table->uuid("id")->primary();
+            $table->id();
             $table->string("persona_id")->unique();
             $table->text('status');
             $table->foreignUuid("reference_id")->references("id")->on("users");
