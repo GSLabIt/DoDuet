@@ -13,11 +13,15 @@ use App\Traits\CryptographicComposition;
 use App\Traits\Uuid;
 use Doinc\Modules\Referral\Models\Traits\Referrable;
 use Doinc\Modules\Settings\Models\Traits\HasSettings;
+use Doinc\Wallet\Interfaces\Customer;
+use Doinc\Wallet\Models\Wallet;
+use Doinc\Wallet\Traits\CanPay;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -30,12 +34,10 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @mixin IdeHelperUser
  */
-class User extends Authenticatable
+class User extends Authenticatable implements Customer
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
-    use ActivityLogAll, CryptographicComposition, Referrable, HasSettings;
-
-
+    use ActivityLogAll, CryptographicComposition, Referrable, HasSettings, CanPay;
 
     /**
      * The attributes that are mass assignable.
@@ -127,11 +129,22 @@ class User extends Authenticatable
         return $this->hasOne(PersonalInformations::class, "owner_id");
     }
 
-    public function wallet(): HasOne
-    {
-        return $this->hasOne(Wallet::class, "owner_id");
-    }
 
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Wallet section
+     * |--------------------------------------------------------------------------
+     * |
+     * | Define all the _wallet_ related methods here
+     * |
+     */
+
+
+    public function wallet(): MorphOne
+    {
+        return $this->morphOne(Wallet::class, "holder");
+    }
 
 
     /**

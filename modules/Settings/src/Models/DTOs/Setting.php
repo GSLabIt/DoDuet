@@ -23,4 +23,24 @@ abstract class Setting extends CastableDataTransferObject
     public function qualifiedName(): string {
         return (!empty($this->group) ? "$this->group." : "") . $this->name;
     }
+
+    /**
+     * Get the setting name
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the setting group
+     *
+     * @return string
+     */
+    public function getGroup(): string
+    {
+        return $this->group;
+    }
 }

@@ -9,6 +9,9 @@ use App\Http\Wrappers\Interfaces\Wrapper;
 use App\Models\User;
 use App\Notifications\MessagesDisabledNotification;
 use App\Notifications\OneTimeKeysNotification;
+use Doinc\Modules\Settings\Models\DTOs\SettingBool;
+use Doinc\Modules\Settings\Models\DTOs\SettingString;
+use Doinc\Modules\Settings\Models\Settings;
 use Exception;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
@@ -100,13 +103,13 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
     {
         return match ($item) {
             $this->whitelistedItems()["master_salt"] =>
-                settings($this->user)->get($this->whitelistedItems()["master_salt"]),
+                settings($this->user)->get($this->whitelistedItems()["master_salt"])->value,
             $this->whitelistedItems()["master_derivation_key"] =>
-                settings($this->user)->get($this->whitelistedItems()["master_derivation_key"]),
+                settings($this->user)->get($this->whitelistedItems()["master_derivation_key"])->value,
             $this->whitelistedItems()["secret_key"] =>
                 session($this->whitelistedItems()["secret_key"]),
             $this->whitelistedItems()["public_key"] =>
-                settings($this->user)->get($this->whitelistedItems()["public_key"]),
+                settings($this->user)->get($this->whitelistedItems()["public_key"])->value,
             $this->whitelistedItems()["symmetric_key"] =>
                 session($this->whitelistedItems()["symmetric_key"]),
             default => null,
@@ -212,12 +215,22 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
 
         // permanently store the master key salt used for main key derivation
         if (is_null($master_salt)) {
-            settings($this->user)->set("master_key_salt", $master_key_pair["salt"]);
+            settings($this->user)->set(
+                "master_key_salt",
+                (new SettingString(
+                    value: $master_key_pair["salt"]
+                ))->toJson()
+            );
         }
 
         // permanently store the derivation key for secure keypair generation
         if (is_null($derivation_key)) {
-            settings($this->user)->set("master_derivation_key", $derivation_key_id);
+            settings($this->user)->set(
+                "master_derivation_key",
+                (new SettingString(
+                    value: $derivation_key_id
+                ))->toJson()
+            );
         }
 
         // generated keys are invalid (empty)
@@ -227,20 +240,35 @@ class SecureUserWrapper implements Wrapper, InteractiveWrapper
             $this->user->notify(new MessagesDisabledNotification($trigger, "Invalid keys generated", true));
 
             // disable messaging functionalities
-            settings($this->user)->set("has_messages", false);
+            settings($this->user)->set(
+                "has_messages",
+                (new SettingBool(
+                    value: false
+                ))->toJson()
+            );
         } else {
             // permanently store the asymmetric public key used for messages sending
             // if one of the generation value is null means that the generation was restarted at least partially,
             // the public key needs to be stored in the settings
             if (is_null($master_salt) || is_null($derivation_key)) {
-                settings($this->user)->set("public_key", $asymmetric_keypair["public_key"]);
+                settings($this->user)->set(
+                    "public_key",
+                    (new SettingString(
+                        value: $asymmetric_keypair["public_key"]
+                    ))->toJson()
+                );
             }
 
             // store the secret key for easily usage without the need to regenerate it
             session()->put("secret_key", $asymmetric_keypair["secret_key"]);
 
             // enable messaging functionalities
-            settings($this->user)->set("has_messages", true);
+            settings($this->user)->set(
+                "has_messages",
+                (new SettingBool(
+                    value: true
+                ))->toJson()
+            );
         }
     }
 

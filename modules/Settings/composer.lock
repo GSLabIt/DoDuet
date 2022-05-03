@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cff2a45824265357c22bde44ab665695",
+    "content-hash": "818d3d3f5dec48cbd94a9d92f7519ce6",
     "packages": [
         {
             "name": "brick/math",
@@ -143,16 +143,16 @@
         },
         {
             "name": "do-inc/crypter-module",
-            "version": "1.0.2",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "git@github.com:Do-inc/laravel-crypter-module.git",
-                "reference": "c0e044c84aee2744e6555ebaface5f20a64afc66"
+                "reference": "495b33123b5e3d43116e51033e01379a4c04c774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Do-inc/laravel-crypter-module/zipball/c0e044c84aee2744e6555ebaface5f20a64afc66",
-                "reference": "c0e044c84aee2744e6555ebaface5f20a64afc66",
+                "url": "https://api.github.com/repos/Do-inc/laravel-crypter-module/zipball/495b33123b5e3d43116e51033e01379a4c04c774",
+                "reference": "495b33123b5e3d43116e51033e01379a4c04c774",
                 "shasum": ""
             },
             "require": {
@@ -211,10 +211,10 @@
                 "module"
             ],
             "support": {
-                "source": "https://github.com/Do-inc/laravel-crypter-module/tree/v1.0.2",
+                "source": "https://github.com/Do-inc/laravel-crypter-module/tree/v1.1.5",
                 "issues": "https://github.com/Do-inc/laravel-crypter-module/issues"
             },
-            "time": "2022-03-08T08:59:11+00:00"
+            "time": "2022-03-10T09:32:11+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -1102,16 +1102,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.3.1",
+            "version": "v9.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "c1c4404511b83fbf90ccbcdf864d4a85537f35e4"
+                "reference": "29f0aaade82eadd20ef881b4efb88b0dad4e9a5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/c1c4404511b83fbf90ccbcdf864d4a85537f35e4",
-                "reference": "c1c4404511b83fbf90ccbcdf864d4a85537f35e4",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/29f0aaade82eadd20ef881b4efb88b0dad4e9a5b",
+                "reference": "29f0aaade82eadd20ef881b4efb88b0dad4e9a5b",
                 "shasum": ""
             },
             "require": {
@@ -1277,7 +1277,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-03-03T15:15:10+00:00"
+            "time": "2022-03-08T16:17:00+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -5325,16 +5325,16 @@
         },
         {
             "name": "voku/portable-ascii",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/portable-ascii.git",
-                "reference": "9bd89e83cecdf8c37b64909454249eaed98b2c89"
+                "reference": "b56450eed252f6801410d810c8e1727224ae0743"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/9bd89e83cecdf8c37b64909454249eaed98b2c89",
-                "reference": "9bd89e83cecdf8c37b64909454249eaed98b2c89",
+                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/b56450eed252f6801410d810c8e1727224ae0743",
+                "reference": "b56450eed252f6801410d810c8e1727224ae0743",
                 "shasum": ""
             },
             "require": {
@@ -5371,7 +5371,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/portable-ascii/issues",
-                "source": "https://github.com/voku/portable-ascii/tree/2.0.0"
+                "source": "https://github.com/voku/portable-ascii/tree/2.0.1"
             },
             "funding": [
                 {
@@ -5395,7 +5395,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-24T18:59:03+00:00"
+            "time": "2022-03-08T17:03:00+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -6116,16 +6116,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "658bcd94662ce66e4f6cbbea385d3272f89accff"
+                "reference": "fa598dbc2b319673857ee17f6afe1aed6564b505"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/658bcd94662ce66e4f6cbbea385d3272f89accff",
-                "reference": "658bcd94662ce66e4f6cbbea385d3272f89accff",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/fa598dbc2b319673857ee17f6afe1aed6564b505",
+                "reference": "fa598dbc2b319673857ee17f6afe1aed6564b505",
                 "shasum": ""
             },
             "require": {
@@ -6190,7 +6190,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nunomaduro/larastan/issues",
-                "source": "https://github.com/nunomaduro/larastan/tree/v2.1.1"
+                "source": "https://github.com/nunomaduro/larastan/tree/v2.1.2"
             },
             "funding": [
                 {
@@ -6210,7 +6210,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-03-05T11:23:57+00:00"
+            "time": "2022-03-08T10:00:28+00:00"
         },
         {
             "name": "orchestra/testbench",
@@ -7086,16 +7086,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.4.8",
+            "version": "1.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "2a6d6704b17c4db6190cc3104056c0aad740cb15"
+                "reference": "1a45f44d319cf000a8c960af6b7435741e944771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2a6d6704b17c4db6190cc3104056c0aad740cb15",
-                "reference": "2a6d6704b17c4db6190cc3104056c0aad740cb15",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1a45f44d319cf000a8c960af6b7435741e944771",
+                "reference": "1a45f44d319cf000a8c960af6b7435741e944771",
                 "shasum": ""
             },
             "require": {
@@ -7126,7 +7126,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.4.8"
+                "source": "https://github.com/phpstan/phpstan/tree/1.4.9"
             },
             "funding": [
                 {
@@ -7146,7 +7146,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-04T13:03:56+00:00"
+            "time": "2022-03-10T08:52:08+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",

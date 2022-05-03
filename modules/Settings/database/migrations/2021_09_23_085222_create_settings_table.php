@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSettingsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,13 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->uuid("id")->primary();
+            if(config("settings.uuid")) {
+                $table->uuid("id")->primary();
+            }
+            else {
+                $table->id();
+            }
+
             $table::encrypted($table, "name");
             $table::encrypted($table, "type");
             $table->boolean("has_default_value")->default(false);
@@ -34,4 +40,4 @@ class CreateSettingsTable extends Migration
     {
         Schema::dropIfExists('settings');
     }
-}
+};

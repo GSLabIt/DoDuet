@@ -1,7 +1,7 @@
 {
     "name": "do-inc/commander-module",
     "description": "Commander module to overwrite & extend default laravel module commands",
-    "version": "1.0.3",
+    "version": "1.1.7",
     "type": "laravel-module",
     "keywords": [
         "do-inc",

@@ -6,7 +6,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use SodiumException;
 
-class SodiumAsymmetricEncryption
+final class SodiumAsymmetricEncryption
 {
     /**
      * Initialize the class instance
@@ -16,7 +16,7 @@ class SodiumAsymmetricEncryption
     #[Pure]
     public static function init(): SodiumAsymmetricEncryption
     {
-        return (new static);
+        return (new SodiumAsymmetricEncryption);
     }
 
     /**

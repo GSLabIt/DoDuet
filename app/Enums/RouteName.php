@@ -14,9 +14,11 @@ enum RouteName: string
     case VOTE_VOTE = "vote_vote";
 
     case CHALLENGE_LATEST_TRACKS = "challenge_latest_tracks";
+    case CHALLENGE_OWNED_TRACKS = "challenge_owned_tracks";
     case CHALLENGE_TRACKS = "challenge_tracks";
     case CHALLENGE_NINE_RANDOM_TRACKS = "challenge_nine_random_tracks";
     case CHALLENGE_REFRESH_NINE_RANDOM_TRACKS = "challenge_refresh_nine_random_tracks";
+    case CHALLENGE_TRACK_PARTICIPATE_IN_CURRENT = "challenge_track_participate_in_current";
     case CHALLENGE_PRIZES_WON = "challenge_prizes_won";
     case CHALLENGE_PARTICIPATING_TRACKS_NUMBER = "challenge_participating_tracks_number";
     case CHALLENGE_PARTICIPATING_USERS_NUMBER = "challenge_participating_users_number";
@@ -50,4 +52,20 @@ enum RouteName: string
     case SETTINGS_USER_PUBLIC_KEY = "settings_user_public_key";
     case SETTINGS_USER_SECRET_KEY = "settings_user_secret_key";
     case SETTINGS_LISTENED_CHALLENGE_RANDOM_TRACKS = "settings_listened_challenge_random_tracks";
+
+
+    case COVER_CREATE = "cover_create";
+    case COVER_UPDATE = "cover_update";
+    case COVER_CREATED = "cover_created";
+    case COVER_OWNED = "cover_owned";
+
+    case ALBUM_CREATE = "album_create";
+    case ALBUM_UPDATE = "album_update";
+    case ALBUM_CREATED = "album_created";
+    case ALBUM_OWNED = "album_owned";
+
+    case LYRIC_CREATE = "lyric_create";
+    case LYRIC_UPDATE = "lyric_update";
+    case LYRIC_CREATED = "lyric_created";
+    case LYRIC_OWNED = "lyric_owned";
 }

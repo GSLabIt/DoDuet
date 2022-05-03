@@ -6,10 +6,10 @@ use App\Enums\RouteClass;
 use App\Enums\RouteGroup;
 use App\Enums\RouteMethod;
 use App\Enums\RouteName;
-use App\Http\Wrappers\Enums\BeatsChainNFT;
+use App\Exceptions\SafeException;
 use App\Models\Albums;
-use App\Models\Covers;
 use App\Models\Challenges;
+use App\Models\Covers;
 use App\Models\Ipfs;
 use App\Models\ListeningRequest;
 use App\Models\Lyrics;
@@ -18,10 +18,11 @@ use App\Models\User;
 use App\Models\Votes;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Request;
 use Throwable;
 
 class TracksController extends Controller
@@ -37,7 +38,7 @@ class TracksController extends Controller
         Validator::validate($request->all(), [
             "name" => "required|string|max:255",
             "description" => "required|string",
-            "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/",
+            "duration" => "required|string|size:5|regex:/^[0-5][0-9]:[0-5][0-9]$/", // TODO: correct this, track may also be 1h  01:59:59
             "mp3" => "required|file|mimes:mp3|max:1048576", // 100 MB, computed in kb not bytes
             "cover_id" => "nullable|uuid|exists:covers,id",
             "lyric_id" => "nullable|uuid|exists:lyrics,id",
@@ -96,10 +97,8 @@ class TracksController extends Controller
             // try to mint the NFT, in case it succeeds the integer nft id is returned and the flux may continue straight
             // away, if an exception occurs it must be propagated and the temporary records must be removed.
             try {
-                $nft_id = blockchain($user)->nft()->mint(
-                    route("nft-track_display", ["id" => $track->id]),
-                    BeatsChainNFT::NFT_CLASS_MELODITY_TRACK_MELT
-                );
+                payTransactionFee($user);
+                $user->pay($track);
             }
             catch (Throwable $exception) {
                 // remove the temporary records
@@ -109,41 +108,39 @@ class TracksController extends Controller
                 // usage of the throwable interface instead of the specific error type mark the following statement
                 // as possibly wrong but as the only exception may occur is the blockchain related one, stay chill,
                 // no other strange exception will occur
-                throw new \App\Exceptions\SafeException($exception);
+                throw new SafeException($exception);
             }
 
             // Upload the just encrypted file to ipfs
             ipfs()->upload($mp3, $track->ipfs);
 
-            /* TODO: UNCOMMENT THIS
             $track->update([
-                "nft_id" => $nft_id,
+                "nft_id" => "undefined",
             ]);
-            */
 
             // Create a new Track instance and return it, the eventually set lyric, cover, album id will create a
             // composed track
             return response()->json([
-                "track" => $track->fresh()
+                "track" => $track->fresh()->withoutRelations()
             ]);
         }
         // handle test errors
         if(!is_null($request->input("cover_id")) && is_null($cover)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
 
         if(!is_null($request->input("lyric_id")) && is_null($lyric)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
 
         if(!is_null($request->input("album_id")) && is_null($album)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
@@ -205,34 +202,34 @@ class TracksController extends Controller
                 "album_id" => $album?->id
             ]);
             return response()->json([
-                "track" => $track
+                "track" => $track->withoutRelations()
             ]);
         }
 
         // handle test errors
         if(is_null($track)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(!is_null($request->input("cover_id")) && is_null($cover)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
         }
 
         if(!is_null($request->input("lyric_id")) && is_null($lyric)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );
         }
 
         if(!is_null($request->input("album_id")) && is_null($album)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
@@ -263,7 +260,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -282,11 +279,15 @@ class TracksController extends Controller
             "user_id" => "required|uuid|exists:users,id",
         ]);
 
+        $required_columns = ["id", "name", "duration", "cover_id"];
+
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
             return response()->json([
-                "tracks" => $user->createdTracks
+                "tracks" => $user->createdTracks->map(function (Tracks $item) use ($required_columns) { // remove relationships
+                    return [...$item->only($required_columns), "creator" => $item->creator->name];
+                })
             ]);
         }
 
@@ -310,16 +311,23 @@ class TracksController extends Controller
             "user_id" => "required|uuid|exists:users,id",
         ]);
 
+        $required_columns = ["id", "name", "description", "duration", "nft_id"];
+
         /** @var User $user */
         $user = User::where("id", $user_id)->first();
         if(!is_null($user)) {
             return response()->json([
-                "tracks" => $user->ownedTracks
+                "tracks" => $user->ownedTracks->map(
+                    function (Tracks $item) use($required_columns) {
+                        $arr = $item->only($required_columns);
+                        return [...$arr, "description" => Str::substr($arr["description"], 0, 97)]; // TODO: add "..." if the string is truncated
+                    }
+                )
             ]);
         }
 
         // handle track not found error
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
         );
@@ -348,7 +356,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -379,7 +387,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -410,7 +418,7 @@ class TracksController extends Controller
      * This function returns the tracks not in the current challenge ( based on the number of votes )
      * @return JsonResponse
      */
-    public function getNotInChallengeTracks(): JsonResponse {
+    public function getNotInChallengeTracks(): JsonResponse { // TODO: correct method, check ChallengesController@getAllTracksInLatestChallenge
         // get current challenge
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("created_at")->first();
@@ -452,7 +460,7 @@ class TracksController extends Controller
         }
 
         // handle track not found error
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.TRACK_NOT_FOUND.message"),
             config("error-codes.TRACK_NOT_FOUND.code")
         );
@@ -494,14 +502,14 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(is_null($album)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.ALBUM_NOT_FOUND.message"),
                 config("error-codes.ALBUM_NOT_FOUND.code")
             );
@@ -545,14 +553,14 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(is_null($cover)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.COVER_NOT_FOUND.message"),
                 config("error-codes.COVER_NOT_FOUND.code")
             );
@@ -597,14 +605,14 @@ class TracksController extends Controller
 
         // handle test errors
         if(is_null($track)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.TRACK_NOT_FOUND.message"),
                 config("error-codes.TRACK_NOT_FOUND.code")
             );
         }
 
         if(is_null($lyric)){
-            throw new \App\Exceptions\SafeException(
+            throw new SafeException(
                 config("error-codes.LYRIC_NOT_FOUND.message"),
                 config("error-codes.LYRIC_NOT_FOUND.code")
             );

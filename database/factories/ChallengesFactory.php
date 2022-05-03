@@ -31,7 +31,7 @@ class ChallengesFactory extends Factory
             "third_prize_rate" => 10.,
             "third_place_id" => User::factory(),
             "treasury_rate" => 5.,
-            "burning_rate" => 5.,
+            "burning_rate" => 15.,
             "fee_rate" => 10.,
             "started_at" => $this->faker->dateTime(),
             "ended_at" => $this->faker->dateTimeBetween("now", "+1 week")

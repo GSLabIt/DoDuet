@@ -9,10 +9,21 @@
 return [
     /*
      * |--------------------------------------------------------------------------
-     * | Crypt related error codes
+     * | Primary key type definition
      * |--------------------------------------------------------------------------
      * |
-     * | Crypter error codes and messages.
+     * | Defines the type of key used in table creation and models, if true then
+     * | uuid will be used otherwise standard autoincrementing ids will be used
+     * |
+     */
+    "uuid" => true,
+
+    /*
+     * |--------------------------------------------------------------------------
+     * | Settings related error codes
+     * |--------------------------------------------------------------------------
+     * |
+     * | Settings error codes and messages.
      * | NOTE: codes *MUST* be universal, never ever repeated
      * |
      */

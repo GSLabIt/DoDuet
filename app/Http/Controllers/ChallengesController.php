@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\DTOs\SettingNineRandomTracks;
+use App\Events\EndedCurrentChallenge;
 use App\Exceptions\SafeException;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
@@ -11,12 +12,16 @@ use App\Models\Tracks;
 use App\Models\User;
 use App\Models\Votes;
 use App\Notifications\ChallengeWinNotification;
+use Bavix\Wallet\Internal\Service\MathService;
 use Doinc\Modules\Settings\Exceptions\SettingNotFound;
+use Doinc\Wallet\BigMath;
 use Exception;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ChallengesController extends Controller
 {
@@ -29,7 +34,7 @@ class ChallengesController extends Controller
     public function getAllTracksInLatestChallenge(Request $request): JsonResponse
     {
         return response()->json([
-            "tracks" => Challenges::orderByDesc("created_at")->first()
+            "tracks" => Challenges::orderByDesc("id")->first()
                 ->tracks()
                 ->pluck("id")
         ]);
@@ -119,7 +124,7 @@ class ChallengesController extends Controller
     public function getNumberOfParticipatingTracks(Request $request): JsonResponse
     {
         return response()->json([
-            "participatingTracks" => Challenges::orderByDesc("created_at")->first()
+            "participatingTracks" => Challenges::orderByDesc("id")->first()
                 ->tracks()
                 ->get()
                 ->count()
@@ -158,7 +163,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -212,7 +217,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -243,7 +248,7 @@ class ChallengesController extends Controller
     public function getNumberOfParticipatingUsers(Request $request): JsonResponse
     {
         /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
         return response()->json([
             "participatingUsers" => $challenge->tracks()
                 ->get(['owner_id'])
@@ -287,7 +292,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -361,7 +366,7 @@ class ChallengesController extends Controller
             }
         } else {
             /** @var Challenges $challenge */
-            $challenge = Challenges::orderByDesc("created_at")->first();
+            $challenge = Challenges::orderByDesc("id")->first();
         }
 
         /** @var Tracks $track */
@@ -466,44 +471,212 @@ class ChallengesController extends Controller
     }
 
     /**
+     * This function returns the id of the tracks owned by the user participating in the current challenge
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getOwnedTracksInChallenge(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::orderByDesc("id")->first();
+
+        return response()->json([
+            "tracks" => $challenge->tracks->where("owner_id", $user->id)->pluck("id")
+        ]);
+    }
+
+    /**
+     * This function allows the track to participate in the challenge, if it's not already participating
+     *
+     * @param Request $request
+     * @param string $track_id
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Exception
+     */
+    public function participateInCurrentChallenge(Request $request, string $track_id): JsonResponse
+    {
+        Validator::validate($request->route()->parameters(), [
+            "track_id" => "required|uuid|exists:tracks,id",
+        ]);
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        /** @var Challenges $challenge */
+        $challenge = Challenges::orderByDesc("id")->first();
+
+        /** @var Tracks $track */
+        $track = Tracks::where("id", $track_id)->first();
+
+        if (!is_null($track)) {
+            if ($challenge->tracks()->where("id", $track_id)->count() === 0) {
+                try {
+                    payTransactionFee($user);
+                    payChallengeParticipationFee($user);
+                    payTransactionFee($user);
+                    $transaction = $user->pay($challenge);
+                    $amount = BigMath::sub($transaction->amount, $transaction->discount);
+
+                    $challenge->total_prize = BigMath::add($challenge->total_prize, $amount);
+                }
+                catch (Throwable $exception) {
+                    // usage of the throwable interface instead of the specific error type mark the following statement
+                    // as possibly wrong but as the only exception may occur is the blockchain related one, stay chill,
+                    // no other strange exception will occur
+                    throw new \App\Exceptions\SafeException($exception);
+                }
+
+                $challenge->tracks()->attach($track->id);
+                return response()->json([
+                    "success" => true
+                ]);
+            }
+
+            throw new SafeException(
+                config("error-codes.BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE.message"),
+                config("error-codes.BEATS_CHAIN_ALREADY_PARTICIPATING_IN_CHALLENGE.code")
+            );
+        }
+
+        // handle track not found error
+        throw new SafeException(
+            config("error-codes.TRACK_NOT_FOUND.message"),
+            config("error-codes.TRACK_NOT_FOUND.code")
+        );
+    }
+
+    /**
      * This function notifies the winners of the current challenge
-     * NOTE: test not passed
+     *
+     * @param Challenges $challenge
+     * @return array
+     */
+    public static function notifyWinners(Challenges $challenge, array $track_ids): array
+    {
+        // NOTE: remember to pass the track_ids array to this function
+
+        $winner_array = [];
+        $first_place_user = $challenge->firstPlace;
+        $second_place_user = $challenge->secondPlace;
+        $third_place_user = $challenge->thirdPlace;
+        //notify the winners based on the number of tracks participating
+        if (!is_null($first_place_user)) {
+            $prize = $challenge->total_prize * $challenge->first_prize_rate;
+            $first_place_user->notify(new ChallengeWinNotification(
+                $challenge->id,
+                $track_ids[0], // this is the track_id
+                "first",
+                $prize
+            ));
+            $winner_array[] = [
+                "id" => $challenge->first_place_id, // this is the user id
+                "prize" => $prize
+            ];
+        }
+        if (!is_null($second_place_user)) {
+            $prize = $challenge->total_prize * $challenge->second_prize_rate;
+            $second_place_user->notify(new ChallengeWinNotification(
+                $challenge->id,
+                $track_ids[1], // this is the track_id
+                "second",
+                $prize
+            ));
+            $winner_array[] = [
+                "id" => $challenge->second_place_id,
+                "prize" => $prize
+            ];
+        }
+        if (!is_null($third_place_user)) {
+            $prize = $challenge->total_prize * $challenge->third_prize_rate;
+            $third_place_user->notify(new ChallengeWinNotification(
+                $challenge->id,
+                $track_ids[2], // this is the track_id
+                "third",
+                $prize
+            ));
+            $winner_array[] = [
+                "id" => $challenge->third_place_id,
+                "prize" => $prize
+            ];
+        }
+
+        return $winner_array;
+    }
+
+
+    /**
+     * This function will set the leaderboard, create a new challenge and dispatch the event every week
+     *
      * @return void
      */
-    public static function notifyWinners(): void
+    public static function setUpChallenge(): void
     {
         /** @var Challenges $challenge */
-        $challenge = Challenges::orderByDesc("created_at")->first();
+        $challenge = Challenges::orderByDesc("id")->first();
 
         // get the leaderboard (all the tracks in the elections ranked)
-        $leaderboard = blockchain(User::first())->election()->leaderboard();
+        $unsorted_leaderboard = collect();
+        $challenge->tracks()
+            ->with('votes', function (HasMany $query) use($challenge) {
+                // track_id is required, else laravel will not recognize the relationship
+                $query->where('challenge_id', $challenge->id)->select(["track_id", "vote"]);
+            })
+            ->select("id", "owner_id")
+            ->get()
+            ->map(function ($track) use ($unsorted_leaderboard){
+                // the leaderboard is decided by the track that has got the highest sum of votes, if more
+                // are equals, then by average vote
+                $votes = $track->votes()->pluck("vote");
+                $unsorted_leaderboard->put($track->id,[
+                    "total" => $votes->sum(),
+                    "average" => $votes->average(),
+                    "owner_id" => $track->owner_id
+                ]);
+            });
+        // sort the leaderboard
+        $leaderboard = $unsorted_leaderboard->sortDesc();
+        $leaderboard_keys = $leaderboard->keys();
+        $leaderboard_length = count($leaderboard_keys);
 
-        $leaderboard_count = $leaderboard->count();
-        //notify the winners based on the number of tracks participating
-        if ($leaderboard_count > 0) {
-            $challenge->firstPlace->notify(new ChallengeWinNotification(
-                $challenge->id,
-                Tracks::where(["nft_id" => $leaderboard[0]["nft_id"]])->first()->id,
-                "first",
-                $challenge->total_prize * $challenge->first_prize_rate
-            ));
+        // update the challenge with the new winners
+        if ($leaderboard_length === 1) {
+            $challenge->update([
+                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+            ]);
+        } elseif ($leaderboard_length === 2) {
+            $challenge->update([
+                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+            ]);
+        } elseif ($leaderboard_length > 2) {
+            $challenge->update([
+                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+                "third_place_id" => $leaderboard[$leaderboard_keys[2]]["owner_id"],
+            ]);
         }
-        if ($leaderboard_count > 1) {
-            $challenge->secondPlace->notify(new ChallengeWinNotification(
-                $challenge->id,
-                Tracks::where(["nft_id" => $leaderboard[1]["nft_id"]])->first()->id,
-                "second",
-                $challenge->total_prize * $challenge->second_prize_rate
-            ));
-        }
-        if ($leaderboard_count > 2) {
-            $challenge->thirdPlace->notify(new ChallengeWinNotification(
-                $challenge->id,
-                Tracks::where(["nft_id" => $leaderboard[2]["nft_id"]])->first()->id,
-                "third",
-                $challenge->total_prize * $challenge->third_prize_rate
-            ));
-        }
+
+
+        // create a new challenge
+        Challenges::create([
+            "total_prize" => 0,
+            "first_prize_rate" => 35.,
+            "second_prize_rate" => 20.,
+            "third_prize_rate" => 10.,
+            "treasury_rate" => 0.,
+            "burning_rate" => 20.,
+            "fee_rate" => 15.,
+        ]);
+
+        $track_ids = $leaderboard_keys->slice(0,3)->toArray();
+
+        // dispatch the event, that will then dispatch notifyWinners
+        EndedCurrentChallenge::dispatch($challenge, $track_ids);
     }
 
     /**
@@ -512,14 +685,15 @@ class ChallengesController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws SettingNotFound
+     * @throws SafeException
      */
     public function getNineRandomTracks(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();
         /** @var Challenges $current_challenge */
-        $current_challenge = Challenges::orderByDesc("created_at")->first();
-        $required_columns = ["id", "name", "description"];
+        $current_challenge = Challenges::orderByDesc("id")->first();
+        $required_columns = ["id", "name", "description", "duration", "cover_id"];
 
         // if the setting is already set
         if (settings($user)->has("challenge_nine_random_tracks")) {
@@ -531,44 +705,67 @@ class ChallengesController extends Controller
                 // if the challenge is the same and the user has not finished listening to all the tracks, select and return them
                 if ($settings_content->listened < 9) {
                     return response()->json([
-                        "tracks" => Tracks::whereIn("id", $settings_content->track_ids)->get($required_columns)
+                        "tracks" => Tracks::whereIn("id", $settings_content->track_ids)
+                            ->select([...$required_columns, "creator_id"])
+                            ->get()
+                            ->map(function (Tracks $item) use ($required_columns) {
+                                return [...$item->only($required_columns), "creator" => $item->creator->name];
+                            })
                     ]);
                 }
             }
         }
 
         // ROTATING tracks because they are all already listened/the challenge has changed/this is the first time
-        // get the track id of the tracks already listened in this challenge
-        $listened_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id");
+        // select the excluded tracks
+        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->pluck("track_id"); // listened tracks
+        $ownedTracks = $current_challenge->tracks()->where(["owner_id" => $user->id])->pluck("id");
+        if (!is_null($ownedTracks)) {
+            $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
+        }
 
         // check the number of tracks available
         $available_tracks = $current_challenge->tracks()
             ->select($required_columns)
-            ->whereNotIn("id", $listened_tracks)
+            ->whereNotIn("id", $excluded_tracks)
             ->count();
+        if ($available_tracks === 0) {
+            throw new SafeException(
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.message"),
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.code")
+            );
+        }
         $random_number = $available_tracks < 9 ? $available_tracks : 9;
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
-            ->select($required_columns)
-            ->whereNotIn("id", $listened_tracks)
+            ->select([...$required_columns, "creator_id"])
+            ->whereNotIn("id", $excluded_tracks)
             ->get()
             ->random($random_number)
             ->map(function (Tracks $item) use ($required_columns) { // remove relationships
-                return $item->only($required_columns);
+                return [...$item->only($required_columns), "creator" => $item->creator->name];
             });
 
         // get all the ids
-        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id")->toArray();
 
+        $settings_DTO = (new SettingNineRandomTracks(
+            challenge_id: $current_challenge->id,
+            track_ids: $nine_random_tracks_ids,
+            listened: 0
+        ))->toJson();
         // update the settings
-        settings($user)->set(
-            "challenge_nine_random_tracks",
-            (new SettingNineRandomTracks(
-                challenge_id: $current_challenge->id,
-                tracks_id: $nine_random_tracks_ids,
-                listened: 0
-            ))->toJson()
-        );
+        if (settings($user)->has("challenge_nine_random_tracks")) {
+            settings($user)->update(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        } else {
+            settings($user)->set(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        }
 
         return response()->json([
             "tracks" => $nine_random_tracks
@@ -587,53 +784,75 @@ class ChallengesController extends Controller
         /** @var User $user */
         $user = auth()->user();
         /** @var Challenges $current_challenge */
-        $current_challenge = Challenges::orderByDesc("created_at")->first();
+        $current_challenge = Challenges::orderByDesc("id")->first();
 
-        $required_columns = ["id", "name", "description"];
+        $required_columns = ["id", "name", "description", "duration", "cover_id"];
         // check if settings exists for malicious requests (normally getNineRandomTracks should already have set something before)
         if (settings($user)->has("challenge_nine_random_tracks")) {
             /** @var SettingNineRandomTracks $settings_content */
             $settings_content = settings($user)->get("challenge_nine_random_tracks");
             if ($settings_content->challenge_id == $current_challenge->id) {
                 // if the challenge is the same and the user has not finished listening to at least 4 tracks, throw an error
-                if ($settings_content->listened < 4) throw new SafeException(
-                    config("error-codes.NOT_ENOUGH_LISTENED.message"),
-                    config("error-codes.NOT_ENOUGH_LISTENED.code")
-                );
+                if ($settings_content->listened < 4) {
+                    throw new SafeException(
+                        config("error-codes.NOT_ENOUGH_LISTENED.message"),
+                        config("error-codes.NOT_ENOUGH_LISTENED.code")
+                    );
+                }
             }
         }
 
         // ROTATING tracks because at least 4 of them are already listened/the challenge has changed/this is the first time
-        // get the track id of the tracks already listened in this challenge
-        $listened_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->get("track_id");
+        // select the excluded tracks
+        $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->pluck("track_id"); // listened tracks
+        $ownedTracks = $current_challenge->tracks()->where(["owner_id" => $user->id])->pluck("id");
+        if (!is_null($ownedTracks)) {
+            $excluded_tracks = $excluded_tracks->merge($ownedTracks); // owned tracks
+        }
 
         // check the number of tracks available
         $available_tracks = $current_challenge->tracks()
             ->select($required_columns)
-            ->whereNotIn("id", $listened_tracks)
+            ->whereNotIn("id", $excluded_tracks)
             ->count();
-        $random_number = $available_tracks < 9 ? $available_tracks : 9;
+        if ($available_tracks === 0) {
+            throw new SafeException(
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.message"),
+                config("error-codes.NOT_ENOUGH_TRACK_IN_CHALLENGE.code")
+            );
+        }
+        $random_number = min($available_tracks, 9);
         // get nine random tracks that the user has not listened yet
         $nine_random_tracks = $current_challenge->tracks()
-            ->select($required_columns)
-            ->whereNotIn("id", $listened_tracks)
+            ->select([...$required_columns, "creator_id"])
+            ->whereNotIn("id", $excluded_tracks)
             ->get()
             ->random($random_number)
             ->map(function (Tracks $item) use ($required_columns) { // remove relationships
-                return $item->only($required_columns);
+                return [...$item->only($required_columns), "creator" => $item->creator->name];
             });
 
         // get all the ids
-        $nine_random_tracks_ids = $nine_random_tracks->pluck("id");
+        $nine_random_tracks_ids = $nine_random_tracks->pluck("id")->toArray();
+
+        $settings_DTO = (new SettingNineRandomTracks(
+            challenge_id: $current_challenge->id,
+            track_ids: $nine_random_tracks_ids,
+            listened: 0
+        ))->toJson();
         // update the settings
-        settings($user)->set(
-            "challenge_nine_random_tracks",
-            (new SettingNineRandomTracks(
-                challenge_id: $current_challenge->id,
-                tracks_id: $nine_random_tracks_ids,
-                listened: 0,
-            ))->toJson()
-        );
+        if (settings($user)->has("challenge_nine_random_tracks")) {
+            settings($user)->update(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        } else {
+            settings($user)->set(
+                "challenge_nine_random_tracks",
+                $settings_DTO
+            );
+        }
+
         return response()->json([
             "tracks" => $nine_random_tracks
         ]);

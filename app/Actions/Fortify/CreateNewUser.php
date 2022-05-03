@@ -9,8 +9,8 @@
 namespace App\Actions\Fortify;
 
 use App\Http\Controllers\UserSegmentsController;
+use App\Http\Wrappers\BeatsChainUnitsHelper;
 use App\Models\User;
-use App\Notifications\NewReferralNotification;
 use Doinc\Modules\Referral\Facades\Referral;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -45,7 +45,9 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         secureUser($user)->set("password", $input["password"]);
-        wallet($user)->generate();
+
+        $user->wallet()->create();
+        $user->deposit(User::query()->count("id") < 100 ? 3000 : 10);
 
         UserSegmentsController::assignToSegment($user);
 

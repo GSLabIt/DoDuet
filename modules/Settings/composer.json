@@ -1,7 +1,7 @@
 {
     "name": "do-inc/settings-module",
     "description": "Module to create and manage strongly typed settings with the usage of DTOs",
-    "version": "1.0.1",
+    "version": "1.2.7",
     "type": "laravel-module",
     "keywords": [
         "do-inc",

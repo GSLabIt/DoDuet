@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\ListeningRequestController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -63,10 +64,27 @@ Route::rclass(RouteClass::PUBLIC)->group(__DIR__ . "/web/public/index.php");
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Basic
-    Route::get('/dashboard', [CommonController::class, "dashboard"])->name('dashboard');
+    Route::get('/dashboard', [CommonController::class, "dashboard"])->name('authenticated.dashboard');
 
     // Challenge
-    Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('challenge-index');
+    Route::get('/challenge', [CommonController::class, "challengeIndex"])->name('authenticated.challenge-index');
+
+    // Tracks
+    Route::get('/track', [CommonController::class, "tracksIndex"])->name('authenticated.tracks-index');
+    Route::get('/track/upload', [CommonController::class, "trackUpload"])->name('authenticated.track-upload');
+
+    // Covers
+    Route::get('/cover', [CommonController::class, "coversIndex"])->name('authenticated.covers-index');
+    Route::get('/cover/upload', [CommonController::class, "coverUpload"])->name('authenticated.cover-upload');
+
+    // Albums
+    Route::get('/album', [CommonController::class, "albumsIndex"])->name('authenticated.albums-index');
+    Route::get('/album/create', [CommonController::class, "albumCreate"])->name('authenticated.album-create');
+
+    // Lyrics
+    Route::get('/lyric', [CommonController::class, "lyricsIndex"])->name('authenticated.lyrics-index');
+    Route::get('/lyric/create', [CommonController::class, "lyricCreate"])->name('authenticated.lyric-create');
+
 });
 
 Route::prefix("nft")->group(function() {
