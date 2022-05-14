@@ -513,6 +513,13 @@ class ChallengesController extends Controller
         /** @var Tracks $track */
         $track = Tracks::where("id", $track_id)->first();
 
+        if (is_null($challenge)) {
+            throw new SafeException(
+                config("error-codes.CHALLENGE_NOT_FOUND.code.message"),
+                config("error-codes.CHALLENGE_NOT_FOUND.code")
+            );
+        }
+
         if (!is_null($track)) {
             if ($challenge->tracks()->where("id", $track_id)->count() === 0) {
                 try {
