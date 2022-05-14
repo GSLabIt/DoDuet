@@ -7,7 +7,7 @@ Route::rname(RouteName::TRACK_GET)
     ->get("/get/{track_id}", [TracksController::class, "getTrack"]);
 
 Route::rname(RouteName::TRACK_AVERAGE_VOTE)
-    ->get("/votes/average/{track_id}", [TracksController::class, "getUserOwnedTracks"]);
+    ->get("/votes/average/{track_id}", [TracksController::class, "getAverageVote"]);
 
 Route::rname(RouteName::TRACK_VOTES)
     ->get("/votes/{track_id}", [TracksController::class, "getTotalVotes"]);

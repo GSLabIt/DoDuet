@@ -35,6 +35,7 @@ class TracksControllerTest extends TestCase
     {
         parent::setUp();
         $this->refreshDatabase();
+        $this->seed();
 
         /**@var User $user */
         $user = User::factory()->create();
@@ -75,7 +76,6 @@ class TracksControllerTest extends TestCase
     /** Test well-formed Track creation */
     public function test_track_creation()
     {
-        $this->seed();
         $this->authAsUser();
         $this->post(rroute()
             ->class(RouteClass::AUTHENTICATED)
@@ -98,7 +98,6 @@ class TracksControllerTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The name field is required.");
-        $this->seed();
         $this->authAsUser();
         $this->withoutExceptionHandling()->post(rroute()
             ->class(RouteClass::AUTHENTICATED)
@@ -119,7 +118,6 @@ class TracksControllerTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The name must not be greater than 255 characters.");
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -143,7 +141,6 @@ class TracksControllerTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The description field is required.");
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -167,7 +164,6 @@ class TracksControllerTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The duration field is required.");
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -191,7 +187,6 @@ class TracksControllerTest extends TestCase
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The mp3 must be a file of type: mp3.");
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -213,7 +208,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with album. */
     public function test_track_creation_with_album()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -249,7 +243,6 @@ class TracksControllerTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(config("error-codes.ALBUM_NOT_FOUND.message"));
         $this->expectExceptionCode(config("error-codes.ALBUM_NOT_FOUND.code"));
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -275,7 +268,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed creation edit with cover. */
     public function test_track_creation_with_cover()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -307,7 +299,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with unowned cover. */
     public function test_track_creation_with_unowned_cover()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -336,7 +327,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with lyric. */
     public function test_track_creation_with_lyric()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -368,7 +358,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track creation with unowned lyric. */
     public function test_track_creation_with_unowned_lyric()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -400,9 +389,8 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit. */
     public function test_track_edit()
     {
-        $this->seed();
         $this->authAsUser();
-      
+
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
         $track->update([
@@ -429,11 +417,9 @@ class TracksControllerTest extends TestCase
     /** Test an unowned track edit. */
     public function test_unowned_track_edit()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
-        $this->seed();
         $this->authAsUser();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(config("error-codes.TRACK_NOT_FOUND.message"));
@@ -441,7 +427,7 @@ class TracksControllerTest extends TestCase
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
 
-        $this->put(rroute()
+        $this->withoutExceptionHandling()->put(rroute()
             ->class(RouteClass::AUTHENTICATED)
             ->group(RouteGroup::TRACK)
             ->method(RouteMethod::PUT)
@@ -454,19 +440,15 @@ class TracksControllerTest extends TestCase
                 "description" => "Description",
                 "duration" => "01:01",
             ]
-        )->assertJsonStructure([
-            "id"
-        ]);
+        );
     }
 
     /** Test a well-formed track edit submitting a null name. */
     public function test_track_edit_null_name()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
-        $this->seed();
         $this->authAsUser();
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The name field is required.");
@@ -495,11 +477,9 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit submitting a long name. */
     public function test_track_edit_long_name()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
-        $this->seed();
         $this->authAsUser();
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The name must not be greater than 255 characters.");
@@ -528,11 +508,9 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit submitting a null description.  */
     public function test_track_edit_null_description()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
-        $this->seed();
         $this->authAsUser();
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage("The description field is required.");
@@ -561,7 +539,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with album. */
     public function test_track_edit_with_album()
     {
-        $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
@@ -595,7 +572,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with unowned album. */
     public function test_track_edit_with_unowned_album()
     {
-        $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
@@ -627,7 +603,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with cover. */
     public function test_track_edit_with_cover()
     {
-        $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
@@ -661,7 +636,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with unowned cover. */
     public function test_track_edit_with_unowned_cover()
     {
-        $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
@@ -693,7 +667,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with lyric. */
     public function test_track_edit_with_lyric()
     {
-        $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
@@ -727,7 +700,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed track edit with unowned lyric. */
     public function test_track_edit_with_unowned_lyric()
     {
-        $this->seed();
         $this->authAsUser();
         /** @var Tracks $track */
         $track = Tracks::factory()->create();
@@ -761,7 +733,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalVotes" */
     public function test_get_total_votes()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -801,7 +772,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getUserCreatedTracks" */
     public function test_get_users_created_tracks()
     {
-        $this->seed();
 
         // create a dummy track, just to get sure it's not counted
         Tracks::factory()->create();
@@ -833,7 +803,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getUserOwnedTracks" */
     public function test_get_users_owned_tracks()
     {
-        $this->seed();
 
         // create a dummy track, just to get sure it's not counted
         Tracks::factory()->create();
@@ -868,7 +837,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTotalListenings" */
     public function test_get_total_listenings()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -903,7 +871,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getAverageVote" */
     public function test_get_average_vote()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -918,7 +885,7 @@ class TracksControllerTest extends TestCase
         $challenge = Challenges::factory()->create();
 
         for ($i = 0; $i <= 5; $i++) {
-            $response = $this->withoutExceptionHandling()->get(rroute()
+            $response = $this->get(rroute()
                 ->class(RouteClass::AUTHENTICATED)
                 ->group(RouteGroup::TRACK)
                 ->method(RouteMethod::GET)
@@ -942,7 +909,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getMostVotedTracks" */
     public function test_get_most_voted_tracks()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1009,7 +975,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getMostListenedTracks" */
     public function test_get_most_listened_tracks()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1070,7 +1035,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getNotInChallengeTracks" */
     public function test_get_not_in_challenge_tracks()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1096,7 +1060,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "getTrackLink" */
     public function test_get_track_link()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1122,7 +1085,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" */
     public function test_link_to_album()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1156,7 +1118,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with unowned track id */
     public function test_link_to_album_unowned_track()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1190,7 +1151,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToAlbum" with unowned album id */
     public function test_link_to_album_unowned_album()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1225,7 +1185,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" */
     public function test_link_to_cover()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1259,7 +1218,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with unowned track id */
     public function test_link_to_cover_unowned_track()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1293,7 +1251,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToCover" with unowned cover id */
     public function test_link_to_cover_unowned_cover()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1328,7 +1285,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" */
     public function test_link_to_lyric()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1362,7 +1318,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with unowned track id */
     public function test_link_to_lyric_unowned_track()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );
@@ -1396,7 +1351,6 @@ class TracksControllerTest extends TestCase
     /** Test a well-formed request to "linkToLyric" with unowned lyric id */
     public function test_link_to_lyric_unowned_lyric()
     {
-        $this->seed();
         $this->actingAs(
             $this->user
         );

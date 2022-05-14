@@ -75,7 +75,6 @@ class VotesController extends Controller
                 ) {
                     // habilitate vote
                     try {
-                        blockchain($user)->election()->grantVoteAbility($user, $track->owner->wallet->address, $track->nft_id);
                         // if no exception is thrown, return true
                         return response()->json(["success" => true]);
                     } catch (Throwable $e) {
@@ -130,7 +129,8 @@ class VotesController extends Controller
 
         if (!is_null($track)) {
             try {
-                blockchain($user)->election()->vote($track->owner->wallet->address, $track->nft_id, $vote);
+                $user->deposit(10);
+                payTransactionFee($user);
                 // if no exceptions are thrown, log the vote
                 $vote_model = Votes::create([
                     "voter_id" => $user->id,

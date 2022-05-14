@@ -52,4 +52,20 @@ enum RouteName: string
     case SETTINGS_USER_PUBLIC_KEY = "settings_user_public_key";
     case SETTINGS_USER_SECRET_KEY = "settings_user_secret_key";
     case SETTINGS_LISTENED_CHALLENGE_RANDOM_TRACKS = "settings_listened_challenge_random_tracks";
+
+
+    case COVER_CREATE = "cover_create";
+    case COVER_UPDATE = "cover_update";
+    case COVER_CREATED = "cover_created";
+    case COVER_OWNED = "cover_owned";
+
+    case ALBUM_CREATE = "album_create";
+    case ALBUM_UPDATE = "album_update";
+    case ALBUM_CREATED = "album_created";
+    case ALBUM_OWNED = "album_owned";
+
+    case LYRIC_CREATE = "lyric_create";
+    case LYRIC_UPDATE = "lyric_update";
+    case LYRIC_CREATED = "lyric_created";
+    case LYRIC_OWNED = "lyric_owned";
 }
