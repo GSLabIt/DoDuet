@@ -7,6 +7,7 @@ use App\Models\PersonaInquiry;
 use App\Models\PersonaVerification;
 use App\Models\User;
 use Carbon\Carbon;
+use Doinc\PersonaKyc\Events\VerificationSubmitted;
 use Doinc\PersonaKyc\Models\Account;
 use Doinc\PersonaKyc\Models\Inquiry;
 use Doinc\PersonaKyc\Models\Verification;
@@ -42,9 +43,9 @@ class PersonaEventListener
         /** @var Inquiry $inquiry */
         $inquiry = $event->inquiry;
         $this->personaInquiryUpdateOrCreate($inquiry);
-        User::where("id", $inquiry->reference_id)->first()
+        User::where("id", $inquiry->reference_id)
             ->update([
-                "persona_verified_at" => $inquiry->completed_at,
+                "persona_verified_at" => $inquiry->decisioned_at,
             ]);
     }
 
@@ -152,6 +153,10 @@ class PersonaEventListener
         // verification events
         $events->listen( // creation event
             'Doinc\PersonaKyc\Events\VerificationCreated',
+            'App\Listeners\PersonaEventListener@onVerificationEvent'
+        );
+        $events->listen(
+            'Doinc\PersonaKyc\Events\VerificationSubmitted',
             'App\Listeners\PersonaEventListener@onVerificationEvent'
         );
         $events->listen(

@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 9.10.1.
+ * Generated for Laravel 9.11.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -4800,7 +4800,7 @@
                     /**
          * Get all of the support drivers.
          *
-         * @return array 
+         * @return string[] 
          * @static 
          */ 
         public static function supportedDrivers()
@@ -4811,7 +4811,7 @@
                     /**
          * Get all of the drivers that are actually available.
          *
-         * @return array 
+         * @return string[] 
          * @static 
          */ 
         public static function availableDrivers()
@@ -4847,7 +4847,7 @@
                     /**
          * Return all of the created connections.
          *
-         * @return array 
+         * @return \Illuminate\Database\array<string, \Illuminate\Database\Connection>
          * @static 
          */ 
         public static function getConnections()
@@ -5891,7 +5891,7 @@
          * Register an event and payload to be fired later.
          *
          * @param string $event
-         * @param array $payload
+         * @param object|array $payload
          * @return void 
          * @static 
          */ 

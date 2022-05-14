@@ -1,0 +1,12 @@
+=> [34;4mApp\Models\User[39;24m {#4268
+     [34mid[39m: "[32m5d0f840e-68f8-3474-a22a-0f6a2331f045[39m",
+     [34mname[39m: "[32meyJpdiI6ImFHTXA1dkJQUm4xYTNUbzcrdUlrVHc9PSIsInZhbHVlIjoiaFU3MDE1Q3I4cUxtc2EvTlBUTDkxQT09IiwibWFjIjoiNzYwOGQ0ZjBkYWJmMmVmYmI1M2Q3YTAyMWY4M2FlYjA3M2M2NzFkODA0OWZjOGIwMjIwNDBhZjliZmI3OGVmMCIsInRhZyI6IiJ9[39m",
+     [34memail[39m: "[32mmarta30@example.com[39m",
+     [34memail_verified_at[39m: "[32m2022-05-10 17:04:54[39m",
+     #[33mpassword[39m: "[32m$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi[39m",
+     #[33mremember_token[39m: "[32mrvzUalQplF[39m",
+     [34mupdated_at[39m: "[32m2022-05-10 17:04:55[39m",
+     [34mcreated_at[39m: "[32m2022-05-10 17:04:55[39m",
+     +[1mprofile_photo_url[22m: "[32mhttps://ui-avatars.com/api/?name=L+L+M&color=7F9CF5&background=EBF4FF[39m",
+   }
+
