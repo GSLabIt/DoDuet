@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PersonaTemplates;
 use App\Models\PersonaAccount;
 use App\Models\User;
 use Carbon\Carbon;
@@ -30,6 +31,7 @@ use Doinc\PersonaKyc\Events\VerificationSubmitted;
 use Doinc\PersonaKyc\Models\Account;
 use Doinc\PersonaKyc\Models\Inquiry;
 use Doinc\PersonaKyc\Models\Verification;
+use Doinc\PersonaKyc\Persona;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -530,7 +532,7 @@ class PersonaEventListenerTest extends TestCase
      *
      * @return Verification
      */
-    private function createVerification($status, $created_at, $created_at_ts, $submitted_at, $submitted_at_ts, $completed_at, $completed_at_ts): Verification
+    private function createVerification($status, $created_at, $created_at_ts, $submitted_at, $submitted_at_ts, $completed_at, $completed_at_ts, $inquiry_id = "inq_wAXJNnZfnsDjrfP3h4nbrAkk"): Verification
     {
         return Verification::from([
             "data" => [
@@ -554,7 +556,7 @@ class PersonaEventListenerTest extends TestCase
                     "inquiry" => [
                         "data" => [
                             "type" => "inquiry",
-                            "id" => "inq_wAXJNnZfnsDjrfP3h4nbrAkk"
+                            "id" => $inquiry_id
                         ]
                     ]
                 ]
@@ -699,6 +701,28 @@ class PersonaEventListenerTest extends TestCase
 
         // I actually don't know what's the actual data sent, so I put it to failed to check that the event was registered
         VerificationCanceled::dispatch($this->createVerification("failed", $created_at, $created_at_ts, $created_at, $created_at_ts, $created_at, $created_at_ts));
+
+        $this->assertDatabaseHas("persona_verifications", ["status" => "failed"]);
+    }
+
+    /**
+     * Test the Verification without Inquiry already existing.
+     *
+     * @return void
+     */
+    public function test_verification_without_inquiry_event()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $created_at = Carbon::now()->toDateTimeString();
+        $created_at_ts = Carbon::now()->timestamp;
+
+        // NOTE: set template ID according to the user that you are using.
+        $inquiry_id = Persona::init()->inquiries()->create($user->id, PersonaTemplates::GOVERNMENT_ID_AND_SELFIE)->id;
+
+        // I actually don't know what's the actual data sent, so I put it to failed to check that the event was registered
+        VerificationCreated::dispatch($this->createVerification("failed", $created_at, $created_at_ts, $created_at, $created_at_ts, $created_at, $created_at_ts, $inquiry_id));
 
         $this->assertDatabaseHas("persona_verifications", ["status" => "failed"]);
     }

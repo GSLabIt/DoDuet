@@ -11,6 +11,7 @@ use Doinc\PersonaKyc\Events\VerificationSubmitted;
 use Doinc\PersonaKyc\Models\Account;
 use Doinc\PersonaKyc\Models\Inquiry;
 use Doinc\PersonaKyc\Models\Verification;
+use Doinc\PersonaKyc\Persona;
 
 class PersonaEventListener
 {
@@ -19,10 +20,10 @@ class PersonaEventListener
     {
         PersonaInquiry::updateOrInsert(
             [ // research and optionally merged for create params
-                "persona_id" => $inquiry->id,
-                "reference_id" => $inquiry->reference_id,
+                "persona_id" => $inquiry->id
             ],
             [ // update params
+                "reference_id" => $inquiry->reference_id,
                 "created_at" => $inquiry->created_at,
                 "status" => $inquiry->status,
                 "started_at" => $inquiry->started_at,
@@ -75,13 +76,19 @@ class PersonaEventListener
     {
         /** @var Verification $verification */
         $verification = $event->verification;
+        $inquiry_id = $verification->relationships->inquiry->id;
+        // if the inquiry is not already registered, request data from persona
+        if (is_null(PersonaInquiry::where("persona_id", $inquiry_id)->first())) {
+            // call the function to create the inquiry with the data got from Persona.
+            $this->personaInquiryUpdateOrCreate(Persona::init()->inquiries()->get($verification->relationships->inquiry->id));
+        }
         PersonaVerification::updateOrInsert(
             [ // research and optionally merged for create params
                 "persona_id" => $verification->id,
             ],
             [ // update params
                 "status" => $verification->status,
-                "inquiry_id" => $verification->relationships->inquiry->id,
+                "inquiry_id" => $inquiry_id,
                 "created_at" => Carbon::createFromTimestamp($verification->created_at_ts)->toDateTimeString(),
                 "submitted_at" => Carbon::createFromTimestamp($verification->submitted_at_ts)->toDateTimeString(),
                 "completed_at" => Carbon::createFromTimestamp($verification->completed_at_ts)->toDateTimeString(),

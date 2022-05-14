@@ -10,6 +10,6 @@ enum PersonaTemplates: string implements IPersonaTemplates {
         return $this->value;
     }
 
-	case GOVERNMENT_ID = "itmplv_tGpKFGNG9dsvZS5QSHr9P7Zz";
-	case GOVERNMENT_ID_AND_SELFIE = "itmpl_qsPvbUsTWT1fv6wWPSM3pjXB";
+	case GOVERNMENT_ID = "itmpl_9XC4r2FTEtsuY7aLhVuHJQw3";
+	case GOVERNMENT_ID_AND_SELFIE = "itmpl_pFp1GW8kijftMt7YjAHoBNqT";
 }
