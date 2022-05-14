@@ -17,8 +17,8 @@
         computed: {
             classes() {
                 return this.active
-                    ? 'inline-flex items-center px-1 pt-1 border-b-4 border-fuchsia-400 text-sm font-bold leading-5 text-gray-200 focus:outline-none focus:border-fuchsia-700 transition'
-                    : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-100 hover:text-gray-100 hover:border-gray-300 focus:outline-none focus:text-gray-100 focus:border-gray-300 transition'
+                    ? 'inline-flex w-full items-center px-1 pt-1 text-md font-black leading-5 text-gray-200 transition bg-gray-800/60'
+                    : 'inline-flex w-full items-center px-1 pt-1 text-md leading-5 text-gray-100 hover:text-gray-100 hover:bg-gray-800/10 focus:text-gray-100 transition'
             }
         }
     })

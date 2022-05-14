@@ -24,7 +24,7 @@
                         <label for="duration">Duration:</label>
                         <input id="duration" v-model="form.duration"/>
                         <label for="mp3">Audio File:</label>
-                        <input id="mp3" type="file" @change="form.mp3 = $event.target.files[0]"/>
+                        <input id="mp3" type="file" @change="uploadChange"/>
                         <label for="cover">Cover:</label>
                         <select id="cover" type="select" v-model="form.cover_id"></select>
                         <label for="lyric">Lyric:</label>
@@ -63,6 +63,9 @@ export default defineComponent({
         }
     },
     methods: {
+        uploadChange(e){
+            this.form.mp3 = e.target.files[0]
+        },
         submit() {
             let formData = new FormData();
             Object.entries(this.form).forEach(

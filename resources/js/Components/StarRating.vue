@@ -70,7 +70,7 @@ export default {
 /* The star of the show */
 .rate > label:before {
     display: inline-block;
-    font-size: 1.5rem;
+    font-size: .7rem;
     padding: .3rem .2rem;
     margin: 0;
     cursor: pointer;

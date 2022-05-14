@@ -242,7 +242,7 @@
         </nav>
 
         <div class="flex flex-1 overflow-hidden bg-[#FFE9FF]">
-            <div class="flex flex-1 flex-col">
+            <div class="flex flex-col">
                 <div class="w-full overflow-y-auto paragraph px-4 pb-24">
                     <!-- Page Heading -->
                     <header v-if="$slots.header">
@@ -250,19 +250,12 @@
                             <slot name="header"></slot>
                         </div>
                     </header>
-
-                    <star-rating id="star" :min="1" :max="10" v-model="stars"/>
-                    <boxed-checkbox name="check" value="check1" v-model="checkbox">check1</boxed-checkbox>
-                    <boxed-checkbox name="check" value="check2" v-model="checkbox"/>
-                    <boxed-radio name="radio" value="radio1" v-model="radio"/>
-                    <boxed-radio name="radio" value="radio2" v-model="radio"/>
-
                     <slot></slot>
                 </div>
             </div>
         </div>
         <!-- Bottom track controls -->
-        <div class="bg-gradient-to-b from-[#FF45FF] to-[#1B1B1D] bottom-0 left-0 right-0 ml-0 h-24">
+        <div class="bg-[#FF45FF]/70 bg-clip-padding backdrop-filter backdrop-blur-xl bottom-0 left-0 right-0 ml-0 h-24">
 
         </div>
     </div>

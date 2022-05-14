@@ -1,22 +1,36 @@
 <template>
     <app-layout title="Challenge">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Current Challenge
-            </h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Current Challenge
+                </h2>
 
-            <button @click="refreshTracks">
-                REFRESH
-            </button>
+                <button @click="refreshTracks">
+                    REFRESH
+                </button>
+            </div>
         </template>
 
-        <div class="py-12">
-            <weekly-election-banner class="my-5 max-w-7xl mx-auto sm:px-6 lg:px-8"></weekly-election-banner>
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div>
+            <!--banner-->
+            <weekly-election-banner class="my-5 max-w-7xl mx-auto sm:pl-3 lg:pl-4"></weekly-election-banner>
+
+            <!--song grid-->
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3
+                    gap-8">
                 <template v-for="(item, index) of nineRandomTracks">
-                    <song-card :cover_id="item.cover_id" :creator="item.creator" :duration="item.duration"
-                               :name="item.name" :id="item.id"></song-card>
-                    <!--                    <button @click="listen(item.id, index)">ASCOLTA</button>
+                    <song-card
+                        :cover_id="item.cover_id"
+                        :creator="item.creator"
+                        :duration="item.duration"
+                        :name="item.name"
+                        :vote="4"
+                        :id="item.id"
+                        @play="listen(item.id, index)"
+                    >
+                    </song-card>
+<!--                                        <button @click="listen(item.id, index)">ASCOLTA</button>
                                         <input type="range" min="0" max="10" id="vota" v-model.number=this.votes[index] name="vota"
                                                :disabled="!this.votable[index]"/>
                                         <label for="vota" @click="vote(item.id, index)">VOTA</label>-->
@@ -32,6 +46,7 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import Toaster from "../../Composition/toaster";
 import WeeklyElectionBanner from "@/Components/WeeklyElectionBanner";
 import SongCard from "@/Components/SongCard";
+import {MusicService} from "@/Services/MusicService";
 
 const sodium = require("libsodium-wrappers")
 
@@ -142,6 +157,17 @@ export default defineComponent({
                     code: error.response.data.code
                 })));
         }
-    }
+    },
+    created() {
+        const musicService = new MusicService()
+        musicService.onChange.subscribe((e)=>{
+            console.log(e)
+        })
+        musicService.setIsPlaying(true)
+
+        setTimeout(()=>{
+            musicService.setIsPlaying(false)
+        }, 5000)
+    },
 })
 </script>

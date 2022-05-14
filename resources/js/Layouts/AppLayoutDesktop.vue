@@ -240,45 +240,110 @@
                 </div>
             </div>
         </nav>
-
-<!--        content-->
+        <!--        content-->
         <div class="flex flex-1 overflow-hidden bg-[#FFE9FF]">
             <!--left sidebar-->
-            <nav class="h-screen w-32 md:w-60 bg-gradient-to-b
-                from-[#FF45FF] to-[#1B1B1D] rounded-tr-[2rem] px-2 py-4 md:px-10 md:py-16">
+            <nav class="h-screen w-32 md:w-40 lg:w-52 xl:w-60 bg-gradient-to-b overflow-hidden
+                from-[#FF45FF] to-[#1B1B1D] rounded-tr-[3rem] flex flex-col justify-start items-center py-4 md:py-16">
                 <!-- Navigation Links -->
-                <div class="space-y-8 gap-4">
-                    <jet-nav-link :href="route('authenticated.dashboard')"
-                                  :active="route().current('authenticated.dashboard')">
-                        Dashboard
-                    </jet-nav-link>
+                <div class="w-full">
+<!--                    users-->
+                    <h1 class="text-xl font-light text-gray-100" :class="classes.heading">Users</h1>
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link :href="route('authenticated.challenge-index')"
+                                      :active="route().current('authenticated.challenge-index')">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa fa-award "></i>
+                                <span class="inline">Weekly election</span>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link href="#" :active="false">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa fa-books"></i>
+                                <span class="inline">Tracks</span>
+                                <coming-soon></coming-soon>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link href="#" :active="false">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa fa-chart-simple"></i>
+                                <span class="inline">Stats</span>
+                                <coming-soon></coming-soon>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+<!--                    artists-->
+                    <h1 class="text-xl font-light text-gray-100 mt-10" :class="classes.heading">Artists</h1>
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link :href="route('authenticated.track-upload')"
+                                      :active="route().current('authenticated.track-upload')">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa fa-compact-disc"></i>
+                                <span class="inline">Tracks</span>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link href="#" :active="false">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa fa-microphone-stand"></i>
+                                <span class="inline">Lyrics</span>
+                                <coming-soon></coming-soon>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link href="#" :active="false">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa-solid fa-images"></i>
+                                <span class="inline">Covers</span>
+                                <coming-soon></coming-soon>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link href="#" :active="false">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa-solid fa-album"></i>
+                                <span class="inline">Albums</span>
+                                <coming-soon></coming-soon>
+                            </div>
+                        </jet-nav-link>
+                    </div>
+
+                    <div class="flex space-x-8 -my-px">
+                        <jet-nav-link href="#" :active="false">
+                            <div class="pointer-events-none flex justify-start items-center gap-4 py-1"
+                                 :class="classes.navLink">
+                                <i class="fa fa-chart-simple"></i>
+                                <span class="inline">Stats</span>
+                                <coming-soon></coming-soon>
+                            </div>
+                        </jet-nav-link>
+                    </div>
                 </div>
 
-                <div class="flex space-x-8 -my-px">
-                    <jet-nav-link :href="route('authenticated.challenge-index')"
-                                  :active="route().current('authenticated.challenge-index')">
-                        Challenge
-                    </jet-nav-link>
-                </div>
-
-                <div class="flex space-x-8 -my-px">
-                    <jet-nav-link :href="route('authenticated.tracks-index')"
-                                  :active="route().current('authenticated.tracks-index')">
-                        Tracks
-                    </jet-nav-link>
-                </div>
-
-                <div class="flex space-x-8 -my-px">
-                    <jet-nav-link :href="route('authenticated.track-upload')"
-                                  :active="route().current('authenticated.track-upload')">
-                        Track Upload
-                    </jet-nav-link>
-                </div>
             </nav>
-
             <!--main-->
             <div class="flex flex-1 flex-col">
-                <div class="w-full overflow-y-auto paragraph px-4 pb-24">
+                <div class="w-full overflow-y-auto paragraph px-4 pb-40">
                     <!-- Page Heading -->
                     <header v-if="$slots.header">
                         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -296,15 +361,15 @@
                 </div>
             </div>
             <!--right sidebar-->
-            <div class="flex bg-[#FFCAFF] w-32 md:w-60 px-2 py-4 md:px-4 md:py-16 overflow-auto">
-                <span>Istruzioni per l'utilizzo e la partecipazione ai contest</span>
+            <div class="flex bg-[#FFCAFF] w-32 md:w-40 lg:w-52 xl:w-60 px-2 py-4 md:px-4 md:py-16 overflow-auto">
+                <contest-info></contest-info>
             </div>
         </div>
 
         <!-- Bottom track controls -->
-        <div class="fixed bg-clip-padding backdrop-filter backdrop-blur-xl bg-gradient-to-r from-gray-900 to-bg-gray-500
-                rounded-tl-[2rem] bottom-0 left-0 right-0 ml-0 h-24">
-
+        <div class="fixed bg-clip-padding backdrop-filter backdrop-blur-xl bg-gray-800/50
+                rounded-t-[3.5rem] bottom-0 left-0 right-0 ml-0 h-28 px-10">
+            <player></player>
         </div>
     </div>
 </template>
@@ -321,6 +386,9 @@ import {Head, Link} from '@inertiajs/inertia-vue3'
 import StarRating from "@/Components/StarRating";
 import BoxedCheckbox from "@/Components/BoxedCheckbox";
 import BoxedRadio from "@/Components/BoxedRadio";
+import Player from "@/Components/AudioPlayer/Player";
+import ComingSoon from "@/Components/ComingSoon";
+import ContestInfo from "@/Components/ContestInfo";
 
 export default defineComponent({
     name: "AppLayoutDesktop",
@@ -330,6 +398,9 @@ export default defineComponent({
     },
 
     components: {
+        ContestInfo,
+        ComingSoon,
+        Player,
         BoxedRadio,
         BoxedCheckbox,
         StarRating,
@@ -352,7 +423,14 @@ export default defineComponent({
         }
     },
 
-    computed: {},
+    computed: {
+        classes(){
+            return {
+                navLink: ['ml-8'],
+                heading: ['ml-6', 'mb-2'],
+            }
+        }
+    },
 
     methods: {
         switchToTeam(team) {
