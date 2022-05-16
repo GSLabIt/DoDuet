@@ -1,0 +1,26 @@
+{
+    "name": "telnyx-extended-api",
+    "alias": "telnyx-extended-api-module",
+    "description": "Enhance the functionalities of the Telnyx SDK",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "telnyx_extended_api",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Doinc\\Modules\\TelnyxExtendedApi\\Providers\\TelnyxExtendedApiServiceProvider"
+    ],
+    "aliases": {
+        "TelnyxExtendedApi": "Doinc\\Modules\\TelnyxExtendedApi\\Facades\\TelnyxExtendedApi"
+    },
+    "files": [],
+    "requires": [
+        "do-inc/safe-exception-module"
+    ],
+    "minimumCoreVersion": "^9.0",
+    "title": "TelnyxExtendedApi module",
+    "version": "1.0.3",
+    "author": "Emanuele (ebalo) Balsamo"
+}

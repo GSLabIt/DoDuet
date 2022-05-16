@@ -52,4 +52,30 @@ enum RouteName: string
     case SETTINGS_USER_PUBLIC_KEY = "settings_user_public_key";
     case SETTINGS_USER_SECRET_KEY = "settings_user_secret_key";
     case SETTINGS_LISTENED_CHALLENGE_RANDOM_TRACKS = "settings_listened_challenge_random_tracks";
+
+    case REPORT_REASONS_TRACK_CREATE = "report_reasons_track_create";
+    case REPORT_REASONS_LYRIC_CREATE = "report_reasons_lyric_create";
+    case REPORT_REASONS_COVER_CREATE = "report_reasons_cover_create";
+    case REPORT_REASONS_ALBUM_CREATE = "report_reasons_album_create";
+    case REPORT_REASONS_MESSAGE_CREATE = "report_reasons_message_create";
+    case REPORT_REASONS_COMMENT_CREATE = "report_reasons_comment_create";
+    case REPORT_REASONS_USER_CREATE = "report_reasons_user_create";
+    case REPORT_REASONS_UPDATE = "report_reasons_update";
+    case REPORT_REASONS_DELETE = "report_reasons_delete";
+
+    case REPORT_TRACK_CREATE = "report_track_create";
+    case REPORT_LYRIC_CREATE = "report_lyric_create";
+    case REPORT_COVER_CREATE = "report_cover_create";
+    case REPORT_ALBUM_CREATE = "report_album_create";
+    case REPORT_MESSAGE_CREATE = "report_message_create";
+    case REPORT_COMMENT_CREATE = "report_comment_create";
+    case REPORT_USER_CREATE = "report_user_create";
+    case REPORT_UPDATE = "report_update";
+
+    case BAN_USER = "ban_user";
+    case UNBAN_USER = "unban_user";
+
+    case USER_SETTINGS_SET = "user_settings_set";
+
+    case PERSONAL_INFORMATIONS_SET = "personal_informations_set";
 }

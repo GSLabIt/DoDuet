@@ -16866,6 +16866,55 @@
      
 }
 
+    namespace Doinc\Modules\SmartyStreetApi\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class SmartyStreetApi {
+                    /**
+         * Access the smarty international functionalities
+         *
+         * @return \Doinc\Modules\SmartyStreetApi\SmartyInternational 
+         * @static 
+         */ 
+        public static function international()
+        {
+                        /** @var \Doinc\Modules\SmartyStreetApi\SmartyStreetApi $instance */
+                        return $instance->international();
+        }
+         
+    }
+     
+}
+
+    namespace Doinc\Modules\TelnyxExtendedApi\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class TelnyxExtendedApi {
+                    /**
+         * Execute a number lookup on the provided telephone number.
+         *
+         * @param string $phone_number Phone number to check
+         * @param bool $with_carrier Retrieve the carrier if present
+         * @param bool $with_caller Retrieve the caller if present
+         * @return \Doinc\Modules\TelnyxExtendedApi\Models\DTOs\TelnyxPhoneLookupRootDTO 
+         * @throws UnknownProperties
+         * @throws InvalidNumber
+         * @static 
+         */ 
+        public static function numberLookup($phone_number, $with_carrier = true, $with_caller = false)
+        {
+                        /** @var \Doinc\Modules\TelnyxExtendedApi\TelnyxExtendedApi $instance */
+                        return $instance->numberLookup($phone_number, $with_carrier, $with_caller);
+        }
+         
+    }
+     
+}
+
     namespace Jenssegers\Agent\Facades { 
             /**
      * 
@@ -22578,6 +22627,8 @@ namespace  {
             class Crypter extends \Doinc\Modules\Crypter\Facades\Crypter {}
             class Referral extends \Doinc\Modules\Referral\Facades\Referral {}
             class Settings extends \Doinc\Modules\Settings\Facades\Settings {}
+            class SmartyStreetApi extends \Doinc\Modules\SmartyStreetApi\Facades\SmartyStreetApi {}
+            class TelnyxExtendedApi extends \Doinc\Modules\TelnyxExtendedApi\Facades\TelnyxExtendedApi {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
             class Octane extends \Laravel\Octane\Facades\Octane {}
             class Socialite extends \Laravel\Socialite\Facades\Socialite {}

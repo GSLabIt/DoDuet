@@ -179,6 +179,9 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
 
+        // Ban service provider
+        Cog\Laravel\Ban\Providers\BanServiceProvider::class,
+
     ],
 
     /*

@@ -16,4 +16,9 @@ enum RouteGroup: string
     case TRACK = "track";
     case LISTENING_REQUEST = "listening_request";
     case SETTINGS = "settings";
+    case REPORT_REASONS = "report_reasons";
+    case REPORTS = "reports";
+    case BAN = "ban";
+    case USER_SETTINGS = "user_settings";
+    case PERSONAL_INFORMATIONS = "personal_informations";
 }

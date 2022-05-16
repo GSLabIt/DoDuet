@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Reportable;
 use App\Traits\ActivityLogAll;
 
 use App\Traits\Uuid;
@@ -21,7 +22,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @mixin IdeHelperMessages
  */
-class Messages extends Model
+class Messages extends Model implements Reportable
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
@@ -40,5 +41,10 @@ class Messages extends Model
     public function reports(): MorphOne
     {
         return $this->morphOne(Reports::class, "reportable");
+    }
+
+    public function reportableUser(): User
+    {
+        return $this->sender;
     }
 }

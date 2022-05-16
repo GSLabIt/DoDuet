@@ -1,0 +1,23 @@
+{
+    "name": "safe-exception",
+    "alias": "safe-exception-module",
+    "description": "Emit json safe exception",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "safe_exception",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Doinc\\Modules\\SafeException\\Providers\\SafeExceptionServiceProvider"
+    ],
+    "aliases": {
+    },
+    "files": [],
+    "requires": [],
+    "minimumCoreVersion": "^9.0",
+    "title": "Safe exception module",
+    "version": "1.0.3",
+    "author": "Emanuele (ebalo) Balsamo"
+}

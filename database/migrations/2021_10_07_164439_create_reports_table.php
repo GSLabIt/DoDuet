@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->uuidMorphs("reportable");
+            $table->foreignUuid("reporter_id")->references("id")->on("users");
             $table->foreignUuid("reason_id")->references("id")->on("report_reasons");
             $table->longText('extra_informations');
             $table->timestamps();

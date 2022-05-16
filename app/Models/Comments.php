@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Reportable;
 use App\Traits\ActivityLogAll;
 
 use App\Traits\Uuid;
@@ -17,7 +18,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @mixin IdeHelperComments
  */
-class Comments extends Model
+class Comments extends Model implements Reportable
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
@@ -44,5 +45,10 @@ class Comments extends Model
     function explicit(): MorphOne
     {
         return $this->morphOne(Explicits::class, "explicit_content");
+    }
+
+    public function reportableUser(): User
+    {
+        return $this->commentor;
     }
 }

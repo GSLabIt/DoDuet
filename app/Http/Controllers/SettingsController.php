@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Exceptions\SafeException;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -62,7 +63,7 @@ class SettingsController extends Controller
             ]);
         }
 
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.USER_NOT_FOUND.message"),
             config("error-codes.USER_NOT_FOUND.code")
         );
@@ -86,7 +87,7 @@ class SettingsController extends Controller
             ]);
         }
 
-        throw new \App\Exceptions\SafeException(
+        throw new SafeException(
             config("error-codes.SETTING_NOT_FOUND.message"),
             config("error-codes.SETTING_NOT_FOUND.code")
         );

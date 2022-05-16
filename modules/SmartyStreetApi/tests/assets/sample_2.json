@@ -1,0 +1,27 @@
+[
+    {
+        "address1": "Via Venti Settembre 54",
+        "address2": "Delaware DE 37129",
+        "components": {
+            "administrative_area": "DE",
+            "sub_administrative_area": "Rutherford",
+            "country_iso_3": "USA",
+            "locality": "Delaware",
+            "postal_code": "37129",
+            "postal_code_short": "37129",
+            "thoroughfare": "Via Venti Settembre",
+            "thoroughfare_name": "Via Venti Settembre",
+            "sub_building": "# 54",
+            "sub_building_type": "#",
+            "sub_building_number": "54"
+        },
+        "metadata": {},
+        "analysis": {
+            "verification_status": "Partial",
+            "address_precision": "Locality",
+            "changes": {
+                "components": {}
+            }
+        }
+    }
+]

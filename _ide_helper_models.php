@@ -678,6 +678,7 @@ namespace App\Models{
  * @property string $id
  * @property string $reportable_type
  * @property string $reportable_id
+ * @property string $reporter_id
  * @property string $reason_id
  * @property string $extra_informations
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -696,6 +697,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReasonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReportableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereReporterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Reports whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -955,8 +957,11 @@ namespace App\Models{
  * @property string|null $profile_photo_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $banned_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cog\Laravel\Ban\Models\Ban[] $bans
+ * @property-read int|null $bans_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comments[] $comments
  * @property-read int|null $comments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Albums[] $createdAlbums
@@ -965,6 +970,8 @@ namespace App\Models{
  * @property-read int|null $created_covers_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lyrics[] $createdLyrics
  * @property-read int|null $created_lyrics_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reports[] $createdReports
+ * @property-read int|null $created_reports_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tracks[] $createdTracks
  * @property-read int|null $created_tracks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Challenges[] $firstPlaces
@@ -1032,6 +1039,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBannedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerifiedAt($value)

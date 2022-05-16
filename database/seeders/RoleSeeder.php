@@ -15,7 +15,13 @@ class RoleSeeder extends Seeder
     public function run()
     {
         $roles = [
-            "super-admin" => [],
+            "super-admin" => [
+                "report_reasons.create.*",
+                "report_reasons.update.*",
+                "report_reasons.delete.*",
+                "ban.user",
+                "unban.user"
+            ],
             "banned" => [],
         ];
 

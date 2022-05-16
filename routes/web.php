@@ -3,6 +3,8 @@
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ChallengesController;
 use App\Http\Controllers\ListeningRequestController;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

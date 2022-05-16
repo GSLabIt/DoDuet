@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Reportable;
 use App\Traits\ActivityLogAll;
 
 use App\Traits\Uuid;
@@ -23,7 +24,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @mixin IdeHelperAlbums
  */
-class Albums extends Model
+class Albums extends Model implements Reportable
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll;
 
@@ -71,5 +72,10 @@ class Albums extends Model
     function explicit(): MorphOne
     {
         return $this->morphOne(Explicits::class, "explicit_content");
+    }
+
+    public function reportableUser(): User
+    {
+        return $this->owner;
     }
 }

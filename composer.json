@@ -14,12 +14,17 @@
         "ext-openssl": "*",
         "ext-sodium": "*",
         "ext-zip": "*",
+        "agiledrop/laravel-telnyx": "^1.0",
+        "cybercog/laravel-ban": "^4.7",
         "do-inc/commander-module": "^1.0",
         "do-inc/crypter-module": "^1.0",
         "do-inc/laravel-persona-kyc": "^0.10.20",
         "do-inc/laravel-wallet": "^1.0",
         "do-inc/referral-module": "^1.0",
+        "do-inc/safe-exception-module": "^1.0",
         "do-inc/settings-module": "^1.0",
+        "do-inc/smarty-street-api-module": "^1.0",
+        "do-inc/telnyx-extended-api-module": "^1.0",
         "docopt/docopt": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "gemorroj/archive7z": "^5.3",
@@ -76,7 +81,16 @@
             "Doinc\\Modules\\Settings\\": "modules/Settings/src/",
             "Doinc\\Modules\\Settings\\Database\\Factories\\": "modules/Settings/database/factories/",
             "Doinc\\Modules\\Settings\\Database\\Seeders\\": "modules/Settings/database/seeders/",
-            "Doinc\\Modules\\Crypter\\": "modules/Crypter/src/"
+            "Doinc\\Modules\\Crypter\\": "modules/Crypter/src/",
+            "Doinc\\Modules\\TelnyxExtendedApi\\": "modules/TelnyxExtendedApi/src/",
+            "Doinc\\Modules\\TelnyxExtendedApi\\Database\\Factories\\": "modules/TelnyxExtendedApi/database/factories/",
+            "Doinc\\Modules\\TelnyxExtendedApi\\Database\\Seeders\\": "modules/TelnyxExtendedApi/database/seeders/",
+            "Doinc\\Modules\\SafeException\\": "modules/SafeException/src/",
+            "Doinc\\Modules\\SafeException\\Database\\Factories\\": "modules/SafeException/database/factories/",
+            "Doinc\\Modules\\SafeException\\Database\\Seeders\\": "modules/SafeException/database/seeders/",
+            "Doinc\\Modules\\SmartyStreetApi\\": "modules/SmartyStreetApi/src/",
+            "Doinc\\Modules\\SmartyStreetApi\\Database\\Factories\\": "modules/SmartyStreetApi/database/factories/",
+            "Doinc\\Modules\\SmartyStreetApi\\Database\\Seeders\\": "modules/SmartyStreetApi/database/seeders/"
         },
         "files": [
             "app/Helpers/index.php"
@@ -88,7 +102,13 @@
             "Doinc\\Modules\\Referral\\Tests\\Feature\\": "modules/Referral/tests/Feature/",
             "Doinc\\Modules\\Referral\\Tests\\Unit\\": "modules/Referral/tests/Unit/",
             "Doinc\\Modules\\Settings\\Tests\\Feature\\": "modules/Settings/tests/Feature/",
-            "Doinc\\Modules\\Crypter\\Tests\\Feature\\": "modules/Crypter/tests/Feature/"
+            "Doinc\\Modules\\Crypter\\Tests\\Feature\\": "modules/Crypter/tests/Feature/",
+            "Doinc\\Modules\\TelnyxExtendedApi\\Tests\\Feature\\": "modules/TelnyxExtendedApi/tests/Feature/",
+            "Doinc\\Modules\\TelnyxExtendedApi\\Tests\\Unit\\": "modules/TelnyxExtendedApi/tests/Unit/",
+            "Doinc\\Modules\\SafeException\\Tests\\Feature\\": "modules/SafeException/tests/Feature/",
+            "Doinc\\Modules\\SafeException\\Tests\\Unit\\": "modules/SafeException/tests/Unit/",
+            "Doinc\\Modules\\SmartyStreetApi\\Tests\\Feature\\": "modules/SmartyStreetApi/tests/Feature/",
+            "Doinc\\Modules\\SmartyStreetApi\\Tests\\Unit\\": "modules/SmartyStreetApi/tests/Unit/"
         }
     },
     "scripts": {
@@ -144,6 +164,18 @@
         {
             "type": "vcs",
             "url": "git@github.com:Do-inc/laravel-settings-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-telnyx-extended-api-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-safe-exception-module.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:Do-inc/laravel-smarty-street-api-module.git"
         }
     ]
 }

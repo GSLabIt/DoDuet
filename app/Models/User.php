@@ -8,9 +8,12 @@
 
 namespace App\Models;
 
+use App\Interfaces\Reportable;
 use App\Traits\ActivityLogAll;
 use App\Traits\CryptographicComposition;
 use App\Traits\Uuid;
+use Cog\Laravel\Ban\Traits\Bannable;
+use Cog\Contracts\Ban\Bannable as BannableContract;
 use Doinc\Modules\Referral\Models\Traits\Referrable;
 use Doinc\Modules\Settings\Models\Traits\HasSettings;
 use Doinc\Wallet\Interfaces\Customer;
@@ -34,10 +37,10 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @mixin IdeHelperUser
  */
-class User extends Authenticatable implements Customer
+class User extends Authenticatable implements Customer,Reportable, BannableContract
 {
     use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, Uuid, HasRoles, LogsActivity;
-    use ActivityLogAll, CryptographicComposition, Referrable, HasSettings, CanPay;
+    use ActivityLogAll, CryptographicComposition, Referrable, HasSettings, CanPay, Bannable;
 
     /**
      * The attributes that are mass assignable.
@@ -206,6 +209,10 @@ class User extends Authenticatable implements Customer
         return $this->hasMany(Tips::class, "tipped_id");
     }
 
+    public function createdReports(): HasMany
+    {
+        return $this->hasMany(Reports::class, "reporter_id");
+    }
 
 
     /**
@@ -285,5 +292,10 @@ class User extends Authenticatable implements Customer
     public function libraries(): HasMany
     {
         return $this->hasMany(PersonalLibraries::class, "owner_id");
+    }
+
+    public function reportableUser()
+    {
+        return $this;
     }
 }

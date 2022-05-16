@@ -53,6 +53,59 @@ class AvailableSettingsSeeder extends Seeder
                 "type" => SettingNineRandomTracks::class,
                 "has_default_value" => false,
             ],
+            [
+                "name" => "public_messaging",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "display_wallet_address",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => false
+            ],
+            [
+                "name" => "profile_page_public",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "comment_contents",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "comment_contents_public",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "profile_page_public_unregistered",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "users_follow",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "users_tips",
+                "type" => SettingBool::class,
+                "has_default_value" => true,
+                "default_value" => true
+            ],
+            [
+                "name" => "anti_phishing_code",
+                "type" => SettingString::class,
+                "has_default_value" => false
+            ],
         ];
 
         foreach ($settings as $setting) {

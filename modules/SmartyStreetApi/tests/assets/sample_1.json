@@ -1,0 +1,40 @@
+[
+    {
+        "address1": "Via Venti Settembre 54",
+        "address2": "37129 Verona VR",
+        "components": {
+            "super_administrative_area": "Veneto",
+            "administrative_area": "VR",
+            "country_iso_3": "ITA",
+            "locality": "Verona",
+            "postal_code": "37129",
+            "postal_code_short": "37129",
+            "premise": "54",
+            "premise_number": "54",
+            "thoroughfare": "Via Venti Settembre"
+        },
+        "metadata": {
+            "address_format": "thoroughfare premise|postal_code locality administrative_area"
+        },
+        "analysis": {
+            "verification_status": "Verified",
+            "address_precision": "Premise",
+            "max_address_precision": "Premise",
+            "changes": {
+                "address1": "Verified-AliasChange",
+                "address2": "Verified-AliasChange",
+                "components": {
+                    "super_administrative_area": "Added",
+                    "administrative_area": "Verified-AliasChange",
+                    "country_iso_3": "Added",
+                    "locality": "Verified-NoChange",
+                    "postal_code": "Verified-NoChange",
+                    "postal_code_short": "Verified-NoChange",
+                    "premise": "Verified-NoChange",
+                    "premise_number": "Verified-NoChange",
+                    "thoroughfare": "Verified-NoChange"
+                }
+            }
+        }
+    }
+]

@@ -1,0 +1,26 @@
+{
+    "name": "smarty-street-api",
+    "alias": "smarty-street-api-module",
+    "description": "Smarty Street API module, verify and lookup international addresses",
+    "keywords": [
+        "do-inc",
+        "laravel",
+        "smarty_street_api",
+        "module"
+    ],
+    "priority": 0,
+    "providers": [
+        "Doinc\\Modules\\SmartyStreetApi\\Providers\\SmartyStreetApiServiceProvider"
+    ],
+    "aliases": {
+        "SmartyStreetApi": "Doinc\\Modules\\SmartyStreetApi\\Facades\\SmartyStreetApi"
+    },
+    "files": [],
+    "requires": [
+        "do-inc/safe-exception-module"
+    ],
+    "minimumCoreVersion": "^9.0",
+    "title": "Laravel Smarty Street API module",
+    "version": "1.1.7",
+    "author": "Emanuele (ebalo) Balsamo"
+}

@@ -28,7 +28,7 @@ class PersonalInformationsFactory extends Factory
             "alias" => $this->faker->text(255),
             "mobile" => $this->faker->phoneNumber(),
             "profile_cover_path" => $this->faker->imageUrl(),
-            "description" => $this->faker->sentences(),
+            "description" => $this->faker->sentence(),
         ];
     }
 

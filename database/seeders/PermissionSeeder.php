@@ -15,7 +15,11 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $permissions = [
-
+            "report_reasons.create.*",
+            "report_reasons.update.*",
+            "report_reasons.delete.*",
+            "ban.user",
+            "unban.user"
         ];
 
         foreach ($permissions as $permission) {

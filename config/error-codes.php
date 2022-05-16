@@ -44,6 +44,14 @@ return [
         "message" => "Unable to find the request setting",
         "code" => 1008,
     ],
+    "REPORTABLE_TYPE_NOT_FOUND" => [
+        "message" => "Unable to find the request reportable type",
+        "code" => 1009,
+    ],
+    "REPORT_NOT_FOUND" => [
+        "message" => "Unable to find the request report",
+        "code" => 1010,
+    ],
 
 
     "ALREADY_LISTENING" => [
@@ -72,6 +80,10 @@ return [
     ],
     "NOT_ENOUGH_TRACK_IN_CHALLENGE" => [
         "message" => "There are no more track in challenge",
+        "code" => 1056,
+    ],
+    "INVALID_MOBILE_NUMBER" => [
+        "message" => "The provided mobile phone number is invalid",
         "code" => 1056,
     ],
 
@@ -140,5 +152,6 @@ return [
         "message" => "Duplicated proposals not allowed",
         "code" => 1115,
     ],
+
 
 ];

@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Reportable;
 use App\Traits\ActivityLogAll;
 use App\Traits\Uuid;
 use Doinc\Wallet\Interfaces\Customer;
@@ -25,7 +26,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @mixin IdeHelperCovers
  */
-class Covers extends Model implements Product
+class Covers extends Model implements Product,Reportable
 {
     use HasFactory, Uuid, LogsActivity, ActivityLogAll, HasWallet;
 
@@ -107,5 +108,11 @@ class Covers extends Model implements Product
     public function getMetadataAttribute(): array
     {
         return [];
+    }
+
+
+    public function reportableUser(): User
+    {
+        return $this->owner;
     }
 }

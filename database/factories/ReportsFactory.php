@@ -33,7 +33,8 @@ class ReportsFactory extends Factory
             "reportable_id" => Tracks::factory(),
             "reportable_type" => Tracks::class,
             "reason_id" => ReportReasons::factory(),
-            "extra_information" => $this->faker->sentence(),
+            "extra_informations" => $this->faker->sentence(),
+            "reporter_id" => User::factory()
         ];
     }
 
