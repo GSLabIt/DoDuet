@@ -52,7 +52,7 @@ class CreateNewUser implements CreatesNewUsers
         UserSegmentsController::assignToSegment($user);
 
         // Generates unique referral code
-        Referral::getOrCreate(false);
+        Referral::getOrCreate($user, false);
 
         // check if the user registered with a referral code
         Referral::check();

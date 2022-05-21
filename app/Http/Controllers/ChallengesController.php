@@ -700,6 +700,14 @@ class ChallengesController extends Controller
         $user = auth()->user();
         /** @var Challenges $current_challenge */
         $current_challenge = Challenges::orderByDesc("id")->first();
+
+        if (is_null($current_challenge)) {
+            throw new SafeException(
+                config("error-codes.CHALLENGE_NOT_FOUND.message"),
+                config("error-codes.CHALLENGE_NOT_FOUND.code")
+            );
+        }
+
         $required_columns = ["id", "name", "description", "duration", "cover_id"];
 
         // if the setting is already set
