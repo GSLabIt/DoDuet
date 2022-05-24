@@ -51,7 +51,7 @@ class ListeningRequestController extends Controller
                 }
             }
             if (is_null($last_listening_request) || $last_listening_request->created_at->addSeconds($seconds) < now()) {
-                $nft = "track:{$track->nft_id}";
+                $nft = "track:{$track->ipfs_id}";
                 //check the cache
                 if (Cache::has($nft)) {
                     $ipfs_mp3 = Cache::get($nft);
@@ -132,7 +132,7 @@ class ListeningRequestController extends Controller
                 }
             }
             if (is_null($last_listening_request) || $last_listening_request->created_at->addSeconds($seconds) < now()) {
-                $nft = "track:{$track->nft_id}";
+                $nft = "track:{$track->ipfs_id}";
                 //check the cache
                 if (Cache::has($nft)) {
                     $ipfs_mp3 = Cache::get($nft);

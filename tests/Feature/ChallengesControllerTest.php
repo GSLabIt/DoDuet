@@ -1427,6 +1427,23 @@ class ChallengesControllerTest extends TestCase
      *
      */
 
+
+    /**
+     * Test the function setUpChallenge when it's been called for the first time (without any previous challenge).
+     * @return void
+     * @throws Exception
+     */
+    public function test_set_up_challenge_first_time()
+    {
+        Event::fake();
+
+        ChallengesController::setUpChallenge();
+
+        Event::assertNotDispatched(EndedCurrentChallenge::class);
+
+        $this->assertEquals(1, Challenges::all()->count());
+    }
+
     /**
      * Test the function setUpChallenge.
      * @return void

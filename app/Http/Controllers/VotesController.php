@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\DTOs\SettingNineRandomTracks;
 use App\Models\Challenges;
 use App\Models\ListeningRequest;
 use App\Models\Tracks;
@@ -75,6 +76,30 @@ class VotesController extends Controller
                 ) {
                     // habilitate vote
                     try {
+                        // if it's the first listening for this challenge, augment the nine_random_track settings counter
+                        if (ListeningRequest::where(
+                            [
+                                "voter_id" => $user->id,
+                                "track_id" => $track->id,
+                                "challenge_id" => $challenge->id
+                            ])
+                                ->orderByDesc("created_at")
+                                ->count() === 1)
+                        {
+                            /** @var SettingNineRandomTracks $settings_content */
+                            $settings_content = settings($user)->get("challenge_nine_random_tracks");
+                            // add 1 to listened counter
+                            $settings_DTO = (new SettingNineRandomTracks(
+                                challenge_id: $settings_content->challenge_id,
+                                track_ids: $settings_content->track_ids,
+                                listened: $settings_content->listened + 1
+                            ))->toJson();
+                            // update the settings
+                            settings($user)->update(
+                                "challenge_nine_random_tracks",
+                                $settings_DTO
+                            );
+                        }
                         // if no exception is thrown, return true
                         return response()->json(["success" => true]);
                     } catch (Throwable $e) {

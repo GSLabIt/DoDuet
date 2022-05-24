@@ -91,6 +91,11 @@ export default defineComponent({
                 .post(route("authenticated.challenge.post.challenge_track_participate_in_current", id))
                 .then(response => {
                     this.inChallenge[index] = response.data.success;
+                    new Toaster({
+                        message: "La tua canzone sta partecipando alla challenge corrente!",
+                        title: "Successo",
+                        type: "success",
+                    });
                 })
                 .catch(error => (new Toaster({
                     message: error.response.data.message,
@@ -109,7 +114,7 @@ export default defineComponent({
             this.modalIndex = index;
             this.modalShow = true;
         },
-        submit(id) {
+        submit() {
             axios
                 .put(route("authenticated.track.put.track_update", this.ownedTracks[this.modalIndex].id), this.form)
                 .then(response => {

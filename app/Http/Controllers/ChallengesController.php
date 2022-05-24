@@ -484,6 +484,13 @@ class ChallengesController extends Controller
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("id")->first();
 
+        if (is_null($challenge)) {
+            throw new SafeException(
+                config("error-codes.CHALLENGE_NOT_FOUND.code.message"),
+                config("error-codes.CHALLENGE_NOT_FOUND.code")
+            );
+        }
+
         return response()->json([
             "tracks" => $challenge->tracks->where("owner_id", $user->id)->pluck("id")
         ]);
@@ -626,49 +633,6 @@ class ChallengesController extends Controller
         /** @var Challenges $challenge */
         $challenge = Challenges::orderByDesc("id")->first();
 
-        // get the leaderboard (all the tracks in the elections ranked)
-        $unsorted_leaderboard = collect();
-        $challenge->tracks()
-            ->with('votes', function (HasMany $query) use($challenge) {
-                // track_id is required, else laravel will not recognize the relationship
-                $query->where('challenge_id', $challenge->id)->select(["track_id", "vote"]);
-            })
-            ->select("id", "owner_id")
-            ->get()
-            ->map(function ($track) use ($unsorted_leaderboard){
-                // the leaderboard is decided by the track that has got the highest sum of votes, if more
-                // are equals, then by average vote
-                $votes = $track->votes()->pluck("vote");
-                $unsorted_leaderboard->put($track->id,[
-                    "total" => $votes->sum(),
-                    "average" => $votes->average(),
-                    "owner_id" => $track->owner_id
-                ]);
-            });
-        // sort the leaderboard
-        $leaderboard = $unsorted_leaderboard->sortDesc();
-        $leaderboard_keys = $leaderboard->keys();
-        $leaderboard_length = count($leaderboard_keys);
-
-        // update the challenge with the new winners
-        if ($leaderboard_length === 1) {
-            $challenge->update([
-                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
-            ]);
-        } elseif ($leaderboard_length === 2) {
-            $challenge->update([
-                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
-                "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
-            ]);
-        } elseif ($leaderboard_length > 2) {
-            $challenge->update([
-                "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
-                "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
-                "third_place_id" => $leaderboard[$leaderboard_keys[2]]["owner_id"],
-            ]);
-        }
-
-
         // create a new challenge
         Challenges::create([
             "total_prize" => 0,
@@ -680,10 +644,55 @@ class ChallengesController extends Controller
             "fee_rate" => 15.,
         ]);
 
-        $track_ids = $leaderboard_keys->slice(0,3)->toArray();
+        // check that this function has not been called for the first time
+        if (!is_null($challenge)) {
+            // get the leaderboard (all the tracks in the elections ranked)
+            $unsorted_leaderboard = collect();
+            $challenge->tracks()
+                ->with('votes', function (HasMany $query) use($challenge) {
+                    // track_id is required, else laravel will not recognize the relationship
+                    $query->where('challenge_id', $challenge->id)->select(["track_id", "vote"]);
+                })
+                ->select("id", "owner_id")
+                ->get()
+                ->map(function ($track) use ($unsorted_leaderboard){
+                    // the leaderboard is decided by the track that has got the highest sum of votes, if more
+                    // are equals, then by average vote
+                    $votes = $track->votes()->pluck("vote");
+                    $unsorted_leaderboard->put($track->id,[
+                        "total" => $votes->sum(),
+                        "average" => $votes->average(),
+                        "owner_id" => $track->owner_id
+                    ]);
+                });
+            // sort the leaderboard
+            $leaderboard = $unsorted_leaderboard->sortDesc();
+            $leaderboard_keys = $leaderboard->keys();
+            $leaderboard_length = count($leaderboard_keys);
 
-        // dispatch the event, that will then dispatch notifyWinners
-        EndedCurrentChallenge::dispatch($challenge, $track_ids);
+            // update the challenge with the new winners
+            if ($leaderboard_length === 1) {
+                $challenge->update([
+                    "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                ]);
+            } elseif ($leaderboard_length === 2) {
+                $challenge->update([
+                    "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                    "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+                ]);
+            } elseif ($leaderboard_length > 2) {
+                $challenge->update([
+                    "first_place_id" => $leaderboard[$leaderboard_keys[0]]["owner_id"],
+                    "second_place_id" => $leaderboard[$leaderboard_keys[1]]["owner_id"],
+                    "third_place_id" => $leaderboard[$leaderboard_keys[2]]["owner_id"],
+                ]);
+            }
+
+            $track_ids = $leaderboard_keys->slice(0,3)->toArray();
+
+            // dispatch the event, that will then dispatch notifyWinners
+            EndedCurrentChallenge::dispatch($challenge, $track_ids);
+        }
     }
 
     /**
@@ -808,7 +817,7 @@ class ChallengesController extends Controller
             $settings_content = settings($user)->get("challenge_nine_random_tracks");
             if ($settings_content->challenge_id == $current_challenge->id) {
                 // if the challenge is the same and the user has not finished listening to at least 4 tracks, throw an error
-                if ($settings_content->listened < 4) {
+                if ($settings_content->listened < 4 and count($settings_content->track_ids) !== $settings_content->listened) {
                     throw new SafeException(
                         config("error-codes.NOT_ENOUGH_LISTENED.message"),
                         config("error-codes.NOT_ENOUGH_LISTENED.code")
@@ -817,7 +826,7 @@ class ChallengesController extends Controller
             }
         }
 
-        // ROTATING tracks because at least 4 of them are already listened/the challenge has changed/this is the first time
+        // ROTATING tracks because at least 4 of them are already listened/the challenge has changed/this is the first time/he has already listened to all that are available
         // select the excluded tracks
         $excluded_tracks = $user->listeningRequests()->where(["challenge_id" => $current_challenge->id])->pluck("track_id"); // listened tracks
         $ownedTracks = $current_challenge->tracks()->where(["owner_id" => $user->id])->pluck("id");
